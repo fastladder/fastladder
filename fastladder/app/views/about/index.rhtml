@@ -1,0 +1,91 @@
+<div id="content" class="page_about">
+<div id="content-inner">
+
+<script type="text/javascript">
+var Language = 'English';
+</script>
+
+<% if @is_feedlink && @feed %>
+<% avg_rate = @feed.subscriptions.average(:rate, :conditions => ["rate > ?", 0]).to_i  %>
+<% subscribed = @member.subscribed(@feed) %>
+
+<h2>Feed Infomation</h2>
+<div class="feedinfo">
+	<div class="feed_info">
+	<div class="channel">
+		<h3 style="background-image:url('<%=h @feed.icon %>')">
+			<a href="<%=h @feed.link %>" id="feed-title"><%=h @feed.title %></a>
+		</h3>
+		<div class="description"><%=h @feed.description %></div>
+	</div>
+	<ul>
+		<li class="feedlink">
+			<a href="<%=h @feed.feedlink %>"><%=h @feed.feedlink %></a>
+			<span class="subscribe_button">
+		<% if !@member || !subscribed %>
+			<a href="/subscribe/<%=h @feed.feedlink %>" class="subscribe_link">subscribe this feed</a>
+		<% end %>
+		<% if subscribed %>
+			<span class="subscribed">[subscribed]</span>
+			<button class="subs_edit" rel="edit:<%= subscribed.id %>" onkeydown="subs_edit.call(this,event)" onmousedown="subs_edit.call(this,event)" onclick="return false">edit</button>
+		<% end %>
+			</span>
+		</li>
+		<li class="subscribers_count"><%=h users(@feed.subscribers_count) %></li>
+		<li class="avg_rate">rate average <%= rate_image(avg_rate) %> <span id="avg-rate"><%= avg_rate %></span></li>
+	</ul>
+	</div>
+</div>
+
+<% else if @feeds %>
+	<% @seen = {} %>
+	<% if feeds.size > 1 %>
+		<h2>select feed</h2>
+	<% else %>
+		<h2>About this feed</h2>
+	<% end %>
+	<div class="feedinfo">
+	<ul class="feedlist">
+		<% @feeds.each do |feed, i| %>
+		<% unless @seen[feed.feedlink] %>
+			<% @seen[feed.feedlink] = true %>
+			<li class="list<% if i == 0 -%> list-first<% end %>">
+				<a href="/about/<%=h feed.feedlink %>"><%=h feed.title %></a>
+				<span class="subscriber_count"> (<%= disp_users(feed.subscribers_count) %>)</span>
+				<br>
+				<a href="/about/<%=h feed.feedlink %>" class="feedlink"><%=h feed.feedlink %></a>
+			</li>
+		<% end %>
+		<% end %>
+	</ul>
+<% end %>
+<% end %>
+
+<% subscriptions = @feed.subscriptions if @feed %>
+<% if @is_feedlink && @feed && subscriptions.size > 0 %>
+	<div class="subscribers">
+	<h3>Subscribers with Public Profiles</h3>
+	<ul class="subscribers_list">
+		<% subscriptions.each_with_index do |subscription, i| %>
+		<% subscriber = subscription.member %>
+		<li class="<%= i % 2 == 0 ? 'even' : 'odd' %>"><dl>
+			<dt>
+				<a href="/user/<%=h subscriber.username %>"><%= subscriber.username %></a>
+			</dt>
+			<dd>
+				<span class="subscribe_date">
+					date: <%= subscriber.created_on.strftime('%Y/%m/%d') %> | 
+					Total Subscriptions <b><%=h subscriber.total_subscribe_count %></b> |
+					Public Subscriptions <b><%=h subscriber.public_subscribe_count %></b>  
+				</span>
+			</dd>
+		</dl><div style="clear:left;height:0px;font-size:1px"></div></li>
+		<% end %>
+	</ul>
+	</div>
+<% end %>
+
+</div><!-- /content-inner -->
+<div style="clear:both;"></div>
+</div><!-- /content -->
+

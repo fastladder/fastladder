@@ -1,0 +1,25 @@
+<div id="content">
+	<h2>Import</h2>
+	<p>
+	Fastladder supports the importing of OPML format subscription list.
+	</p>
+
+	<h3>Upload OPML</h3>
+	<div class="sub-content">
+		<% form_tag({ :controller => :import, :action => "index", :id => "" }, {:enctype =>"multipart/form-data" }) do %>
+		<form action="/import/index" method="POST" enctype="multipart/form-data">
+		<input type="file" name="opml"><input type="submit" value="Import">
+		<% end %>
+	</div>
+	<h3>URL Import</h3>
+	<div class="sub-content">
+		<% form_tag({ :controller => :import, :action => "fetch"}, {:enctype =>"multipart/form-data" }) do %>
+		<input type="text" name="url" value="http://"><input type="submit" value="Import">
+		<% end %>
+	</div>
+	<div class="sub-content">
+	<h4>Attension</h4>
+	<p>If you have many subscription list, it takes time to import. Please wait to finish importing.</p>
+	</div>
+</div>
+

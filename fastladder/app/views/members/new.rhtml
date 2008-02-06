@@ -1,0 +1,19 @@
+<% @title = "Create new account" %>
+
+<div id="content">
+<h2>Create new account</h2>
+<%= error_messages_for :member -%>
+<% form_for :member, :url => members_path do |f| -%>
+	<dl>
+		<dt><label for="member_username">Username</label></dt>
+		<dd><%= f.text_field :username %></dd>
+		<dt><label for="member_password">Password</label></dt>
+		<dd><%= f.password_field :password %></dd>
+		<dt><label for="member_password_confirmation">Confirm Password</label></dt>
+		<dd><%= f.password_field :password_confirmation %></dd>
+	</dl>
+	<div class="submit"><%= submit_tag "Sign Up" %></div>
+<% end -%>
+<div class="section"><%= link_to "Back to Sign In", "/login" %></div>
+</div>
+

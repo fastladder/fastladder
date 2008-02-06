@@ -1,0 +1,33 @@
+<form id="subs_edit_form" action="/api/feed/update" method="POST">
+<input type="hidden" name="subscribe_id">
+<input type="hidden" name="ApiKey">
+<table>
+	<tr><th>Folder</th>
+	<td>
+		<select id="subs_edit_folder" name="folder_id" onchange="folder_change.call(this,event)">
+			<option value="0" selected>TopLevel</option>
+			<option value="-">Create new folder</option>
+		</select>
+	</td></tr>
+	<tr><th>Rating</th>
+	<td>
+		<select name="rate">
+			<option value="0">Not Rated</option>
+			<option value="1">1 star</option>
+			<option value="2">2 stars</option>
+			<option value="3">3 stars</option>
+			<option value="4">4 stars</option>
+			<option value="5">5 stars</option>
+		</select>
+	</td></tr>
+	<tr><th>Share</th>
+	<td>
+		<input type="radio" name="public" value="1" id="subs_edit_public_1"><label for="subs_edit_public_1">Public</label>
+		<input type="radio" name="public" value="0" id="subs_edit_public_0"><label for="subs_edit_public_0">Private</label>
+	</td></tr>
+</table>
+<div class="buttons">
+	<span class="subs_edit_cancel" onclick="subs_edit.hide()">Close</span>
+	<input type="submit" value="Save" class="subs_edit_save">
+</div>
+</form>

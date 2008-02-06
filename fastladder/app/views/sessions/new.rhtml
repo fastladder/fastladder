@@ -1,0 +1,22 @@
+<% @title = "Login" %>
+<div id="content">
+<h2>Sign in</h2>
+<% form_tag session_path do -%>
+	<dl>
+		<dt><label for="username">Username</label></dt>
+		<dd><%= text_field_tag "username" %></dd>
+		<dt><label for="password">Password</label></dt>
+		<dd><%= password_field_tag "password" %></dd>
+	</dl>
+	<%= check_box_tag "remember_me" %> <label for="remember_me">Remember me</label>
+	<div class="submit"><%= submit_tag "Sign In" %></div>
+<% end -%>
+
+<div class="section">
+	<%= link_to "Create new account", "/signup" %>
+</div>
+
+<div style="clear: both"></div>
+
+</div>
+

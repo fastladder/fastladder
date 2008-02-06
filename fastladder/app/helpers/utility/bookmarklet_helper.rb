@@ -1,0 +1,2 @@
+module Utility::BookmarkletHelper
+end

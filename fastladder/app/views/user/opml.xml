@@ -1,0 +1,14 @@
+<%- name = @target.username -%>
+<?xml version="1.0" encoding="utf-8"?>
+<opml version="1.0">
+<head>
+  <title><%=h name %>'s Subscriptions</title>
+  <ownerName><%=h name %></ownerName>
+</head>
+<body>
+<outline title="Subscriptions">
+  <outline title="<%=h name %>">
+<%= @target.public_subs.map{|item| format_opml_item(item) }.join("\n") %>
+  </outline>
+</outline>
+</body></opml>

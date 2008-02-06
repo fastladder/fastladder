@@ -1,0 +1,85 @@
+
+<% if @target.public %>
+<% rss_link_tag = %w!<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="[% config.base_url %]/user/[% target.livedoor_id %]/rss" />! %>
+<% end %>
+
+<% is_owner = 1 if @member && @member.username == @target.username %>
+<% total_subscribe_count = @target.total_subscribe_count %>
+<% public_subscribe_count = @target.public_subscribe_count %>
+<% recent_subs_feed = "" %>
+
+
+<script type="text/javascript">
+var Language = 'English';
+var ApiKey = null;
+</script>
+<script type="text/javascript" src="/js/reader_subscribe.js"></script>
+
+<div id="content" class="page_user">
+<h2>User Information</h2>
+<div id="content-inner">
+<div class="user_info">
+
+	<h3><%=h @target.username %></h3>
+		<% if @target.public && is_owner %>
+		<p>
+			<a href="/share/">Manage Sharing</a>
+		</p>
+		<% end %>
+		<% if !@target.public %>
+		<p>
+			Share-setting is disabled. This page is not accessible to others.<br />
+			You may set publicity of your subscription from "<a href="/share/">Manage Sharing</a>"
+		</p>
+		<% end %>
+
+	<div class="user_stats">
+		<ul>
+			<li>Total Subscriptions : <span id="total_subscribe_count"><%= total_subscribe_count %></span></li>
+			<li>Public Subscriptions : <span id="public_subscribe_count"><%= public_subscribe_count %></span></li> 
+		</ul>
+		<% if @target.public %>
+			<ul class="link_rss">
+			<% if @target.public && public_subscribe_count %>
+				<li><a href="/user/<%=h @target.username %>">Read public subscriptions</a></li>
+				<li>
+					<a href="/import/<%= url_for(:action => "/", :abs_path => false) %>/user/<%=h @target.username %>/opml">Import subscription list</a>
+					<a href="/user/<%=h @target.username %>/opml"><img src="/img/icon/opml.gif" border="0"></a>
+				</li>
+			<% end %>
+			</ul>
+		<% end %>
+
+	</div>
+	<% recent_subs = @target.recent_subs(10) %>
+	<% if recent_subs && recent_subs.size > 0 %>
+	<div class="recent_subscribed">
+		<h3>Recent Subscriptions</h3>
+		<p>
+			<%=h @target.username %>'s recent public subscriptions.
+			<%= subscribe_button(recent_subs_feed) %>
+		</p>
+		<ul class="recent_feeds">
+		<% recent_subs.each_with_index do |subs, i| %>
+			<% feed = subs.feed %>
+			<li class="<%= i % 2 == 0 ? 'odd' : 'even' %>">
+				<a href="<%=h feed.link %>" style="background-image:url(/icon/<%=h feed.id %>)" class="title"><%=h feed.title %></a>
+				<div class="description"><%=h feed.description %></div>
+				<ul class="info">
+					<li class="date"><%= subs.created_on  %></li>
+					<li>
+						<a href="/about/<%=h feed.feedlink %>"><%= disp_users(feed.subscribers_count) %></a>
+					</li>
+					<li><%= subscribe_button(feed.feedlink) %></li>
+				</ul>
+				<div style="clear:left"></div>
+			</li>
+		<% end %>
+		</ul>
+	</div>
+	<% end %>
+
+</div>
+</div>
+</div><!-- /content -->
+<div style="clear:both;"></div>

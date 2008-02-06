@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+  <title>Fastladder <%=h @title ? @title : "#{controller.controller_name.capitalize} #{controller.action_name == "index" ? "" : ": " + controller.action_name }" %></title>
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <link href="/css/main.css" rel="stylesheet" type="text/css" />
+</head>
+<body class="<%= params[:controller] %>">
+<script type="text/javascript">var ApiKey = "<%= session.session_id %>";</script>
+<%= loadJS("compat","common","event","template","api","reader_subscribe","round_corner") %>
+<div id="container">
+<div class="navi">
+<h1 class="logo"><a href="/">Fastladder</a></h1>
+<%- if @member -%>
+<ul>
+	<li>Welcome <a href="<%=h "/user/#{@member.username}" %>"><%=h @member.username %></a></li>
+	<li><a href="/reader/">My Feeds</a></li>
+	<li><a href="/account/">Account</a></li>
+	<li><a href="/logout?sv=<%= session.session_id %>">Sign Out</a></li>
+</ul>
+<%- end -%>
+</div>
+<%- if flash[:notice] -%>
+<div class="notice" style="text-align:center;background-color:#ff9;padding:0.5em">
+	<p style="color: green"><%= flash[:notice] %></p>
+</div>
+<%- end -%>
+<%= yield %>
+</div>
+</body>
+</html>

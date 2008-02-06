@@ -1,0 +1,36 @@
+*{
+	font-family:Arial, Helvetica, sans-serif;
+	/* word-break :break-all; */
+}
+body{
+	padding:0px;
+	margin:0px;
+	background:#fff;
+}
+
+.guide {
+	margin : 0px 10px 0 20px;
+	background-repeat: no-repeat;
+	background-position: 100% 0px;
+	background-image:url("/img/bg_plant.jpg");
+}
+
+.guide ul{
+	padding : 0;
+	margin : 10px 20px;
+	line-height: 1.5;
+}
+
+.guide h2{
+	font-size: 150%;
+	margin : 10px 0;
+}
+
+.guide h3{
+	color: #976504;
+	font-family: Arial, sans-serif;
+	font-weight: bold;
+	margin-left: 0px;
+	padding: 5px 0px;
+}
+

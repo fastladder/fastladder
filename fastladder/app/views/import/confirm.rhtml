@@ -1,0 +1,148 @@
+
+<style type="text/css">
+.button{
+	cursor : pointer;
+}
+.subscribed a:link{
+	color : #888;
+	text-decoration : none;
+}
+.subscribed a:visited{
+	color : #888;
+	text-decoration : none;
+}
+/* show-subscribed */
+.show-subscribed .subscribed{ display:block }
+.show-subscribed .not_subscribed{ display:none }
+
+
+/* show-not_subscribed */
+.show-not_subscribed .subscribed{ display:none }
+.show-not_subscribed .not_subscribed{ display:block }
+
+.tabs{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size : 13px;
+	height : 22px;
+}
+.tabs .tab{
+	float : left;
+	height : 14px;
+	padding : 4px 6px;
+	margin-right : 6px;
+	color : white;
+	background : #2d5ea1;
+	font-weight : bold;
+	cursor : pointer;
+}
+.tabs .tab-active{
+	background : #4889fd !important;
+}
+.tabs .num{
+	font-family : monospace;
+}
+.importbox{
+	border : 1px solid #4a89fb;
+}
+
+</style>
+
+<script type="text/javascript" src="/js/array_extra.js"></script>
+<script type="text/javascript" src="/js/common.js"></script>
+<script type="text/javascript" src="/js/queryCSS.js"></script>
+<script type="text/javascript" src="/js/ed.js"></script>
+<script type="text/javascript">
+
+function get_target(button){
+	var id = button.id.replace("button_","");
+	return $("ul_" + id);
+}
+function selectfolder(event){
+	Event.stop(event);
+	var ul = get_target(this);
+	if(!ul) return;
+	var ck = ul.getElementsByTagName("input");
+	var len = ck.length;
+	for(var i=0;i<len;i++) ck[i].checked = true;
+}
+function unselectfolder(event){
+	Event.stop(event);
+	var ul = get_target(this);
+	if(!ul) return;
+	var ck = ul.getElementsByTagName("input");
+	var len = ck.length;
+	for(var i=0;i<len;i++) ck[i].checked = false;
+}
+function s_toggle(mode,tab){
+	switchClass("registerbox", "show-"+mode);
+	var tabs = $("import_tab");
+	foreach(tabs.getElementsByTagName("div"),function(el){
+		el == tab ? addClass(tab,"tab-active") : removeClass(el, "tab-active")
+	})
+	
+}
+
+</script>
+
+
+<div id="content">
+
+<input type="hidden" name="ApiKey" value="[% session.session_id %]">
+<% form_tag({ :controller => :import, :action => "finish" } ) do %>
+
+<div style="padding:5px 15px 0;text-align:left;"><h2 class="px18 guidesubttl" style="border:none">Subscription list</h2></div>
+<div id="registerbox" style="width:auto;margin:0 10px">
+
+<div id="import_tab" class="tabs" style="text-align:left;padding-left:15px;">
+	<div class="tab tab-active" onclick="s_toggle('all',this)">All<span class="num">(<%= @all_count %>)</span></div>
+	<div class="tab" onclick="s_toggle('not_subscribed',this)">Without Subscribed feed<span class="num">(<%=  @not_subscribed_count %>)</span></div>
+	<div class="tab" onclick="s_toggle('subscribed',this)">Subscribed<span class="num">(<%= @subscribed_count %>)</span></div>
+</div>
+
+<div class="importbox">
+
+<% @seen = {} %>
+<% count = 0 %>
+<% loop_count = 0 %>
+<% @folders.each do |folder_name, value| %>
+    <% folder_name ||= "" %>
+    <% loop_count += 1 %>
+	<h3 class="px18 importttl"><%=h (folder_name.empty?) ? 'Uncategolized' : folder_name %>
+		<span style="font-size:12px;color:#05308c;font-weight:normal;padding-left:10px;">
+		<span class="button" onclick="selectfolder.call(this,event)" id="button_<%= loop_count %>">Select All</span>
+	&nbsp;|&nbsp;
+		<span class="button" onclick="unselectfolder.call(this,event)" id="button_<%= loop_count %>">None</span>
+	</span>
+	</h3><ul id="ul_<%= loop_count %>">
+		<% value.each do |outline| %>
+			<% if outline["xml_url"] && outline["html_url"] %>
+			<% outline["title"] ||= "" %>
+			<%- if !outline["subscribed"] -%>
+			<li class="not_subscribed">
+				<input type="checkbox" checked name="check_for_subscribe[<%= count %>]" value="on">
+				<a href="<%=h outline["html_url"] %>"><%=h outline["title"] %></a>
+				<input type="hidden" name="feedlinks[<%= count %>>]" value="<%=h folder_name %>:<%=h outline["xml_url"] %>" />
+				<input type="hidden" name="titles[<%= count %>]" value="<%=h outline["title"] %>" />
+				<% count = count+1 %>
+			</li>
+			<% else %>
+			<li class="subscribed">
+				<a href="<%=h outline["html_url"] %>"><%=h outline["title"] %></a
+				<span style="color:#f00;">［Subscribed］</span>
+			</li>
+			<%- end -%>
+			<%- end -%>
+		<% end %>
+	</ul>
+<% end %>
+
+</div>
+
+<div align="center" style="width:100px;margin:15px auto 0;padding-bottom:5px;"><input type="submit" value=" Import "></div>
+
+</div>
+<% end %>
+
+<script type="text/javascript">
+</script>
+

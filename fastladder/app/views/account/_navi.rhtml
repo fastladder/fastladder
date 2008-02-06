@@ -1,0 +1,6 @@
+<% def selected(name) (name == params[:action]) ? 'class="selected"' : '' end %>
+<ul class="account_navi">
+	<li><a href="/account/password" <%= selected('password') %>>Password</a></li>
+	<li><a href="/account/backup" <%= selected('backup') %>>Backup data</a></li>
+	<li><a href="/account/share" <%= selected('share') %>>Share</a></li>
+</ul>
