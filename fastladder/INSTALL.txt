@@ -7,7 +7,7 @@ Click Start menu and find Fastladder, run "Start Crawler" which opens command pr
 
 ** for Mac OS X (10.5 or higher)
 
-0. Extract all files from this archive (maybe already done).
+0. Extract all files from this archive (maybe already done)
 $ tar xvzf fastladder-0.0.1-macosx.tar.gz
 
 1. Install gems
@@ -31,12 +31,19 @@ $ RAILS_ENV=production script/crawler > /dev/null &
 
 0. Extract all files from this archive (maybe already done).
 
-1. Install Ruby 1.8.6 and RubyGems.
+1. Install Ruby 1.8.6 and RubyGems
 If you want to use SQLite3 (default), install sqlite3 libraries and headers.
 Debian and Ubuntsu users:
-$ sudo apt-get install libsqlite3-dev
+$ sudo aptitude install libsqlite3-dev
 
-2. Install gems
+2. Install FreeImage library
+Debian and Ubuntsu users:
+$ sudo aptitude install libfreeimage3
+
+Otherwise, download FreeImage source distribution, make and install library.
+http://freeimage.sourceforge.net/download.html
+
+3. Install gems
 $ sudo gem install rails --version 2.0.2 -y
 $ sudo gem install rfeedfinder
 $ sudo gem install feed-normalizer
@@ -44,10 +51,10 @@ $ sudo gem install opml
 $ sudo gem install mongrel
 $ sudo gem install sqlite3-ruby
 
-2. Create database
+4. Create database
 $ cd fastladder
 $ RAILS_ENV=production rake db:migrate
 
-3. Start web server and crawler
+5. Start web server and crawler
 $ script/server -d -e production
 $ RAILS_ENV=production script/crawler > /dev/null &
