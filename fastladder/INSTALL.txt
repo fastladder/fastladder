@@ -33,11 +33,11 @@ $ RAILS_ENV=production script/crawler > /dev/null &
 
 1. Install Ruby 1.8.6 and RubyGems
 If you want to use SQLite3 (default), install sqlite3 libraries and headers.
-Debian and Ubuntsu users:
+Debian and Ubuntu users:
 $ sudo aptitude install libsqlite3-dev
 
 2. Install FreeImage library
-Debian and Ubuntsu users:
+Debian and Ubuntu users:
 $ sudo aptitude install libfreeimage3
 
 Otherwise, download FreeImage source distribution, make and install library.
