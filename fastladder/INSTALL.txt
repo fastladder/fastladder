@@ -31,7 +31,7 @@ $ RAILS_ENV=production script/crawler > /dev/null &
 
 0. Extract all files from this archive (maybe already done).
 
-1. Install Ruby (1.8.6 or higher) and RubyGems.
+1. Install Ruby 1.8.6 and RubyGems.
 If you want to use SQLite3 (default), install sqlite3 libraries and headers.
 Debian and Ubuntsu users:
 $ sudo apt-get install libsqlite3-dev
