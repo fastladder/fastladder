@@ -10,7 +10,7 @@ rescue LoadError
 end
 
 module Crawler
-  Version = "0.0.1"
+  Version = "0.0.2"
 
   ITEMS_LIMIT = 500
   CRAWL_OK = 1

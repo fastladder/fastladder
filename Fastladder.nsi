@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "Fastladder"
-!define PRODUCT_VERSION "0.0.1"
+!define PRODUCT_VERSION "0.0.2"
 !define PRODUCT_PUBLISHER "livedoor Co., Ltd."
 !define PRODUCT_WEB_SITE "http://fastladder.org/"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
@@ -46,7 +46,7 @@ SetCompressor /SOLID lzma
 ; MUI end ------
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
-OutFile "fastladder-0.0.1-win32.exe"
+OutFile "fastladder-0.0.2-win32.exe"
 InstallDir "$PROGRAMFILES\Fastladder"
 ShowInstDetails show
 ShowUnInstDetails show

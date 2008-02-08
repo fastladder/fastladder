@@ -5,10 +5,10 @@
 Click Start menu and find Fastladder, run "Start Crawler" which opens command prompt window (please minimize), and open "Fastladder" shortcut.
 
 
-** for Mac OS X (10.5 or higher)
+** for Mac OS X (ruby 1.8.6 and rubygems are required)
 
 0. Extract all files from this archive (maybe already done)
-$ tar xvzf fastladder-0.0.1-macosx.tar.gz
+$ tar xvzf fastladder-0.0.2-macosx.tar.gz
 
 1. Install gems
 $ sudo gem install rails --version 2.0.2 -y
