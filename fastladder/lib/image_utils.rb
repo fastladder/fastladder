@@ -8,10 +8,19 @@ module ImageUtils
     FIMEMORY = struct ["void* data"]
     typealias "FREE_IMAGE_FORMAT", "int"
     typealias "FREE_IMAGE_FILTER", "int"
+    # for Unix (Linux, etc.)
+    libs = %w(libfreeimage.so libfreeimage.so.3)
+    # for Mac OS X
+    libs << "#{RAILS_ROOT}/lib/libfreeimage-3.10.0.dylib"
+    lib = libs.shift
     begin
-      dlload "libfreeimage.so"
-    rescue => ex
-      dlload "lib/libfreeimage-3.10.0.dylib"
+      dlload lib
+    rescue
+      if libs.size > 0
+        lib = libs.shift
+        retry
+      end
+      raise "Cannot load FreeImage library."
     end
     extern "FIMEMORY* FreeImage_OpenMemory(BYTE*, DWORD)"
     extern "void FreeImage_CloseMemory(FIMEMORY*)"
