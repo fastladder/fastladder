@@ -202,7 +202,7 @@ module Crawler
         modified_on = Time.rfc2822(last_modified)
       end
       feed.modified_on = modified_on
-      Subscription.update_all("has_unread = 1", ["feed_id = ?", feed.id])
+      Subscription.update_all(["has_unread = ?", true], ["feed_id = ?", feed.id])
     end
     feed.title = parsed.title
     feed.link = parsed.url
