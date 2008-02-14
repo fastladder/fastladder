@@ -1,0 +1,386 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: fastladder 0.0.2\n"
+"POT-Creation-Date: 2008-02-15 01:20+0900\n"
+"PO-Revision-Date: 2008-02-15 00:06+0900\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: app/models/crawl_status.rb:-
+msgid "crawl status"
+msgstr ""
+
+#: app/models/crawl_status.rb:-
+msgid "CrawlStatus|Feed"
+msgstr ""
+
+#: app/models/crawl_status.rb:-
+msgid "CrawlStatus|Status"
+msgstr ""
+
+#: app/models/crawl_status.rb:-
+msgid "CrawlStatus|Error count"
+msgstr ""
+
+#: app/models/crawl_status.rb:-
+msgid "CrawlStatus|Error message"
+msgstr ""
+
+#: app/models/crawl_status.rb:-
+msgid "CrawlStatus|Http status"
+msgstr ""
+
+#: app/models/crawl_status.rb:-
+msgid "CrawlStatus|Digest"
+msgstr ""
+
+#: app/models/crawl_status.rb:-
+msgid "CrawlStatus|Update frequency"
+msgstr ""
+
+#: app/models/crawl_status.rb:-
+msgid "CrawlStatus|Crawled on"
+msgstr ""
+
+#: app/models/crawl_status.rb:-
+msgid "CrawlStatus|Created on"
+msgstr ""
+
+#: app/models/crawl_status.rb:-
+msgid "CrawlStatus|Updated on"
+msgstr ""
+
+#: app/models/favicon.rb:-
+msgid "favicon"
+msgstr ""
+
+#: app/models/favicon.rb:-
+msgid "Favicon|Feed"
+msgstr ""
+
+#: app/models/favicon.rb:-
+msgid "Favicon|Image"
+msgstr ""
+
+#: app/models/feed.rb:-
+msgid "feed"
+msgstr ""
+
+#: app/models/feed.rb:-
+msgid "Feed|Feedlink"
+msgstr ""
+
+#: app/models/feed.rb:-
+msgid "Feed|Link"
+msgstr ""
+
+#: app/models/feed.rb:-
+msgid "Feed|Title"
+msgstr ""
+
+#: app/models/feed.rb:-
+msgid "Feed|Description"
+msgstr ""
+
+#: app/models/feed.rb:-
+msgid "Feed|Subscribers count"
+msgstr ""
+
+#: app/models/feed.rb:-
+msgid "Feed|Image"
+msgstr ""
+
+#: app/models/feed.rb:-
+msgid "Feed|Icon"
+msgstr ""
+
+#: app/models/feed.rb:-
+msgid "Feed|Modified on"
+msgstr ""
+
+#: app/models/feed.rb:-
+msgid "Feed|Created on"
+msgstr ""
+
+#: app/models/feed.rb:-
+msgid "Feed|Updated on"
+msgstr ""
+
+#: app/models/folder.rb:-
+msgid "folder"
+msgstr ""
+
+#: app/models/folder.rb:-
+msgid "Folder|Member"
+msgstr ""
+
+#: app/models/folder.rb:-
+msgid "Folder|Name"
+msgstr ""
+
+#: app/models/folder.rb:-
+msgid "Folder|Created on"
+msgstr ""
+
+#: app/models/folder.rb:-
+msgid "Folder|Updated on"
+msgstr ""
+
+#: app/models/item.rb:-
+msgid "item"
+msgstr ""
+
+#: app/models/item.rb:-
+msgid "Item|Feed"
+msgstr ""
+
+#: app/models/item.rb:-
+msgid "Item|Link"
+msgstr ""
+
+#: app/models/item.rb:-
+msgid "Item|Title"
+msgstr ""
+
+#: app/models/item.rb:-
+msgid "Item|Body"
+msgstr ""
+
+#: app/models/item.rb:-
+msgid "Item|Author"
+msgstr ""
+
+#: app/models/item.rb:-
+msgid "Item|Category"
+msgstr ""
+
+#: app/models/item.rb:-
+msgid "Item|Enclosure"
+msgstr ""
+
+#: app/models/item.rb:-
+msgid "Item|Enclosure type"
+msgstr ""
+
+#: app/models/item.rb:-
+msgid "Item|Digest"
+msgstr ""
+
+#: app/models/item.rb:-
+msgid "Item|Version"
+msgstr ""
+
+#: app/models/item.rb:-
+msgid "Item|Stored on"
+msgstr ""
+
+#: app/models/item.rb:-
+msgid "Item|Modified on"
+msgstr ""
+
+#: app/models/item.rb:-
+msgid "Item|Created on"
+msgstr ""
+
+#: app/models/item.rb:-
+msgid "Item|Updated on"
+msgstr ""
+
+#: app/models/member.rb:-
+msgid "member"
+msgstr ""
+
+#: app/models/member.rb:-
+msgid "Member|Username"
+msgstr "ユーザー名"
+
+#: app/models/member.rb:-
+msgid "Member|Email"
+msgstr "メールアドレス"
+
+#: app/models/member.rb:-
+msgid "Member|Crypted password"
+msgstr ""
+
+#: app/models/member.rb:-
+msgid "Member|Salt"
+msgstr ""
+
+#: app/models/member.rb:-
+msgid "Member|Remember token"
+msgstr ""
+
+#: app/models/member.rb:-
+msgid "Member|Remember token expires at"
+msgstr ""
+
+#: app/models/member.rb:-
+msgid "Member|Config dump"
+msgstr ""
+
+#: app/models/member.rb:-
+msgid "Member|Public"
+msgstr ""
+
+#: app/models/member.rb:-
+msgid "Member|Created on"
+msgstr "登録日"
+
+#: app/models/member.rb:-
+msgid "Member|Updated on"
+msgstr ""
+
+#: app/models/member.rb:25
+msgid "Member|Password"
+msgstr "パスワード"
+
+#: app/models/member.rb:26
+msgid "Member|Password confirmation"
+msgstr "パスワード（確認）"
+
+#: app/models/pin.rb:-
+msgid "pin"
+msgstr ""
+
+#: app/models/pin.rb:-
+msgid "Pin|Member"
+msgstr ""
+
+#: app/models/pin.rb:-
+msgid "Pin|Link"
+msgstr ""
+
+#: app/models/pin.rb:-
+msgid "Pin|Title"
+msgstr ""
+
+#: app/models/pin.rb:-
+msgid "Pin|Created on"
+msgstr ""
+
+#: app/models/pin.rb:-
+msgid "Pin|Updated on"
+msgstr ""
+
+#: app/models/subscription.rb:-
+msgid "subscription"
+msgstr ""
+
+#: app/models/subscription.rb:-
+msgid "Subscription|Member"
+msgstr ""
+
+#: app/models/subscription.rb:-
+msgid "Subscription|Folder"
+msgstr ""
+
+#: app/models/subscription.rb:-
+msgid "Subscription|Feed"
+msgstr ""
+
+#: app/models/subscription.rb:-
+msgid "Subscription|Rate"
+msgstr ""
+
+#: app/models/subscription.rb:-
+msgid "Subscription|Has unread"
+msgstr ""
+
+#: app/models/subscription.rb:-
+msgid "Subscription|Public"
+msgstr ""
+
+#: app/models/subscription.rb:-
+msgid "Subscription|Ignore notify"
+msgstr ""
+
+#: app/models/subscription.rb:-
+msgid "Subscription|Viewed on"
+msgstr ""
+
+#: app/models/subscription.rb:-
+msgid "Subscription|Created on"
+msgstr ""
+
+#: app/models/subscription.rb:-
+msgid "Subscription|Updated on"
+msgstr ""
+
+#: app/views/members/new.rhtml:1 app/views/members/new.rhtml:4
+#: app/views/sessions/new.rhtml:16
+msgid "Create new account"
+msgstr "新規登録"
+
+#: app/views/members/new.rhtml:8 app/views/sessions/new.rhtml:6
+msgid "Username"
+msgstr "ユーザー名"
+
+#: app/views/members/new.rhtml:10 app/views/sessions/new.rhtml:8
+msgid "Password"
+msgstr "パスワード"
+
+#: app/views/members/new.rhtml:12
+msgid "Confirm Password"
+msgstr "パスワード（確認）"
+
+#: app/views/members/new.rhtml:15
+msgid "Sign Up"
+msgstr "登録"
+
+#: app/views/members/new.rhtml:17
+msgid "Back to Sign In"
+msgstr "ログインページに戻る"
+
+#: app/views/reader/index.rhtml:257
+msgid "welcome %s"
+msgstr "ようこそ、%s さん"
+
+#: app/views/reader/index.rhtml:258
+msgid "Settings"
+msgstr "設定変更"
+
+#: app/views/reader/index.rhtml:259
+msgid "Account"
+msgstr "アカウント"
+
+#: app/views/reader/index.rhtml:259
+msgid "Sign Out"
+msgstr "ログアウト"
+
+#: app/views/reader/index.rhtml:309
+msgid "Reload"
+msgstr "更新"
+
+#: app/views/reader/index.rhtml:312
+msgid "Edit"
+msgstr "編集"
+
+#: app/views/reader/index.rhtml:313
+msgid "Add"
+msgstr "追加"
+
+#: app/views/sessions/new.rhtml:1
+msgid "Login"
+msgstr "ログイン"
+
+#: app/views/sessions/new.rhtml:3
+msgid "Sign in"
+msgstr "ログイン"
+
+#: app/views/sessions/new.rhtml:11
+msgid "Remember me"
+msgstr "ID・パスワードを記憶する"
+
+#: app/views/sessions/new.rhtml:12
+msgid "Sign In"
+msgstr "ログイン"

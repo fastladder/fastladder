@@ -10,7 +10,7 @@
 </head>
 <script type="text/javascript">
 var ApiKey = "<%= session.session_id %>";
-var Language = 'English';
+var Language = '<%= @language %>';
 
 function ads_mouseover(){
 	if(typeof Element == 'object'){
@@ -254,9 +254,9 @@ table.compact input, table.compact textarea{
 	<tr>
 	<td align="right" nowrap  style="padding-left:12px;padding-top:2px;vertical-align:top;">
 		<div id="my_menu" style="line-height:100%;padding:4px 6px 0px 0;text-align:right">
-			<span id="welcome">welcome <%= link_to(@member.username, :controller => "user", :login_name => @member.username) %></span>
-			|&nbsp;<a href="#config" onclick="init_config();return false">Settings</a>&nbsp;
-			|&nbsp;<a href="/account/" target="_self">Account</a>&nbsp;|&nbsp;<a href="/logout" target="_self">Sign Out</a>
+			<span id="welcome"><%= link_to(_('welcome %s') % @member.username, :controller => "user", :login_name => @member.username) %></span>
+      |&nbsp;<a href="#config" onclick="init_config();return false"><%= _('Settings') %></a>&nbsp;
+      |&nbsp;<a href="/account/" target="_self"><%= _('Account') %></a>&nbsp;|&nbsp;<a href="/logout" target="_self"><%= _('Sign Out') %></a>
 		</div>
 	</td></tr>
 	</table>
@@ -306,11 +306,11 @@ table.compact input, table.compact textarea{
 			<div class="toolbar" id="subs_buttons" style="padding : 6px 12px 0 12px;">
 				<table width="100%" height="20px"><tr>
 					<td width="30%">
-						<div onclick="Control.reload_subs()" id="reload_button" class="button" style="background-image:url('/img/icon/reload.gif')">Reload</div>
+            <div onclick="Control.reload_subs()" id="reload_button" class="button" style="background-image:url('/img/icon/reload.gif')"><%= _('Reload') %></div>
 					</td>
 					<td width="30%">
-						<div class="button" onclick="init_manage()" style="background-image:url('/img/icon/mylist.gif')">Edit</div></td>
-					<td width="30%"><div class="button" onclick="Control.show_subscribe_form()"  style="background-image:url('/img/icon/add.gif')">Add</div></td>
+            <div class="button" onclick="init_manage()" style="background-image:url('/img/icon/mylist.gif')"><%= _('Edit') %></div></td>
+          <td width="30%"><div class="button" onclick="Control.show_subscribe_form()"  style="background-image:url('/img/icon/add.gif')"><%= _('Add') %></div></td>
 				</tr></table>
 			</div>
 			<div class="toolbar" id="subs_toolbar" style="padding-left:12px;padding-bottom:4px">

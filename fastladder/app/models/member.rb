@@ -21,6 +21,9 @@ class Member < ActiveRecord::Base
   validates_length_of :username, :within => 3..40
   validates_uniqueness_of :username, :case_sensitive => false
   before_save :encrypt_password
+
+  N_('Member|Password')
+  N_('Member|Password confirmation')
   
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
