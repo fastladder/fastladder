@@ -7,6 +7,5 @@ class ReaderController < ApplicationController
   end
 
   def index
-    @language = (GetText.locale.language == 'ja') ? 'Japanese' : 'English'
   end
 end

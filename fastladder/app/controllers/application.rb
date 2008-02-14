@@ -5,7 +5,6 @@ class ApplicationController < ActionController::Base
   include AuthenticatedSystem
   protect_from_forgery
   helper :all # include all helpers, all the time
-  init_gettext 'fastladder'
 
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
