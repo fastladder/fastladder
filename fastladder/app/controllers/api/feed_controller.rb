@@ -1,4 +1,4 @@
-require "rfeedfinder"
+require "fastladder/feedfinder"
 require "open-uri"
 require "feed-normalizer"
 

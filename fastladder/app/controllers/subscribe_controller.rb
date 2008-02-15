@@ -1,16 +1,8 @@
-require "crawler"
-require "rfeedfinder"
+require "fastladder/feedfinder"
 require "open-uri"
 require "feed-normalizer"
 
-
 class SubscribeController < ApplicationController
-  def Rfeedfinder.open_doc(link)
-    html_body = Crawler::simple_fetch(link.to_s)
-    return nil unless html_body
-    Hpricot(html_body, :xml => true)
-  end
-
   verify_nothing :session => :member
   # verify_json :params => :feedlink, :only => :subscribe
   # Ffeed = Struct.new('Candidates', :link, :feedlink, :title, :subscribers_count, :subscribe_id)

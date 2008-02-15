@@ -54,15 +54,15 @@ module Crawler
         # http_status = ...
         # log_error
         break
-      #when Net::HTTPUnauthorized
-      #  ...
-      #when Net::HTTPMovedPermanently
-      #  if crawl_status.http_status == 301  # Moved Permanently
-      #    if crawl_status.response_changed_on < 1.week.ago
-      #      feed.feedlink = feedlink
-      #      modified_on = nil
-      #    end
-      #  end
+        #when Net::HTTPUnauthorized
+        #  ...
+        #when Net::HTTPMovedPermanently
+        #  if crawl_status.http_status == 301  # Moved Permanently
+        #    if crawl_status.response_changed_on < 1.week.ago
+        #      feed.feedlink = feedlink
+        #      modified_on = nil
+        #    end
+        #  end
       when Net::HTTPRedirection
         logger.info "Redirect: #{feedlink} => #{response["location"]}"
         feedlink = response["location"]
@@ -81,6 +81,11 @@ module Crawler
     end
     feed.save
     crawl_status.save
+    begin
+      GC.start
+    rescue
+      warn $!.message
+    end
     result
   end
 
