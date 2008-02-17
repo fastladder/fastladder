@@ -32,7 +32,11 @@ class Test::Unit::TestCase
   #
   # Note: You'll currently still have to declare fixtures explicitly in integration tests
   # -- they do not yet inherit this setting
-  fixtures :all
+  #fixtures :all
 
   # Add more helper methods to be used by all tests here...
+end
+
+def embed_file(file_name)
+  " !binary |\n" + Base64.encode64(File.read("#{RAILS_ROOT}/test/fixtures/files/#{file_name}")).gsub(/^/, '    ')
 end

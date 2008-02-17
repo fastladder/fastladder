@@ -1,5 +1,4 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-one:
+fastladder_blog:
   id: 1
-two:
-  id: 2
+  feed_id: 1
+  image: <%= embed_file('favicon.ico') %>

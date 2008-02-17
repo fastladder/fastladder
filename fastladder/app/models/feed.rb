@@ -1,5 +1,6 @@
 require "string_utils"
-require "crawler"
+require "feed-normalizer"
+require "fastladder/crawler"
 
 class Feed < ActiveRecord::Base
   has_one :crawl_status
@@ -8,6 +9,20 @@ class Feed < ActiveRecord::Base
   has_many :subscriptions
   #has_many :members, :through => :subscriptions
   #has_many :folders, :through => :subscriptions
+  
+  def self.create_from_uri(uri)
+    unless feed_data = FeedNormalizer::FeedNormalizer.parse(Fastladder::simple_fetch(uri))
+      return nil
+    end
+    feed = self.create({
+      :feedlink => uri.to_s,
+      :link => feed_data.urls[0] || uri.to_s,
+      :title => feed_data.title || feed_data.link || "",
+      :description => feed_data.description || "",
+    })
+    feed.create_crawl_status
+    feed
+  end
   
   def icon
     if self.favicon
@@ -42,17 +57,13 @@ class Feed < ActiveRecord::Base
   end
 
   def crawl
-    crawl_status = self.crawl_status
-    CrawlStatus.transaction do
-      if crawl_status.status != Crawler::CRAWL_OK
-        return
-      end
-      crawl_status.update_attribute(:status, Crawler::CRAWL_NOW)
-    end
+    return if crawl_status.status != Fastladder::Crawler::CRAWL_OK
+    crawl_status.update_attribute(:status, Fastladder::Crawler::CRAWL_NOW)
     begin
-      Crawler::crawl(self)
-    rescue => ex
-      logger.error "Crawler error: #{ex}"
+      crawler = Fastladder::Crawler.new(logger)
+      crawler.crawl(self)
+    rescue
+      logger.error "Crawler error: #{$!}"
     ensure
       crawl_status.update_attribute(:status, Crawler::CRAWL_OK)
     end

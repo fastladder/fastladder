@@ -378,22 +378,22 @@ table.compact input, table.compact textarea{
 	</div>
 	<div class="body">
 		<div id="add_feed">
-			<form id="discover_form" action="/api/feed/discover" method="post">
+      <% form_tag '/api/feed/discover', :id => 'discover_form' do %>
 				<b>Feed URL</b> : <input type="text" name="url" style="width:280px" id="discover_url" value="http://">
 				<input type="submit" value="next" style="width:90px">
-			</form>
+      <% end %>
 			<div id="discover_items"></div>
 			<div style="float:left" class="discover_help">
 				<a href="/subscribe/"><img src="/img/icon/new_window.gif" border="none"></a>
 			</div>
 		</div>
 		<div id="import_feed" style="display:none">
-			<form target="_blank" action="/import/index" method="post" enctype="multipart/form-data">
+      <% form_tag '/import/index', :multipart => true, :target => '_blank' do %>
 				<b>file</b> : <input type="file" name="opml" style="width:230px"> <input type="submit" value=" Upload " style="width:90px">
-			</form>
-			<form target="_blank" action="/import/fetch" method="post" enctype="multipart/form-data">
-				<b>OPML URL</b> : <input type="text" name="opml_url" value="http://" style="width:280px"> <input type="submit" value=" Import from URL " style="width:90px">
-			</form>
+			<% end %>
+      <% form_tag '/import/fetch', :multipart => true, :target => '_blank' do %>
+				<b>OPML URL</b> : <input type="text" name="url" value="http://" style="width:280px"> <input type="submit" value=" Import from URL " style="width:90px">
+			<% end %>
 			<div style="float:left" class="discover_help">
 				<a href="/import/"><img src="/img/icon/new_window.gif" border="none"></a>
 			</div>

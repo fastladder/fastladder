@@ -1,113 +1,33 @@
 #!/usr/bin/env ruby
 require File.dirname(__FILE__) + '/../config/environment'
 
-require "crawler"
+require "fastladder/crawler"
 require "optparse"
-require "webrick/server"
-require "logger"
-
-class MyCrawler
-  include Crawler
-
-  def self.start(options = {})
-    self.new.start(options)
-  end
-
-  def start(options = {})
-    sleep_time = 0
-    crawl_status = nil
-    finish = false
-    until finish
-      logger.info "sleep: #{sleep_time}s"
-      sleep sleep_time
-      begin
-        if crawl_status = fetch_crawl_status(options)
-          sleep_time = 0
-          result = crawl(crawl_status)
-          if result[:error] == 0
-            logger.info "success: #{result[:message]}"
-          else
-            logger.info "error: #{result[:message]}"
-          end
-        else
-          sleep_time = sleep_time > 60 ? 60 : sleep_time + 1
-        end
-      rescue Exception, Interrupt => ex
-        case ex
-        when SignalException
-        when Interrupt
-          logger.warn "\n#{ex.message} trapped. Terminating..."
-          finish = true
-        else
-          logger.error %!Crawler error: #{ex.backtrace.join("\n")}!
-        end
-      ensure
-        if crawl_status and crawl_status.status == CRAWL_NOW
-          crawl_status.update_attribute(:status, CRAWL_OK)
-        end
-      end
-    end
-  end
-
-  def fetch_crawl_status(options = {})
-    crawl_status = nil
-    CrawlStatus.update_all("status = #{CRAWL_OK}", ["crawled_on < ?", 24.hours.ago])
-    CrawlStatus.transaction do
-      conditions = [
-        "crawl_statuses.status = ? AND feeds.subscribers_count > 0 AND (crawl_statuses.crawled_on is NULL OR crawl_statuses.crawled_on < ?)",
-        CRAWL_OK,
-        30.minutes.ago
-      ]
-      if crawl_status = CrawlStatus.find(:first, :conditions => conditions, :order => "crawl_statuses.crawled_on", :include => :feed)
-        crawl_status.update_attributes(:status => CRAWL_NOW, :crawled_on => Time.now)
-      end
-    end
-    crawl_status
-  end
-
-  def logger
-    $logger
-  end
-end
-
-class Tee
-  def initialize(filename)
-    @file = File.open(filename, "ab")
-  end
-
-  def write(str)
-    STDOUT.write(str)
-    @file.write(str)
-  end
-
-  def close
-    @file.close
-  end
-end
 
 options = {}
 ARGV.options do |opt|
   opt.on("-d", "--daemon", "Run daemonized in the background") { |v| options[:daemon] = v }
   opt.on("-f", "--force", "Crawl all feeds regardless of the crawler's status") { |v| options[:force] = v }
-  opt.on("-l", "--log=FILE", "Where to write log messages") { |v| options[:log] = v }
+  opt.on("-l", "--log=FILE", "Where to write log messages") { |v| options[:log_file] = v }
+  opt.on("-p", "--pid=FILE", "Where to write the PID") { |v| options[:pid_file] = v }
   opt.parse!
 end
 
-logfile = options[:log]
 if options[:daemon]
-  target = logfile || "#{RAILS_ROOT}/log/crawler.log"
+  options[:log_file] ||= "#{RAILS_ROOT}/log/crawler.log" if options[:daemon]
+  exit!(0) if fork
+  Process::setsid
+  pidfile = options[:pid_file] || File.join(RAILS_ROOT, 'tmp', 'pids', 'crawler.pid')
+  exit!(0) if fork
+  open(pidfile, 'w') { |f| f << Process.pid }
+  Dir::chdir('/')
+  File::umask(0)
+  STDIN.reopen('/dev/null')
+  STDOUT.reopen('/dev/null', 'w')
+  STDERR.reopen('/dev/null', 'w')
 end
-target ||= STDOUT
-# XXX: for debug
-target = Tee.new("#{RAILS_ROOT}/log/crawler.log")
 
-$logger = Logger.new(target)
-$logger.level = Logger::INFO
+#Process.setrlimit(Process::RLIMIT_RSS, 20.megabytes)
+#Process.setrlimit(Process::RLIMIT_AS, 20.megabytes)
 
-if options[:daemon]
-  WEBrick::Daemon.start do
-    MyCrawler.start(options)
-  end
-else
-  MyCrawler.start(options)
-end
+Fastladder::Crawler.start(options)

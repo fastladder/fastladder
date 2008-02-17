@@ -11,14 +11,14 @@ class ImportController < ApplicationController
   end
 
   def fetch
-      opml_uri = params["url"]
-#      begin
-        str = open(opml_uri).read
-        @opml = Opml.new(str)
-        return self.confirm
-#      rescue => e
-        render :json => e
-#      end
+    opml_uri = params["url"]
+    #begin
+      str = open(opml_uri).read
+      @opml = Opml.new(str)
+      return self.confirm
+    #rescue => e
+      render :json => e
+    #end
   end
 
   def finish

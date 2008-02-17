@@ -1,8 +1,4 @@
 require "digest/sha1"
-require "yaml"
-require "open-uri"
-require "feed-normalizer"
-require "crawler"
 
 class Member < ActiveRecord::Base
   # Virtual attribute for the unencrypted password
@@ -84,28 +80,18 @@ class Member < ActiveRecord::Base
       return nil
     end
     
-    if feed = Feed.find_by_feedlink(feedlink)
-
-    elsif options[:quick]
-      feed_data = {}
-      feed = Feed.create({
-         :feedlink => feedlink,
-         :link => feedlink,
-         :title => options[:title],
-         :description => ""
-      })
-      feed.create_crawl_status
-    else
-      unless feed_data = FeedNormalizer::FeedNormalizer.parse(Crawler::simple_fetch(feedlink))
-        return nil
+    unless feed = Feed.find_by_feedlink(feedlink)
+      if options[:quick]
+        feed = Feed.create({
+          :feedlink => feedlink,
+          :link => feedlink,
+          :title => options[:title],
+          :description => ""
+        })
+        feed.create_crawl_status
+      else
+        feed = Feed.create_from_uri(feedlink)
       end
-      feed = Feed.create({
-        :feedlink => feedlink,
-        :link => feed_data.urls[0] || feedlink,
-        :title => feed_data.title || feed_data.link || "",
-        :description => feed_data.description || "",
-      })
-      feed.create_crawl_status
     end
 
     options.delete(:quick)

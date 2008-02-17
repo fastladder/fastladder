@@ -1,5 +1,3 @@
-require "fastladder/feedfinder"
-require "open-uri"
 require "feed-normalizer"
 
 class Api::FeedController < ApplicationController
@@ -28,7 +26,7 @@ class Api::FeedController < ApplicationController
         end
         feeds << result
       else
-        unless feed_dom = FeedNormalizer::FeedNormalizer.parse(open(feedlink))
+        unless feed_dom = FeedNormalizer::FeedNormalizer.parse(Fastladder::simple_fetch(feedlink))
           next
         end
         feeds << {
