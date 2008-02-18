@@ -12,6 +12,7 @@ end
 module Fastladder
   class Crawler
     ITEMS_LIMIT = 500
+    REDIRECT_LIMIT = 5
     CRAWL_OK = 1
     CRAWL_NOW = 10
     GETA = [12307].pack("U")
@@ -76,38 +77,47 @@ module Fastladder
         :error => false,
         :response_code => nil,
       }
-      begin 
-        @logger.info "fetch: #{feed.feedlink}"
-        response = Fastladder::fetch(feed.feedlink, :modified_on => feed.modified_on)
-      end
-      @logger.info "HTTP status: [#{response.code}] #{feed.feedlink}"
-      case response
-      when Net::HTTPNotModified
-        # nothing to do
-      when Net::HTTPSuccess
-        ret = update(feed, response)
-        result[:message] = "#{ret[:new_items]} new items, #{ret[:updated_items]} updated items"
-      when Net::HTTPClientError, Net::HTTPServerError
-        result[:message] = "Error: #{response.code} #{response.message}"
-        result[:error] = true
-        #when Net::HTTPUnauthorized
-        #  ...
-        #when Net::HTTPMovedPermanently
-        #  if crawl_status.http_status == 301  # Moved Permanently
-        #    if crawl_status.response_changed_on < 1.week.ago
-        #      feed.feedlink = feedlink
-        #      modified_on = nil
-        #    end
-        #  end
-      when Net::HTTPRedirection
-        @logger.info "Redirect: #{feedlink} => #{response["location"]}"
-        feed.feedlink = response["location"]
-        feed.modified_on = nil
-        feed.save
-      else
-        # HTTPUnknownResponse, HTTPInformation
-        result[:message] = "Error: #{response.code} #{response.message}"
-        result[:error] = true
+      REDIRECT_LIMIT.times do
+        begin 
+          @logger.info "fetch: #{feed.feedlink}"
+          response = Fastladder::fetch(feed.feedlink, :modified_on => feed.modified_on)
+        end
+        @logger.info "HTTP status: [#{response.code}] #{feed.feedlink}"
+        case response
+        when Net::HTTPNotModified
+          break
+        when Net::HTTPSuccess
+          ret = update(feed, response)
+          result[:message] = "#{ret[:new_items]} new items, #{ret[:updated_items]} updated items"
+          break
+        when Net::HTTPClientError, Net::HTTPServerError
+          result[:message] = "Error: #{response.code} #{response.message}"
+          result[:error] = true
+          break
+=begin
+        when Net::HTTPUnauthorized
+          ...
+          break
+        when Net::HTTPMovedPermanently
+          if crawl_status.http_status == 301  # Moved Permanently
+            if crawl_status.response_changed_on < 1.week.ago
+              feed.feedlink = feedlink
+              modified_on = nil
+            end
+          end
+          break
+=end
+        when Net::HTTPRedirection
+          @logger.info "Redirect: #{feedlink} => #{response["location"]}"
+          feed.feedlink = response["location"]
+          feed.modified_on = nil
+          feed.save
+        else
+          # HTTPUnknownResponse, HTTPInformation
+          result[:message] = "Error: #{response.code} #{response.message}"
+          result[:error] = true
+          break
+        end
       end
       result[:response_code] = response.code.to_i
       result
