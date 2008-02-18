@@ -25,6 +25,7 @@ module Fastladder
         logger.level = options[:log_level] || Logger::INFO
       end
 
+      logger.warn '=> Booting FeedFetcher...'
       self.new(logger).run
     end
 
@@ -55,7 +56,7 @@ module Fastladder
         rescue TimeoutError
           @logger.error "Time out: #{$!}"
         rescue Interrupt
-          @logger.warn "\n#{$!} trapped. Terminating..."
+          @logger.warn "\n=> #{$!.message} trapped. Terminating..."
           finish = true
         rescue Exception
           @logger.error %!Crawler error: #{$!.message}\n#{$!.backtrace.join("\n")}!
@@ -64,7 +65,6 @@ module Fastladder
             crawl_status.status = CRAWL_OK
             crawl_status.save
           end
-          GC.start
         end
       end
     end
@@ -196,6 +196,7 @@ module Fastladder
         favicon ||= Favicon.new(:feed => feed)
         favicon.image = image if favicon.image != image
         favicon.save
+        GC.start
       end
 
       result

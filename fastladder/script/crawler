@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
-require File.dirname(__FILE__) + '/../config/environment'
 
-require "fastladder/crawler"
 require "optparse"
 
 options = {}
@@ -10,8 +8,12 @@ ARGV.options do |opt|
   opt.on("-f", "--force", "Crawl all feeds regardless of the crawler's status") { |v| options[:force] = v }
   opt.on("-l", "--log=FILE", "Where to write log messages") { |v| options[:log_file] = v }
   opt.on("-p", "--pid=FILE", "Where to write the PID") { |v| options[:pid_file] = v }
+  opt.on("-e", "--environment=NAME", "Specifies the environment to run this server under (test/development/production)") { |v| ENV['RAILS_ENV'] = v }
   opt.parse!
 end
+
+require File.dirname(__FILE__) + '/../config/environment'
+require "fastladder/crawler"
 
 if options[:daemon]
   options[:log_file] ||= "#{RAILS_ROOT}/log/crawler.log" if options[:daemon]
@@ -27,7 +29,8 @@ if options[:daemon]
   STDERR.reopen('/dev/null', 'w')
 end
 
-#Process.setrlimit(Process::RLIMIT_RSS, 20.megabytes)
-#Process.setrlimit(Process::RLIMIT_AS, 20.megabytes)
-
 Fastladder::Crawler.start(options)
+begin
+  File.delete(options[:pid_file]) if File.exists?(options[:pid_file])
+rescue
+end
