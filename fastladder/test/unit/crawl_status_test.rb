@@ -1,10 +1,13 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class CrawlStatusTest < Test::Unit::TestCase
-  fixtures :crawl_statuses
+  fixtures :crawl_statuses, :feeds
 
-  # Replace this with your real tests.
-  def test_truth
-    assert true
+  def setup
+    @status = CrawlStatus.find(:first)
+  end
+
+  def test_feed
+    assert_not_nil(@status.feed)
   end
 end

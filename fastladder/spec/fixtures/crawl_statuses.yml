@@ -1,0 +1,12 @@
+fastladder_blog:
+  id: 1
+  feed_id: 1
+  status: 1
+  error_count: 0
+  error_message: ""
+  http_status: 304
+  digest: NULL
+  update_frequency: 0
+  crawled_on: <%= 12.hours.ago.to_s :db %>
+  created_on: <%= 1.days.ago.to_s :db %>
+  updated_on: <%= 12.hours.ago.to_s :db %>
