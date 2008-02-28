@@ -37,3 +37,7 @@ Spec::Runner.configure do |config|
   # config.mock_with :flexmock
   # config.mock_with :rr
 end
+
+def embed_file(file_name)
+  " !binary |\n" + Base64.encode64(File.read("#{RAILS_ROOT}/spec/fixtures/files/#{file_name}")).gsub(/^/, '    ')
+end

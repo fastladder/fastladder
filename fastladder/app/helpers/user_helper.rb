@@ -17,7 +17,9 @@ END
     end
   end
 
+=begin
   def disp_users(num)
     return num.to_s + " " + (num > 1 ? "users" : "user")
   end
+=end
 end

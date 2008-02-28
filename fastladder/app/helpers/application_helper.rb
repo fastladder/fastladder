@@ -5,4 +5,8 @@ module ApplicationHelper
       %Q{<script type="text/javascript" src="/js/#{str}.js" charset="utf-8"></script>}
     }.join("\n")
   end
+
+  def disp_users(num)
+    "#{num} #{(num > 1 ? "users" : "user")}"
+  end
 end

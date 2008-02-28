@@ -1,0 +1,12 @@
+fastladder_blog:
+  id: 1
+  feedlink: 'http://blog.fastladder.com/blog/rss.xml'
+  link: 'http://blog.fastladder.com'
+  title: 'Fastladder Blog'
+  description: ""
+  subscribers_count: 1
+  image: NULL
+  icon: NULL
+  modified_on: <%= 1.hour.ago.to_s :db %>
+  created_on: <%= 1.days.ago.to_s :db %>
+  updated_on: <%= 2.hours.ago.to_s :db %>

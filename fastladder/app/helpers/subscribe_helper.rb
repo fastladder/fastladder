@@ -10,8 +10,10 @@ module SubscribeHelper
       "(" + disp_users(feed.subscribers_count) + ")"
     end
   end
-  
+
+=begin
   def disp_users(num)
-    num.to_s + " " + (num > 1 ? "users" : "user")
+    return num.to_s + " " + (num > 1 ? "users" : "user")
   end
+=end
 end
