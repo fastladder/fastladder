@@ -25,9 +25,10 @@ class ExportController < ApplicationController
     end
 
     output = SimpleOPML.new
-    root = folders.delete ""
-    root.each do |item|
-      output.add_item(item)
+    folders.delete "" do |root|
+      root.each do |item|
+        output.add_item(item)
+      end
     end
     folders.each do |key, value|
       output.add_outline(key, value)
