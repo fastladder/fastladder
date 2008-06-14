@@ -78,3 +78,67 @@ describe Feed, 'when have no favicon' do
     @feed.icon.should be_eql('/img/icon/default.png')
   end
 end
+
+describe Feed, 'when subscribed by a member' do
+  fixtures :feeds
+
+  before :each do
+    @feed = feeds(:fastladder_blog)
+  end
+
+  before :each do
+    @member = mock('Member')
+    @member.should_receive(:subscribed).with(@feed).and_return(@feed)
+  end
+
+  it 'should be subscribed' do
+    # ???
+    @feed.subscribed(@member).should be_eql(@feed)
+  end
+end
+
+describe Feed, 'when update subscribers count' do
+  fixtures :feeds
+
+  before :each do
+    @feed = feeds(:fastladder_blog)
+  end
+
+  before :each do 
+    @new_count = 2
+    @subscriptions = mock('Subscriptions')
+    @subscriptions.should_receive(:size).at_least(:once).and_return(@new_count)
+    @feed.should_receive(:subscriptions).at_least(:once).and_return(@subscriptions)
+  end
+
+  it 'should updated count by number of subscritions' do
+    @old_count = @feed.subscribers_count
+    @feed.update_subscribers_count
+    @feed.subscribers_count.should be_equal(@new_count)
+    @feed.subscribers_count.should_not be_equal(@old_count)
+  end
+end
+
+describe Feed, 'when execute crawl' do
+  fixtures :feeds
+
+  before :each do
+    @feed = feeds(:fastladder_blog)
+  end
+
+  it 'should fetch feed and update item if feed is crawlable' do
+    @crawl_status = mock('CrawlStatus')
+    @crawl_status.should_receive(:status).and_return(Fastladder::Crawler::CRAWL_OK)
+    @crawl_status.should_receive(:update_attribute).with(:status, Fastladder::Crawler::CRAWL_NOW)
+    @crawl_status.should_receive(:update_attribute).with(:status, Fastladder::Crawler::CRAWL_OK)
+    @feed.should_receive(:crawl_status).at_least(3).times.and_return(@crawl_status)
+    @feed.crawl
+  end
+
+  it 'should not crawl if feed is not crawlable' do
+    @crawl_status = mock('CrawlStatus')
+    @crawl_status.should_receive(:status).and_return(Fastladder::Crawler::CRAWL_NOW)
+    @feed.should_receive(:crawl_status).once.and_return(@crawl_status)
+    @feed.crawl
+  end
+end

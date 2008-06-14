@@ -1,0 +1,10 @@
+fastladder_blog:
+  id: 1
+  member_id: 1
+  feed_id: 1
+  rate: 5
+  has_unread: 0
+  public: true
+  ignore_notify: false
+  created_on: <%= 1.days.ago.to_s :db %>
+  updated_on: <%= 2.hours.ago.to_s :db %>

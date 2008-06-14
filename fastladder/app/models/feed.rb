@@ -65,7 +65,7 @@ class Feed < ActiveRecord::Base
     rescue
       logger.error "Crawler error: #{$!}"
     ensure
-      crawl_status.update_attribute(:status, Crawler::CRAWL_OK)
+      crawl_status.update_attribute(:status, Fastladder::Crawler::CRAWL_OK)
     end
   end
 end

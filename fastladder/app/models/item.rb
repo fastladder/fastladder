@@ -1,4 +1,5 @@
 require "string_utils"
+
 class Item < ActiveRecord::Base
   belongs_to :feed
 

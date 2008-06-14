@@ -83,3 +83,5 @@ Fastladder::Initializer.run do |config|
   #config.read_timeout = 60
   #config.crawler_user_agent = "Fastladder FeedFetcher/#{Fastladder::Version} (http://fastladder.org/)"
 end
+
+require 'gettext/rails'

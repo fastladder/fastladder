@@ -1,0 +1,16 @@
+fastladder_entry:
+  id: 1
+  feed_id: 1
+  link: 'http://blog.fastladder.com/hogehoge'
+  title: 'hoge'
+  body: 'Opensource Fastladder release!'
+  author: 'livedoor'
+  category: 'hoge'
+  enclosure: ""
+  enclosure_type: ""
+  digest: ""
+  version: 2
+  updated_on: <%= 1.minute.ago.to_s :db %>
+  modified_on: <%= 5.minute.ago.to_s :db %>
+  stored_on: <%= 6.minute.ago.to_s :db %>
+  created_on: <%= 6.hours.ago.to_s :db %>
