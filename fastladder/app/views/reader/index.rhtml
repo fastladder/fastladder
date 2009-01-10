@@ -10,7 +10,7 @@
 	<link rel="shortcut icon" href="/favicon.ico">
 </head>
 <script type="text/javascript">
-var ApiKey = "<%= session.session_id %>";
+var ApiKey = "<%= URI.encode(session.session_id) %>";
 var Language = 'English';
 
 function ads_mouseover(){
