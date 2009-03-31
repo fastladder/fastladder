@@ -50,7 +50,7 @@ Rails::Initializer.run do |config|
     :session_key => '_fastladder_session',
     :secret      => secret
   }
-  config.gem "gettext", :lib => "gettext/rails"
+  config.gem 'gettext', :lib => 'gettext/rails', :version => '~>1.93'
 
   # Use the database for sessions instead of the cookie-based default,
   # which shouldn't be used to store highly confidential information
