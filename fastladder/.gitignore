@@ -1,0 +1,5 @@
+log
+tmp
+config/secret.txt
+db/schema.rb
+lib/libfreeimage-3.10.0.dylib
