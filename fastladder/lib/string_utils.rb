@@ -7,6 +7,8 @@ class String
   # for strip_tags
   #include ActionView::Helpers::TextHelper
   include ActionView::Helpers::SanitizeHelper
+  extend ActionView::Helpers::SanitizeHelper::ClassMethods
+
   LAME_CHARS = [0x200c, 0x200d, 0x200e, 0x200f, 0x2028, 0x2029, 0x202a, 0x202b, 0x202c,0x202d, 0x202e, 0x206a, 0x206b, 0x206c, 0x206d, 0x206e, 0x206f, 0xfeff].pack("U*")
 
   def utf8_roundtrip
