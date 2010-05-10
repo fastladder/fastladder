@@ -1,0 +1,14 @@
+source :gemcutter
+
+group :development do
+	gem 'locale'
+	gem 'locale_rails'
+	gem 'gettext'
+	gem 'gettext_activerecord'
+	gem 'rfeedfinder'
+	gem 'feed-normalizer'
+	gem 'opml'
+	gem 'mongrel'
+	gem 'sqlite3-ruby'
+	gem 'mysql'
+end

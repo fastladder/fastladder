@@ -1,0 +1,79 @@
+--- 
+hash: a68d1841ba13133ab9af98724d504ee8aabf5dea
+sources: 
+- Rubygems: 
+    uri: http://gemcutter.org
+specs: 
+- activesupport: 
+    version: 2.3.5
+- activerecord: 
+    version: 2.3.5
+- hpricot: 
+    version: 0.8.2
+- simple-rss: 
+    version: 1.2.2
+- feed-normalizer: 
+    version: 1.5.2
+- gem_plugin: 
+    version: 0.2.3
+- locale: 
+    version: 2.0.5
+- gettext: 
+    version: 2.1.0
+- gettext_activerecord: 
+    version: 2.1.0
+- htmlentities: 
+    version: 4.2.1
+- locale_rails: 
+    version: 2.0.5
+- mongrel: 
+    version: 1.1.6
+- mysql: 
+    version: 2.8.1.1
+- opml: 
+    version: 1.0.0
+- rfeedfinder: 
+    version: 0.9.13
+- sqlite3-ruby: 
+    version: 1.2.5
+dependencies: 
+  locale: 
+    version: ">= 0"
+    group: 
+    - :development
+  locale_rails: 
+    version: ">= 0"
+    group: 
+    - :development
+  gettext: 
+    version: ">= 0"
+    group: 
+    - :development
+  gettext_activerecord: 
+    version: ">= 0"
+    group: 
+    - :development
+  rfeedfinder: 
+    version: ">= 0"
+    group: 
+    - :development
+  feed-normalizer: 
+    version: ">= 0"
+    group: 
+    - :development
+  opml: 
+    version: ">= 0"
+    group: 
+    - :development
+  mongrel: 
+    version: ">= 0"
+    group: 
+    - :development
+  sqlite3-ruby: 
+    version: ">= 0"
+    group: 
+    - :development
+  mysql: 
+    version: ">= 0"
+    group: 
+    - :development
