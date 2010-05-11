@@ -11,7 +11,7 @@ module ImageUtils
     # for Unix (Linux, etc.)
     libs = %w(libfreeimage.so libfreeimage.so.3)
     # for Mac OS X
-    libs << "#{RAILS_ROOT}/lib/libfreeimage-3.10.0.dylib"
+    libs << "#{RAILS_ROOT}/lib/libfreeimage.3.13.1.dylib"
     lib = libs.shift
     begin
       dlload lib

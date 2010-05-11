@@ -2,48 +2,77 @@
 dependencies: 
   mongrel: 
     group: 
-    - :development
+    - :default
     version: ">= 0"
-  mysql: 
+  rails: 
     group: 
-    - :development
-    version: ">= 0"
+    - :default
+    version: = 2.3.5
+    require: []
+
   opml: 
     group: 
-    - :development
+    - :default
     version: ">= 0"
   sqlite3-ruby: 
     group: 
-    - :development
+    - :default
+    version: ">= 0"
+  mysql: 
+    group: 
+    - :production
+    version: ">= 0"
+  rspec-rails: 
+    group: 
+    - :test
+    - :cucumber
     version: ">= 0"
   locale_rails: 
     group: 
-    - :development
+    - :default
     version: ">= 0"
   rfeedfinder: 
     group: 
-    - :development
+    - :default
+    version: ">= 0"
+  restful_authentication: 
+    group: 
+    - :default
+    version: ">= 0"
+  gettext_rails: 
+    group: 
+    - :default
     version: ">= 0"
   gettext: 
     group: 
-    - :development
+    - :default
     version: ">= 0"
   locale: 
     group: 
-    - :development
+    - :default
     version: ">= 0"
   feed-normalizer: 
     group: 
-    - :development
+    - :default
     version: ">= 0"
   gettext_activerecord: 
     group: 
-    - :development
+    - :default
     version: ">= 0"
 specs: 
+- rake: 
+    version: 0.8.7
 - activesupport: 
     version: 2.3.5
+- rack: 
+    version: 1.0.1
+- actionpack: 
+    version: 2.3.5
+- actionmailer: 
+    version: 2.3.5
 - activerecord: 
+    version: 2.3.5
+- activeresource: 
     version: 2.3.5
 - hpricot: 
     version: 0.8.2
@@ -59,21 +88,31 @@ specs:
     version: 2.1.0
 - gettext_activerecord: 
     version: 2.1.0
-- htmlentities: 
-    version: 4.2.1
 - locale_rails: 
     version: 2.0.5
+- rails: 
+    version: 2.3.5
+- gettext_rails: 
+    version: 2.1.0
+- htmlentities: 
+    version: 4.2.1
 - mongrel: 
     version: 1.1.6
 - mysql: 
-    version: 2.8.1
+    version: 2.8.1.1
 - opml: 
     version: 1.0.0
+- restful_authentication: 
+    version: 1.1.6
 - rfeedfinder: 
     version: 0.9.13
+- rspec: 
+    version: 1.3.0
+- rspec-rails: 
+    version: 1.3.2
 - sqlite3-ruby: 
     version: 1.2.5
-hash: a68d1841ba13133ab9af98724d504ee8aabf5dea
+hash: 9db31cb3ca652c0ed1fb96b4310c468fe5dd1776
 sources: 
 - Rubygems: 
     uri: http://gemcutter.org

@@ -1,14 +1,22 @@
-source :gemcutter
+source :rubygems
 
-group :development do
-	gem 'locale'
-	gem 'locale_rails'
-	gem 'gettext'
-	gem 'gettext_activerecord'
-	gem 'rfeedfinder'
-	gem 'feed-normalizer'
-	gem 'opml'
-	gem 'mongrel'
-	gem 'sqlite3-ruby'
+gem 'rails', '2.3.5', :require => nil
+gem 'locale'
+gem 'locale_rails'
+gem 'gettext'
+gem 'gettext_activerecord'
+gem 'gettext_rails'
+gem 'rfeedfinder'
+gem 'feed-normalizer'
+gem 'opml'
+gem 'mongrel'
+gem 'sqlite3-ruby'
+gem 'restful_authentication'
+
+group :production do
 	gem 'mysql'
+end
+
+group :test, :cucumber do
+	gem 'rspec-rails'
 end
