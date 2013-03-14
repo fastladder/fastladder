@@ -1,4 +1,3 @@
-require "string_utils"
 class Pin < ActiveRecord::Base
   belongs_to :member
 

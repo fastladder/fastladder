@@ -1,14 +1,13 @@
-require "feed-normalizer"
-
 class Api::FeedController < ApplicationController
-  verify_nothing :session => :member
+  before_filter :login
+  #verify_nothing :session => :member
   #verify_nothing :method => :post, :except => [:discover, :subscribed]
-  verify_json :params => :url, :only => :discover
-  verify_json :params => :feedlink, :only => :subscribe
-  verify_json :params => :subscribe_id, :only => [:unsubscribe, :update, :move]
-  verify_json :params => [:subscribe_id, :rate], :only => :set_rate
-  verify_json :params => [:subscribe_id, :ignore], :only => :set_notify
-  verify_json :params => [:subscribe_id, :public], :only => :set_public
+  #verify_json :params => :url, :only => :discover
+  #verify_json :params => :feedlink, :only => :subscribe
+  #verify_json :params => :subscribe_id, :only => [:unsubscribe, :update, :move]
+  #verify_json :params => [:subscribe_id, :rate], :only => :set_rate
+  #verify_json :params => [:subscribe_id, :ignore], :only => :set_notify
+  #verify_json :params => [:subscribe_id, :public], :only => :set_public
   skip_before_filter :verify_authenticity_token
 
   def discover
@@ -26,14 +25,16 @@ class Api::FeedController < ApplicationController
         end
         feeds << result
       else
-        unless feed_dom = FeedNormalizer::FeedNormalizer.parse(Fastladder::simple_fetch(feedlink))
+        html = Fastladder::simple_fetch(feedlink)
+        logger.debug html
+        unless feed_dom = FeedNormalizer::FeedNormalizer.parse(html)
           next
         end
         feeds << {
           :subscribers_count => 0,
-          :feedlink => feedlink,
-          :link => feed_dom.urls[0] || feedlink,
-          :title => feed_dom.title || feed_dom.link || "",
+          :feedlink => feedlink.html_escape,
+          :link => (feed_dom.urls[0] || feedlink).html_escape,
+          :title => (feed_dom.title || feed_dom.link || "").utf8_roundtrip.html_escape,
         }
       end
     end
@@ -45,11 +46,11 @@ class Api::FeedController < ApplicationController
     options = {
       :folder_id => 0,
       :rate => 0,
-      :public => member.default_public,
+      :public => @member.default_public,
     }
     if params[:folder_id]
       folder_id = params[:folder_id].to_i
-      if member.folders.exists?(folder_id)
+      if @member.folders.exists?(folder_id)
         options[:folder_id] = folder_id
       else
         return render_json_status(false)
@@ -194,7 +195,7 @@ class Api::FeedController < ApplicationController
 
 protected
   def subscribe_feed(feedlink, options)
-    member.subscribe_feed(feedlink, options)
+    @member.subscribe_feed(feedlink, options)
   end
 
   def get_subscription

@@ -11,10 +11,11 @@ class MembersController < ApplicationController
     # reset_session
     @member = Member.new(params[:member])
     @member.save!
-    self.current_member = @member
+    session[:member_id] = @member.id
     redirect_back_or_default('/')
     flash[:notice] = "Thanks for signing up!"
   rescue ActiveRecord::RecordInvalid
+    flash[:error] = @member.errors.map{|x| x}.join(' ')
     render :action => 'new'
   end
 end

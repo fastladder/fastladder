@@ -1,4 +1,0 @@
-fastladder_blog:
-  id: 1
-  feed_id: 1
-  image: <%= embed_file('favicon.ico') %>

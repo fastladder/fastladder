@@ -1,10 +1,11 @@
 require "string_utils"
 class ApiController < ApplicationController
-  verify_nothing :session => :member
+  before_filter :login
+  #verify_nothing :session => :member
   #verify_nothing :method => :post, :only => [:subs, :lite_subs, :error_subs, :folders]
-  verify_json :params => :subscribe_id, :only => :touch_all
-  verify_json :params => [:timestamp, :subscribe_id], :only => :touch
-  verify_json :params => :since, :only => [:item_count, :unread_count]
+  #verify_json :params => :subscribe_id, :only => :touch_all
+  #verify_json :params => [:timestamp, :subscribe_id], :only => :touch
+  #verify_json :params => :since, :only => [:item_count, :unread_count]
   before_filter :find_sub, :only => [:all, :unread]
   skip_before_filter :verify_authenticity_token
 
@@ -75,7 +76,7 @@ class ApiController < ApplicationController
     from_id = (params[:from_id] || 0).to_i
     items = []
     conditions = params[:unread].to_i != 0 ? ["has_unread = ?", true] : nil
-    member.subscriptions.find(:all, :conditions => conditions, :order => "subscriptions.id", :include => [:folder, { :feed => :crawl_status }]).each do |sub|
+    @member.subscriptions.find(:all, :conditions => conditions, :order => "subscriptions.id", :include => [:folder, { :feed => :crawl_status }]).each do |sub|
       unread_count = sub.feed.items.count(:conditions => sub.viewed_on ? ["stored_on >= ?", sub.viewed_on] : nil)
       next if params[:unread].to_i > 0 and unread_count == 0
       next if sub.id < from_id
@@ -109,7 +110,7 @@ class ApiController < ApplicationController
 
   def lite_subs
     items = []
-    member.subscriptions.find(:all, :include => [:folder, :feed]).each do |sub|
+    @member.subscriptions.find(:all, :include => [:folder, :feed]).each do |sub|
       feed = sub.feed
       modified_on = feed.modified_on
       item = {
@@ -138,7 +139,7 @@ class ApiController < ApplicationController
   def folders
     names = []
     name2id = {}
-    member.folders.each do |folder|
+    @member.folders.each do |folder|
       name = (folder.name || "").utf8_roundtrip.html_escape
       names << name
       name2id[name] = folder.id
@@ -164,7 +165,7 @@ class ApiController < ApplicationController
 protected
   def find_sub
     @id = (params[:subscribe_id] || params[:id] || 0).to_i
-    unless @sub = member.subscriptions.find_by_id(@id, :include => :feed)
+    unless @sub = @member.subscriptions.find_by_id(@id, :include => :feed)
       render NOTHING
       return false
     end
@@ -173,7 +174,7 @@ protected
 
   def count_items(options = {})
     conditions = options[:unread] ? ["has_unread = ?", true] : nil
-    stored_on_list = member.subscriptions.find(:all, :conditions => conditions, :order => "id").map do |sub|
+    stored_on_list = @member.subscriptions.find(:all, :conditions => conditions, :order => "id").map do |sub|
       {
         :subscription => sub,
         :stored_on => sub.feed.items.find(:all, :select => "stored_on", :order => "stored_on DESC", :limit => MAX_UNREAD_COUNT).map { |item| item.stored_on.to_time },

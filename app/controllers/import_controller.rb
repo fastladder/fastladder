@@ -3,19 +3,22 @@ require "open-uri"
 require "string_utils"
 
 class ImportController < ApplicationController
+  before_filter :login
   def index
      if request.post?
-       @opml = Opml.new(params["opml"])
+       opml = params[:opml].read.to_s
+       @opml = Opml.new opml
+       logger.debug @opml
        return confirm
      end
   end
 
   def fetch
-    opml_uri = params["url"]
+    opml_uri = params[:url]
     #begin
       str = open(opml_uri).read
       @opml = Opml.new(str)
-      return self.confirm
+      return confirm
     #rescue => e
       render :json => e
     #end
@@ -40,13 +43,13 @@ class ImportController < ApplicationController
       title = titles[i]
       (folder_name, feedlink) = feed.split(":", 2)
       # TODO: folder find or create
-      folder = Folder.find_or_create_by_member_id_and_name(member.id, folder_name)
+      folder = Folder.find_or_create_by_member_id_and_name(@member.id, folder_name)
       options = {
         :folder_id => folder.id,
         :title  => title,
         :quick => true,
       }
-      member.subscribe_feed(feedlink, options)
+      @member.subscribe_feed(feedlink, options)
     end
     
     # render :json => feedlinks.to_json
@@ -70,7 +73,7 @@ class ImportController < ApplicationController
         next unless item.attributes["xml_url"]
         feed = Feed.find_by_feedlink(item.attributes["xml_url"])
         if feed
-          item.attributes["subscribed"] = member.subscribed(feed)
+          item.attributes["subscribed"] = @member.subscribed(feed)
         end
         @folders[folder_name] << item.attributes
       end
@@ -82,9 +85,9 @@ class ImportController < ApplicationController
     }.map {|item|
       feed = Feed.find_by_feedlink(item.attributes["xml_url"])
       if feed
-        item.attributes["subscribed"] = member.subscribed(feed)
+        item.attributes["subscribed"] = @member.subscribed(feed)
       end
-      item.attributes["subscribed"] = member.subscribed(item.attributes["xml_url"])
+      item.attributes["subscribed"] = @member.subscribed(item.attributes["xml_url"])
       item.attributes
     }
     if toplevel.size > 0 

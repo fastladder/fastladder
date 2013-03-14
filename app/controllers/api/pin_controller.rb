@@ -1,12 +1,12 @@
 class Api::PinController < ApplicationController
-  verify_nothing :session => :member
+  before_filter :login
   #verify_nothing :method => :post
-  verify_json :params => [:link, :title], :only => :add
-  verify_json :params => :link, :only => :remove
+  #verify_json :params => [:link, :title], :only => :add
+  #verify_json :params => :link, :only => :remove
   skip_before_filter :verify_authenticity_token
   
   def all
-    render :json => member.pins.to_json
+    render :json => @member.pins.to_json
   end
 
   def add

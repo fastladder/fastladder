@@ -1,6 +1,10 @@
 class ContentsController < ApplicationController
-  layout nil, :only => :index
-  def config
+  before_filter :login
+  def configure
+    render layout:false
+  end
 
+  def guide
+    render layout:false
   end
 end

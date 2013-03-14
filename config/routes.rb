@@ -1,58 +1,34 @@
-ActionController::Routing::Routes.draw do |map|
-  # The priority is based upon order of creation: first created -> highest priority.
+Fastladder::Application.routes.draw do
+  match 'api/config/load' => 'api/config#getter'
+  match 'api/config/save' => 'api/config#setter'
 
-  # Sample of regular route:
-  #   map.connect 'products/:id', :controller => 'catalog', :action => 'view'
-  # Keep in mind you can assign values other than :controller and :action
-  map.connect "api/config/load", :controller => "api/config", :action => "get"
-  map.connect "api/config/save", :controller => "api/config", :action => "put"
+  match 'api/:action' => 'api'
+  match 'subscribe/:url' => 'subscribe#confirm'
+  match 'import/:url' => 'import#fetch'
+  match 'about/:url' => 'about#index'
+  match 'user/:login_name/:action' => 'user'
+  match 'user/:login_name' => 'user#index'
+  match 'icon/:feed' => 'icon#get'
+  match 'favicon/:feed' => 'icon#get'
 
-  map.connect "/api/:action", :controller => "api"
-  map.connect "/:controller/:action", :requirements =>{:controller => /api\/\w+/}
-  map.connect "/subscribe/:url", 
-      :controller => "subscribe", :action => "confirm", :requirements =>{:url => /https?.+/}
-  map.connect "/import/:url", 
-      :controller => "import", :action => "fetch", :requirements =>{:url => /https?.+/}
-  map.connect "/about/:url", 
-      :controller => "about", :action => "index", :requirements =>{:url => /https?.+/}
-  map.connect "/user/:login_name/:action", 
-      :controller => "user"
-  map.connect "/user/:login_name", 
-      :controller => "user", :action => "index"
-  map.connect "/icon/*feed", :controller => "icon", :action => "get"
-  map.connect "/favicon/*feed", :controller => "icon", :action => "get"
+  resource :members
+  match 'signup' => 'members#new'
 
-  # Sample of named route:
-  #   map.purchase 'products/:id/purchase', :controller => 'catalog', :action => 'purchase'
-  # This route can be invoked with purchase_url(:id => product.id)
+  resource :session
+  match 'login' => 'sessions#new', as: :login
+  match 'logout' => 'sessions#destroy'
 
-  # Sample resource route (maps HTTP verbs to controller actions automatically):
-  #   map.resources :products
-  map.resources :members
-  map.signup "signup", :controller => "members", :action => "new"
+  root to: 'reader#welcome'
 
-  map.resource :session
-  map.login "login", :controller => "sessions", :action => "new"
-  map.logout "logout", :controller => "sessions", :action => "destroy"
+  match 'reader' => 'reader#index'
+  match 'contents/guide' => 'contents#guide'
+  match 'contents/config' => 'contents#configure'
+  match 'api/pin/all' => 'api/pin#all'
+  match 'api/feed/discover' => 'api/feed#discover'
+  match 'api/feed/subscribe' => 'api/feed#subscribe'
 
-  # Sample resource route with options:
-  #   map.resources :products, :member => { :short => :get, :toggle => :post }, :collection => { :sold => :get }
+  match 'import' => 'import#index'
 
-  # Sample resource route with sub-resources:
-  #   map.resources :products, :has_many => [ :comments, :sales ], :has_one => :seller
+  match ':controller(/:action(/:id))(.:format)'
 
-  # Sample resource route within a namespace:
-  #   map.namespace :admin do |admin|
-  #     # Directs /admin/products/* to Admin::ProductsController (app/controllers/admin/products_controller.rb)
-  #     admin.resources :products
-  #   end
-
-  # You can have the root of your site routed with map.root -- just remember to delete public/index.html.
-  map.root :controller => "reader", :action => "welcome"
-
-  # See how all your routes lay out with "rake routes"
-
-  # Install the default routes as the lowest priority.
-  map.connect ':controller/:action/:id'
-  map.connect ':controller/:action/:id.:format'
 end

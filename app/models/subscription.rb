@@ -1,4 +1,5 @@
 class Subscription < ActiveRecord::Base
+  attr_accessible :feed_id, :has_unread, :folder_id, :rate, :public
   belongs_to :member
   belongs_to :feed
   belongs_to :folder

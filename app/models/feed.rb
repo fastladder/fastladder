@@ -1,8 +1,9 @@
-require "string_utils"
-require "feed-normalizer"
-require "fastladder/crawler"
+#require "string_utils"
+#require "feed-normalizer"
+#require "fastladder/crawler"
 
 class Feed < ActiveRecord::Base
+  attr_accessible :feedlink, :link, :title, :description
   has_one :crawl_status
   has_one :favicon
   has_many :items
