@@ -12,7 +12,7 @@ class MembersController < ApplicationController
     @member = Member.new(params[:member])
     @member.save!
     session[:member_id] = @member.id
-    redirect_back_or_default('/')
+    redirect_to '/'
     flash[:notice] = "Thanks for signing up!"
   rescue ActiveRecord::RecordInvalid
     flash[:error] = @member.errors.map{|x| x}.join(' ')

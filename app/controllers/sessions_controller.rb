@@ -3,7 +3,7 @@ class SessionsController < ApplicationController
   # render new.rhtml
   def new
     if Member.count == 0
-      redirect_to "/signup"
+      redirect_to signup_path
     end
   end
 

@@ -12,7 +12,7 @@ Fastladder::Application.routes.draw do
   match 'favicon/:feed' => 'icon#get'
 
   resource :members
-  match 'signup' => 'members#new'
+  match 'signup' => 'members#new', as: :sign_up
 
   resource :session
   match 'login' => 'sessions#new', as: :login
