@@ -9,7 +9,7 @@ gem 'sqlite3'
 gem 'haml'
 gem 'feed-normalizer'
 gem 'rfeedfinder'
-gem 'opml'
+gem 'opml', github: 'kyanny/opml'
 
 
 # Gems used only for assets and not required
