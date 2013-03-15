@@ -12,9 +12,9 @@ class Api::PinController < ApplicationController
   def add
     link = params[:link]
     title = params[:title]
-    member.pins.create(:link => link, :title => title)
-    if (diff = member.pins.size - SAVE_PIN_LIMIT) > 0
-      member.pins.find(:all, :order => "created_on", :limit => diff).each do |pin|
+    @member.pins.create(:link => link, :title => title)
+    if (diff = @member.pins.size - SAVE_PIN_LIMIT) > 0
+      @member.pins.find(:all, :order => "created_on", :limit => diff).each do |pin|
         pin.destroy
       end
     end
@@ -22,7 +22,7 @@ class Api::PinController < ApplicationController
   end
 
   def remove
-    unless pin = member.pins.find_by_link(params[:link])
+    unless pin = @member.pins.find_by_link(params[:link])
       return render_json_status(false, 2)
     end
     pin.destroy
@@ -30,7 +30,7 @@ class Api::PinController < ApplicationController
   end
 
   def clear
-    Pin.delete_all(:member_id => member.id)
+    Pin.delete_all(:member_id => @member.id)
     render_json_status(true)
   end
 end
