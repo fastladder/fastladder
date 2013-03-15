@@ -65,5 +65,12 @@ describe ApiController do
       end
     end
   end
+
+  describe 'GET /lite_subs' do
+    it 'renders json' do
+      get :lite_subs, {}, { member_id: @member.id }
+      expect(response.body).to be_json
+    end
+  end
 end
 

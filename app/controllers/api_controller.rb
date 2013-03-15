@@ -110,7 +110,7 @@ class ApiController < ApplicationController
 
   def lite_subs
     items = []
-    @member.subscriptions.find(:all, :include => [:folder, :feed]).each do |sub|
+    @member.subscriptions.includes(:folder, :feed).each do |sub|
       feed = sub.feed
       modified_on = feed.modified_on
       item = {
