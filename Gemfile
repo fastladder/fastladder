@@ -10,6 +10,7 @@ gem 'haml'
 gem 'feed-normalizer'
 gem 'rfeedfinder'
 gem 'opml'
+gem 'verification', github: 'sikachu/verification'
 
 
 # Gems used only for assets and not required
