@@ -3,6 +3,9 @@ class Subscription < ActiveRecord::Base
   belongs_to :member
   belongs_to :feed
   belongs_to :folder
+  before_create :before_create
+  after_create  :after_create
+  after_destroy :after_destroy
 
   def before_create
     self.public ||= false
