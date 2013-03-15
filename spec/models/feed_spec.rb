@@ -89,4 +89,14 @@ describe Feed do
       it { expect(Feed.crawlable).not_to include(@ng_feed)}
     end
   end
+
+  describe "#avg_rate" do
+    before {
+      @feed = FactoryGirl.create(:feed)
+      FactoryGirl.create(:subscription, feed: @feed, member_id: 1, rate: 5)
+      FactoryGirl.create(:subscription, feed: @feed, member_id: 2, rate: 5)
+      FactoryGirl.create(:subscription, feed: @feed, member_id: 3, rate: 3)
+    }
+    it { expect(@feed.avg_rate).to eq(4) }
+  end
 end

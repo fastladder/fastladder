@@ -149,4 +149,8 @@ class Feed < ActiveRecord::Base
     uri_list << Addressable::URI.join(link, "/favicon.ico").normalize
     uri_list.uniq
   end
+
+  def avg_rate
+    subscriptions.where("rate > ?", 0).average(:rate).to_i
+  end
 end
