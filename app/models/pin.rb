@@ -1,6 +1,8 @@
 class Pin < ActiveRecord::Base
   belongs_to :member
 
+  attr_accessible :link, :title
+
   def to_json(options = {})
     result = {}
     result[:link] = self.link.purify_uri
