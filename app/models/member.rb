@@ -150,7 +150,7 @@ class Member < ActiveRecord::Base
   end
 
   def recent_subs(num)
-    self.subscriptions.find(:all, :order => "created_on DESC", :limit => num)
+    self.subscriptions.recent(num)
   end
 
   def set_auth_key

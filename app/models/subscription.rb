@@ -26,6 +26,7 @@ class Subscription < ActiveRecord::Base
 
   scope :public, ->{ where(public: true) }
   scope :has_unread, ->{ where(has_unread: true) }
+  scope :recent, ->(num){ order("created_on DESC").limit(num) }
 
   def update_public_fields
     self.public ||= false
