@@ -10,4 +10,9 @@ FactoryGirl.define do
     title '最速インターフェース研究会'
     description 'はてな使ったら負けかなと思っている'
   end
+
+  factory :crawl_ok_feed, parent: :feed do
+    crawl_status { FactoryGirl.create(:crawl_status, status: Fastladder::Crawler::CRAWL_OK) }
+    subscribers_count 1
+  end
 end
