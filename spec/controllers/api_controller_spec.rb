@@ -5,6 +5,7 @@ describe ApiController do
     @member = Factory(:member, password: 'mala', password_confirmation: 'mala')
     @feed = Factory(:feed)
     @subscription = Factory(:subscription, feed: @feed, member: @member)
+    @crawl_status = Factory(:crawl_status, feed: @feed)
   end
 
   describe 'POST /touch_all' do
