@@ -1,3 +1,11 @@
+GIT
+  remote: git://github.com/sikachu/verification.git
+  revision: 7c692e3cdb7e3c9dd075503baeb63a1022025f08
+  specs:
+    verification (1.0.3)
+      actionpack (>= 3.0.0, < 3.3.0)
+      activesupport (>= 3.0.0, < 3.3.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -125,3 +133,4 @@ DEPENDENCIES
   sass-rails (~> 3.2.3)
   sqlite3
   uglifier (>= 1.0.3)
+  verification!
