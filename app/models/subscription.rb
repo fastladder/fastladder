@@ -25,6 +25,7 @@ class Subscription < ActiveRecord::Base
   after_destroy :update_subscribers_count
 
   scope :public, ->{ where(public: true) }
+  scope :has_unread, ->{ where(has_unread: true) }
 
   def update_public_fields
     self.public ||= false

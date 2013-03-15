@@ -74,8 +74,9 @@ class ApiController < ApplicationController
     limit = (params[:limit] || 0).to_i
     from_id = (params[:from_id] || 0).to_i
     items = []
-    conditions = params[:unread].to_i != 0 ? ["has_unread = ?", true] : nil
-    @member.subscriptions.find(:all, :conditions => conditions, :order => "subscriptions.id", :include => [:folder, { :feed => :crawl_status }]).each do |sub|
+    subscriptions = @member.subscriptions
+    subscriptions = subscriptions.has_unread if params[:unread].to_i != 0
+    subscriptions.order("subscriptions.id").includes(:folder, { :feed => :crawl_status }).each do |sub|
       unread_count = sub.feed.items.stored_since(sub.viewed_on).count
       next if params[:unread].to_i > 0 and unread_count == 0
       next if sub.id < from_id
@@ -172,8 +173,9 @@ protected
   end
 
   def count_items(options = {})
-    conditions = options[:unread] ? ["has_unread = ?", true] : nil
-    stored_on_list = @member.subscriptions.find(:all, :conditions => conditions, :order => "id").map do |sub|
+    subscriptions = @member.subscriptions
+    subscriptions = subscriptions.has_unread if options[:unread]
+    stored_on_list = subscriptions.order("id").map do |sub|
       {
         :subscription => sub,
         :stored_on => sub.feed.items.find(:all, :select => "stored_on", :order => "stored_on DESC", :limit => MAX_UNREAD_COUNT).map { |item| item.stored_on.to_time },

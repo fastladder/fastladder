@@ -28,4 +28,23 @@ describe ApiController do
       expect(response.body).to be_json
     end
   end
+
+  describe 'GET /subs' do
+    before {
+      @unread_subscription = FactoryGirl.create(:unread_subscription, member: @member)
+    }
+    context 'default' do
+      it "has read and unread subscriptions" do
+        get :subs, {}, { member_id: @member.id }
+        JSON.parse(response.body).count.should == 2
+      end
+    end
+    context 'with unread' do
+      it "has only unread subscriptions" do
+        get :subs, {unread: 1}, { member_id: @member.id }
+        JSON.parse(response.body).count.should == 1
+      end
+    end
+  end
 end
+
