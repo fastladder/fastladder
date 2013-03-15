@@ -178,7 +178,7 @@ protected
     stored_on_list = subscriptions.order("id").map do |sub|
       {
         :subscription => sub,
-        :stored_on => sub.feed.items.find(:all, :select => "stored_on", :order => "stored_on DESC", :limit => MAX_UNREAD_COUNT).map { |item| item.stored_on.to_time },
+        :stored_on => sub.feed.items.select("stored_on").order("stored_on DESC").limit(MAX_UNREAD_COUNT).map { |item| item.stored_on.to_time },
       }
     end
     counts = []
