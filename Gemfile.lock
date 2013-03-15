@@ -1,3 +1,9 @@
+GIT
+  remote: git://github.com/kyanny/opml.git
+  revision: 3659bded5faf2633b22da0d64b65d7e49fd0ef0b
+  specs:
+    opml (0.0.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -59,7 +65,6 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.21)
     multi_json (1.6.1)
-    opml (1.0.0)
     polyglot (0.3.3)
     rack (1.4.5)
     rack-cache (1.2)
@@ -119,7 +124,7 @@ DEPENDENCIES
   coffee-rails (~> 3.2.1)
   feed-normalizer
   haml
-  opml
+  opml!
   rails (= 3.2.12)
   rfeedfinder
   sass-rails (~> 3.2.3)
