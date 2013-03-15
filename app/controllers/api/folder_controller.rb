@@ -1,5 +1,5 @@
 class Api::FolderController < ApplicationController
-  verify_nothing :session => :member
+  before_filter :login
   #verify_nothing :method => :post
   verify_json :params => :name, :only => :create
   verify_json :params => [:name, :folder_id], :only => :update
@@ -13,10 +13,10 @@ class Api::FolderController < ApplicationController
       return render_json_status(false)
     end
     Folder.transaction do
-      if member.folders.find_by_name(name)
+      if @member.folders.find_by_name(name)
         return render_json_status(false, ERR_ALREADY_EXISTS)
       end
-      member.folders.create(:name => name)
+      @member.folders.create(:name => name)
     end
     render_json_status(true)
   end
@@ -44,7 +44,7 @@ class Api::FolderController < ApplicationController
 protected
   def get_folder
     if (folder_id = params[:folder_id].to_i) > 0
-      return member.folders.find_by_id(folder_id)
+      return @member.folders.find_by_id(folder_id)
     end
     return nil
   end
