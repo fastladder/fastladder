@@ -1,5 +1,6 @@
 class CrawlStatus < ActiveRecord::Base
   belongs_to :feed
+  attr_accessible :status, :crawled_on
 
   def self.fetch_crawlable_feed(options = {})
     CrawlStatus.update_all("status = #{Fastladder::Crawler::CRAWL_OK}", ['crawled_on < ?', 24.hours.ago])
