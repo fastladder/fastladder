@@ -9,15 +9,8 @@ gem 'sqlite3'
 gem 'haml'
 gem 'feed-normalizer'
 gem 'rfeedfinder'
-gem 'opml'
+gem 'opml', github: 'kyanny/opml'
 gem 'verification', github: 'sikachu/verification'
-
-group :development, :test do
-  gem 'rspec-rails'
-  gem 'capybara'
-  gem 'launchy'
-  gem 'factory_girl_rails'
-end
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -29,6 +22,18 @@ group :assets do
   # gem 'therubyracer', :platforms => :ruby
 
   gem 'uglifier', '>= 1.0.3'
+end
+
+group :development do
+  gem 'pry-rails'
+  gem 'pry-doc'
+end
+
+group :development, :test do
+  gem 'rspec-rails'
+  gem 'capybara'
+  gem 'launchy'
+  gem 'factory_girl_rails'
 end
 
 # To use ActiveModel has_secure_password
