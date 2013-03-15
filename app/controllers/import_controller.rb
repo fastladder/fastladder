@@ -14,7 +14,7 @@ class ImportController < ApplicationController
   end
 
   def fetch
-    opml_uri = params[:url]
+    opml_uri = File.join(File.dirname(url_for(only_path: false)), params[:url])
     #begin
       str = open(opml_uri).read
       @opml = Opml.new(str)
