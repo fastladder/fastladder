@@ -44,6 +44,7 @@ GEM
       multi_json (~> 1.0)
     arel (3.0.2)
     builder (3.0.4)
+    coderay (1.0.9)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
       railties (~> 3.2.0)
@@ -71,9 +72,19 @@ GEM
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    method_source (0.8.1)
     mime-types (1.21)
     multi_json (1.6.1)
     polyglot (0.3.3)
+    pry (0.9.12)
+      coderay (~> 1.0.5)
+      method_source (~> 0.8)
+      slop (~> 3.4)
+    pry-doc (0.4.4)
+      pry (>= 0.9.9.6)
+      yard (~> 0.8.1)
+    pry-rails (0.2.2)
+      pry (>= 0.9.10)
     rack (1.4.5)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -109,6 +120,7 @@ GEM
       sass (>= 3.1.10)
       tilt (~> 1.3)
     simple-rss (1.2.3)
+    slop (3.4.4)
     sprockets (2.2.2)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -124,6 +136,7 @@ GEM
     uglifier (1.3.0)
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
+    yard (0.8.5.2)
 
 PLATFORMS
   ruby
@@ -133,6 +146,8 @@ DEPENDENCIES
   feed-normalizer
   haml
   opml!
+  pry-doc
+  pry-rails
   rails (= 3.2.12)
   rfeedfinder
   sass-rails (~> 3.2.3)
