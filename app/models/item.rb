@@ -28,6 +28,7 @@ class Item < ActiveRecord::Base
   before_save :create_digest, :fill_datetime
 
   scope :stored_since, ->(viewed_on){ viewed_on ? where("stored_on >= ?", viewed_on) : scoped }
+  scope :recent, ->(limit, offset){ order("created_on DESC, id DESC").limit(limit).offset(offset) }
 
   def fill_datetime
     self.stored_on = Time.now unless self.stored_on

@@ -19,7 +19,7 @@ class ApiController < ApplicationController
       end
     end
     offset = params[:offset].blank? ? 0 : params[:offset].to_i
-    items = @sub.feed.items.find(:all, :order => "created_on DESC, id DESC", :limit => limit, :offset => offset)
+    items = @sub.feed.items.recent(limit, offset)
     result = {
       :subscribe_id => @id,
       :channel => @sub.feed,
