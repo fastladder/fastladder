@@ -93,7 +93,7 @@ class Api::FeedController < ApplicationController
       return render_json_status(false)
     end
     result = {
-      :ApiKey => session.session_id,
+      :ApiKey => session[:session_id],
       :subscribe_id => sub.id,
       :folder_id => sub.folder_id || 0,
       :rate => sub.rate,
