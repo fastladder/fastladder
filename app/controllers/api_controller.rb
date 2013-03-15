@@ -30,8 +30,7 @@ class ApiController < ApplicationController
   end
 
   def unread
-    conditions = @sub.viewed_on ? ["stored_on >= ?", @sub.viewed_on] : nil
-    items = @sub.feed.items.find(:all, :conditions => conditions, :order => "created_on DESC, id DESC", :limit => MAX_UNREAD_COUNT)
+    items = @sub.feed.items.stored_since(@sub.viewed_on).order("created_on DESC, id DESC").limit(MAX_UNREAD_COUNT)
     result = {
       :subscribe_id => @id,
       :channel => @sub.feed,
@@ -77,7 +76,7 @@ class ApiController < ApplicationController
     items = []
     conditions = params[:unread].to_i != 0 ? ["has_unread = ?", true] : nil
     @member.subscriptions.find(:all, :conditions => conditions, :order => "subscriptions.id", :include => [:folder, { :feed => :crawl_status }]).each do |sub|
-      unread_count = sub.feed.items.count(:conditions => sub.viewed_on ? ["stored_on >= ?", sub.viewed_on] : nil)
+      unread_count = sub.feed.items.stored_since(sub.viewed_on).count
       next if params[:unread].to_i > 0 and unread_count == 0
       next if sub.id < from_id
       feed = sub.feed
