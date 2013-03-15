@@ -59,6 +59,11 @@ GEM
     erubis (2.7.0)
     execjs (1.4.0)
       multi_json (~> 1.0)
+    factory_girl (2.6.4)
+      activesupport (>= 2.3.9)
+    factory_girl_rails (1.7.0)
+      factory_girl (~> 2.6.0)
+      railties (>= 3.0.0)
     feed-normalizer (1.5.2)
       hpricot (>= 0.6)
       simple-rss (>= 1.1)
@@ -161,6 +166,7 @@ PLATFORMS
 DEPENDENCIES
   capybara
   coffee-rails (~> 3.2.1)
+  factory_girl_rails
   feed-normalizer
   haml
   launchy
