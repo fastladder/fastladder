@@ -24,6 +24,8 @@ class Subscription < ActiveRecord::Base
   after_create  :update_subscribers_count
   after_destroy :update_subscribers_count
 
+  scope :public, ->{ where(public: true) }
+
   def update_public_fields
     self.public ||= false
     true
