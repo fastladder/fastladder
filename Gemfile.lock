@@ -157,6 +157,12 @@ GEM
       rubyzip
       websocket (~> 1.0.4)
     simple-rss (1.2.3)
+    simplecov (0.7.1)
+      multi_json (~> 1.0)
+      simplecov-html (~> 0.7.1)
+    simplecov-html (0.7.1)
+    simplecov-rcov (0.2.3)
+      simplecov (>= 0.4.1)
     slop (3.4.4)
     sprockets (2.2.2)
       hike (~> 1.2)
@@ -195,6 +201,8 @@ DEPENDENCIES
   rfeedfinder
   rspec-rails
   sass-rails (~> 3.2.3)
+  simplecov
+  simplecov-rcov
   sqlite3
   uglifier (>= 1.0.3)
   verification!
