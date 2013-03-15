@@ -354,8 +354,6 @@ HotKey.kc2char = function(kc){
 
 HotKey.specialCase = function(e){
 	var kc = e.keyCode;
-	// alert([e.type, e.keyCode]);
-	if(window.opera && e.type == "keypress" && e.keyCode == 46)  return "delete";
 	if(e.type == "keypress" && e.keyCode == 27) return "esc";
 	if(e.type == "keydown" && e.keyCode == 46)  return "delete";
 	if(112 <= e.keyCode && e.keyCode <= 123){

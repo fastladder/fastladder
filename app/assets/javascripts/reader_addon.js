@@ -333,10 +333,6 @@ Linkage.push({
 	url  : 'http://bookmarks.yahoo.co.jp/bookmarklet/showpopup?t=[[title]]&u=[[url]]&ei=UTF-8'
 });
 Linkage.push({
-	name : 'ニフティクリップ',
-	url  : 'http://clip.nifty.com/create?url=[[url]]&title=[[title]]'
-});
-Linkage.push({
 	name : 'Google Bookmarks',
 	url  : 'http://www.google.com/bookmarks/mark?op=edit&bkmk=[[url]]&title=[[title]]'
 });
@@ -755,8 +751,8 @@ var clip_overlay;
 		'<span class="date">[[#{ (State.now-created_on).toRelativeDate() }]]</span>',
 		'<a href="[[link]]" target="_blank" class="[[ classname ]]">[[title]]</a>',
 		'<span class="clip-count">',
-		'<a href="[[#{ clip_page_link(link) }]]" class="hotlevel_[[#{get_hotlevel(total_clip_count)}]]" target="_blank">',
-			'[[total_clip_count]] user</a></span>'
+		'<a href="[[#{ clip_page_link(link) }]]" class="hotlevel_[[#{get_hotlevel(public_clip_count)}]]" target="_blank">',
+			'[[public_clip_count]] user</a></span>'
 	].join("");
 	var template_comments = [];
 	var formatter = new Template(template).compile();
@@ -1440,46 +1436,6 @@ new function(){
 
 	Event.observe($(target), 'selectstart', click);
 };
-
-
-
-// sponsored_feed
-function enable_adfeeds(){
-	var adfeeds_subs_template = [
-	 '<span class="adfeeds_item" style="background-image:url(\'[[icon]]\')">',
-	 '[[ title ]]',
-	 '</span>'
-	].join("");
-	var subs_container = $("subs_container");
-	var api = new API("/adfeeds/subs");
-	api.post({}, function(s){
-		if(s && s.length > 0){
-			var d = $N("DIV");
-			var feed = s.shift();
-			d.className = "adfeeds_body";
-			d.innerHTML = new Template(adfeeds_subs_template).fill(feed);
-			subs_item(feed.subscribe_id, feed);
-			var feedlink = feed.feedlink;
-			Event.observe(d, "click", function(e){
-				var api = new API("/adfeeds/all");
-				api.post({feedlink:feedlink}, print_feed);
-			});
-			subs_container.insertBefore(d, subs_container.firstChild);
-			tracking('adfeed');
-		}
-	});
-}
-function tracking(t){
-	var report = 'http://image.reader.livedoor.com/img/report.gif';
-	var path = report + '?' + t + '&' + (new Date - 0);
-	new Image().src = path;
-}
-
-new function(){
-	var now = new Date - 0;
-	if(now < 1168826400000) return;
-	register_hook('BEFORE_INIT', enable_adfeeds);
-}
 
 // translate
 function tl(str){

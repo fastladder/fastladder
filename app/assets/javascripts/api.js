@@ -3,7 +3,7 @@
 */
 var API = Class.create();
 API.extend({
-	initialize: function(ap){ this.ap = ap },
+	initialize: function(ap){ this.ap = ap; this.raw_mode = false; },
 	onCreate:   function(){},
 	onComplete: function(){},
 	post: function(param,onload){
@@ -28,15 +28,18 @@ API.extend({
 			oncomplete();
 			//alert([this.ap,this.req.responseText.length]);
 			API.last_response = req.responseText;
-			var json = JSON.parse(this.req.responseText);
-			if(json){
-				onload(json);
+			if(this.raw_mode){
+				onload(this.req.responseText);
 			} else {
-				message("データをロードできません");
-				show_error();
+				var json = JSON.parse(this.req.responseText);
+				if(json){
+					onload(json);
+				} else {
+					message("Unable to load data");
+					show_error();
+				}
 			}
 			this.req = null;
-			
 		}.bind(this);
 		// alert(postdata);
 		this.onCreate();
@@ -61,7 +64,7 @@ API.extend({
 			if(json){
 				onload(json);
 			} else {
-				message("データをロードできません")
+				message("Unable to load data");
 			}
 			this.req = null;
 		}.bind(this);

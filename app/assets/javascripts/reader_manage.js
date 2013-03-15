@@ -42,9 +42,9 @@ updater("manage_select",function(){
 			removeClass("manage_control", "grayout");
 			State.manage_disabled = false;
 		}
-		Manage.message(size + " 件選択されています");
+		Manage.message(size + tl(' items selected'));
 	} else {
-		Manage.message("編集したいアイテムを選択してください");
+		Manage.message(tl('Select item(s) you want to edit'));
 		addClass("manage_control", "grayout");
 		Form.disable_all("manage_control");
 		State.manage_disabled = true;
@@ -312,16 +312,20 @@ Manage.Item = {
 	unsubscribe: function(){
 		var ids = TRSelector.get_selected();
 		var l = ids.length;
-		var c = confirm( l+"件のフィードの登録を解除します。よろしいですか？" );
+		var tmpl_confirm = getText('manage_unsubscribe_confirm_tmpl');
+		var tmpl_progress = getText('manage_unsubscribe_progress_tmpl')
+		var c = confirm(tmpl_confirm.fill({count: l}));
 		if(!c) return;
 		TRSelector.clear();
 		foreach(ids,function(sid,n){
 			var api = new API("/api/feed/unsubscribe");
 			api.post({subscribe_id:sid},function(){
 				l--;
-				message("フィードを削除しています:残り"+l+"件");
+				message(
+					tmpl_progress.fill({remain: l})
+				);
 				if(l == 0){
-					message("フィードを削除しました");
+					message(tl('Feeds deleted'));
 					MI.load();
 				}
 			});
@@ -339,7 +343,7 @@ Manage.Item = {
 				api.post({subscribe_id:sid})
 			}
 		});
-		message("既読にしました");
+		message('Marked as read');
 		update("manage_item")
 	}
 	
@@ -356,9 +360,9 @@ updater("manage_offset", function(){
 	var tmpl = Template.get("man_offset").compile();
 	var folder_id = MF.folder_id;
 	if(folder_id == 0){
-		var folder_name = "未分類"
+		var folder_name = tl('Uncategolized');
 	} else if (!folder_id){
-		var folder_name = "すべて"
+		var folder_name = tl('All');
 	} else {
 		var folder_name = folder.id2name[folder_id];
 	}
@@ -382,7 +386,7 @@ updater("mi_paging", function(){
 
 updater("move_to", function(){
 	this.options.length = 0;
-	this.options[0] = new Option("未分類","");
+	this.options[0] = new Option(tl('Uncategolized'), "");
 	var op = this.options;
 	folder.names.map(function(v,i){
 		op[i+1] = new Option(v,v);
@@ -408,7 +412,7 @@ updater("manage_folder", function(){
 		})
 	};
 	$("manage_folder").innerHTML = [
-		'<li class="button ' + (MF.folder_id == 0 ? 'selected' : '')  + '" onclick="MF.select(0)">未分類</li>',
+		'<li class="button ' + (MF.folder_id == 0 ? 'selected' : '')  + '" onclick="MF.select(0)">', tl('Uncategolized'), '</li>',
 		folder.names.map(fmt).join(" ")
 	].join("");
 	update("update_folder");
@@ -426,7 +430,7 @@ updater("update_folder",function(){
 	});
 
 	ajaxize("rename_form", function(res,req){
-		message(folder.id2name[req.folder_id] + "→" + req.name);
+		message(folder.id2name[req.folder_id] + "-&gt;" + req.name);
 		folder = null;
 		MF.change_flag = true;
 		update('manage_folder');
@@ -439,12 +443,15 @@ updater("update_folder",function(){
 
 	ajaxize("delete_form",{
 		before: function(param){
-			var c = confirm(folder.id2name[param.folder_id] + "を削除してよろしいですか？(中のアイテムは削除されません)");
+			var tmpl = getText('manage_folder_delete_confirm');
+			var c = confirm(
+				tmpl.fill({ folder: folder.id2name[param.folder_id]})
+			);
 			return c ? true : false;
 		},
 		after: function(res,req){
 			var fn = folder.id2name[req.folder_id];
-			message(fn + "を削除しました");
+			message(fn + tl(' deleted'));
 			MF.folder_id = null;
 			folder = null;
 			// フォルダ一覧を再読み込みして表示のみ更新
@@ -502,11 +509,11 @@ Manage.Folder = {
 	},
 	filter: function(){ return true },
 	create_folder: function(callback){
-		var name = prompt("フォルダ名","");
+		var name = prompt(tl('Folder Name'),"");
 		if(!name) return;
 		var api = new API("/api/folder/create");
 		api.post({name:name},function(res){
-			message("フォルダを作成しました");
+			message('folder created');
 			folder = null;
 			callback();
 		});
@@ -519,7 +526,7 @@ Manage.Folder = {
 		if(!new_name) return false;
 		var api = new API("/api/folder/update");
 		api.post({folder_id : folder_id, name : new_name},function(){
-			message(folder.id2name[folder_id] + "→" + new_name);
+			message(folder.id2name[folder_id] + "-&gt;" + new_name);
 			folder = null; callback();
 		});
 		MF.change_flag = true;
@@ -529,11 +536,14 @@ Manage.Folder = {
 	delete_folder : function(callback){
 		var folder_id = MF.folder_id;
 		if(!folder_id) return false;
-		var c = confirm(folder.id2name[folder_id] + "を削除してよろしいですか？(中のアイテムは削除されません)");
+		var tmpl = getText('manage_folder_delete_confirm');
+		var c = confirm(
+			tmpl.fill({ folder: folder.id2name[folder_id]})
+		);
 		if(!c) return false;
 		var api = new API("/api/folder/delete");
 		api.post({folder_id : folder_id},function(){
-			message(folder.id2name[folder_id] + "を削除しました");
+			message(folder.id2name[folder_id] + tl(' deleted'));
 			MF.folder_id = null;
 			folder = null;
 			callback();
@@ -545,7 +555,7 @@ Manage.Folder = {
 
 Manage.show_help = function(){
 	if(this.disabled) return;
-	$("manage_help").innerHTML = "→&nbsp;&nbsp;" + this.title;
+	$("manage_help").innerHTML = "-&gt; &nbsp;&nbsp;" + this.title;
 }
 Manage.hide_help = function(){
 	$("manage_help").innerHTML = "";
@@ -556,7 +566,7 @@ Manage.hide_help = function(){
 function delete_folder(folder_id){
 	var api = new API("/api/folder/delete");
 	api.post({folder_id : folder_id},function(){
-		message(folder.id2name[folder_id] + "を削除しました");
+		message(folder.id2name[folder_id] + tl(' deleted'));
 		folder = null; callback();
 	});
 	var models = SM.instances;
@@ -568,7 +578,7 @@ function delete_folder(folder_id){
 function rename_folder(folder_id, new_name){
 	var api = new API("/api/folder/update");
 	api.post({folder_id : folder_id, name : new_name},function(){
-		message(folder.id2name[folder_id] + "→" + new_name);
+		message(folder.id2name[folder_id] + "-&gt;" + new_name);
 		folder = null; callback();
 	});
 	var models = SM.instances;
