@@ -6,3 +6,4 @@ config/database.yml
 db/schema.rb
 lib/*.dylib
 db/*.sqlite3
+coverage

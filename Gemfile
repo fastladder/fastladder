@@ -34,6 +34,8 @@ group :development, :test do
   gem 'capybara'
   gem 'launchy'
   gem 'factory_girl_rails'
+  gem 'simplecov'
+  gem 'simplecov-rcov'
 end
 
 # To use ActiveModel has_secure_password
