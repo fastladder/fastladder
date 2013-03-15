@@ -46,7 +46,7 @@ class ApiController < ApplicationController
 
   def touch_all
     params[:subscribe_id].split(/\s*,\s*/).each do |id|
-      if sub = member.subscriptions.find_by_id(id)
+      if sub = @member.subscriptions.find_by_id(id)
         sub.update_attributes(:has_unread => false, :viewed_on => DateTime.now)
       end
     end
@@ -56,7 +56,7 @@ class ApiController < ApplicationController
   def touch
     timestamps = params[:timestamp].split(/\s*, \s*/).map { |t| t.to_i }
     params[:subscribe_id].split(/\s*,\s*/).each_with_index do |id, i|
-      if sub = Subscription.find(id) and sub.member_id == member.id and timestamps[i]
+      if sub = Subscription.find(id) and sub.member_id == @member.id and timestamps[i]
         sub.update_attributes(:has_unread => false, :viewed_on => Time.new(timestamps[i] + 1))
       end
     end
@@ -153,7 +153,7 @@ class ApiController < ApplicationController
   def crawl
     success = false
     params[:subscribe_id].to_s.split(/\s*,\s*/).each_with_index do |id, i|
-      if sub = Subscription.find(id) and sub.member_id == member.id
+      if sub = Subscription.find(id) and sub.member_id == @member.id
         success = sub.feed.crawl
       end
     end
