@@ -1,3 +1,19 @@
+# == Schema Information
+#
+# Table name: pins
+#
+#  id         :integer          not null, primary key
+#  member_id  :integer          default(0), not null
+#  link       :string(255)      default(""), not null
+#  title      :string(255)
+#  created_on :datetime         not null
+#  updated_on :datetime         not null
+#
+# Indexes
+#
+#  index_pins_on_member_id_and_link  (member_id,link) UNIQUE
+#
+
 class Pin < ActiveRecord::Base
   belongs_to :member
 
