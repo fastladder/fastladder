@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe "SignupStories" do
+  include Capybara::DSL
+
   it "sign up as a first member" do
     expect {
       visit "/"
