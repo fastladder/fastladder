@@ -101,7 +101,7 @@ function hide_error(){
 function show_all_mouseover(){
 	State.help_show = true;
 	State.help_snap = this;
-	var tmpl = getText('show_all_help_message_tmpl');
+	var tmpl = I18n.t('show_all_help_message_tmpl');
 	State.help_message = tmpl.fill({state: Config.show_all ? 'disabled' : 'enabled' });
 	update("help_window");
 }
@@ -470,11 +470,9 @@ function ajaxize(element, callback){
 }
 
 function print_error(t){
-	var e = error_message[t];
-	if(e){
-		$("error_title").innerHTML = e.title;
-		$("error_body").innerHTML =  e.body;
-	}
+	var options = {scope: "error_message/" + t};
+	$("error_title").innerHTML = I18n.t('title', options);
+	$("error_body").innerHTML =  I18n.t('body', options);
 }
 /*
  DHTML Functions
@@ -504,10 +502,10 @@ updater("error_window",function(){
 	}
 });
 updater("mode_text_view",function(){
-	this.innerHTML = getText(Config.view_mode);
+	this.innerHTML = I18n.t(Config.view_mode);
 });
 updater("mode_text_sort",function(){
-	this.innerHTML = getText(Config.sort_mode);
+	this.innerHTML = I18n.t(Config.sort_mode);
 });
 /* navi */
 updater("right_bottom_navi", print_navi);
@@ -519,7 +517,7 @@ updater("scroll_offset",function(){
 updater("folder_label",function(){
 	var item = subs_item(State.now_reading);
 	this.innerHTML = [
-		(item.folder ? item.folder.ry(8,"...") : tl('Uncategolized')),
+		(item.folder ? item.folder.ry(8,"...") : I18n.t('Uncategolized')),
 		'<img src="/img/icon/tri_d.gif">'
 	].join("");
 });
@@ -539,8 +537,8 @@ updater("total_unread_count", function(){
 	} else {
 		removeClass(this, "progress")
 	}
-	var tmpl = getText('unread_count_tmpl');
-	var tmpl_title = getText('unread_count_title_tmpl');
+	var tmpl = I18n.t('unread_count_tmpl');
+	var tmpl_title = I18n.t('unread_count_title_tmpl');
 	this.innerHTML = tmpl.fill(param);
 	if(!State.guest_mode){
 		document.title = tmpl_title.fill(param);
@@ -764,8 +762,8 @@ function setup_event(){
 		feed_subscribe(feedlink,function(res){
 			el.setAttribute("rel","unsubscribe");
 			el.className = "unsub_button";
-			if(el.innerHTML == tl('Add')){
-				el.innerHTML = tl('Unsubscribe');
+			if(el.innerHTML == I18n.t('Add')){
+				el.innerHTML = I18n.t('Unsubscribe');
 			}
 			feedlink2id[feedlink] = res.subscribe_id;
 		});
@@ -778,8 +776,8 @@ function setup_event(){
 		feed_unsubscribe(sid,function(res){
 			el.setAttribute("rel","subscribe");
 			el.className = "sub_button";
-			if(el.innerHTML == tl('Unsubscribe')){
-				el.innerHTML = tl('Add');
+			if(el.innerHTML == I18n.t('Unsubscribe')){
+				el.innerHTML = I18n.t('Add');
 			}
 		});
 	});
@@ -927,7 +925,7 @@ function Dumper(obj){
 var subs,inbox;
 
 function message(str){
-	$("message").innerHTML = getText(str) || str;
+	$("message").innerHTML = I18n.t(str) || str;
 }
 
 /* 購読停止 */
@@ -935,11 +933,11 @@ function unsubscribe(sid,callback){
 	var api = new API("/api/feed/unsubscribe");
 	callback = callback || Function.empty;
 	var info = subs_item(sid);
-	var tmpl = getText('unsubscribe_confirm');  // 'Are you sure to remove [[title]] from your subscription?'
-	var tmpl2 = getText('ubsubscribe_confirm2'); // 'Are you sure to unsubscribe this feed?'
+	var tmpl = I18n.t('unsubscribe_confirm');  // 'Are you sure to remove [[title]] from your subscription?'
+	var tmpl2 = I18n.t('ubsubscribe_confirm2'); // 'Are you sure to unsubscribe this feed?'
 	confirm( info ? tmpl.fill(info) : tmpl2) && api.post(
 		{subscribe_id:sid},function(res){
-			message(tl('feed deleted'));
+			message(I18n.t('feed deleted'));
 			callback(res);
 		}
 	);
@@ -991,7 +989,7 @@ function set_rate(id,rate){
 }
 function create_folder(name){
 	if(!name){
-		name = prompt(tl('Folder Name'),"");
+		name = prompt(I18n.t('Folder Name'),"");
 		if(!name) return;
 	}
 	var api = new API("/api/folder/create");
@@ -1321,16 +1319,16 @@ function format_keybind(){
 	var button = [
 		'<div class="keyhelp_desc">',
 		'<div class="keyhelp_ime">',
-			getText('notice_ime_off'),
+			I18n.t('notice_ime_off'),
 		'</div>',
 		'<div class="keyhelp_more">',
-			'<span class="button"r onclick="Control.open_keyhelp.call(this,event)">' + tl('Show in window') + '</span>',
+			'<span class="button"r onclick="Control.open_keyhelp.call(this,event)">' + I18n.t('Show in window') + '</span>',
 			'<span class="button" onclick="Control.toggle_more_keyhelp.call(this,event)">'+ 
-			 (State.keyhelp_more ? tl('Compact') : tl('More') + '...') + '</span>',
+			 (State.keyhelp_more ? I18n.t('Compact') : I18n.t('More') + '...') + '</span>',
 		'</div>',
 		'</div>',
 		'<div class="keyhelp_hide">',
-			'<span class="button" onclick="Control.hide_keyhelp.call(this,event)">' + tl('Close') + '</span>',
+			'<span class="button" onclick="Control.hide_keyhelp.call(this,event)">' + I18n.t('Close') + '</span>',
 		'</div>'
 	];
 	return table + button.join("");
@@ -1452,7 +1450,7 @@ var Control = {
 			menu.add([
 				'<span class="button flat_menu pin_list"',
 				' rel="Control:pin_list();FlatMenu.hide()">',
-				tl('List view'), ' (', pin.pins.length, tl(' items'), ')</span>'
+				I18n.t('List view'), ' (', pin.pins.length, I18n.t(' items'), ')</span>'
 			].join(""));
 			foreach(pin.pins,function(v,i){
 				if(i > view_num){
@@ -1469,7 +1467,7 @@ var Control = {
 			menu.add([
 				'<span class="button flat_menu dust_box"',
 				' rel="Control:clear_pin();FlatMenu.hide()">',
-				tl('Clear'), '</span>'
+				I18n.t('Clear'), '</span>'
 			].join(""));
 			menu.update();
 		};
@@ -1611,10 +1609,10 @@ var Control = {
 			menu.add([
 				'<span class="button create_folder"',
 				' rel="Control:create_folder();FlatMenu.hide()">',
-				tl('Create New Folder'), '</span>'
+				I18n.t('Create New Folder'), '</span>'
 			].join(""));
 			menu.add(tmpl({
-				folder_name : tl('Uncategolized'),
+				folder_name : I18n.t('Uncategolized'),
 				move_to : ""
 			}));
 			foreach(folder.names,function(v){
@@ -1625,14 +1623,14 @@ var Control = {
 			menu.add([
 				'<span class="button dust_box"',
 				' rel="Control:unsubscribe();FlatMenu.hide()">',
-				tl('Unsubscribe'), '</span>'
+				I18n.t('Unsubscribe'), '</span>'
 			].join(""));
 			menu.update();
 		};
 		if(folder){
 			write_menu();
 		} else {
-			menu.add(tl('Loading'));
+			menu.add(I18n.t('Loading'));
 			get_folders(write_menu);
 		}
 		return menu;
@@ -1644,7 +1642,7 @@ var Control = {
 		var modes  = LDR_VARS.ViewModes;
 		foreach(modes,function(v,i){
 			var item = tmpl({
-				label : getText(v),
+				label : I18n.t(v),
 				mode  : v,
 				checked : Config.view_mode == v ? "checked" : ""
 			});
@@ -1669,7 +1667,7 @@ var Control = {
 		];
 		foreach(modes,function(v,i){
 			var item = tmpl({
-				label : getText(v),
+				label : I18n.t(v),
 				mode  : v,
 				checked : Config.sort_mode == v ? "checked" : ""
 			});
@@ -1890,7 +1888,7 @@ var Control = {
 				State.return_to_head = false;
 				Control.read_head_subs();
 			} else {
-				message(tl('End of feeds.  Press s to return to the top.'));
+				message(I18n.t('End of feeds.  Press s to return to the top.'));
 				State.return_to_head = true;
 			}
 		}
@@ -1998,7 +1996,7 @@ var Control = {
 	mark_all_read: function(){
 		var list = Ordered.list;
 		if(!list) return;
-		var no_feeds = tl('There is no item to mark as read');
+		var no_feeds = I18n.t('There is no item to mark as read');
 		if(list.length == 0){
 			alert(no_feeds);
 			return;
@@ -2012,7 +2010,7 @@ var Control = {
 			alert(no_feeds);
 			return;
 		}
-		var tmpl = getText('mark_all_read_tmpl');
+		var tmpl = I18n.t('mark_all_read_tmpl');
 		var c = confirm(tmpl.fill({
 			count: post_list.length
 		}));
@@ -2828,7 +2826,7 @@ Subscribe.Formatter = {
 			var min = Math.min(tmp[0],tmp[1]);
 			var filtered = model.get_by_subscribers_count(min,max);
 			var param = {
-				name : min + " - " + max + " " + tl('users'),
+				name : min + " - " + max + " " + I18n.t('users'),
 				unread_count : filtered.get_unread_count()
 			};
 			var folder = new TreeView(
@@ -2977,7 +2975,7 @@ Subscribe.Controller = Class.create("controller").extend({
 					update('total_unread_count');
 					count+=limit;
 					load_request();
-					message(tl('Loading .. ') + (count+1) + " - " + (count+limit));
+					message(I18n.t('Loading .. ') + (count+1) + " - " + (count+limit));
 				}
 			};
 			var flush = function(list){
@@ -3343,7 +3341,7 @@ function init(){
 			output.innerHTML = [
 				'<div class="discover_loading">',
 				'<img src="/img/icon/loading.gif">　',
-				getText("print_discover_loading"),
+				I18n.t("print_discover_loading"),
 				'</div>'
 			].join("");
 			return true;
@@ -3369,7 +3367,7 @@ function print_discover(list){
 	if(list.length == 0){
 		output.innerHTML = [
 			'<div class="discover_loading"><img src="/img/icon/orz.gif">　',
-			getText('print_discover_notfound'),
+			I18n.t('print_discover_notfound'),
 			'</div>'
 		].join("");
 	} else {
@@ -3622,7 +3620,7 @@ FeedFormatter.extend({
 		var feed_filter = {
 			image : FF.channel.image,
 			folder: function(v){
-				return v ? v.ry(8,"...") : tl('Uncategolized')
+				return v ? v.ry(8,"...") : I18n.t('Uncategolized')
 			}
 		};
 		this.tmpl.add_filters(feed_filter);
@@ -3701,7 +3699,7 @@ function print_feed(feed){
 		State.last_items["_"+v.id] = v;
 		var widgets = entry_widgets.process(feed, v);
 		return item_formatter(v,{
-			relative_date : (v.created_on) ? (Now-v.created_on).toRelativeDate() : tl('Unknown date'),
+			relative_date : (v.created_on) ? (Now-v.created_on).toRelativeDate() : I18n.t('Unknown date'),
 			item_count    : item_count,
 			widgets       : widgets,
 			pin_active    : pin.has(v.link) ? "pin_active" : "",

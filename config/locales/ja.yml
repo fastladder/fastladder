@@ -1,0 +1,62 @@
+# -*- coding: utf-8 -*-
+
+ja:
+  # mode
+  flat: フラット
+  folder: フォルダ,
+  rate: レート,
+  subscribers: 購読者数
+  domain: ドメイン
+
+  # sort
+  modified_on: 新着順
+  modified_on:reverse: 旧着順
+  unread_count: 未読が多い
+  unread_count:reverse: 未読が少ない
+  title:reverse: タイトル
+  rate: レート
+  subscribers_count: 読者が多い
+  subscribers_count:reverse: 読者が少ない
+
+  # api
+  set_rate_complete: レートを変更しました
+  create_folder_complete: フォルダを作成しました
+  print_discover_loading: フィードを探しています
+  print_discover_notfound: 登録可能なフィードが見つかりませんでした
+  this is the last item: 最後だよ
+  End of feeds.  Press s to return to the top.: 最後のフィードです。sキーで先頭に戻ります
+
+  prefetching: 先読み中
+  prefetch_complete: 先読み完了
+  'Loading .. ': ロード中
+  Loading completed.: ロード完了
+
+  unread_count_tmpl: '未読 [[feed_count]]フィード&nbsp;&nbsp;|&nbsp;&nbsp;[[count]]エントリ'
+  unread_count_title_tmpl: 'livedoor Reader ([[count]])'
+  mark_all_read_tmpl: '[[count]]件のフィードを既読にします。よろしいですか？'
+  There is no item to mark as read: 既読にすべきフィードがありません
+  notice_ime_off: ※ショートカットキーが使えない場合は日本語入力を無効にしてみてください。
+  manage_unsubscribe_confirm_tmpl: '[[ count ]]件のフィードの登録を解除します。よろしいですか？'
+  manage_unsubscribe_progress_tmpl: 'フィードを削除しています:残り[[remain]]件'
+  manage_folder_delete_confirm: '[[folder]]を削除してよろしいですか？(中のアイテムは削除されません)'
+  unsubscribe_confirm: '「[[title]]」の登録を解除しますか？'
+  unsubscribe_confirm2: 登録を解除しますか？
+
+  Unknown date: 日時不明
+
+  # error
+  cannot_popup: この機能を使うにはポップアップブロックを解除してください。
+
+  # keyboard help
+  Close: 閉じる
+  More: もっと表示
+  Compact: 隠す
+  Show in window: 別ウィンドウで開く
+
+  Now saving: 変更を保存しています
+  Wait a minutes: しばらくお待ち下さい
+  Public: 公開
+  Private: 非公開
+  leave it uncategorized: 未分類
+  uncategorized: 未分類
+  New Folder Name: 新しいフォルダ名を入力してください

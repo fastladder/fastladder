@@ -1,0 +1,29 @@
+# -*- coding: utf-8 -*-
+
+en:
+  error_message:
+    login:
+      title: You need to sign in to Fastladder
+      body: <p>Please reload the browser and sign in again</p>
+
+    xmlhttp:
+      title: Your browser is not supported by Fastladder
+      body: <p>Your browser is out of date.  (Please upgrade your browser.)</p>
+
+    busy:
+      title: Failed to retrieve data.
+      body: <p>Our servers might be busy.  Please try again later.</p>
+
+ja:
+  error_message:
+    login:
+      title: ログインしてください
+      body: <p>ブラウザをリロードして再度ログインしてください。</p>
+
+    xmlhttp:
+      title: お使いのブラウザは動作対象外です
+      body: <p>ブラウザのバージョンが古いためご利用いただけません。</p>
+
+    busy:
+      title: データの受信に失敗しました
+      body: <p>サーバーが混雑している可能性があります。<br>しばらく時間をおいてから再度アクセスしてください。</p>

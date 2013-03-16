@@ -1,3 +1,11 @@
+//= require i18n
+//= require i18n/translations
+I18n.locale = (typeof Language !== 'undefined' && Language === 'English') ? 'en' : 'ja';
+I18n.defaultSeparator = '/';
+I18n.missingTranslation = function(scope) {
+	return scope;
+};
+
 /*
  良く使う関数
 */
@@ -17,30 +25,6 @@ function $(el){
 }
 $.cache = {};
 $.cacheable = {};
-
-var setText;
-var getText;
-(function(){
-	// private value
-	var text = {};
-	setText = function(key, value){
-		if(isString(key)){
-			text[key] = value;
-		} else {
-			Object.extend(text, key)
-		}
-	};
-	getText = function(key){
-		return text[key]
-	};
-})();
-
-// translate
-function tl(str){
-	str = "" + str;
-	var t = getText(str) || getText(str.toLowerCase());
-	return (t) ? t : str;
-}
 
 function getlocale(){
 	var na = window.navigator;
