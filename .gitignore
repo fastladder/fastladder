@@ -3,6 +3,7 @@ log
 tmp
 config/secret.txt
 config/database.yml
+config/initializers/secret_token.rb
 db/schema.rb
 lib/*.dylib
 db/*.sqlite3
