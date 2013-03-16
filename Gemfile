@@ -8,7 +8,8 @@ gem 'rails', '3.2.12'
 gem 'sqlite3'
 gem 'mysql2'
 gem 'haml'
-gem 'feed-normalizer'
+# current release version has no `feed.description` method. this is why :git used
+gem 'feedzirra', :git => "https://github.com/pauldix/feedzirra"
 gem 'rfeedfinder'
 gem 'opml', github: 'kyanny/opml'
 gem 'verification', github: 'sikachu/verification'

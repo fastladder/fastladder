@@ -42,7 +42,10 @@ Array.prototype.some = Array.prototype.some || function(callback,thisObject){
 // generic
 if(!Array.forEach){
 	(function(){
-		var methods = "forEach map filter indexOf lastIndexOf every some".split(" ");
+		var methods = (
+			"concat slice shift push unshift pop sort reverse" +
+			"forEach map filter indexOf lastIndexOf every some"
+		).split(" ");
 		methods.forEach(function(mn){
 			Array[mn] = Array[mn] || function(self,args){
 				args = Array.prototype.slice.call(arguments,1);
