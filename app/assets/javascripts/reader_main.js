@@ -470,10 +470,9 @@ function ajaxize(element, callback){
 }
 
 function print_error(t){
-	var prefix = 'error_message.' + t;
-	var options = {sepalator: '.'};
-	$("error_title").innerHTML = I18n.t(prefix + '.title', options);
-	$("error_body").innerHTML =  I18n.t(prefix + '.body', options);
+	var options = {scope: "error_message/" + t};
+	$("error_title").innerHTML = I18n.t('title', options);
+	$("error_body").innerHTML =  I18n.t('body', options);
 }
 /*
  DHTML Functions
