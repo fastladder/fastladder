@@ -6,7 +6,7 @@ module UserHelper
 
   def subscribe_button(feedlink)
     unless @member
-      return '<a href="/subscribe/#{ feedlink }" class="subscribe">add</a>'
+      return link_to add, { :controller => :subscribe, :action => :confirm, :url => feedlink }, :class => 'subscribe'
     end
     subs = @member.check_subscribed(feedlink)
     if subs
