@@ -22,6 +22,6 @@ class SessionsController < ApplicationController
     session[:member_id] = nil if logged_in?
     reset_session
     flash[:notice] = "You have been signed out."
-    redirect_back_or_default "/"
+    redirect_to root_url
   end
 end
