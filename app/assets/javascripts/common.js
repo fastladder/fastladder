@@ -2,6 +2,9 @@
 //= require i18n/translations
 I18n.locale = (typeof Language !== 'undefined' && Language === 'English') ? 'en' : 'ja';
 I18n.defaultSeparator = '/';
+I18n.missingTranslation = function(scope) {
+	return scope;
+};
 
 /*
  良く使う関数
