@@ -1,4 +1,21 @@
 # -*- coding: utf-8 -*-
+# == Schema Information
+#
+# Table name: subscriptions
+#
+#  id            :integer          not null, primary key
+#  member_id     :integer          default(0), not null
+#  folder_id     :integer
+#  feed_id       :integer          default(0), not null
+#  rate          :integer          default(0), not null
+#  has_unread    :boolean          default(FALSE), not null
+#  public        :boolean          default(TRUE), not null
+#  ignore_notify :boolean          default(FALSE), not null
+#  viewed_on     :datetime
+#  created_on    :datetime         not null
+#  updated_on    :datetime         not null
+#
+
 require 'spec_helper'
 
 describe Subscription do

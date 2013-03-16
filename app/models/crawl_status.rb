@@ -14,10 +14,6 @@
 #  created_on       :datetime         not null
 #  updated_on       :datetime         not null
 #
-# Indexes
-#
-#  index_crawl_statuses_on_status_and_crawled_on  (status,crawled_on)
-#
 
 class CrawlStatus < ActiveRecord::Base
   belongs_to :feed
