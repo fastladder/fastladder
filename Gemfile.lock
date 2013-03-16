@@ -236,6 +236,7 @@ DEPENDENCIES
   launchy
   mini_magick
   mysql2
+  nokogiri
   opml!
   pry-doc
   pry-rails
