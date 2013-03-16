@@ -232,15 +232,24 @@ module Fastladder
       @logger.info uri_list
       uri_list.uniq.each do |uri|
         @logger.info "fetch: #{uri.to_s}"
-        next unless favicon = Fastladder::simple_fetch(uri)
+        next unless favicon = open(uri.to_s)
         begin
+          ext = favicon.meta["content-type"] == 'image/vnd.microsoft.icon' ? ".ico" : File.basename(uri.to_s)
+          tmp = Tempfile.new(["favicon", ext])
+          tmp.binmode
+          tmp.write favicon.read
+          tmp.close
           buf = StringIO.new("")
-          image = MiniMagick::Image.read(favicon)
+          image = MiniMagick::Image.open(tmp.path)
+          image.resize "16x16"
+          image.format "png"
           image.write(buf)
           buf.rewind
-          return buf.read
+          return buf.read.force_encoding('ascii-8bit')
         rescue
           @logger.error "ico2png error: #{$!.message}"
+        ensure
+          tmp.close!
         end
       end
       nil
