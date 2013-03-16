@@ -111,3 +111,24 @@ function queryCSS(el,rule){
 		return false;
 	});
 }
+
+(function (){
+	var matchesSelector = (
+		HTMLElement.prototype.matchesSelector ||
+		HTMLElement.prototype.oMatchesSelector ||
+		HTMLElement.prototype.msMatchesSelector ||
+		HTMLElement.prototype.mozMatchesSelector ||
+		HTMLElement.prototype.webkitMatchesSelector
+	);
+	var originalQueryCSS;
+	if (typeof matchesSelector === 'function') {
+		originalQueryCSS = queryCSS;
+		queryCSS = function(el, rule) {
+			try {
+				return matchesSelector.call(el, rule);
+			} catch (e) {
+				return originalQueryCSS.call(this, el, rule);
+			}
+		};
+	}
+})();

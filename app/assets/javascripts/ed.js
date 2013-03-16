@@ -10,7 +10,9 @@ Event.sweep = function(){
 		try{
 			removeEvent.apply(this,q[i]);
 			q[i] = null;
-		}catch(e){alert(e)}
+		} catch(e){
+			// alert(e)
+		}
 	}
 };
 Event.observe = addEvent;
@@ -35,10 +37,38 @@ Event.pointerY = function(event){
 Event.cancelFlag = {};
 Event.cancelNext = function(type){
 	Event.cancelFlag[type] = true;
-}
+};
+
+Event.userDefined = {
+	wheeldown: function(obj, evType, fn, useCapture){
+		var callback = function(e){
+			var count  = e.wheelDelta ? e.wheelDelta / -120 : e.detail / 3;
+			if(count > 0){
+				fn(e, count);
+			}
+		};
+		obj.attachEvent ?
+			addEvent(obj, 'mousewheel', callback, useCapture) : // IE
+			addEvent(obj, 'DOMMouseScroll', callback, useCapture); // firefox
+	},
+	wheelup: function(obj, evType, fn, useCapture){
+		var callback = function(e){
+			var count  = e.wheelDelta ? e.wheelDelta / -120 : e.detail / 3;
+			if(count < 0){
+				fn(e, count);
+			}
+		};
+		obj.attachEvent ?
+			addEvent(obj, 'mousewheel', callback, useCapture) : // IE
+			addEvent(obj, 'DOMMouseScroll', callback, useCapture); // firefox
+	}
+};
 
 window.onunload = Event.sweep;
 function addEvent(obj, evType, fn, useCapture){
+	if(Event.userDefined.hasOwnProperty(evType)){
+		return Event.userDefined[evType].apply(null, arguments);
+	}
 	Event.list.push(arguments);
 	if(obj.addEventListener){
 		obj.addEventListener(evType, fn, useCapture);
@@ -78,25 +108,45 @@ Trigger.extend({
 		addEvent(target, this.type, function(e){
 			var e = e || window.event;
 			var element = e.target || e.srcElement;
+			var args = Array.prototype.slice(arguments);
+			args[0] = e;
 			if(Event.cancelFlag[e.type] == true){
 				Event.cancelFlag[e.type] = false;
 				return;
 			}
+			/*
 			this.event_list.forEach(function(pair){
-				this.enable && pair[0].call(element,e) && pair[1].call(element,e)
+				this.enable && pair[1].apply(element,args) && pair[2].apply(element,args)
 			},this)
+			*/
+			var pair;
+			for(var i=0;i<this.event_list.length;i++){
+				pair = this.event_list[i];
+				this.enable && pair[1].apply(element,args) && pair[2].apply(element,args);
+			}
+			element = null;
+			e = null;
 		}.bind(this))
 		this.destroy();
 	},
 	destroy : function(){},
 	add : function(trigger, callback){
+		var expression;
 		if(isString(trigger)){
-			trigger = cssTester(trigger);
+			expression = cssTester(trigger);
+		} else {
+			expression = trigger;
 		}
 		this.event_list.push([
-			trigger,callback
+			trigger, expression, callback
 		]);
 		return this
+	},
+	remove : function(trigger){
+		this.event_list = this.event_list.reject(function(pair){
+			return pair[0] == trigger;
+		});
+		return this;
 	},
 	toggle : function(state){
 		this.enable = arguments.length ? !this.enable : state;
