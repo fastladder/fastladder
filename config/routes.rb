@@ -35,6 +35,8 @@ Fastladder::Application.routes.draw do
 
   match 'rpc/:action' => 'rpc'
 
+  get 'utility/bookmarklet' => "utility/bookmarklet#index"
+
   match ':controller(/:action(/:id))(.:format)'
 
 end
