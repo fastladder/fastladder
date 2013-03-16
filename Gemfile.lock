@@ -1,8 +1,9 @@
 GIT
   remote: git://github.com/kyanny/opml.git
-  revision: 3659bded5faf2633b22da0d64b65d7e49fd0ef0b
+  revision: 9f6eb1367b22e5f038de86f115fda434a773a3f2
   specs:
-    opml (0.0.1)
+    opml (1.0.0)
+      activesupport (~> 3.2.12)
 
 GIT
   remote: git://github.com/sikachu/verification.git
