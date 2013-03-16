@@ -38,7 +38,7 @@ module Fastladder
       interval = 0
       finish = false
       until finish
-        #begin
+        begin
           @logger.info "sleep: #{interval}s"
           sleep interval
           if feed = CrawlStatus.fetch_crawlable_feed
@@ -54,19 +54,19 @@ module Fastladder
           else
             interval = interval > 60 ? 60 : interval + 1
           end
-        #rescue TimeoutError
-        #  @logger.error "Time out: #{$!}"
-        #rescue Interrupt
-        #  @logger.warn "\n=> #{$!.message} trapped. Terminating..."
-        #  finish = true
-        #rescue Exception
-        #  @logger.error %!Crawler error: #{$!.message}\n#{$!.backtrace.join("\n")}!
-        #ensure
-        #  if crawl_status
-        #    crawl_status.status = CRAWL_OK
-        #    crawl_status.save
-        #  end
-        #end
+        rescue TimeoutError
+          @logger.error "Time out: #{$!}"
+        rescue Interrupt
+          @logger.warn "\n=> #{$!.message} trapped. Terminating..."
+          finish = true
+        rescue Exception
+          @logger.error %!Crawler error: #{$!.message}\n#{$!.backtrace.join("\n")}!
+        ensure
+          if crawl_status
+            crawl_status.status = CRAWL_OK
+            crawl_status.save
+          end
+        end
       end
     end
 
