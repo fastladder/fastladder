@@ -6,13 +6,13 @@
 <h2>Subscribe Feed</h2>
 <!-- <form action="/subscribe/confirm" method="post" name="subscribe" onsubmit="subscribe_submit.call(this,event)">-->
 
-<% form_tag({ :controller => :subscribe, :action => "confirm", :id => "" }, {:name => "subscribe", :onsubmit => "subscribe_submit.call(this,event)" }) do %>
+<%= form_tag(subscribe_path(url: @url), {:name => "subscribe", :onsubmit => "subscribe_submit.call(this,event)" }) do %>
 
 <div class="subscribe_candidates">
 	<h3>You can subscribe to</h3>
-	<input type="hidden" name="url" value="<%=h params[:url] %>" id="target_url">
+	<input type="hidden" name="url" value="<%= @url %>" id="target_url">
 	<input type="hidden" name="register" value="1">
-	<input type="hidden" name="ApiKey" value="<%= session.session_id %>">
+	<input type="hidden" name="ApiKey" value="<%= session[:session_id] %>">
 	<% not_subscribed = 0 %>
 	<% seen = {} %>
 	<ul id="feed_candidates">
