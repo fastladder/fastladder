@@ -158,6 +158,43 @@ class Member < ActiveRecord::Base
     self.save
   end
 
+  # export OPML or JSON
+  def export format
+    case format
+    when 'opml'
+      folders = {}
+      subs = self.subscriptions.find(:all, :order => "subscriptions.id", :include => :folder)
+
+      subs.each do |sub|
+        feed = sub.feed
+        item = {
+          :folder => (sub.folder ? sub.folder.name : "").utf8_roundtrip.html_escape,
+          :link => feed.link.html_escape,
+          :feedlink => feed.feedlink.html_escape,
+          :title => feed.title.utf8_roundtrip.html_escape,
+        }
+        if folders[item[:folder]]
+          folders[item[:folder]] << item
+        else
+          folders[item[:folder]] = [item]
+        end
+      end
+
+      output = SimpleOPML.new
+      folders.delete "" do |root|
+        root.each do |item|
+          output.add_item(item)
+        end
+      end
+      folders.each do |key, value|
+        output.add_outline(key, value)
+      end
+      return output.generate_opml
+    when 'json'
+      self.subscriptions.includes(:feed).map{|x| x.feed}.to_json
+    end
+  end
+
 protected
   # before filter
   def encrypt_password

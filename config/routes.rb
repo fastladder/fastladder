@@ -33,7 +33,7 @@ Fastladder::Application.routes.draw do
   match 'account' => 'account#index'
   match 'password' => 'account#password'
 
-  match 'rpc/update_feed' => 'rpc#update_feed'
+  match 'rpc/:action' => 'rpc'
 
   match ':controller(/:action(/:id))(.:format)'
 
