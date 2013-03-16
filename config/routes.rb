@@ -3,10 +3,10 @@ Fastladder::Application.routes.draw do
   match 'api/config/save' => 'api/config#setter'
 
   match 'api/:action' => 'api'
-  match 'subscribe/*url' => 'subscribe#confirm', as: :subscribe
+  match 'subscribe/*url' => 'subscribe#confirm', as: :subscribe, format: false
   match 'import/finish' => 'import#finish'
   match 'import/:url' => 'import#fetch'
-  match 'about/*url' => 'about#index', as: :about
+  match 'about/*url' => 'about#index', as: :about, format: false
   match 'user/:login_name/:action' => 'user'
   match 'user/:login_name' => 'user#index'
   match 'icon/:feed' => 'icon#get'
