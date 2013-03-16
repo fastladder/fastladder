@@ -1,5 +1,4 @@
 require "opml"
-require "open-uri"
 require "string_utils"
 
 class ImportController < ApplicationController
@@ -14,10 +13,10 @@ class ImportController < ApplicationController
   end
 
   def fetch
-    opml_uri = File.join(File.dirname(url_for(only_path: false)), params[:url])
+    opml_uri = params[:url]
     #begin
-      str = open(opml_uri).read
-      @opml = Opml.new(str)
+      opml = Fastladder.simple_fetch(opml_uri)
+      @opml = Opml.new(opml)
       return confirm
     #rescue => e
       render :json => e

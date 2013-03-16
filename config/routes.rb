@@ -4,13 +4,15 @@ Fastladder::Application.routes.draw do
 
   match 'api/:action' => 'api'
   match 'subscribe/*url' => 'subscribe#confirm', as: :subscribe, format: false
-  match 'import/finish' => 'import#finish'
-  match 'import/:url' => 'import#fetch'
   match 'about/*url' => 'about#index', as: :about, format: false
   match 'user/:login_name/:action' => 'user'
   match 'user/:login_name' => 'user#index'
   match 'icon/:feed' => 'icon#get'
   match 'favicon/:feed' => 'icon#get'
+
+  post 'import/finish' => 'import#finish'
+  post 'import/fetch' => 'import#fetch'
+  match 'import/' => 'import#index'
 
   resource :members, only: :create
   get 'signup' => 'members#new', as: :sign_up
