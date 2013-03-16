@@ -13,11 +13,11 @@ Fastladder::Application.routes.draw do
   match 'favicon/:feed' => 'icon#get'
 
   resource :members, only: :create
-  match 'signup' => 'members#new', as: :sign_up
+  get 'signup' => 'members#new', as: :sign_up
 
   resource :session, only: :create
-  match 'login'  => 'sessions#new',     as: :login
-  match 'logout' => 'sessions#destroy', as: :logout
+  get 'login'  => 'sessions#new',     as: :login
+  get 'logout' => 'sessions#destroy', as: :logout
 
   root to: 'reader#welcome'
 
