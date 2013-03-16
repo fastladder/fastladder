@@ -1,5 +1,3 @@
-require "feed-normalizer"
-
 class SubscribeController < ApplicationController
   before_filter :login
   # verify_json :params => :feedlink, :only => :subscribe
@@ -26,7 +24,7 @@ class SubscribeController < ApplicationController
         feeds << feed
         next
       end
-      unless feed_dom = FeedNormalizer::FeedNormalizer.parse(Fastladder::simple_fetch(feedlink))
+      unless feed_dom = Feedzirra::Feed.parse(Fastladder::simple_fetch(feedlink))
         next
       end
       feeds << Feed.new({
