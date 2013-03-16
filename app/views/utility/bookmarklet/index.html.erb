@@ -14,8 +14,8 @@
 	}
 	</script>
 	<div id="bmicon">
-		<a href="javascript:location.href='<%= url_for(:controller => "/", :only_path => false) %>subscribe/'+location.href" title="Subscribe with Fastladder"><img src="/img/parts/bm_01.gif" width="172" height="24" alt="Subscribe with Fastladder" title="Subscribe with Fastladder"></a>
-		<a href="<%= url_for(:controller => "/", :only_path => false) %>reader/" title="Fastladder"><img src="/img/parts/bm_02.gif" width="90" height="24" alt="Fastladder" title="Fastladder"></a>
+		<a href="javascript:location.href='<%= root_url %>subscribe/'+location.href" title="Subscribe with Fastladder"><img src="/img/parts/bm_01.gif" width="172" height="24" alt="Subscribe with Fastladder" title="Subscribe with Fastladder"></a>
+		<a href="<%= root_url %>reader/" title="Fastladder"><img src="/img/parts/bm_02.gif" width="90" height="24" alt="Fastladder" title="Fastladder"></a>
 	</div>
 	<script type="text/javascript">
 	new function(){
@@ -51,7 +51,7 @@
 		<img src="/img/parts/bm_ff2.gif"><br />
 		Click the following link and select 'Yes'.
 		<em>
-		<a href='javascript:navigator.registerContentHandler("application/vnd.mozilla.maybe.feed","<%= url_for(:controller => "/", :only_path => false) %>subscribe/?url=%s","Fastladder");'>Add Fastladder to your Firefox2's feed readers list.</a></em>
+		<a href='javascript:navigator.registerContentHandler("application/vnd.mozilla.maybe.feed","<%= root_url %>subscribe/?url=%s","Fastladder");'>Add Fastladder to your Firefox2's feed readers list.</a></em>
 	</p>
 	</div>
 </div>
