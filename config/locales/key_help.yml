@@ -1,0 +1,49 @@
+# -*- coding: utf-8 -*-
+
+en:
+  key_help:
+    scroll_next_item: Next item
+    scroll_prev_item: Previous item
+    scroll_next_page: Scroll down
+    scroll_prev_page: Scroll up
+    feed_next: Older items
+    feed_prev: Newer items
+    view_original: Open item
+    pin: Pin
+    open_pin: Open pinned items
+    toggle_clip: Bookmark
+    instant_clip: Quick bookmark
+    compact: Collapse/Expand item
+    unsubscribe: Unsubscribe
+    reload_subs: Reload left pane
+    toggle_leftpane: Collapse/Expand left pane
+    focus_findbox: Focus on search box
+    read_next_subs: Next feed
+    read_prev_subs: Previous feed
+    read_head_subs: Move to the top of unread feed
+    read_end_subs: Move to the bottom of unread feed
+    toggle_keyhelp: Open this menu
+
+ja:
+  key_help:
+    scroll_next_item: 次のアイテム
+    scroll_prev_item: 前のアイテム
+    scroll_next_page: 下にスクロール
+    scroll_prev_page: 上にスクロール
+    feed_next: 過去の記事に移動
+    feed_prev: 未来の記事に移動
+    view_original: 元記事を開く
+    pin: ピンを付ける / 外す
+    open_pin: ピンを開く
+    toggle_clip: クリップボタン
+    instant_clip: 一発クリップ
+    compact: 本文の表示 / 非表示
+    unsubscribe: 購読停止
+    reload_subs: フィード一覧の更新
+    toggle_leftpane: マイフィードを畳む / 戻す
+    focus_findbox: 検索ボックスに移動
+    read_next_subs: 次のフィードに移動
+    read_prev_subs: 前のフィードに移動
+    read_head_subs: 最初の未読に移動
+    read_end_subs: 最後の未読に移動
+    toggle_keyhelp: ヘルプを表示 / 非表示

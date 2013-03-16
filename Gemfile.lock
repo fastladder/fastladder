@@ -86,6 +86,8 @@ GEM
     hpricot (0.8.6)
     htmlentities (4.3.1)
     i18n (0.6.4)
+    i18n-js (2.1.2)
+      i18n
     journey (1.0.4)
     json (1.7.7)
     launchy (2.2.0)
@@ -198,6 +200,7 @@ DEPENDENCIES
   factory_girl_rails
   feed-normalizer
   haml
+  i18n-js
   launchy
   mysql2
   opml!

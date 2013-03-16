@@ -12,15 +12,15 @@ var SubsIndex = {};
 
 function init(){
 	updater("filtered_subs_count", function(){
-		this.innerHTML = FilteredSubs.length +" "+tl('items');
+		this.innerHTML = FilteredSubs.length +" "+I18n.t('items');
 	});
 	updater("filtered_subs", function(){
 		var header = [
 			'<table id="result" cellspacing="0" cellpadding="0">',
-			'<tr><th width="80" nowrap>', tl('State'), '</th>',
-			'<th width="80%">', tl('Title'), '</th>',
-			'<th width="60" nowrap>', tl('Subscribers'), '</th>',
-			'<th width="80">', tl('Rate'), '</th>',
+			'<tr><th width="80" nowrap>', I18n.t('State'), '</th>',
+			'<th width="80%">', I18n.t('Title'), '</th>',
+			'<th width="60" nowrap>', I18n.t('Subscribers'), '</th>',
+			'<th width="80">', I18n.t('Rate'), '</th>',
 			'</tr>'
 		].join("");
 		if(State.show_all){
@@ -33,7 +33,7 @@ function init(){
 				 FilteredSubs.slice(State.offset, State.offset + State.limit).map(formatter).join("") +
 				 "</table>";
 			if(FilteredSubs.length > State.limit){
-				$("show_all").innerHTML = tl('Show all') + " (" + FilteredSubs.length + " " + tl('items') + ")" ;
+				$("show_all").innerHTML = I18n.t('Show all') + " (" + FilteredSubs.length + " " + I18n.t('items') + ")" ;
 				$("show_all").style.display = "block";
 			} else {
 				$("show_all").style.display = "none";
@@ -41,7 +41,7 @@ function init(){
 		}
 		setup_style();
 	});
-	$("filtered_subs").innerHTML = "<div class='loading'>" + tl('Loading ...') + "</div>";
+	$("filtered_subs").innerHTML = "<div class='loading'>" + I18n.t('Loading ...') + "</div>";
 	load_config();
 	load_subs();
 	setup_event();
@@ -113,7 +113,7 @@ var template = new Template([
 	'<td width="80" nowrap class="check_cell"><div class="check">',
 	'<input type="checkbox" id="check_[[subscribe_id]]" onclick="return false" [[checked]]> [[ public_text ]]</div></td>',
 	'<td width="80%" style="background-image:url(\'[[icon]]\')" class="title_cell">[[title]]</td>',
-	'<td width="60" nowrap>[[#{ subscribers_count > 1 ? subscribers_count + " " + tl("people") : "just you" }]]', '</td>',
+	'<td width="60" nowrap>[[#{ subscribers_count > 1 ? subscribers_count + " " + I18n.t("people") : "just you" }]]', '</td>',
 	'<td width="80" nowrap><img src="/img/rate/[[rate]].gif"></td>',
 	'</tr>'
 ].join("")
@@ -128,7 +128,7 @@ function formatter(s){
 		classname.push("selected");
 	}
 	param.classname = classname.join(" ");
-	param.public_text = s["public"] ? tl('Public') : tl('Private');
+	param.public_text = s["public"] ? I18n.t('Public') : I18n.t('Private');
 	return template(s, param);
 }
 
@@ -246,8 +246,8 @@ function load_subs(){
 		var parted = res.partition(function(sub){
 			return sub["public"]
 		});
-		$("public_subs_count").innerHTML = parted[0].length +" "+ tl('items');
-		$("private_subs_count").innerHTML = parted[1].length +" "+ tl('items');
+		$("public_subs_count").innerHTML = parted[0].length +" "+ I18n.t('items');
+		$("private_subs_count").innerHTML = parted[1].length +" "+ I18n.t('items');
 		res.forEach(function(sub){
 			SubsIndex["_" + sub.subscribe_id] = sub;
 			sub.link_lc = sub.link.toLowerCase();
@@ -305,7 +305,7 @@ function setup_mspace(){
 		if(name == "" && i != 0) return;
 		var v = name;
 		var count = folder_count[name];
-		if(v == ""){ v = tl('[ Uncategolized ]') }
+		if(v == ""){ v = I18n.t('[ Uncategolized ]') }
 		buf.push('<option value="' + name.escapeHTML() + '" selected>' + v + " (" + count + ")</option>");
 	});
 	buf.push("</select>")
@@ -317,7 +317,7 @@ function load_config(){
 	var api = new API("/api/config/load");
 	api.post({}, function(res){
 		if(res.hasOwnProperty("default_public_status")){
-			var s = res.default_public_status ? tl('Private') : tl('Public');
+			var s = res.default_public_status ? I18n.t('Private') : I18n.t('Public');
 		} else {
 		}
 	});
@@ -345,7 +345,7 @@ function set_public(flag){
 		return (sub.selected && sub["public"] != flag);
 	});
 	if(selected.length == 0) return;
-	var text = flag ? tl('Public') : tl('Private');
+	var text = flag ? I18n.t('Public') : I18n.t('Private');
 	var c = confirm(
 		'Are you sure to mark ' + selected.length +  ' feeds as "' + text + '"?'
 	);
@@ -357,7 +357,7 @@ function set_public(flag){
 	};
 	var status = $("set_public_progress");
 	status.style.display = "inline";;
-	status.innerHTML = tl('Now saving');
+	status.innerHTML = I18n.t('Now saving');
 	api.post(param, function(){
 		selected.forEach(function(sub){
 			sub["public"] = flag;
