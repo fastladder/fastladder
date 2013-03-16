@@ -10,8 +10,41 @@ describe Api::FeedController do
 
   describe 'POST /discover' do
     it 'renders json' do
-      post :discover, { url: @feed.feedlink }, { member_id: @member.id }
+      post :discover, { url: @feed.link }, { member_id: @member.id }
       expect(response.body).to be_json
+    end
+
+    context 'no rss auto discovery links' do
+      before do
+        Rfeedfinder.stub(:feeds).and_return([])
+      end
+
+      it 'renders json of empty array' do
+        post :discover, { url: @feed.link }, { member_id: @member.id }
+        expect(JSON.parse(response.body).size).to eq(0)
+      end
+    end
+
+    context '1 rss auto discovery link' do
+      before do
+        Rfeedfinder.stub(:feeds).and_return(['http://feeds.feedburner.com/mala/blog/'])
+      end
+
+      it 'renders json of 1 feed' do
+        post :discover, { url: @feed.link }, { member_id: @member.id }
+        expect(JSON.parse(response.body).size).to eq(1)
+      end
+    end
+
+    context '2 rss auto discovery links' do
+      before do
+        Rfeedfinder.stub(:feeds).and_return(['http://feeds.feedburner.com/mala/blog/', 'http://feeds.bulknews.net/bulknews'])
+      end
+
+      it 'renders json of 2 feeds' do
+        post :discover, { url: @feed.link }, { member_id: @member.id }
+        expect(JSON.parse(response.body).size).to eq(2)
+      end
     end
   end
 

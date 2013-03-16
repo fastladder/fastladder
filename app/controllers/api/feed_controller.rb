@@ -26,7 +26,6 @@ class Api::FeedController < ApplicationController
         feeds << result
       else
         html = Fastladder::simple_fetch(feedlink)
-        logger.debug html
         unless feed = Feedzirra::Feed.parse(html)
           next
         end
