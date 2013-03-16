@@ -1,3 +1,24 @@
+# == Schema Information
+#
+# Table name: members
+#
+#  id                        :integer          not null, primary key
+#  username                  :string(255)      not null
+#  email                     :string(255)
+#  crypted_password          :string(255)
+#  salt                      :string(255)
+#  remember_token            :string(255)
+#  remember_token_expires_at :datetime
+#  config_dump               :text
+#  public                    :boolean          default(FALSE), not null
+#  created_on                :datetime         not null
+#  updated_on                :datetime         not null
+#
+# Indexes
+#
+#  index_members_on_username  (username) UNIQUE
+#
+
 require "digest/sha1"
 
 class Member < ActiveRecord::Base
