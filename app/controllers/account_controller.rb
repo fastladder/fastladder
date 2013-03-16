@@ -1,5 +1,5 @@
 class AccountController < ApplicationController
-  verify :session => :member, :redirect_to => "/login"
+  before_filter :login
 
   def password
     if request.post?

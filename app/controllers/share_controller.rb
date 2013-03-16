@@ -1,5 +1,5 @@
 class ShareController < ApplicationController
-  verify :session => :member, :redirect_to => "/login"
+  before_filter :login
   def index
 
   end

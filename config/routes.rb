@@ -30,6 +30,9 @@ Fastladder::Application.routes.draw do
 
   match 'import' => 'import#index'
 
+  match 'account' => 'account#index'
+  match 'password' => 'account#password'
+
   match ':controller(/:action(/:id))(.:format)'
 
 end
