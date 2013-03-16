@@ -1,7 +1,7 @@
 require "feed-normalizer"
 
 class SubscribeController < ApplicationController
-  verify_nothing :session => :member
+  before_filter :login
   # verify_json :params => :feedlink, :only => :subscribe
   # Ffeed = Struct.new('Candidates', :link, :feedlink, :title, :subscribers_count, :subscribe_id)
 
@@ -16,9 +16,11 @@ class SubscribeController < ApplicationController
       return self.subscribe
     end
     feeds = []
-    Rfeedfinder.feeds(params[:url]).each do |feedlink|
+    # params[:url] is http:/example.com because of squeeze("/")
+    @url = request.original_fullpath.slice(11..-1) unless params[:url].blank?
+    Rfeedfinder.feeds(@url).each do |feedlink|
       if feed = Feed.find_by_feedlink(feedlink)
-        if sub = member.subscribed(feed)
+        if sub = @member.subscribed(feed)
           feed[:subscribe_id] = sub.id
         end
         feeds << feed
@@ -28,7 +30,6 @@ class SubscribeController < ApplicationController
         next
       end
       feeds << Feed.new({
-        :subscribers_count => 0,
         :feedlink => feedlink,
         :link => feed_dom.urls[0] || feedlink,
         :title => feed_dom.title || feed_dom.link || "",
@@ -57,7 +58,7 @@ protected
     end
     options[:folder_id] = folder_id
     params[:check_for_subscribe].values.each do |feedlink|
-      member.subscribe_feed(feedlink, options)
+      @member.subscribe_feed(feedlink, options)
     end
     # render :json => params.to_json
     redirect_to :controller => "reader"
