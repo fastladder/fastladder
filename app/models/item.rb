@@ -25,15 +25,14 @@ class Item < ActiveRecord::Base
   attr_accessible :feed_id, :link, :title, :body, :author, :category, :enclosure, :enclosure_type, :digest, :stored_on, :modified_on
   belongs_to :feed
   
-  before_create :fill_datetime
-  before_save :create_digest
+  before_save :create_digest, :fill_datetime
 
   def fill_datetime
     self.stored_on = Time.now unless self.stored_on
   end
 
   def create_digest
-    str = "#{self.title}#{self.content}"
+    str = "#{self.title}#{self.body}"
     str.gsub!(%r{<br clear="all"\s*/>\s*<a href="http://rss\.rssad\.jp/(.*?)</a>\s*<br\s*/>}im, "")
     str = str.gsub(/\s+/, "")
     digest = Digest::SHA1.hexdigest(str)
