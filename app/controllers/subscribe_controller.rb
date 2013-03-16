@@ -8,7 +8,7 @@ class SubscribeController < ApplicationController
       return self.confirm
     end
   end
-  
+
   def confirm
     if request.post?
       return self.subscribe
@@ -29,7 +29,7 @@ class SubscribeController < ApplicationController
       end
       feeds << Feed.new({
         :feedlink => feedlink,
-        :link => feed_dom.urls[0] || feedlink,
+        :link => feed_dom.url || feedlink,
         :title => feed_dom.title || feed_dom.link || "",
       })
     end
