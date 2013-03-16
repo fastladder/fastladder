@@ -26,17 +26,16 @@ class Subscription < ActiveRecord::Base
   belongs_to :member
   belongs_to :feed
   belongs_to :folder
+  before_create :update_public_fields
+  after_create  :update_subscribers_count
+  after_destroy :update_subscribers_count
 
-  def before_create
+  def update_public_fields
     self.public ||= false
     true
   end
 
-  def after_create
-    self.feed.update_subscribers_count
-  end
-
-  def after_destroy
+  def update_subscribers_count
     self.feed.update_subscribers_count
   end
 end
