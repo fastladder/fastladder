@@ -5,12 +5,52 @@
    kb.add("a",function(){alert("a")});
    kb.add("A",function(){alert("Shift+a")});
 */
-function HotKey(element){
-	this._target = element || document;
+function HotKey(element, name){
+	var ctor = arguments.callee;
+	var target = element || document;
+	this._target = target;
 	this._keyfunc = {};
+	this._ctor = ctor;
+	if(name){
+		ctor.keysets[name] = this;
+	}
+	// attach event
+	if(!ctor.Base.initialized){
+		Event.observe(target, "keydown",  ctor.Base.invoke_keydown, true);
+		Event.observe(target, "keypress", ctor.Base.invoke_keypress, true);
+		ctor.Base.initialized = true;
+	}
+	this.active = true;
 	this.init();
-
 }
+
+HotKey.register_keylistener = function(handler, f){
+	if(handler == "keydown"){
+		this.Base.KeydownListeners.push(f)
+	}
+	if(handler == "keypress"){
+		this.Base.KeypressListeners.push(f)
+	}
+};
+
+HotKey.Base = {
+	initialized : false,
+	KeydownListeners  : [],
+	KeypressListeners : [],
+	invoke_keydown : function(e){
+		var listeners = HotKey.Base.KeydownListeners;
+		for(var i=0;i<listeners.length;i++){
+			listeners[i].call(this, e);
+		}
+	},
+	invoke_keypress : function(e){
+		var listeners = HotKey.Base.KeypressListeners;
+		for(var i=0;i<listeners.length;i++){
+			listeners[i].call(this, e);
+		}
+	}
+};
+
 // keycode
 HotKey.kc2char = function(kc){
 	var between = function(a,b){
@@ -78,7 +118,21 @@ HotKey.getChar = function(e){
 	} else if(e.which){
 		return HotKey.kc2char(kc);
 	}
-}
+};
+
+// キーセットの切り替え
+HotKey.keysets = {};
+HotKey.use_only = function(name){
+	var keysets = this.keysets;
+	if(!keysets.hasOwnProperty(name)) return;
+	for(var i in keysets){
+		keysets[i].activate(false);
+	}
+	setTimeout(function(){
+		keysets[name].activate(true);
+	}, 0);
+};
+
 HotKey.prototype.globalCallback = function(){};
 HotKey.prototype.ignore = /input|textarea/i;
 HotKey.prototype.allow  = /element_id/;
@@ -93,6 +147,7 @@ HotKey.prototype.init = function(){
 	//var log = [];
 	// keydown -> keypress
 	var keydown_listener = function(e){
+		if(!self.active) return;
 		self.globalCallback();
 		//window.status = count++ + "keydown";
 		if(window.opera){Event.stop(e);return}
@@ -107,14 +162,16 @@ HotKey.prototype.init = function(){
 			self.lastCapture  = "";
 		}
 		// log.push(self.lastInput);
-	}
+	};
 
 	var keypress_listener = function(e){
+		if(!self.active) return;
 		self.globalCallback();
 		if(e.metaKey || e.altKey) {return}
 		if(cancelNext){
 			cancelNext = false;
 			self.lastCapture = "keypress";
+			Event.stop(e);
 			return;
 		}
 		self.event = e;
@@ -126,21 +183,24 @@ HotKey.prototype.init = function(){
 			// log.push(self.lastInput)
 			self.invoke();
 		}
-	}
+	};
+
 	// keypress listener
-	Event.observe(target,"keydown",  keydown_listener, true);
-	Event.observe(target,"keypress", keypress_listener, true);
-}
+	this._ctor.register_keylistener("keydown", keydown_listener, self);
+	this._ctor.register_keylistener("keypress", keypress_listener, self);
+};
+
 HotKey.prototype.invoke = function(input){
 	input = input || this.lastInput;
 	var e = this.event;
-	if(this._keyfunc.hasOwnProperty(input)){
-		this._keyfunc[input].call(this,e);
-		this.abort && Event.stop(e);
-		return true
-	}
-	return false;
-}
+	if(!this._keyfunc.hasOwnProperty(input)) return false;
+	if(typeof this._keyfunc[input] != "function") return false;
+	// abort browser action
+	this.abort && Event.stop(e);
+	this._keyfunc[input].call(this, e);
+	this.lastInvoke = input;
+	return true;
+};
 
 HotKey.prototype.get_input = function(e){
 	var el  = (e.target || e.srcElement);
@@ -149,8 +209,7 @@ HotKey.prototype.get_input = function(e){
 	if(!this.allow.test(id) && this.ignore.test(tag)) return;
 	// filter
 	if(!this.filter(e)) return false;
-	
-	var input = HotKey.getChar(e);
+	var input = HotKey.getChar(e) + "";
 	// window.status = [e.type, e.keyCode,e.button, e.which,input];
 	if(e.shiftKey && input != "shift"){
 		input = (input.length == 1) ? input.toUpperCase() :	"shift+" + input;
@@ -158,11 +217,13 @@ HotKey.prototype.get_input = function(e){
 	if(e.ctrlKey && !/ctrl/i.test(input))
 		 input = "ctrl+" + input;
 	return input;
-}
+};
+
 HotKey.prototype.sendKey = function(key){
 	this._keyfunc[key] && this._keyfunc[key]()
-}
-HotKey.prototype.add = function(key,func){
+};
+
+HotKey.prototype.add = function(key, func){
 	if(key.constructor == Array){
 		for(var i=0;i<key.length;i++)
 			this.add(key[i], func)
@@ -171,7 +232,18 @@ HotKey.prototype.add = function(key,func){
 	}else{
 		this._keyfunc[key] = func;
 	}
-}
+};
+
+HotKey.prototype.remove = function(key){
+	delete this._keyfunc[key];
+	return this;
+};
+
+HotKey.prototype.activate = function(sw){
+	this.active = sw;
+	return this;
+};
+
 HotKey.prototype.clear = function(){
 	this._keyfunc = {};
-}
+};

@@ -752,12 +752,12 @@ function setup_event(){
 			case "set_rate" : var rate = this.getAttribute("rate");set_rate(sid,rate);break;
 		}
 	});
-	ClickEvent.add('[rel^Control:]', function(){
+	ClickEvent.add('[rel^="Control:"]', function(){
 		var rel = this.getAttribute("rel");
 		var action = rel.replace("Control:","");
 		eval("Control."+action);
 	});
-	ClickEvent.add('[rel=subscribe]', function(e){
+	ClickEvent.add('[rel="subscribe"]', function(e){
 		Event.stop(e);
 		var el = this;
 		var feedlink = this.href;
@@ -770,7 +770,7 @@ function setup_event(){
 			feedlink2id[feedlink] = res.subscribe_id;
 		});
 	});
-	ClickEvent.add('[rel=unsubscribe]', function(e){
+	ClickEvent.add('[rel="unsubscribe"]', function(e){
 		Event.stop(e);
 		var el = this;
 		var feedlink = this.href;
@@ -783,7 +783,7 @@ function setup_event(){
 			}
 		});
 	});
-	ClickEvent.add('[rel=discover]', function(e){
+	ClickEvent.add('[rel="discover"]', function(e){
 		Event.stop(e);
 		var el = this;
 		var url = this.href;
@@ -793,7 +793,7 @@ function setup_event(){
 		Control.show_subscribe_form();
 	});
 
-	ClickEvent.add('a[href~/subscribe/]', function(e){
+	ClickEvent.add('a[href~="/subscribe/"]', function(e){
 		if(browser.isKHTML) return;
 		var subscribe_base = "http://" + location.host + "/subscribe/";
 		var url = this.href;
@@ -809,10 +809,10 @@ function setup_event(){
 		}
 	});
 	
-	ClickEvent.add('[rel^tab:]', TabClick);
+	ClickEvent.add('[rel^="tab:"]', TabClick);
 	ClickEvent.add(True, FlatMenu.hide);
 	ClickEvent.add(True, function(){ State.LastUserAction = new Date });
-	ClickEvent.add('[rel^sort:]', function(e){
+	ClickEvent.add('[rel^="sort:"]', function(e){
 		var el = this;
 		var rel = el.getAttribute("rel");
 		var sort_mode  = rel.slice(5);
