@@ -171,24 +171,6 @@ Class.merge = function(a,b){
 	});
 	return c;
 }
-/*
-*/
-
-
-/* generic */
-if(!Array.concat){
-	(function(){
-		var methods = "concat slice shift push unshift pop sort reverse".split(" ");
-		foreach(methods,function(mn){
-			Array[mn] = function(){
-				var args = Array.from(arguments);
-				var self = args.shift();
-				return Array.prototype[mn].apply(self,args);
-			}
-		})
-	})();
-}
-
 
 function extend(self,other){
 	for(var i in other){
