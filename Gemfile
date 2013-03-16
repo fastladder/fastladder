@@ -32,6 +32,7 @@ group :development do
   gem 'pry-rails'
   gem 'pry-doc'
   gem 'annotate'
+  gem 'quiet_assets'
 end
 
 group :development, :test do

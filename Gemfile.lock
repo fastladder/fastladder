@@ -121,6 +121,8 @@ GEM
       yard (~> 0.8.1)
     pry-rails (0.2.2)
       pry (>= 0.9.10)
+    quiet_assets (1.0.2)
+      railties (>= 3.1, < 5.0)
     rack (1.4.5)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -217,6 +219,7 @@ DEPENDENCIES
   opml!
   pry-doc
   pry-rails
+  quiet_assets
   rails (= 3.2.12)
   rfeedfinder
   rspec-rails
