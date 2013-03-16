@@ -1,5 +1,4 @@
 require "fastladder"
-require "hpricot"
 require "digest/sha1"
 require "tempfile"
 require "logger"
@@ -215,11 +214,19 @@ module Fastladder
       uri_list = []
       feedlink_uri = URI.parse(feed.feedlink)
       if source
-        doc = Hpricot(source.body)
-        if link_rel = doc.at("//link[@rel='shortcut icon']") and path = link_rel["href"]
-          uri_list << feedlink_uri + path
+        doc = Nokogiri::XML.parse(source.body)
+        if link_rel = doc.at("//link[@href and (@rel='shortcut icon' or @rel='icon')]")
+          uri_list << feedlink_uri + link_rel["href"].text
         end
       end
+
+      if uri_list.empty?
+        doc = Nokogiri::HTML.parse(open(feed.link).read)
+        doc.xpath('//link[@href and (@rel="shortcut icon" or @rel="icon")]/@href').each do |href|
+          uri_list << Addressable::URI.join(feed.link, href.text).normalize
+        end
+      end
+
       uri_list << feedlink_uri + "/favicon.ico"
       uri_list << URI.parse(feed.link) + "/favicon.ico"
       @logger.info uri_list
@@ -227,7 +234,11 @@ module Fastladder
         @logger.info "fetch: #{uri.to_s}"
         next unless favicon = Fastladder::simple_fetch(uri)
         begin
-          return ImageUtils::ico2png(favicon)
+          buf = StringIO.new("")
+          image = MiniMagick::Image.read(favicon)
+          image.write(buf)
+          buf.rewind
+          return buf.read
         rescue
           @logger.error "ico2png error: #{$!.message}"
         end
