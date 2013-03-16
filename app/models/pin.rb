@@ -9,10 +9,6 @@
 #  created_on :datetime         not null
 #  updated_on :datetime         not null
 #
-# Indexes
-#
-#  index_pins_on_member_id_and_link  (member_id,link) UNIQUE
-#
 
 class Pin < ActiveRecord::Base
   belongs_to :member

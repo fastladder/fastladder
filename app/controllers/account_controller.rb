@@ -13,4 +13,8 @@ class AccountController < ApplicationController
       @member.save
     end
   end
+
+  def apikey
+    @member.set_auth_key if request.post?
+  end
 end

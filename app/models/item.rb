@@ -18,17 +18,28 @@
 #  created_on     :datetime         not null
 #  updated_on     :datetime         not null
 #
-# Indexes
-#
-#  index_items_on_feed_id_and_link  (feed_id,link) UNIQUE
-#  items_search_index               (feed_id,stored_on,created_on,id)
-#
 
 require "string_utils"
 
 class Item < ActiveRecord::Base
   attr_accessible :feed_id, :link, :title, :body, :author, :category, :enclosure, :enclosure_type, :digest, :stored_on, :modified_on
   belongs_to :feed
+  
+  before_create :fill_datetime
+  before_save :create_digest
+
+  def fill_datetime
+    self.stored_on = Time.now unless self.stored_on
+  end
+
+  def create_digest
+    str = "#{self.title}#{self.content}"
+    str.gsub!(%r{<br clear="all"\s*/>\s*<a href="http://rss\.rssad\.jp/(.*?)</a>\s*<br\s*/>}im, "")
+    str = str.gsub(/\s+/, "")
+    digest = Digest::SHA1.hexdigest(str)
+    self.digest = digest
+  end
+
 
   def to_json(options = {})
     result = {}
