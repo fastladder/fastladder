@@ -8,10 +8,6 @@
 #  created_on :datetime         not null
 #  updated_on :datetime         not null
 #
-# Indexes
-#
-#  index_folders_on_member_id_and_name  (member_id,name) UNIQUE
-#
 
 class Folder < ActiveRecord::Base
   belongs_to :member

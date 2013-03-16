@@ -14,12 +14,6 @@
 #  created_on    :datetime         not null
 #  updated_on    :datetime         not null
 #
-# Indexes
-#
-#  index_subscriptions_on_feed_id                (feed_id)
-#  index_subscriptions_on_folder_id              (folder_id)
-#  index_subscriptions_on_member_id_and_feed_id  (member_id,feed_id) UNIQUE
-#
 
 class Subscription < ActiveRecord::Base
   attr_accessible :feed_id, :has_unread, :folder_id, :rate, :public, :viewed_on

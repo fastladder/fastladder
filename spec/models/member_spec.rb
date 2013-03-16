@@ -13,10 +13,7 @@
 #  public                    :boolean          default(FALSE), not null
 #  created_on                :datetime         not null
 #  updated_on                :datetime         not null
-#
-# Indexes
-#
-#  index_members_on_username  (username) UNIQUE
+#  auth_key                  :string(255)
 #
 
 require 'spec_helper'

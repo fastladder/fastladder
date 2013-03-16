@@ -13,10 +13,7 @@
 #  public                    :boolean          default(FALSE), not null
 #  created_on                :datetime         not null
 #  updated_on                :datetime         not null
-#
-# Indexes
-#
-#  index_members_on_username  (username) UNIQUE
+#  auth_key                  :string(255)
 #
 
 require "digest/sha1"
@@ -37,6 +34,7 @@ class Member < ActiveRecord::Base
   validates_confirmation_of :password, :if => :password_required?
   validates_length_of :username, :within => 3..40
   validates_uniqueness_of :username, :case_sensitive => false
+  validates_uniqueness_of :auth_key
   before_save :encrypt_password
   
   # prevents a user from submitting a crafted form that bypasses activation
@@ -153,6 +151,11 @@ class Member < ActiveRecord::Base
 
   def recent_subs(num)
     self.subscriptions.find(:all, :order => "created_on DESC", :limit => num)
+  end
+
+  def set_auth_key
+    self.auth_key = rand(256**16).to_s(16)
+    self.save
   end
 
 protected
