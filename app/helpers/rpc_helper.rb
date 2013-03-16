@@ -1,2 +1,0 @@
-module RpcHelper
-end
