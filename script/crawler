@@ -16,10 +16,10 @@ require File.expand_path(File.dirname(__FILE__) + '/../config/environment')
 require "fastladder/crawler"
 
 if options[:daemon]
-  options[:log_file] ||= "#{RAILS_ROOT}/log/crawler.log" if options[:daemon]
+  options[:log_file] ||= File.join(Rails.root, 'log', 'crawler.log')
   exit!(0) if fork
   Process::setsid
-  pidfile = options[:pid_file] || File.join(RAILS_ROOT, 'tmp', 'pids', 'crawler.pid')
+  pidfile = options[:pid_file] || File.join(Rails.root, 'tmp', 'pids', 'crawler.pid')
   exit!(0) if fork
   open(pidfile, 'w') { |f| f << Process.pid }
   Dir::chdir('/')
