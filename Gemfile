@@ -11,7 +11,6 @@ gem 'haml'
 # current release version has no `feed.description` method. this is why :git used
 gem 'feedzirra', :git => "https://github.com/pauldix/feedzirra"
 gem 'feedisco'
-gem 'rfeedfinder'
 gem 'opml', github: 'kyanny/opml'
 gem 'verification', github: 'sikachu/verification'
 
