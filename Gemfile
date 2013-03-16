@@ -10,9 +10,10 @@ gem 'mysql2'
 gem 'haml'
 # current release version has no `feed.description` method. this is why :git used
 gem 'feedzirra', :git => "https://github.com/pauldix/feedzirra"
-gem 'rfeedfinder'
 gem 'opml', github: 'kyanny/opml'
 gem 'verification', github: 'sikachu/verification'
+gem 'hpricot'
+gem 'feed_searcher'
 
 # Gems used only for assets and not required
 # in production environments by default.

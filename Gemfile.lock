@@ -77,6 +77,8 @@ GEM
     coffee-script-source (1.6.1)
     curb (0.8.3)
     diff-lcs (1.1.3)
+    domain_name (0.5.8)
+      unf (~> 0.0.3)
     erubis (2.7.0)
     execjs (1.4.0)
       multi_json (~> 1.0)
@@ -85,14 +87,14 @@ GEM
     factory_girl_rails (1.7.0)
       factory_girl (~> 2.6.0)
       railties (>= 3.0.0)
+    feed_searcher (0.0.2)
+      mechanize (>= 1.0.0)
+      nokogiri
     ffi (1.4.0)
     haml (4.0.0)
       tilt
     hike (1.2.1)
-    hoe (3.5.1)
-      rake (>= 0.8, < 11.0)
     hpricot (0.8.6)
-    htmlentities (4.3.1)
     i18n (0.6.4)
     i18n-js (2.1.2)
       i18n
@@ -106,11 +108,22 @@ GEM
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    mechanize (2.5.1)
+      domain_name (~> 0.5, >= 0.5.1)
+      mime-types (~> 1.17, >= 1.17.2)
+      net-http-digest_auth (~> 1.1, >= 1.1.1)
+      net-http-persistent (~> 2.5, >= 2.5.2)
+      nokogiri (~> 1.4)
+      ntlm-http (~> 0.1, >= 0.1.1)
+      webrobots (~> 0.0, >= 0.0.9)
     method_source (0.8.1)
     mime-types (1.21)
     multi_json (1.6.1)
     mysql2 (0.3.11)
+    net-http-digest_auth (1.2.1)
+    net-http-persistent (2.8)
     nokogiri (1.5.6)
+    ntlm-http (0.1.1)
     polyglot (0.3.3)
     pry (0.9.12)
       coderay (~> 1.0.5)
@@ -146,10 +159,6 @@ GEM
     rake (10.0.3)
     rdoc (3.12.2)
       json (~> 1.4)
-    rfeedfinder (0.9.13)
-      hoe (>= 1.7.0)
-      hpricot (>= 0.6)
-      htmlentities (>= 4.0.0)
     rspec-core (2.12.2)
     rspec-expectations (2.12.1)
       diff-lcs (~> 1.1.3)
@@ -196,6 +205,10 @@ GEM
     uglifier (1.3.0)
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
+    unf (0.0.5)
+      unf_ext
+    unf_ext (0.0.6)
+    webrobots (0.1.1)
     websocket (1.0.7)
     xpath (1.0.0)
       nokogiri (~> 1.3)
@@ -209,8 +222,10 @@ DEPENDENCIES
   capybara
   coffee-rails (~> 3.2.1)
   factory_girl_rails
+  feed_searcher
   feedzirra!
   haml
+  hpricot
   i18n-js
   launchy
   mysql2
@@ -218,7 +233,6 @@ DEPENDENCIES
   pry-doc
   pry-rails
   rails (= 3.2.12)
-  rfeedfinder
   rspec-rails
   sass-rails (~> 3.2.3)
   simplecov

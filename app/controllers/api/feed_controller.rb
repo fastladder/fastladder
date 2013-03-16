@@ -12,7 +12,7 @@ class Api::FeedController < ApplicationController
 
   def discover
     feeds = []
-    Rfeedfinder.feeds(params[:url]).each do |feedlink|
+    FeedSearcher.search(params[:url]).each do |feedlink|
       if feed = Feed.find_by_feedlink(feedlink)
         result = {
           :subscribers_count => feed.subscribers_count,
