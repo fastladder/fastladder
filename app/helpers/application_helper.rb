@@ -2,7 +2,7 @@
 module ApplicationHelper
   def loadJS(*filename)
     filename.map {|str|
-      %Q{<script type="text/javascript" src="/js/#{str}.js" charset="utf-8"></script>}
+      javascript_include_tag str
     }.join("\n")
   end
 

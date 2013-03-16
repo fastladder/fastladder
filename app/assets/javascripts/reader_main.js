@@ -1,5 +1,7 @@
 // API
 API.StickyQuery = { ApiKey: ApiKey };
+
+var initialized = false;
 window.onload   = init;
 window.onresize = function(){invoke_hook('WINDOW_RESIZE')};
 
@@ -99,10 +101,8 @@ function hide_error(){
 function show_all_mouseover(){
 	State.help_show = true;
 	State.help_snap = this;
-	State.help_message = [
-		'新着のみの表示にすると動作が軽くなります<br>現在 :',
-		(Config.show_all ? '無効':'有効')
-	].join("");
+	var tmpl = getText('show_all_help_message_tmpl');
+	State.help_message = tmpl.fill({state: Config.show_all ? 'disabled' : 'enabled' });
 	update("help_window");
 }
 function show_all_mouseout(){
@@ -307,6 +307,7 @@ function setup_hook(){
 	var guide_fix = function(){
 		if(!hasClass("right_container","mode-guide")) return;
 		if(browser.isIE){
+			if(!$("guiderankbody")) return;
 			$("guiderankbody").style.width = $("right_container").offsetWidth - 15 + "px";
 		}
 	}
@@ -371,7 +372,6 @@ function setup_hook(){
 		});
 	});
 }
-setup_hook();
 
 /*
  State
@@ -468,22 +468,6 @@ function ajaxize(element, callback){
 	addEvent(element, "submit", onsubmit);
 	element.submit = onsubmit;
 }
-/*
- Error message
-*/
-var error_message = {};
-error_message.login = {
-	title : "ログインしてください",
-	body : "<p>ブラウザをリロードして再度ログインしてください。</p>"
-};
-error_message.xmlhttp = {
-	title : "お使いのブラウザは動作対象外です",
-	body : "<p>ブラウザのバージョンが古いためご利用いただけません。</p>"
-};
-error_message.busy = {
-	title : "データの受信に失敗しました",
-	body : "<p>サーバーが混雑している可能性があります。<br>しばらく時間をおいてから再度アクセスしてください。</p>"
-};
 
 function print_error(t){
 	var e = error_message[t];
@@ -535,7 +519,7 @@ updater("scroll_offset",function(){
 updater("folder_label",function(){
 	var item = subs_item(State.now_reading);
 	this.innerHTML = [
-		(item.folder ? item.folder.ry(8,"...") : "未分類"),
+		(item.folder ? item.folder.ry(8,"...") : tl('Uncategolized')),
 		'<img src="/img/icon/tri_d.gif">'
 	].join("");
 });
@@ -555,9 +539,11 @@ updater("total_unread_count", function(){
 	} else {
 		removeClass(this, "progress")
 	}
-	this.innerHTML = "未読 [[feed_count]]フィード&nbsp;&nbsp;|&nbsp;&nbsp;[[count]]エントリ".fill(param);
+	var tmpl = getText('unread_count_tmpl');
+	var tmpl_title = getText('unread_count_title_tmpl');
+	this.innerHTML = tmpl.fill(param);
 	if(!State.guest_mode){
-		document.title = "livedoor Reader ([[count]])".fill(param);
+		document.title = tmpl_title.fill(param);
 	}
 });
 
@@ -586,7 +572,7 @@ updater("myfeed_tab", function(){
 	this.style.borderColor = State.show_left 
 	 ? '#a5c5ff white white white'
 	 : 'white white #a5c5ff white';
-});
+}._try());
 
 updater("show_all_button", function(){
 	var style = {
@@ -778,8 +764,8 @@ function setup_event(){
 		feed_subscribe(feedlink,function(res){
 			el.setAttribute("rel","unsubscribe");
 			el.className = "unsub_button";
-			if(el.innerHTML == "追加"){
-				el.innerHTML = "解除"
+			if(el.innerHTML == tl('Add')){
+				el.innerHTML = tl('Unsubscribe');
 			}
 			feedlink2id[feedlink] = res.subscribe_id;
 		});
@@ -792,8 +778,8 @@ function setup_event(){
 		feed_unsubscribe(sid,function(res){
 			el.setAttribute("rel","subscribe");
 			el.className = "sub_button";
-			if(el.innerHTML == "解除"){
-				el.innerHTML = "追加"
+			if(el.innerHTML == tl('Unsubscribe')){
+				el.innerHTML = tl('Add');
 			}
 		});
 	});
@@ -949,11 +935,11 @@ function unsubscribe(sid,callback){
 	var api = new API("/api/feed/unsubscribe");
 	callback = callback || Function.empty;
 	var info = subs_item(sid);
-	confirm(
-		info ? "「[[title]]」の登録を解除しますか？".fill(info) : "登録を解除しますか"
-	) && api.post(
+	var tmpl = getText('unsubscribe_confirm');  // 'Are you sure to remove [[title]] from your subscription?'
+	var tmpl2 = getText('ubsubscribe_confirm2'); // 'Are you sure to unsubscribe this feed?'
+	confirm( info ? tmpl.fill(info) : tmpl2) && api.post(
 		{subscribe_id:sid},function(res){
-			message("購読停止しました");
+			message(tl('feed deleted'));
 			callback(res);
 		}
 	);
@@ -983,7 +969,7 @@ function touch_all(id){
 		subs.model.unread_feeds_count_cache -= 1;
 		info.unread_count = 0;
 		api.post({subscribe_id : id}, function(){
-			message("既読にしました");
+			message("Marked as read");
 			update("total_unread_count");
 		});
 	}
@@ -1005,7 +991,7 @@ function set_rate(id,rate){
 }
 function create_folder(name){
 	if(!name){
-		name = prompt("フォルダ名","");
+		name = prompt(tl('Folder Name'),"");
 		if(!name) return;
 	}
 	var api = new API("/api/folder/create");
@@ -1335,12 +1321,12 @@ function format_keybind(){
 	var button = [
 		'<div class="keyhelp_desc">',
 		'<div class="keyhelp_ime">',
-			'※ショートカットキーが使えない場合は日本語入力を無効にしてみてください。',
+			getText('notice_ime_off'),
 		'</div>',
 		'<div class="keyhelp_more">',
-			'<span class="button"r onclick="Control.open_keyhelp.call(this,event)">' + tl('Open in window') + '</span>',
+			'<span class="button"r onclick="Control.open_keyhelp.call(this,event)">' + tl('Show in window') + '</span>',
 			'<span class="button" onclick="Control.toggle_more_keyhelp.call(this,event)">'+ 
-			 (State.keyhelp_more ? tl('Hide') : tl('Show More') + '...') + '</span>',
+			 (State.keyhelp_more ? tl('Compact') : tl('More') + '...') + '</span>',
 		'</div>',
 		'</div>',
 		'<div class="keyhelp_hide">',
@@ -1408,21 +1394,12 @@ var Control = {
 		menu.onhide = function(){ State.show_menu = false };
 		menu.show();
 		var sep = '<div style="height:0px;border-top:1px dotted #ccc;font-size:0px;"></div>';
-		var menus = [
-			{title:"livedoor Reader Guide", action:"init_guide()"},
-			{title:"設定変更", action:"init_config()"},
-			{title:"フィードの整理", action:"init_manage()"},
-			sep,
-			{title:"本文の表示 / 非表示の切替", action:"Control.compact()"},
-			{title:"新着順 / 旧着順表示の切替", action:"Control.reverse()"},
-			sep,
-			{title:"全て読んだことにする", action:"Control.mark_all_read()"}
-		];
+		var menus = LDR_VARS.MenuItems;
 		var tmpl = Template.get("menu_item").compile();
 		var write_menu = function(){
 			menu.clear();
 			foreach(menus,function(v,i){
-				v == sep 
+				v == '-----' 
 					? menu.add(sep)
 					: menu.add(tmpl(v));
 			});
@@ -1475,7 +1452,7 @@ var Control = {
 			menu.add([
 				'<span class="button flat_menu pin_list"',
 				' rel="Control:pin_list();FlatMenu.hide()">',
-				'リスト出力 (',pin.pins.length,'件)</span>'
+				tl('List view'), ' (', pin.pins.length, tl(' items'), ')</span>'
 			].join(""));
 			foreach(pin.pins,function(v,i){
 				if(i > view_num){
@@ -1492,7 +1469,7 @@ var Control = {
 			menu.add([
 				'<span class="button flat_menu dust_box"',
 				' rel="Control:clear_pin();FlatMenu.hide()">',
-				'クリア</span>'
+				tl('Clear'), '</span>'
 			].join(""));
 			menu.update();
 		};
@@ -1503,8 +1480,8 @@ var Control = {
 		Config.set("reverse_mode", !Config.reverse_mode);
 		message(
 			(Config.reverse_mode)
-			 ? '古い記事が上に表示されます。'
-			 : '新しい記事が上に表示されます。'
+			 ? 'Show older items first'
+			 : 'Show newer items first'
 		);
 		rewrite_feed();
 	},
@@ -1512,9 +1489,9 @@ var Control = {
 		var o = get_active_item();
 		toggleClass("right_body", "compact");
 		if(contain($("right_body").className, "compact")){
-			message("本文を非表示にしました。cで元に戻ります")
+			message("expanded items / press c to collapse")
 		} else {
-			message("本文を表示しました。cで隠せます")
+			message("collapsed items / press c to expand")
 		}
 		Control.scroll_to_offset(o);
 	},
@@ -1538,7 +1515,7 @@ var Control = {
 		update("folder_label");
 		move_to(State.now_reading,folder,[
 			message.bindArgs(
-				(folder ? folder + "に移動しました" : "未分類にしました")
+				(folder ? 'Moved to ' + folder : 'Moved to Uncategolized')
 			),
 			FlatMenu.hide
 		].asCallback());
@@ -1634,10 +1611,10 @@ var Control = {
 			menu.add([
 				'<span class="button create_folder"',
 				' rel="Control:create_folder();FlatMenu.hide()">',
-				'新規フォルダ</span>'
+				tl('Create New Folder'), '</span>'
 			].join(""));
 			menu.add(tmpl({
-				folder_name : "未分類",
+				folder_name : tl('Uncategolized'),
 				move_to : ""
 			}));
 			foreach(folder.names,function(v){
@@ -1648,14 +1625,14 @@ var Control = {
 			menu.add([
 				'<span class="button dust_box"',
 				' rel="Control:unsubscribe();FlatMenu.hide()">',
-				'購読停止</span>'
+				tl('Unsubscribe'), '</span>'
 			].join(""));
 			menu.update();
 		};
 		if(folder){
 			write_menu();
 		} else {
-			menu.add("読み込み中");
+			menu.add(tl('Loading'));
 			get_folders(write_menu);
 		}
 		return menu;
@@ -1827,7 +1804,7 @@ var Control = {
 		if (check_wait()) return;
 		var next_offset = Control.next_item_offset();
 		if (next_offset == null){
-			writing_complete() && message("最後だよ");
+			writing_complete() && message('this is the last item');
 			return;
 		}
 		Control.add_scroll_padding();
@@ -1913,7 +1890,7 @@ var Control = {
 				State.return_to_head = false;
 				Control.read_head_subs();
 			} else {
-				message("最後のフィードです。sキーで先頭に戻ります");
+				message(tl('End of feeds.  Press s to return to the top.'));
 				State.return_to_head = true;
 			}
 		}
@@ -2021,8 +1998,9 @@ var Control = {
 	mark_all_read: function(){
 		var list = Ordered.list;
 		if(!list) return;
+		var no_feeds = tl('There is no item to mark as read');
 		if(list.length == 0){
-			alert("既読にすべきフィードがありません");
+			alert(no_feeds);
 			return;
 		}
 		var post_list = list.filter(function(id){
@@ -2031,10 +2009,11 @@ var Control = {
 			return (info.unread_count > 0) ? true : false;
 		});
 		if(post_list.length == 0){
-			alert("既読にすべきフィードがありません");
+			alert(no_feeds);
 			return;
 		}
-		var c = confirm("[[count]]件のフィードを既読にします。よろしいですか？".fill({
+		var tmpl = getText('mark_all_read_tmpl');
+		var c = confirm(tmpl.fill({
 			count: post_list.length
 		}));
 		if (!c) return;
@@ -2053,7 +2032,7 @@ var Control = {
 		var postdata = post_list.join(",");
 		var api = new API("/api/touch_all");
 		api.post({subscribe_id : postdata}, function(){
-			message("既読にしました");
+			message("Marked as read");
 			update("total_unread_count");
 		});
 	}
@@ -2496,7 +2475,7 @@ function feed_subscribe(feedlink,callback){
 	var api = new API("/api/feed/subscribe");
 	callback = callback || Function.empty;
 	api.post({feedlink:feedlink},function(res){
-		message("追加しました");
+		message("Subscription completed");
 		callback(res);
 		subs.update(true);
 	})
@@ -2849,7 +2828,7 @@ Subscribe.Formatter = {
 			var min = Math.min(tmp[0],tmp[1]);
 			var filtered = model.get_by_subscribers_count(min,max);
 			var param = {
-				name : min +"人 - "+ max + "人",
+				name : min + " - " + max + " " + tl('users'),
 				unread_count : filtered.get_unread_count()
 			};
 			var folder = new TreeView(
@@ -2951,7 +2930,7 @@ Subscribe.Controller = Class.create("controller").extend({
 			State.load_progress = true;
 			State.subs_loader = {
 				cancel: function(){
-					message("読み込みを中断しました");
+					message("Aborted.");
 					canceled = true;
 				}
 			};
@@ -2998,7 +2977,7 @@ Subscribe.Controller = Class.create("controller").extend({
 					update('total_unread_count');
 					count+=limit;
 					load_request();
-					message('ロード中 ' + (count+1) + " - " + (count+limit));
+					message(tl('Loading .. ') + (count+1) + " - " + (count+limit));
 				}
 			};
 			var flush = function(list){
@@ -3021,7 +3000,7 @@ Subscribe.Controller = Class.create("controller").extend({
 				//	update("total_unread_count");
 				//}
 				invoke_hook('AFTER_SUBS_LOAD');
-				message('ロード完了');
+				message('Loading completed.');
 				setTimeout(function(){self.readyState=0},3000);
 			};
 			self.readyState = 1;
@@ -3164,9 +3143,10 @@ style_updater("subs_container", function(){
 }._try());
 
 style_updater("right_container", function(){
+	var border_w = 2;
 	setStyle(this,{
 		 height : State.container_height + "px",
-		 width  : document.body.offsetWidth - State.leftpane_width - 2 + "px"
+		 width  : document.body.offsetWidth - State.leftpane_width - border_w + "px"
 	});
 }._try());
 
@@ -3302,6 +3282,9 @@ var LoadEffect = {
  初期化処理
 */
 function init(){
+	if(initialized) return;
+	initialized = true;
+	setup_hook();
 	invoke_hook('BEFORE_INIT');
 	window.onerror = function(a,b,c){
 		$("message").innerHTML = [a,b,c];
@@ -3332,13 +3315,20 @@ function init(){
 		if(!q){
 			return subs.find("");
 		}
-		var roma = new Roma();
 		var query;
-		try{
-			query = new RegExp(roma.toRegExp(q),"i");
-			//window.status = query;
-		} catch(e){
-			query = q;
+		if(typeof Roma == "function"){
+			var roma = new Roma();
+			try{
+				query = new RegExp(roma.toRegExp(q),"i");
+			} catch(e){
+				query = q;
+			}
+		} else {
+			try{
+				query = new RegExp(q, "i");
+			} catch(e){
+				query = q;
+			}
 		}
 		subs.find(query)
 	});
@@ -3393,7 +3383,7 @@ function print_discover(list){
 			}
 		});
 		output.innerHTML = uniq_list.map(function(item){
-			var users = item.subscribers_count > 1 ? "users" : "user";
+			var users = item.subscribers_count == 1 ? "user" : "users";
 			if(item.subscribe_id){
 				feedlink2id[item.feedlink] = item.subscribe_id;
 				return unsub(item,{users: users});
@@ -3632,7 +3622,7 @@ FeedFormatter.extend({
 		var feed_filter = {
 			image : FF.channel.image,
 			folder: function(v){
-				return v ? v.ry(8,"...") : "未分類"
+				return v ? v.ry(8,"...") : tl('Uncategolized')
 			}
 		};
 		this.tmpl.add_filters(feed_filter);
@@ -3711,7 +3701,7 @@ function print_feed(feed){
 		State.last_items["_"+v.id] = v;
 		var widgets = entry_widgets.process(feed, v);
 		return item_formatter(v,{
-			relative_date : (v.created_on) ? (Now-v.created_on).toRelativeDate() : "日時不明",
+			relative_date : (v.created_on) ? (Now-v.created_on).toRelativeDate() : tl('Unknown date'),
 			item_count    : item_count,
 			widgets       : widgets,
 			pin_active    : pin.has(v.link) ? "pin_active" : "",
@@ -3881,14 +3871,14 @@ function init_manage(){
 }
 
 function init_config(){
-	ahah("/contents/config.html", "right_body", function(){
+	ahah("/contents/config", "right_body", function(){
 		switchClass("right_container", "mode-config");
 		Control.scroll_top();
 		Form.fill("config_form", Config);
 		ajaxize("config_form",{
 			before: function(){return true},
 			after: function(res,req){
-				message("設定を保存しました");
+				message("Your settings have been saved");
 				typecast_config(req);
 				Object.extend(Config, req);
 			}
