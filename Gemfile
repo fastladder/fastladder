@@ -13,6 +13,7 @@ gem 'feedzirra', :git => "https://github.com/pauldix/feedzirra"
 gem 'feedisco'
 gem 'opml', github: 'kyanny/opml'
 gem 'verification', github: 'sikachu/verification'
+gem 'hpricot'
 
 # Gems used only for assets and not required
 # in production environments by default.
