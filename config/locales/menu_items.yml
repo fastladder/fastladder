@@ -1,0 +1,19 @@
+# -*- coding: utf-8 -*-
+
+en:
+  menu_items:
+    Quick Guide: Quick Guide
+    Settings: Settings
+    Edit Subscription list: Edit Subscription list
+    Expanded view / List view: Expanded view / List view
+    Toggle order: Toggle order
+    Mark all feeds as read: Mark all feeds as read
+
+ja:
+  menu_items:
+    Quick Guide: livedoor Reader Guide
+    Settings: 設定変更
+    Edit Subscription list: フィードの整理
+    Expanded view / List view: 本文の表示 / 非表示の切替
+    Toggle order: 新着順 / 旧着順表示の切替
+    Mark all feeds as read: 全て読んだことにする
