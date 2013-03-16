@@ -163,7 +163,7 @@ class Member < ActiveRecord::Base
     case format
     when 'opml'
       folders = {}
-      subs = self.subscriptions.find(:all, :order => "subscriptions.id", :include => :folder)
+      subs = subscriptions.includes(:folder).order("subscriptions.id")
 
       subs.each do |sub|
         feed = sub.feed
@@ -173,18 +173,14 @@ class Member < ActiveRecord::Base
           :feedlink => feed.feedlink.html_escape,
           :title => feed.title.utf8_roundtrip.html_escape,
         }
-        if folders[item[:folder]]
-          folders[item[:folder]] << item
-        else
-          folders[item[:folder]] = [item]
-        end
+        folder_name = item[:folder]
+        folders[folder_name] ||= []
+        folders[folder_name] << item
       end
 
       output = SimpleOPML.new
-      folders.delete "" do |root|
-        root.each do |item|
-          output.add_item(item)
-        end
+      folders.delete("").each do |item|
+        output.add_item(item)
       end
       folders.each do |key, value|
         output.add_outline(key, value)
