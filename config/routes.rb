@@ -6,7 +6,7 @@ Fastladder::Application.routes.draw do
   match 'subscribe/:url' => 'subscribe#confirm'
   match 'import/finish' => 'import#finish'
   match 'import/:url' => 'import#fetch'
-  match 'about/:url' => 'about#index'
+  match 'about/*url' => 'about#index'
   match 'user/:login_name/:action' => 'user'
   match 'user/:login_name' => 'user#index'
   match 'icon/:feed' => 'icon#get'
