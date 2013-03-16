@@ -191,7 +191,7 @@ class Member < ActiveRecord::Base
       end
       return output.generate_opml
     when 'json'
-      self.subscriptions.includes(:feed).map{|x| x.feed}.to_json
+      self.subscriptions.includes(feed: :favicon).map{|x| x.feed}.to_json
     end
   end
 
