@@ -410,7 +410,7 @@ register_command("v|view",function(mode){
 	var mode = modes.like(mode);
 	if(mode){
 		Control.change_view(mode);
-		var mode_text = getText(mode);
+		var mode_text = I18n.t(mode);
 		message(mode_text + "表示に変更しました");
 	} else {
 		message(":v [" + modes.join("|") + "]");
@@ -1436,13 +1436,6 @@ new function(){
 
 	Event.observe($(target), 'selectstart', click);
 };
-
-// translate
-function tl(str){
-	str = "" + str;
-	var t = getText(str) || getText(str.toLowerCase());
-	return (t) ? t : str;
-}
 
 // for English mode
 if(typeof Language != 'undefined' && Language == 'English'){

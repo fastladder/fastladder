@@ -150,7 +150,7 @@ subs_edit.hide = function(){
 function folder_change(e){
 	var el = this;
 	if(this.selectedIndex == 1){
-		var c = prompt(tl('New Folder Name'), "");
+		var c = prompt(I18n.t('New Folder Name'), "");
 		if(!c){
 			this.selectedIndex == 0;
 			return;
@@ -166,8 +166,8 @@ function update_folders(el, option){
 	var selected_name = option.selected;
 	var selected_id = option.selected_id;
 	el.options.length = 0;
-	el.options[0] = new Option(tl('leave it uncategorized'), "0");
-	el.options[1] = new Option(tl('create new folder'), "-");
+	el.options[0] = new Option(I18n.t('leave it uncategorized'), "0");
+	el.options[1] = new Option(I18n.t('create new folder'), "-");
 	var op = el.options;
 	var api = new API("/api/folders");
 	api.post({},function(folder){
