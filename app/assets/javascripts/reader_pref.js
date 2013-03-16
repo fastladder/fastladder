@@ -21,16 +21,19 @@ var KeyHelpOrder = [
 ];
 
 // menu
-LDR_VARS.MenuItems = [
-	{title: I18n.t("menu_items/Quick Guide"), action:"init_guide()"},
-	{title: I18n.t("menu_items/Settings"), action:"init_config()"},
-	{title: I18n.t("menu_items/Edit Subscription list"), action:"init_manage()"},
-	'-----',
-	{title: I18n.t("menu_items/Expanded view / List view"), action:"Control.compact()"},
-	{title: I18n.t("menu_items/Toggle order"), action:"Control.reverse()"},
-	'-----',
-	{title: I18n.t("menu_items/Mark all feeds as read"), action:"Control.mark_all_read()"}
-];
+(function() {
+	var options = {scope: "menu_items"};
+	LDR_VARS.MenuItems = [
+		{title: I18n.t("Quick Guide", options), action:"init_guide()"},
+		{title: I18n.t("Settings", options), action:"init_config()"},
+		{title: I18n.t("Edit Subscription list", options), action:"init_manage()"},
+		'-----',
+		{title: I18n.t("Expanded view / List view", options), action:"Control.compact()"},
+		{title: I18n.t("Toggle order", options), action:"Control.reverse()"},
+		'-----',
+		{title: I18n.t("Mark all feeds as read", options), action:"Control.mark_all_read()"}
+	];
+})();
 
 if (typeof Language === 'undefined' || Language !== 'English') {
 	KeyHelpOrder.push([ '', 'toggle_clip', 'instant_clip']);
@@ -122,26 +125,29 @@ var KeyConfig = {
 	 'toggle_keyhelp'   : '?'
 };
 
-var KeyHelp = {
-	 'scroll_next_item' : I18n.t('key_help/scroll_next_item'),
-	 'scroll_prev_item' : I18n.t('key_help/scroll_prev_item'),
-	 'scroll_next_page' : I18n.t('key_help/scroll_next_page'),
-	 'scroll_prev_page' : I18n.t('key_help/scroll_prev_page'),
-	 'feed_next'        : I18n.t('key_help/feed_next'),
-	 'feed_prev'        : I18n.t('key_help/feed_prev'),
-	 'view_original'    : I18n.t('key_help/view_original'),
-	 'pin'              : I18n.t('key_help/pin'),
-	 'open_pin'         : I18n.t('key_help/open_pin'),
-	 'toggle_clip'      : I18n.t('key_help/toggle_clip'),
-	 'instant_clip'     : I18n.t('key_help/instant_clip'),
-	 'compact'          : I18n.t('key_help/compact'),
-	 'unsubscribe'      : I18n.t('key_help/unsubscribe'),
-	 'reload_subs'      : I18n.t('key_help/reload_subs'),
-	 'toggle_leftpane'  : I18n.t('key_help/toggle_leftpane'),
-	 'focus_findbox'    : I18n.t('key_help/focus_findbox'),
-	 'read_next_subs'   : I18n.t('key_help/read_next_subs'),
-	 'read_prev_subs'   : I18n.t('key_help/read_prev_subs'),
-	 'read_head_subs'   : I18n.t('key_help/read_head_subs'),
-	 'read_end_subs'    : I18n.t('key_help/read_end_subs'),
-	 'toggle_keyhelp'   : I18n.t('key_help/toggle_keyhelp')
-};
+var KeyHelp = (function() {
+	var options = {scope: "key_help"};
+	return {
+		'scroll_next_item' : I18n.t('scroll_next_item', options),
+		'scroll_prev_item' : I18n.t('scroll_prev_item', options),
+		'scroll_next_page' : I18n.t('scroll_next_page', options),
+		'scroll_prev_page' : I18n.t('scroll_prev_page', options),
+		'feed_next'        : I18n.t('feed_next', options),
+		'feed_prev'        : I18n.t('feed_prev', options),
+		'view_original'    : I18n.t('view_original', options),
+		'pin'              : I18n.t('pin', options),
+		'open_pin'         : I18n.t('open_pin', options),
+		'toggle_clip'      : I18n.t('toggle_clip', options),
+		'instant_clip'     : I18n.t('instant_clip', options),
+		'compact'          : I18n.t('compact', options),
+		'unsubscribe'      : I18n.t('unsubscribe', options),
+		'reload_subs'      : I18n.t('reload_subs', options),
+		'toggle_leftpane'  : I18n.t('toggle_leftpane', options),
+		'focus_findbox'    : I18n.t('focus_findbox', options),
+		'read_next_subs'   : I18n.t('read_next_subs', options),
+		'read_prev_subs'   : I18n.t('read_prev_subs', options),
+		'read_head_subs'   : I18n.t('read_head_subs', options),
+		'read_end_subs'    : I18n.t('read_end_subs', options),
+		'toggle_keyhelp'   : I18n.t('toggle_keyhelp', options)
+	};
+})();
