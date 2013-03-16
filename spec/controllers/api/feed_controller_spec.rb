@@ -16,7 +16,7 @@ describe Api::FeedController do
 
     context 'no rss auto discovery links' do
       before do
-        Rfeedfinder.stub(:feeds).and_return([])
+        Feedisco.stub(:find).and_return([])
       end
 
       it 'renders json of empty array' do
@@ -27,7 +27,7 @@ describe Api::FeedController do
 
     context '1 rss auto discovery link' do
       before do
-        Rfeedfinder.stub(:feeds).and_return(['http://feeds.feedburner.com/mala/blog/'])
+        Feedisco.stub(:find).and_return(['http://feeds.feedburner.com/mala/blog/'])
       end
 
       it 'renders json of 1 feed' do
@@ -38,7 +38,7 @@ describe Api::FeedController do
 
     context '2 rss auto discovery links' do
       before do
-        Rfeedfinder.stub(:feeds).and_return(['http://feeds.feedburner.com/mala/blog/', 'http://feeds.bulknews.net/bulknews'])
+        Feedisco.stub(:find).and_return(['http://feeds.feedburner.com/mala/blog/', 'http://feeds.bulknews.net/bulknews'])
       end
 
       it 'renders json of 2 feeds' do

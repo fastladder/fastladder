@@ -8,7 +8,7 @@ describe SubscribeController do
   describe 'GET /confirm' do
     context 'feed exists' do
       before do
-        Rfeedfinder.stub(:feeds).and_return(['http://feeds.feedburner.com/mala/blog/'])
+        Feedisco.stub(:find).and_return(['http://feeds.feedburner.com/mala/blog/'])
       end
 
       it 'renders confirm.html.erb' do
@@ -24,7 +24,7 @@ describe SubscribeController do
 
     context 'no feeds' do
       before do
-        Rfeedfinder.stub(:feeds).and_return([])
+        Feedisco.stub(:find).and_return([])
       end
 
       it 'redirect to index' do
