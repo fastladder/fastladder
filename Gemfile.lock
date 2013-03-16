@@ -85,6 +85,9 @@ GEM
     factory_girl_rails (1.7.0)
       factory_girl (~> 2.6.0)
       railties (>= 3.0.0)
+    feedisco (0.1.3)
+      nokogiri
+      nokogiri
     ffi (1.4.0)
     haml (4.0.0)
       tilt
@@ -209,6 +212,7 @@ DEPENDENCIES
   capybara
   coffee-rails (~> 3.2.1)
   factory_girl_rails
+  feedisco
   feedzirra!
   haml
   i18n-js
