@@ -27,6 +27,7 @@ end
 group :development do
   gem 'pry-rails'
   gem 'pry-doc'
+  gem 'annotate'
 end
 
 group :development, :test do
