@@ -16,7 +16,6 @@
 #
 
 #require "string_utils"
-#require "feed-normalizer"
 #require "fastladder/crawler"
 
 class Feed < ActiveRecord::Base
@@ -29,14 +28,14 @@ class Feed < ActiveRecord::Base
   #has_many :folders, :through => :subscriptions
   
   def self.create_from_uri(uri)
-    unless feed_data = FeedNormalizer::FeedNormalizer.parse(Fastladder::simple_fetch(uri))
+    unless feed = Feedzirra::Feed.parse(Fastladder::simple_fetch(uri))
       return nil
     end
     feed = self.create({
       :feedlink => uri.to_s,
-      :link => feed_data.urls[0] || uri.to_s,
-      :title => feed_data.title || feed_data.link || "",
-      :description => feed_data.description || "",
+      :link => feed.url || uri.to_s,
+      :title => feed.title || feed.url || "",
+      :description => feed.description || "",
     })
     feed.create_crawl_status
     feed

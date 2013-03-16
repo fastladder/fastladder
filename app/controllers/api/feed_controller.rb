@@ -27,14 +27,14 @@ class Api::FeedController < ApplicationController
       else
         html = Fastladder::simple_fetch(feedlink)
         logger.debug html
-        unless feed_dom = FeedNormalizer::FeedNormalizer.parse(html)
+        unless feed = Feedzirra::Feed.parse(html)
           next
         end
         feeds << {
           :subscribers_count => 0,
           :feedlink => feedlink.html_escape,
-          :link => (feed_dom.urls[0] || feedlink).html_escape,
-          :title => (feed_dom.title || feed_dom.link || "").utf8_roundtrip.html_escape,
+          :link => (feed.url || feedlink).html_escape,
+          :title => (feed.title || feed.url|| "").utf8_roundtrip.html_escape,
         }
       end
     end

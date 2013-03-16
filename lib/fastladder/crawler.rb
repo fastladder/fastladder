@@ -1,5 +1,4 @@
 require "fastladder"
-require "feed-normalizer"
 require "hpricot"
 require "digest/sha1"
 require "tempfile"
@@ -130,24 +129,24 @@ module Fastladder
         :updated_items => 0,
         :error => nil
       }
-      unless parsed = FeedNormalizer::FeedNormalizer.parse(source.body)
+      unless parsed = Feedzirra::Feed.parse(source.body)
         result[:error] = 'Cannot parse feed'
         return result
       end
-      @logger.info "parsed: [#{parsed.items.size} items] #{feed.feedlink}"
-      items = parsed.items.map { |item|
+      @logger.info "parsed: [#{parsed.entries.size} items] #{feed.feedlink}"
+      items = parsed.entries.map { |item|
         Item.new({
           :feed_id => feed.id,
-          :link => item.urls.first || "",
+          :link => item.url || "",
           :title => item.title || "",
           :body => item.content,
-          :author => item.authors.first,
+          :author => item.author,
           :category => item.categories.first,
           :enclosure => nil,
           :enclosure_type => nil,
           :digest => item_digest(item),
           :stored_on => Time.now,
-          :modified_on => item.date_published ? item.date_published.to_datetime : nil,
+          :modified_on => item.published ? item.published.to_datetime : nil,
         })
       }
 
