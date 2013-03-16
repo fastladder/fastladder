@@ -87,7 +87,6 @@ class ImportController < ApplicationController
       if feed
         item.attributes["subscribed"] = @member.subscribed(feed)
       end
-      item.attributes["subscribed"] = @member.subscribed(item.attributes["xml_url"])
       item.attributes
     }
     if toplevel.size > 0 
