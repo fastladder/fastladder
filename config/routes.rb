@@ -6,7 +6,7 @@ Fastladder::Application.routes.draw do
   match 'subscribe/:url' => 'subscribe#confirm'
   match 'import/finish' => 'import#finish'
   match 'import/:url' => 'import#fetch'
-  match 'about/:url' => 'about#index'
+  match 'about/*url' => 'about#index'
   match 'user/:login_name/:action' => 'user'
   match 'user/:login_name' => 'user#index'
   match 'icon/:feed' => 'icon#get'
@@ -24,9 +24,9 @@ Fastladder::Application.routes.draw do
   match 'reader' => 'reader#index'
   match 'contents/guide' => 'contents#guide'
   match 'contents/config' => 'contents#configure'
-  match 'api/pin/all' => 'api/pin#all'
-  match 'api/feed/discover' => 'api/feed#discover'
-  match 'api/feed/subscribe' => 'api/feed#subscribe'
+  match 'api/pin/:action' => 'api/pin'
+  match 'api/feed/:action' => 'api/feed'
+  match 'api/folder/:action' => 'api/folder'
 
   match 'import' => 'import#index'
 

@@ -7,7 +7,7 @@ var Language = 'English';
 
 <% if @is_feedlink && @feed %>
 <% avg_rate = @feed.subscriptions.average(:rate, :conditions => ["rate > ?", 0]).to_i  %>
-<% subscribed = @member.subscribed(@feed) %>
+<% subscribed = @member.subscribed(@feed) unless @member.nil? %>
 
 <h2>Feed Infomation</h2>
 <div class="feedinfo">

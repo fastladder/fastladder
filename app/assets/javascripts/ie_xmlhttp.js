@@ -1,7 +1,8 @@
 (function(){
-if(typeof ActiveXObject == "function" && typeof XMLHttpRequest == "undefined"){
+// IE
+if(typeof ActiveXObject == "function"){
 	var empty = function(){};
-	XMLHttpRequest = function(){
+	_XMLHttpRequest = function(){
 		var self = this;
 		var props = "readyState,responseText,responseXML,status,statusText".split(",");
 		this.readyState  = 0;
@@ -16,7 +17,6 @@ if(typeof ActiveXObject == "function" && typeof XMLHttpRequest == "undefined"){
 			self.onreadystatechange();
 			if(self.readyState == 4){
 				self.onload();
-				// 
 				self.__request__.onreadystatechange = empty;
 				self.__request__ = null;
 				self.onreadystatechange = empty;
@@ -28,7 +28,7 @@ if(typeof ActiveXObject == "function" && typeof XMLHttpRequest == "undefined"){
 	}
 	var methods = "open,abort,send,setRequestHeader,getResponseHeader,getAllResponseHeaders".split(",");
 	var make_method = function(name){
-		XMLHttpRequest.prototype[name] = function(){
+		_XMLHttpRequest.prototype[name] = function(){
 			var params = new Array(arguments.length);
 			for(var i=0;i<params.length;i++) params[i] = "_"+i;
 			return Function(
@@ -38,5 +38,8 @@ if(typeof ActiveXObject == "function" && typeof XMLHttpRequest == "undefined"){
 		}
 	};
 	for(var i=0;i<methods.length;i++) make_method(methods[i]);
+	try{ XMLHttpRequest = _XMLHttpRequest } catch(e){}
+} else if(typeof XMLHttpRequest != "undefined"){
+	_XMLHttpRequest = XMLHttpRequest;
 }
 })();
