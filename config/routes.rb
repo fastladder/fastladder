@@ -7,8 +7,8 @@ Fastladder::Application.routes.draw do
   match 'about/*url' => 'about#index', as: :about, format: false
   match 'user/:login_name/:action' => 'user'
   match 'user/:login_name' => 'user#index'
-  match 'icon/:feed' => 'icon#get'
-  match 'favicon/:feed' => 'icon#get'
+  match 'icon/*feed' => 'icon#get'
+  match 'favicon/*feed' => 'icon#get'
 
   resource :members, only: :create
   get 'signup' => 'members#new', as: :sign_up
