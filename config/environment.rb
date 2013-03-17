@@ -16,7 +16,7 @@ CRAWL_INTERVAL = 60
 ALLOW_TAGS = %w(a i u b em strong table tr td th tbody font center div pre code blockquote ins del img br p hr ul li ol dl dt dd)
 ALLOW_ATTRIBUTES = %w(src width height border alt title href color size align)
 
-Mime::Type.register 'application/xml', :opml
+Mime::Type.register 'text/x-opml', :opml
 
 Fastladder::Initializer.run do |config|
   #config.proxy = {
