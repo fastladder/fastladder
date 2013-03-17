@@ -2,7 +2,7 @@ class UserController < ApplicationController
   def index
     @target = Member.where(username: params[:login_name]).first
     @username = @target.username
-    @recent = @target.subscriptions.where(public: true).order('created_on').limit(30).all
+    @recent = @target.subscriptions.where(public: true).order('created_on DESC').limit(30).all
     respond_to do |format|
       format.html
       format.rss { render layout: false }
@@ -13,7 +13,7 @@ class UserController < ApplicationController
   def rss
     @target = Member.where(username: params[:login_name]).first
     @username = @target.username
-    @recent = @target.subscriptions.where(public: true).order('created_on').limit(30).all
+    @recent = @target.subscriptions.where(public: true).order('created_on DESC').limit(30).all
     render action: :index, formats: [:rss], type: :builder
   end
 
