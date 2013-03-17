@@ -1,5 +1,4 @@
 //= require application
-//= require lib/reader/proto
 //= require lib/reader/common
 //= require lib/reader/pref
 //= require lib/reader/main
