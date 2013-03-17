@@ -1,27 +1,9 @@
 <div id="content" class="page_about">
 <div id="content-inner">
 
-<% if @is_feedlink && @feed %>
-<% avg_rate = @feed.subscriptions.average(:rate, :conditions => ["rate > ?", 0]).to_i  %>
-<% subscribed = @member.subscribed(@feed) unless @member.nil? %>
-
-<h2>Feed Infomation</h2>
-<div class="feedinfo">
-	<ul class="feedlist">
-		<% @feeds.uniq {|feed| feed.feedlink }.each do |feed, i| -%>
-		<li class="list<% if i == 0 -%> list-first<% end %>">
-			<%= link_to feed.title, about_path(:url => feed.feedlink) %>
-			<span class="subscriber_count"> (<%= disp_users(feed.subscribers_count) %>)</span>
-			<br>
-			<%= link_to feed.feedlink, about_path(:url => feed.feedlink), :class => "feedlink" %>
-		</li>
-		<% end -%>
-	</ul>
-</div>
-<% end -%>
-
-<% subscriptions = @feed.subscriptions if @feed -%>
-<% if @is_feedlink && @feed && subscriptions.size > 0 %>
+<% if @is_feedlink and @feed.present? -%>
+<%= render "feed", feed: @feed %>
+<% if (subscriptions = @feed.subscriptions).length > 0 -%>
 <div class="subscribers">
 	<h3>Subscribers with Public Profiles</h3>
 	<ul class="subscribers_list">
@@ -43,8 +25,23 @@
 		</li>
 		<% end %>
 	</ul>
-	</div>
+</div>
 <% end %>
+<% elsif @feeds.present? -%>
+<h2><% @feeds.length > 1 ? "select feed" : "About this feed" %></h2>
+<div class="feedinfo">
+	<ul class="feedlist">
+		<% @feeds.uniq {|feed| feed.feedlink }.each do |feed, i| -%>
+		<li class="list<% if i == 0 -%> list-first<% end %>">
+			<%= link_to feed.title, about_path(:url => feed.feedlink) %>
+			<span class="subscriber_count"> (<%= disp_users(feed.subscribers_count) %>)</span>
+			<br>
+			<%= link_to feed.feedlink, about_path(:url => feed.feedlink), :class => "feedlink" %>
+		</li>
+		<% end -%>
+	</ul>
+</div>
+<% end -%>
 
 </div><!-- /content-inner -->
 <div style="clear:both;"></div>
