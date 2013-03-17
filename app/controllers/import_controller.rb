@@ -15,7 +15,7 @@ class ImportController < ApplicationController
 
   def fetch
     unless params[:url].blank?
-      opml_uri = request.post? ? params[:url] : request.original_fullpath.slice(8..-1)
+      opml_uri = request.post? ? params[:url] : url_from_path(:url)
       opml = Fastladder.simple_fetch(opml_uri)
       @opml = Opml.new(opml)
       return confirm
