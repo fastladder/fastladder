@@ -29,16 +29,22 @@ class Feed < ActiveRecord::Base
   #has_many :members, :through => :subscriptions
   #has_many :folders, :through => :subscriptions
 
+  def self.initialize_from_uri(uri)
+    feed_dom = Feedzirra::Feed.parse(Fastladder::simple_fetch(uri))
+    return nil unless feed_dom
+
+    self.new(
+      feedlink: uri.to_s,
+      link: feed_dom.url || uri.to_s,
+      title: feed_dom.title || feed_dom.url || "",
+      description: feed_dom.description || "",
+    )
+  end
+
   def self.create_from_uri(uri)
-    unless feed = Feedzirra::Feed.parse(Fastladder::simple_fetch(uri))
-      return nil
-    end
-    feed = self.create({
-      :feedlink => uri.to_s,
-      :link => feed.url || uri.to_s,
-      :title => feed.title || feed.url || "",
-      :description => feed.description || "",
-    })
+    feed = self.initialize_from_uri(uri)
+    return nil unless feed
+    feed.save
     feed.create_crawl_status
     feed
   end
