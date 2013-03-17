@@ -103,7 +103,7 @@ function subs_edit(e){
 	var sid = this.getAttribute("rel").split(":")[1];
 	if(!subs_edit.template){
 		var retry = function(){subs_edit.call(el)};
-		ajax([subs_edit.template_url, (new Date-0)].join("?"), function(res){
+		ajax([subs_edit.template_url, (new Date()).getTime()].join("?"), function(res){
 			subs_edit.template = res;
 			retry();
 		});
