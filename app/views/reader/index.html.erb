@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<html lang="en">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8">
 	<meta http-equiv="content-script-type" content="text/javascript">
@@ -8,9 +8,8 @@
 	<link rel="stylesheet" href="/css/common.css">
 	<link rel="stylesheet" href="/css/style.css">
 	<link rel="shortcut icon" href="/favicon.ico">
-</head>
 <script type="text/javascript">
-var ApiKey = "<%=request.session_options[:id]  %>";
+var ApiKey = "<%= session[:sessionid]  %>";
 var Language = 'English';
 
 function ads_mouseover(){
@@ -217,7 +216,7 @@ table.compact input, table.compact textarea{
 }
 </style>
 <![endif]-->
-
+</head>
 <body><base target="_blank">
 
 <!-- header -->
@@ -255,9 +254,10 @@ table.compact input, table.compact textarea{
 	<tr>
 	<td align="right" nowrap  style="padding-left:12px;padding-top:2px;vertical-align:top;">
 		<div id="my_menu" style="line-height:100%;padding:4px 6px 0px 0;text-align:right">
-			<span id="welcome">welcome <%= link_to(@member.username, :controller => "user", :login_name => @member.username) %></span>
-			|&nbsp;<a href="#config" onclick="init_config();return false">Settings</a>&nbsp;
-			|&nbsp;<a href="/account/" target="_self">Account</a>&nbsp;|&nbsp;<a href="/logout" target="_self">Sign Out</a>
+			<span id="welcome">welcome <%= link_to @member.username, user_path(@member.username) %></span>
+			|&nbsp;<%= link_to "Settings", "#config", :onclick => "init_config();return false;" %>
+			|&nbsp;<%= link_to "Account", account_index_path, :target => "_self" %>
+                        |&nbsp;<%= link_to "Sign Out", logout_path, :target => "_self" %>
 		</div>
 	</td></tr>
 	</table>
@@ -379,22 +379,22 @@ table.compact input, table.compact textarea{
 	</div>
 	<div class="body">
 		<div id="add_feed">
-      <%= form_tag '/api/feed/discover', :id => 'discover_form' do %>
+			<%= form_tag '/api/feed/discover', :id => 'discover_form' do %>
 				<b>Feed URL</b> : <input type="text" name="url" style="width:280px" id="discover_url" value="http://">
 				<input type="submit" value="next" style="width:90px">
-      <% end %>
+			<% end -%>
 			<div id="discover_items"></div>
 			<div style="float:left" class="discover_help">
 				<a href="/subscribe/"><img src="/img/icon/new_window.gif" border="none"></a>
 			</div>
 		</div>
 		<div id="import_feed" style="display:none">
-      <%= form_tag '/import/index', :multipart => true, :target => '_blank' do %>
+			<%= form_tag '/import/index', :multipart => true, :target => '_blank' do %>
 				<b>file</b> : <input type="file" name="opml" style="width:230px"> <input type="submit" value=" Upload " style="width:90px">
-			<% end %>
-      <%= form_tag '/import/fetch', :multipart => true, :target => '_blank' do %>
+			<% end -%>
+			<%= form_tag '/import/fetch', :multipart => true, :target => '_blank' do %>
 				<b>OPML URL</b> : <input type="text" name="url" value="http://" style="width:280px"> <input type="submit" value=" Import from URL " style="width:90px">
-			<% end %>
+			<% end -%>
 			<div style="float:left" class="discover_help">
 				<a href="/import/"><img src="/img/icon/new_window.gif" border="none"></a>
 			</div>

@@ -1,10 +1,10 @@
 <div id="content">
 	<h2>Account</h2>
-	<%= render :partial => "navi" %>
+	<%= render "navi" %>
 	<div class="account_form">
 	<h4>Share your subscription</h4>
 	<p>You can publish your subscription list.<br />
-	<strong><a href="/share/">Manage Sharing</a></strong>
+	<strong><%= link_to "Manage Sharing", share_path %></strong>
 	</p>
 	</div>
 	<div class="clear"></div>
