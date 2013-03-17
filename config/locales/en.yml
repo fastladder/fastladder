@@ -24,7 +24,7 @@ en:
   create_folder_complete: I created folder
   print_discover_loading: Finding a feed. Please wait.
   print_discover_notfound: I could not find a valid feed.
-  this is the last item: 最後だよ
+  this is the last item: this is the last item
   End of feeds.  Press s to return to the top.: End of feeds.  Press s to return to the top.
 
   prefetching: prefetching.
