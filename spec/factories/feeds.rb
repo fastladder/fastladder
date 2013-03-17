@@ -2,7 +2,7 @@
 # Read about factories at https://github.com/thoughtbot/factory_girl
 
 FactoryGirl.define do
-  sequence(:feed_feedlink_seq) {|n| "http://feeds.feedburner.com/mala/blog/#{n}" }
+  sequence(:feed_feedlink_seq) {|n| "http://feeds.feedburner.com/mala/blog/?#{n}" }
 
   factory :feed do
     feedlink { FactoryGirl.generate(:feed_feedlink_seq) }

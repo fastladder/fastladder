@@ -8,5 +8,6 @@
 #
 
 class Favicon < ActiveRecord::Base
+  attr_accessible :image, :feed
   belongs_to :feed
 end
