@@ -46,6 +46,7 @@ group :development, :test do
   gem 'simplecov'
   gem 'simplecov-rcov'
   gem 'webmock'
+  gem 'konacha'
 end
 
 # To use ActiveModel has_secure_password
