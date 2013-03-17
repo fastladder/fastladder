@@ -850,7 +850,7 @@ function setup_hotkey(){
 		])
 	});
 	if(browser.isWin && browser.isFirefox){
-		LDR.KeyConfig.push([
+		keyconfig.push([
 			"IME",
 			function(){
 				if(this.lastInvoke == "IME"){
