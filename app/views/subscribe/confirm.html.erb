@@ -10,7 +10,6 @@
 	<input type="hidden" name="url" value="<%= @url %>" id="target_url">
 	<input type="hidden" name="register" value="1">
 	<input type="hidden" name="ApiKey" value="<%= session[:session_id] %>">
-	<% not_subscribed = 0 -%>
 	<ul id="feed_candidates">
 		<% @feeds.uniq {|feed| feed.feedlink }.each_with_index do |feed, i| -%>
 		<li class="list<% if i == 0 %> list-first<% end %>">
@@ -23,8 +22,7 @@
 			<br />
 			<%= link_to feed.feedlink, feed.feedlink, :class => "feedlink" %>
 			<% else -%>
-			<% not_subscribed += 1 -%>
-			<input type="checkbox" name="check_for_subscribe[<%= not_subscribed %>]" value="<%=h feed.feedlink %>"<% if @feeds.size == 1 || i == 0 %> checked<% end %>>
+			<input type="checkbox" name="check_for_subscribe[]" value="<%=h feed.feedlink %>"<% if @feeds.size == 1 || i == 0 %> checked<% end %>>
 			<input type="hidden" name="feedlink" value="<%=h feed.feedlink %>" />
 			<%= link_to feed.title, feed.link, :class => "subscribe_list", :style => "background-image:url('/icon/#{feed.id}')" %>
 			<span class="subscriber_count"><%= users_link(feed) %></span><br />
@@ -35,7 +33,7 @@
 	</ul>
 </div>
 
-<% if not_subscribed > 0 %>
+<% if @feeds.any? {|feed| feed[:subscribe_id].blank? } %>
 <div class="subscribe_option">
 	<h3>Options</h3>
 	<table>
