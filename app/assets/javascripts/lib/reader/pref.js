@@ -1,15 +1,18 @@
-var LDR_VARS = {
-	LeftpaneWidth   : 250, // マイフィードの幅
-	DefaultPrefetch : 2,   // デフォルトの先読み件数
-	MaxPrefetch     : 5,   // 最大先読み件数
-	PrintFeedFirstNum : 3, // 初回に描画する件数
-	PrintFeedDelay  : 500, // 2件目以降を描画するまでの待ち時間
-	PrintFeedDelay2 : 100, // 21件目以降を描画するまでの待ち時間
-	PrintFeedNum    : 20,  // 一度に描画する件数
-	SubsLimit1      : 100, // 初回にロードするSubsの件数
-	SubsLimit2      : 200, // 二回目以降にロードするSubsの件数
-	ViewModes : ['flat','folder','rate','subscribers']
-};
+(function(){
+	LDR.VARS = {
+		LeftpaneWidth   : 250, // マイフィードの幅
+		DefaultPrefetch : 2,   // デフォルトの先読み件数
+		MaxPrefetch     : 5,   // 最大先読み件数
+		PrintFeedFirstNum : 3, // 初回に描画する件数
+		PrintFeedDelay  : 500, // 2件目以降を描画するまでの待ち時間
+		PrintFeedDelay2 : 100, // 21件目以降を描画するまでの待ち時間
+		PrintFeedNum    : 20,  // 一度に描画する件数
+		SubsLimit1      : 100, // 初回にロードするSubsの件数
+		SubsLimit2      : 200, // 二回目以降にロードするSubsの件数
+		ViewModes : ['flat','folder','rate','subscribers']
+	};
+
+}).call(LDR);
 
 var KeyHelpOrder = [
 	[ 'read_next_subs', 'scroll_next_item', 'pin' ],
@@ -23,7 +26,7 @@ var KeyHelpOrder = [
 // menu
 (function() {
 	var options = {scope: "menu_items"};
-	LDR_VARS.MenuItems = [
+	LDR.VARS.MenuItems = [
 		{title: I18n.t("Quick Guide", options), action:"init_guide()"},
 		{title: I18n.t("Settings", options), action:"init_config()"},
 		{title: I18n.t("Edit Subscription list", options), action:"init_manage()"},

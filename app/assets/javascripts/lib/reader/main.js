@@ -274,7 +274,6 @@ Class.Trigger.extend({
 	}
 });
 
-var LDR = {};
 // まだ作ってないのもあり。
 LDR.trigger = new Class.Trigger(
 	// Window LOAD/UNLOAD
@@ -1639,7 +1638,7 @@ var Control = {
 		Event.cancelNext("click");
 		var menu = FlatMenu.create_on(this);
 		var tmpl = Template.get("viewmode_item").compile();
-		var modes  = LDR_VARS.ViewModes;
+		var modes  = LDR.VARS.ViewModes;
 		foreach(modes,function(v,i){
 			var item = tmpl({
 				label : I18n.t(v),
@@ -1926,7 +1925,7 @@ var Control = {
 		(!State.show_left) ? Control.show_leftpane() : Control.hide_leftpane();
 	},
 	show_leftpane: function(){
-		State.leftpane_width = LDR_VARS.LeftpaneWidth;
+		State.leftpane_width = LDR.VARS.LeftpaneWidth;
 		State.show_left = true;
 		fit_screen();
 		DOM.hide("right_top_navi");
@@ -2045,7 +2044,7 @@ function hide_overlay(){
 }
 
 function prefetch(sid,count){
-	var max_prefetch = LDR_VARS.MaxPrefetch;
+	var max_prefetch = LDR.VARS.MaxPrefetch;
 	get_unread.cache.set(sid, "prefetch");
 	switchClass("subs_item_" + sid, "ps-prefetching");
 	message("prefetching");
@@ -2075,13 +2074,13 @@ function get_prefetch_num(){
 	var prefetch_num;
 	if(Config.use_prefetch_hack){
 		prefetch_num = Config.prefetch_num;
-		if(0 <= prefetch_num && prefetch_num <= LDR_VARS.MaxPrefetch){
+		if(0 <= prefetch_num && prefetch_num <= LDR.VARS.MaxPrefetch){
 			return prefetch_num;
 		} else {
-			return LDR_VARS.DefaultPrefetch;
+			return LDR.VARS.DefaultPrefetch;
 		}
 	} else {
-		return LDR_VARS.DefaultPrefetch;
+		return LDR.VARS.DefaultPrefetch;
 	}
 }
 function get_next_group(){
@@ -2886,7 +2885,7 @@ Subscribe.Formatter = {
 	}
 };
 
-LDR_VARS.USE_PARTIAL_LOAD = true;
+LDR.VARS.USE_PARTIAL_LOAD = true;
 Subscribe.View = Class.create("view");
 Subscribe.Controller = Class.create("controller").extend({
 	loaded : false,
@@ -2912,7 +2911,7 @@ Subscribe.Controller = Class.create("controller").extend({
 		}
 	},
 	update: function(reload_flag){
-		if(!LDR_VARS.USE_PARTIAL_LOAD){
+		if(!LDR.VARS.USE_PARTIAL_LOAD){
 			return this._update.apply(this, arguments);
 		}
 		var self = this;
@@ -2939,8 +2938,8 @@ Subscribe.Controller = Class.create("controller").extend({
 			var is_first = 1;
 			var allways_flush = 1;
 			var writed = 0;
-			var limit1 = LDR_VARS.SubsLimit1; // 100;
-			var limit2 = LDR_VARS.SubsLimit2; // 200;
+			var limit1 = LDR.VARS.SubsLimit1; // 100;
+			var limit2 = LDR.VARS.SubsLimit2; // 200;
 			var limit = limit1;
 			var list = [];
 			var count = 0;
@@ -3289,7 +3288,7 @@ function init(){
 		return false;
 	}
 
-	State.leftpane_width = LDR_VARS.LeftpaneWidth;
+	State.leftpane_width = LDR.VARS.LeftpaneWidth;
 
 	DOM.show("container");
 	DOM.show("footer");
@@ -3474,8 +3473,8 @@ function get_first(id,callback){
 /*
  未読の記事を読み込む
 */
-LDR_VARS.PrefetchTimeout = 2000;
-LDR_VARS.LockTimeout = 2000;
+LDR.VARS.PrefetchTimeout = 2000;
+LDR.VARS.LockTimeout = 2000;
 function get_unread(id,callback){
 	State.viewrange.start = 0;
 	State.has_next = true;
@@ -3489,7 +3488,7 @@ function get_unread(id,callback){
 				var cached_data = get_unread.cache.get(id);
 				if(cached_data != "prefetch"){
 					loaded(cached_data);
-				} else if(now - start > LDR_VARS.PrefetchTimeout){
+				} else if(now - start > LDR.VARS.PrefetchTimeout){
 					// console.log('prefetch_timeout');
 					prefetch_timeout();
 				} else {
@@ -3517,7 +3516,7 @@ function get_unread(id,callback){
 		// release lock
 		setTimeout(function(){
 			if(!success){State.requested = false}
-		}, LDR_VARS.LockTimeout);
+		}, LDR.VARS.LockTimeout);
 	}
 	function prefetch_timeout(){
 		// unlock
@@ -3711,14 +3710,14 @@ function print_feed(feed){
 				(item_count != 1 && item_count != size) ? "inner" : ""
 			].join(" ")
 		});
-		
+
 	};
 
 	var subscribe_info = subs_item(subscribe_id);
 	var size = items.length;
 	State.viewrange.end = State.viewrange.start + size;
 
-	var first_write_num = LDR_VARS.PrintFeedFirstNum;
+	var first_write_num = LDR.VARS.PrintFeedFirstNum;
 	var widgets = channel_widgets.process(feed, items);
 	output.innerHTML = feed_formatter(
 		feed, channel, subscribe_info, {
@@ -3742,10 +3741,10 @@ function print_feed(feed){
 
 	// 遅延描画
 	function push_item(){
-		var num    = LDR_VARS.PrintFeedNum;
-		var delay  = LDR_VARS.PrintFeedDelay;
-		var delay2 = LDR_VARS.PrintFeedDelay2;
-		
+		var num    = LDR.VARS.PrintFeedNum;
+		var delay  = LDR.VARS.PrintFeedDelay;
+		var delay2 = LDR.VARS.PrintFeedDelay2;
+
 		var writer = function(){
 			var remain_items = items.slice(writed,writed + num).map(item_f).join("");
 			writed += num

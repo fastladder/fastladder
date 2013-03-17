@@ -406,7 +406,7 @@ register_command("q|quit",function(){
 });
 // change mode
 register_command("v|view",function(mode){
-	var modes = LDR_VARS.ViewModes;
+	var modes = LDR.VARS.ViewModes;
 	var mode = modes.like(mode);
 	if(mode){
 		Control.change_view(mode);
