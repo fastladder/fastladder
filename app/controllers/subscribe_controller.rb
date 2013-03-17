@@ -24,14 +24,9 @@ class SubscribeController < ApplicationController
         feeds << feed
         next
       end
-      unless feed_dom = Feedzirra::Feed.parse(Fastladder::simple_fetch(feedlink))
-        next
-      end
-      feeds << Feed.new({
-        :feedlink => feedlink,
-        :link => feed_dom.feed_url || feedlink,
-        :title => feed_dom.title || feed_dom.link || "",
-      })
+      feed = Feed.initialize_from_uri(feedlink)
+      next unless feed
+      feeds << feed
     end
     if feeds.empty?
       flash[:notice] = "please check URL"
