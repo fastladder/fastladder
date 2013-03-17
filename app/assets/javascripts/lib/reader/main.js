@@ -2475,6 +2475,8 @@ function feed_subscribe(feedlink,callback){
 		message("Subscription completed");
 		callback(res);
 		subs.update(true);
+		var api = new API("/api/feed/fetch_favicon");
+		api.post({feedlink: feedlink});
 	})
 }
 function feed_unsubscribe(sid, callback){
