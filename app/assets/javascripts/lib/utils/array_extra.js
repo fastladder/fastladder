@@ -43,8 +43,8 @@ Array.prototype.some = Array.prototype.some || function(callback,thisObject){
 if(!Array.forEach){
 	(function(){
 		var methods = (
-			"concat slice shift push unshift pop sort reverse" +
-			"forEach map filter indexOf lastIndexOf every some"
+			"concat slice shift push unshift pop sort reverse " +
+			"forEach map filter indexOf lastIndexOf every some "
 		).split(" ");
 		methods.forEach(function(mn){
 			Array[mn] = Array[mn] || function(self,args){
