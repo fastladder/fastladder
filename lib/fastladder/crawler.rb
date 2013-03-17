@@ -199,60 +199,10 @@ module Fastladder
       end
       feed.save
 
-      if image = fetch_favicon(feed, source)
-        favicon = feed.favicon
-        favicon ||= Favicon.new(:feed => feed)
-        favicon.image = image if favicon.image != image
-        favicon.save
-        GC.start
-      end
+      feed.fetch_favicon!
+      GC.start
 
       result
-    end
-
-    def fetch_favicon(feed, source)
-      uri_list = []
-      feedlink_uri = URI.parse(feed.feedlink)
-      if source
-        doc = Nokogiri::XML.parse(source.body)
-        if link_rel = doc.at("//link[@href and (@rel='shortcut icon' or @rel='icon')]")
-          uri_list << feedlink_uri + link_rel["href"].text
-        end
-      end
-
-      if uri_list.empty?
-        doc = Nokogiri::HTML.parse(open(feed.link).read)
-        doc.xpath('//link[@href and (@rel="shortcut icon" or @rel="icon")]/@href').each do |href|
-          uri_list << Addressable::URI.join(feed.link, href.text).normalize
-        end
-      end
-
-      uri_list << feedlink_uri + "/favicon.ico"
-      uri_list << URI.parse(feed.link) + "/favicon.ico"
-      @logger.info uri_list
-      uri_list.uniq.each do |uri|
-        @logger.info "fetch: #{uri.to_s}"
-        next unless favicon = open(uri.to_s)
-        begin
-          ext = favicon.meta["content-type"] == 'image/vnd.microsoft.icon' ? ".ico" : File.basename(uri.to_s)
-          tmp = Tempfile.new(["favicon", ext])
-          tmp.binmode
-          tmp.write favicon.read
-          tmp.close
-          buf = StringIO.new("")
-          image = MiniMagick::Image.open(tmp.path)
-          image.resize "16x16"
-          image.format "png"
-          image.write(buf)
-          buf.rewind
-          return buf.read.force_encoding('ascii-8bit')
-        rescue
-          @logger.error "ico2png error: #{$!.message}"
-        ensure
-          tmp.close!
-        end
-      end
-      nil
     end
 
     def item_digest(item)
