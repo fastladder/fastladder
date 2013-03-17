@@ -4,7 +4,7 @@ class RpcController < ApplicationController
   def update_feed
     sub = @member.subscribe_feed params[:feedlink]
     if params[:json]
-      params.merge JSON.parse(params[:json]).symbolize_keys
+      params.merge! JSON.parse(params[:json]).symbolize_keys
     end
     item = Item.find_or_create_by_link_and_feed_id params[:link], sub.feed.id
     item.title = params[:title]
