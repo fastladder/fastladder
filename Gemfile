@@ -45,6 +45,9 @@ group :development, :test do
   gem 'factory_girl_rails'
   gem 'simplecov'
   gem 'simplecov-rcov'
+end
+
+group :test do
   gem 'webmock'
 end
 
