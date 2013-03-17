@@ -17,6 +17,8 @@
 
 #require "string_utils"
 #require "fastladder/crawler"
+require "open-uri"
+require "tempfile"
 
 class Feed < ActiveRecord::Base
   attr_accessible :feedlink, :link, :title, :description
@@ -26,7 +28,7 @@ class Feed < ActiveRecord::Base
   has_many :subscriptions
   #has_many :members, :through => :subscriptions
   #has_many :folders, :through => :subscriptions
-  
+
   def self.create_from_uri(uri)
     unless feed = Feedzirra::Feed.parse(Fastladder::simple_fetch(uri))
       return nil
@@ -84,5 +86,56 @@ class Feed < ActiveRecord::Base
     ensure
       crawl_status.update_attribute(:status, Fastladder::Crawler::CRAWL_OK)
     end
+  end
+
+  def fetch_favicon!
+    self.favicon ||= Favicon.new(:feed => self)
+    favicon_list.each do |uri|
+      next unless response = open(uri.to_s) rescue nil # ensure timeout
+      next if response.status.last.to_i >= 400
+      # MiniMagick will determine the image type from extension of file name
+      ext = response.meta["content-type"] == 'image/vnd.microsoft.icon' ? ".ico" : File.basename(uri.to_s)
+      tmp = Tempfile.new(["favicon", ext])
+      tmp.binmode
+      tmp.write response.read
+      tmp.close
+      buf = StringIO.new
+      begin
+        image = MiniMagick::Image.open(tmp.path)
+        image.resize "16x16"
+        image.format "png"
+        image.write(buf)
+        buf.rewind
+        blob = buf.read.force_encoding('ascii-8bit')
+        self.favicon.image = blob
+        self.favicon.save
+        break
+      rescue MiniMagick::Invalid
+        next
+      ensure
+        tmp.close!
+      end
+    end
+  end
+
+  def favicon_list
+    xml = Fastladder.simple_fetch(feedlink)
+    doc = Nokogiri::XML.parse(xml)
+    uri_list = []
+
+    doc.xpath("//link[@href and (@rel='shortcut icon' or @rel='icon')]/@href").each do |href|
+      uri_list << Addressable::URI.join(feedlink, href.text).normalize
+    end
+
+    if uri_list.empty?
+      doc = Nokogiri::HTML.parse(Fastladder.simple_fetch(link))
+      doc.xpath('//link[@href and (@rel="shortcut icon" or @rel="icon")]/@href').each do |href|
+        uri_list << Addressable::URI.join(link, href.text).normalize
+      end
+    end
+
+    uri_list << Addressable::URI.join(feedlink, "/favicon.ico").normalize
+    uri_list << Addressable::URI.join(link, "/favicon.ico").normalize
+    uri_list.uniq
   end
 end

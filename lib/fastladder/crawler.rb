@@ -1,5 +1,4 @@
 require "fastladder"
-require "hpricot"
 require "digest/sha1"
 require "tempfile"
 require "logger"
@@ -200,39 +199,10 @@ module Fastladder
       end
       feed.save
 
-      if image = fetch_favicon(feed, source)
-        favicon = feed.favicon
-        favicon ||= Favicon.new(:feed => feed)
-        favicon.image = image if favicon.image != image
-        favicon.save
-        GC.start
-      end
+      feed.fetch_favicon!
+      GC.start
 
       result
-    end
-
-    def fetch_favicon(feed, source)
-      uri_list = []
-      feedlink_uri = URI.parse(feed.feedlink)
-      if source
-        doc = Hpricot(source.body)
-        if link_rel = doc.at("//link[@rel='shortcut icon']") and path = link_rel["href"]
-          uri_list << feedlink_uri + path
-        end
-      end
-      uri_list << feedlink_uri + "/favicon.ico"
-      uri_list << URI.parse(feed.link) + "/favicon.ico"
-      @logger.info uri_list
-      uri_list.uniq.each do |uri|
-        @logger.info "fetch: #{uri.to_s}"
-        next unless favicon = Fastladder::simple_fetch(uri)
-        begin
-          return ImageUtils::ico2png(favicon)
-        rescue
-          @logger.error "ico2png error: #{$!.message}"
-        end
-      end
-      nil
     end
 
     def item_digest(item)
