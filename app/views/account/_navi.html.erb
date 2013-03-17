@@ -1,7 +1,5 @@
-<% def selected(name) (name == params[:action]) ? 'class="selected"' : '' end %>
 <ul class="account_navi">
-  <li><a href="/account/password" <%= selected('password') %>>Password</a></li>
-  <li><a href="/account/apikey" <%= selected('apikey') %>>API Key</a></li>
-	<li><a href="/account/backup" <%= selected('backup') %>>Backup data</a></li>
-	<li><a href="/account/share" <%= selected('share') %>>Share</a></li>
+	<% %w/password apikey backup share/.each do |name| -%>
+	<li><%= link_to t(name, :scope => 'account'), account_path(:action => name), :class => ("selected" if name == params[:action]) %></li>
+	<% end -%>
 </ul>

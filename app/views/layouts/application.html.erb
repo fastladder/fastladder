@@ -1,39 +1,36 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-  <title>Fastladder <%=h @title ? @title : "#{controller.controller_name.capitalize} #{controller.action_name == "index" ? "" : ": " + controller.action_name }" %></title>
-  <meta http-equiv="Content-Script-Type" content="text/javascript" />
-  <meta http-equiv="Content-Style-Type" content="text/css" />
-  <link href="/css/main.css" rel="stylesheet" type="text/css" />
+	<title>Fastladder <%= @title or [params[:controller].capitalize, (params[:action] if params[:action] != "index")].compact.join(": ") %></title>
+	<meta http-equiv="Content-Script-Type" content="text/javascript" />
+	<meta http-equiv="Content-Style-Type" content="text/css" />
+	<link href="/css/main.css" rel="stylesheet" type="text/css" />
 </head>
 <body class="<%= params[:controller] %>">
-<script type="text/javascript">var ApiKey = "<%= request.session_options[:id] %>";</script>
-
+<script type="text/javascript">var ApiKey = "<%= session[:session_id] %>";</script>
 <%= javascript_include_tag 'application' %>
-
-
 <div id="container">
 <div class="navi">
-<h1 class="logo"><a href="/">Fastladder</a></h1>
-<%- if @member -%>
+<h1 class="logo"><%= link_to "Fastladder", root_path %></h1>
+<% if @member -%>
 <ul>
-	<li>Welcome <a href="<%=h "/user/#{@member.username}" %>"><%=h @member.username %></a></li>
-	<li><a href="/reader/">My Feeds</a></li>
-	<li><a href="/account/">Account</a></li>
-	<li><a href="/logout?sv=<%= request.session_options[:id] %>">Sign Out</a></li>
+	<li>Wellcome <%= link_to @member.username, user_path(@member.username) %></li>
+	<li><%= link_to "My Feeds", reader_path %></li>
+	<li><%= link_to "Account", account_index_path %></li>
+	<li><%= link_to "Sign Out", logout_path %></li>
 </ul>
-<%- end -%>
+<% end -%>
 </div>
-<%- if flash[:notice] -%>
+<% if flash[:notice] -%>
 <div class="notice" style="text-align:center;background-color:#ff9;padding:0.5em">
 	<p style="color: green"><%= flash[:notice] %></p>
 </div>
-<%- end -%>
-<%- if flash[:alert] -%>
+<% end -%>
+<% if flash[:alert] -%>
 <div class="alert" style="text-align:center;background-color:#fdf3eb;padding:0.5em">
 	<p style="color: #e81a37"><%= flash[:alert] %></p>
 </div>
-<%- end -%>
+<% end -%>
 <%= yield %>
 </div>
 </body>
