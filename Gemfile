@@ -12,7 +12,7 @@ gem 'haml'
 gem 'feedzirra', :git => "https://github.com/pauldix/feedzirra"
 gem 'opml', github: 'fastladder/opml'
 gem 'verification', github: 'sikachu/verification'
-gem 'feed_searcher', '~> 0.0.3'
+gem 'feed_searcher', '>= 0.0.4'
 gem 'nokogiri'
 gem "mini_magick"
 gem "addressable", :require => "addressable/uri"
