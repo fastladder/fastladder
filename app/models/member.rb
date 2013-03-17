@@ -34,7 +34,7 @@ class Member < ActiveRecord::Base
   validates_confirmation_of :password, :if => :password_required?
   validates_length_of :username, :within => 3..40
   validates_uniqueness_of :username, :case_sensitive => false
-  validates_uniqueness_of :auth_key
+  validates_uniqueness_of :auth_key, :allow_nil => true
   before_save :encrypt_password
   
   # prevents a user from submitting a crafted form that bypasses activation
