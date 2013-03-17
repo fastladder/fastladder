@@ -8,7 +8,7 @@
 </head>
 <body class="<%= params[:controller] %>">
 <script type="text/javascript">var ApiKey = "<%= request.session_options[:id] %>";</script>
-<%=raw loadJS("compat","common","event","template","api","reader_subscribe","round_corner") %>
+<%= javascript_include_tag "application" %>
 <div id="container">
 <div class="navi">
 <h1 class="logo"><a href="/">Fastladder</a></h1>

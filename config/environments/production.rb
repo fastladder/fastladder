@@ -46,7 +46,7 @@ Fastladder::Application.configure do
   # config.action_controller.asset_host = "http://assets.example.com"
 
   # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
-  config.assets.precompile += %w( compat.js common.js event.js template.js api.js reader_subscribe.js round_corner.js reader_proto.js reader_pref.js reader_share.js )
+  # config.assets.precompile += %w()
 
   # Disable delivery errors, bad email addresses will be ignored
   # config.action_mailer.raise_delivery_errors = false
