@@ -5,27 +5,28 @@ var initialized = false;
 window.onload   = init;
 window.onresize = function(){invoke_hook('WINDOW_RESIZE')};
 
-function preload(){
-	var preload_image = function(url){ new Image().src = url }.forEachArgs();
-	preload_image([
-		'/img/rate/0.gif',
-		'/img/rate/1.gif',
-		'/img/rate/2.gif',
-		'/img/rate/3.gif',
-		'/img/rate/4.gif',
-		'/img/rate/5.gif',
-		'/img/rate/pad/0.gif',
-		'/img/rate/pad/1.gif',
-		'/img/rate/pad/2.gif',
-		'/img/rate/pad/3.gif',
-		'/img/rate/pad/4.gif',
-		'/img/rate/pad/5.gif',
-		'/img/icon/default.gif',
-		'/img/icon/p.gif',
-		'/img/icon/m.gif'
-	]);
-}
-preload();
+LDR.ASSET_IMAGES = [
+	'/img/rate/0.gif',
+	'/img/rate/1.gif',
+	'/img/rate/2.gif',
+	'/img/rate/3.gif',
+	'/img/rate/4.gif',
+	'/img/rate/5.gif',
+	'/img/rate/pad/0.gif',
+	'/img/rate/pad/1.gif',
+	'/img/rate/pad/2.gif',
+	'/img/rate/pad/3.gif',
+	'/img/rate/pad/4.gif',
+	'/img/rate/pad/5.gif',
+	'/img/icon/default.gif',
+	'/img/icon/p.gif',
+	'/img/icon/m.gif'
+];
+
+LDR.preload(LDR.ASSET_IMAGES, function(){
+	//preload done
+});
+
 
 // last_error
 window.__ERROR__ = null;
