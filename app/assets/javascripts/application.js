@@ -10,16 +10,8 @@
 // WARNING: THE FIRST BLANK LINE MARKS THE END OF WHAT'S TO BE PROCESSED, ANY BLANK LINE SHOULD
 // GO AFTER THE REQUIRES BELOW.
 //
-//= require compat
-//= require common
-//= require event
-//= require template
-//= require api
-//= require ui
-//= require reader_proto
-//= require reader_common
-//= require reader_pref
-//= require reader_main
-//= require reader_manage
-//= require reader_widgets_en
-//= require reader_addon
+//= require_tree ./lib/utils
+//= require_tree ./lib/events
+//= require lib/template
+//= require lib/api
+//= require lib/ui
