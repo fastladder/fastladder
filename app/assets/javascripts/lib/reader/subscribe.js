@@ -103,7 +103,7 @@ function subs_edit(e){
 	var sid = this.getAttribute("rel").split(":")[1];
 	if(!subs_edit.template){
 		var retry = function(){subs_edit.call(el)};
-		ajax("/static/edit.txt?" + (new Date-0), function(res){
+		ajax([subs_edit.template_url, (new Date-0)].join("?"), function(res){
 			subs_edit.template = res;
 			retry();
 		});
@@ -140,6 +140,13 @@ function subs_edit(e){
 		}
 	});
 }
+subs_edit.template_url = (function() {
+	var suffix = "";
+	if (I18n.locale === "en") {
+		suffix = "_en";
+	}
+	return "/static/edit" + suffix + ".txt";
+})();
 subs_edit.hide = function(){
 	document.body.removeChild($("subs_edit_window"));
 	removeClass(subs_edit.current_button, "toggle-on");
