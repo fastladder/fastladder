@@ -29,7 +29,7 @@ class SubscribeController < ApplicationController
       end
       feeds << Feed.new({
         :feedlink => feedlink,
-        :link => feed_dom.urls[0] || feedlink,
+        :link => feed_dom.feed_url || feedlink,
         :title => feed_dom.title || feed_dom.link || "",
       })
     end
