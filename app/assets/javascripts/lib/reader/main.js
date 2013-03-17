@@ -191,7 +191,7 @@ function add_button(el){
 		var li = document.createElement("li");
 		li.innerHTML = el;
 		ul.appendChild(li);
-	} else { 
+	} else {
 		ul.appendChild(create_button(el));
 	}
 }
@@ -274,7 +274,6 @@ Class.Trigger.extend({
 	}
 });
 
-var LDR = {};
 // まだ作ってないのもあり。
 LDR.trigger = new Class.Trigger(
 	// Window LOAD/UNLOAD
@@ -409,11 +408,11 @@ var TT = {
 }
 function typecast_config(obj){
 	each(obj, function(value,key){
-		if(!TypeofConfig[key]) return;
+		if(!LDR.TypeofConfig[key]) return;
 		// "0" を falseに。
-		switch(TypeofConfig[key]){
+		switch(LDR.TypeofConfig[key]){
 			case 'Boolean':
-				 obj[key] = 
+				 obj[key] =
 					(value == "1") ? true :
 					(value == "0") ? false :
 					(value == "true") ? true :
@@ -567,7 +566,7 @@ updater("feed_paging_prev", function(){
 });
 
 updater("myfeed_tab", function(){
-	this.style.borderColor = State.show_left 
+	this.style.borderColor = State.show_left
 	 ? '#a5c5ff white white white'
 	 : 'white white #a5c5ff white';
 }._try());
@@ -659,12 +658,12 @@ Pipe.get = function(label){
 
 
 /*
-  Config 
+  Config
 */
 
 var Config = {};
 var onConfigChange = {};
-Object.extend(Config, DefaultConfig);
+Object.extend(Config, LDR.DefaultConfig);
 Config.addCallback = function(key, callback){
 	onConfigChange[key] = callback;
 }
@@ -806,7 +805,7 @@ function setup_event(){
 			return false;
 		}
 	});
-	
+
 	ClickEvent.add('[rel^="tab:"]', TabClick);
 	ClickEvent.add(True, FlatMenu.hide);
 	ClickEvent.add(True, function(){ State.LastUserAction = new Date });
@@ -845,13 +844,13 @@ function setup_hotkey(){
 		if(State.show_error) hide_error();
 	};
 	var keyconfig = [];
-	each(KeyConfig,function(value,key){
+	each(LDR.KeyConfig, function(value,key){
 		keyconfig.push([
 			value, Control[key]
 		])
 	});
 	if(browser.isWin && browser.isFirefox){
-		keyconfig.push([
+		LDR.KeyConfig.push([
 			"IME",
 			function(){
 				if(this.lastInvoke == "IME"){
@@ -1110,7 +1109,7 @@ Pin.extend({
 		var self = this;
 		var count = 0;
 		var max_pin = Config.max_pin;
-		if(!isNumber(max_pin)) max_pin = DefaultConfig.max_pin;
+		if(!isNumber(max_pin)) max_pin = LDR.DefaultConfig.max_pin;
 		foreach(this.pins, function(p){
 			if(max_pin > count){
 				queue.push(function(){
@@ -1169,7 +1168,7 @@ var pin = new Pin;
 
 function start_mousetracking(callback){
 	State.mousemove = function(e){
-		var pos = [e.clientX,e.clientY]; 
+		var pos = [e.clientX,e.clientY];
 		message(pos);
 		isFunction(callback) && callback(pos)
 	};
@@ -1280,7 +1279,7 @@ function format_keybind(){
 		}).join(" or ");
 	};
 	each(KeyHelp, function(value,key){
-		var kb = KeyConfig[key];
+		var kb = LDR.KeyConfig[key];
 		help.push("<tr><th>" + value + "</th><td>" + kbd(kb) + "</td></tr>");
 	});
 	return "<table>" + help.join("") + "</table>";
@@ -1301,12 +1300,12 @@ function format_keybind(){
 			return v.aroundTag("kbd");
 		}).join("<br>");
 	};
-	KeyHelpOrder.forEach(function(row, num){
+	LDR.KeyHelpOrder.forEach(function(row, num){
 		if(!State.keyhelp_more && num > 1) return;
 		help.push("<tr>");
 		row.forEach(function(f){
-			var l  = KeyHelp[f];
-			var kb = KeyConfig[f];
+			var l  = LDR.KeyHelp[f];
+			var kb = LDR.KeyConfig[f];
 			if(kb){
 				help.push("<th>" + l + ":</th><td>" + kbd(kb) + "</td>");
 			} else {
@@ -1323,7 +1322,7 @@ function format_keybind(){
 		'</div>',
 		'<div class="keyhelp_more">',
 			'<span class="button"r onclick="Control.open_keyhelp.call(this,event)">' + I18n.t('Show in window') + '</span>',
-			'<span class="button" onclick="Control.toggle_more_keyhelp.call(this,event)">'+ 
+			'<span class="button" onclick="Control.toggle_more_keyhelp.call(this,event)">'+
 			 (State.keyhelp_more ? I18n.t('Compact') : I18n.t('More') + '...') + '</span>',
 		'</div>',
 		'</div>',
@@ -1392,12 +1391,12 @@ var Control = {
 		menu.onhide = function(){ State.show_menu = false };
 		menu.show();
 		var sep = '<div style="height:0px;border-top:1px dotted #ccc;font-size:0px;"></div>';
-		var menus = LDR_VARS.MenuItems;
+		var menus = LDR.VARS.MenuItems;
 		var tmpl = Template.get("menu_item").compile();
 		var write_menu = function(){
 			menu.clear();
 			foreach(menus,function(v,i){
-				v == '-----' 
+				v == '-----'
 					? menu.add(sep)
 					: menu.add(tmpl(v));
 			});
@@ -1522,7 +1521,7 @@ var Control = {
 		(!State.keyhelp_visible) ?
 			 Control.show_keyhelp.call($("keyhelp_button")) :
 			 Control.hide_keyhelp()
-	
+
 	},
 	show_keyhelp: function(){
 		Element.show("keyhelp");
@@ -1639,7 +1638,7 @@ var Control = {
 		Event.cancelNext("click");
 		var menu = FlatMenu.create_on(this);
 		var tmpl = Template.get("viewmode_item").compile();
-		var modes  = LDR_VARS.ViewModes;
+		var modes  = LDR.VARS.ViewModes;
 		foreach(modes,function(v,i){
 			var item = tmpl({
 				label : I18n.t(v),
@@ -1742,8 +1741,8 @@ var Control = {
 		})
 	},
 	update_scrollcount: function(num){
-	
-	
+
+
 	},
 	add_scroll_padding:function(){
 		var container = $("right_container");
@@ -1926,7 +1925,7 @@ var Control = {
 		(!State.show_left) ? Control.show_leftpane() : Control.hide_leftpane();
 	},
 	show_leftpane: function(){
-		State.leftpane_width = LDR_VARS.LeftpaneWidth;
+		State.leftpane_width = LDR.VARS.LeftpaneWidth;
 		State.show_left = true;
 		fit_screen();
 		DOM.hide("right_top_navi");
@@ -1979,7 +1978,7 @@ var Control = {
 	},
 	scroll_page: function(num){
 		var h = $("right_container").offsetHeight - 40;
-		var c = 
+		var c =
 			(Config.scroll_type == "page") ? h:
 			(Config.scroll_type == "half") ? h / 2 :
 			(Config.scroll_px || 100);
@@ -2045,7 +2044,7 @@ function hide_overlay(){
 }
 
 function prefetch(sid,count){
-	var max_prefetch = LDR_VARS.MaxPrefetch;
+	var max_prefetch = LDR.VARS.MaxPrefetch;
 	get_unread.cache.set(sid, "prefetch");
 	switchClass("subs_item_" + sid, "ps-prefetching");
 	message("prefetching");
@@ -2075,13 +2074,13 @@ function get_prefetch_num(){
 	var prefetch_num;
 	if(Config.use_prefetch_hack){
 		prefetch_num = Config.prefetch_num;
-		if(0 <= prefetch_num && prefetch_num <= LDR_VARS.MaxPrefetch){
+		if(0 <= prefetch_num && prefetch_num <= LDR.VARS.MaxPrefetch){
 			return prefetch_num;
 		} else {
-			return LDR_VARS.DefaultPrefetch;
+			return LDR.VARS.DefaultPrefetch;
 		}
 	} else {
-		return LDR_VARS.DefaultPrefetch;
+		return LDR.VARS.DefaultPrefetch;
 	}
 }
 function get_next_group(){
@@ -2387,7 +2386,7 @@ TreeView.extend({
 		this.state ? this.close() : this.open();
 	}
 });
-/*  
+/*
   TreeItem
 */
 function TreeItem(data){
@@ -2438,7 +2437,7 @@ var ListItem = Class.create().extend({
 	}
 });
 
-/* 
+/*
   MenuItem共通
  */
 var MenuItem = new (Class.base(ListItem).extend({
@@ -2489,7 +2488,7 @@ function feed_unsubscribe(sid, callback){
 }
 
 /*
- 
+
 */
 Class.Traits["view"] = {
 	initialize: function(element){
@@ -2886,7 +2885,7 @@ Subscribe.Formatter = {
 	}
 };
 
-LDR_VARS.USE_PARTIAL_LOAD = true;
+LDR.VARS.USE_PARTIAL_LOAD = true;
 Subscribe.View = Class.create("view");
 Subscribe.Controller = Class.create("controller").extend({
 	loaded : false,
@@ -2912,7 +2911,7 @@ Subscribe.Controller = Class.create("controller").extend({
 		}
 	},
 	update: function(reload_flag){
-		if(!LDR_VARS.USE_PARTIAL_LOAD){
+		if(!LDR.VARS.USE_PARTIAL_LOAD){
 			return this._update.apply(this, arguments);
 		}
 		var self = this;
@@ -2939,8 +2938,8 @@ Subscribe.Controller = Class.create("controller").extend({
 			var is_first = 1;
 			var allways_flush = 1;
 			var writed = 0;
-			var limit1 = LDR_VARS.SubsLimit1; // 100;
-			var limit2 = LDR_VARS.SubsLimit2; // 200;
+			var limit1 = LDR.VARS.SubsLimit1; // 100;
+			var limit2 = LDR.VARS.SubsLimit2; // 200;
 			var limit = limit1;
 			var list = [];
 			var count = 0;
@@ -3289,7 +3288,7 @@ function init(){
 		return false;
 	}
 
-	State.leftpane_width = LDR_VARS.LeftpaneWidth;
+	State.leftpane_width = LDR.VARS.LeftpaneWidth;
 
 	DOM.show("container");
 	DOM.show("footer");
@@ -3301,7 +3300,7 @@ function init(){
 		Complete: LoadEffect.Stop
 	});
 
-	
+
 	subs = new Subscribe.Controller({
 		model : new Subscribe.Model,
 		view  : new Subscribe.View("subs_body")
@@ -3348,7 +3347,7 @@ function init(){
 		},
 		after: print_discover
 	});
-	
+
 	(function(){
 		load_content();
 		invoke_hook('BEFORE_CONFIGLOAD');
@@ -3474,8 +3473,8 @@ function get_first(id,callback){
 /*
  未読の記事を読み込む
 */
-LDR_VARS.PrefetchTimeout = 2000;
-LDR_VARS.LockTimeout = 2000;
+LDR.VARS.PrefetchTimeout = 2000;
+LDR.VARS.LockTimeout = 2000;
 function get_unread(id,callback){
 	State.viewrange.start = 0;
 	State.has_next = true;
@@ -3489,7 +3488,7 @@ function get_unread(id,callback){
 				var cached_data = get_unread.cache.get(id);
 				if(cached_data != "prefetch"){
 					loaded(cached_data);
-				} else if(now - start > LDR_VARS.PrefetchTimeout){
+				} else if(now - start > LDR.VARS.PrefetchTimeout){
 					// console.log('prefetch_timeout');
 					prefetch_timeout();
 				} else {
@@ -3517,7 +3516,7 @@ function get_unread(id,callback){
 		// release lock
 		setTimeout(function(){
 			if(!success){State.requested = false}
-		}, LDR_VARS.LockTimeout);
+		}, LDR.VARS.LockTimeout);
 	}
 	function prefetch_timeout(){
 		// unlock
@@ -3565,7 +3564,7 @@ Util.style.visible = function(el){
 function swap_channel_image(el,src){
 	el.onload = null;
 	var img = new Image();
-	var swap = function(){ 
+	var swap = function(){
 		Util.image.maxsize.call(img,200,50);
 		el.width  = img.width;
 		el.height = img.height;
@@ -3711,14 +3710,14 @@ function print_feed(feed){
 				(item_count != 1 && item_count != size) ? "inner" : ""
 			].join(" ")
 		});
-		
+
 	};
 
 	var subscribe_info = subs_item(subscribe_id);
 	var size = items.length;
 	State.viewrange.end = State.viewrange.start + size;
 
-	var first_write_num = LDR_VARS.PrintFeedFirstNum;
+	var first_write_num = LDR.VARS.PrintFeedFirstNum;
 	var widgets = channel_widgets.process(feed, items);
 	output.innerHTML = feed_formatter(
 		feed, channel, subscribe_info, {
@@ -3742,10 +3741,10 @@ function print_feed(feed){
 
 	// 遅延描画
 	function push_item(){
-		var num    = LDR_VARS.PrintFeedNum;
-		var delay  = LDR_VARS.PrintFeedDelay;
-		var delay2 = LDR_VARS.PrintFeedDelay2;
-		
+		var num    = LDR.VARS.PrintFeedNum;
+		var delay  = LDR.VARS.PrintFeedDelay;
+		var delay2 = LDR.VARS.PrintFeedDelay2;
+
 		var writer = function(){
 			var remain_items = items.slice(writed,writed + num).map(item_f).join("");
 			writed += num
