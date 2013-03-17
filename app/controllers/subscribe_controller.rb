@@ -16,7 +16,7 @@ class SubscribeController < ApplicationController
     feeds = []
     # params[:url] is http:/example.com because of squeeze("/")
     @url = request.original_fullpath.slice(11..-1) unless params[:url].blank?
-    Rfeedfinder.feeds(@url).each do |feedlink|
+    FeedSearcher.search(@url).each do |feedlink|
       if feed = Feed.find_by_feedlink(feedlink)
         if sub = @member.subscribed(feed)
           feed[:subscribe_id] = sub.id
