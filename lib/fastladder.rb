@@ -100,5 +100,3 @@ module Fastladder
 
   module_function :fetch, :simple_fetch
 end
-
-require 'fastladder/feedfinder'
