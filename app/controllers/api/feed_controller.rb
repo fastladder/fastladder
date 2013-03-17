@@ -195,6 +195,15 @@ class Api::FeedController < ApplicationController
   def remove_tags
   end
 
+  def fetch_favicon
+    feedlink = params[:feedlink]
+    if feedlink.blank? or (feed = Feed.find_by_feedlink(feedlink)).nil?
+      return render_json_status(false)
+    end
+    feed.fetch_favicon!
+    render_json_status(true)
+  end
+
 protected
   def subscribe_feed(feedlink, options)
     @member.subscribe_feed(feedlink, options)

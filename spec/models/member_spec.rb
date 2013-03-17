@@ -30,16 +30,4 @@ describe Member do
       it { expect(Member.authenticate('bulkneets', 'ssig33')).to be_false }
     end
   end
-
-  describe ".subscribe_feed" do
-    let(:member) { Factory(:member, password: "mala", password_confirmation: "mala") }
-
-    it "store feed's favicon" do
-      feed = Factory(:feed)
-      Feed.stub(:find_by_feedlink).with('url').and_return(nil)
-      Feed.stub(:create_from_uri).with('url').and_return(feed)
-      feed.should_receive(:fetch_favicon!)
-      member.subscribe_feed('url')
-    end
-  end
 end
