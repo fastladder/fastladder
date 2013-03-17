@@ -79,7 +79,7 @@ var ClipRate = new Rate(function(e){
 
 
 new function(){
-	if(typeof Language != 'undefined' && Language == 'English'){ return }
+	if(I18n.locale === 'en'){ return }
 	// extension for livedoor clip
 	KeyConfig.toggle_clip  = "b";
 	KeyConfig.instant_clip = "i";
@@ -301,7 +301,7 @@ function custom_clip_change(e){
 	}
 }
 register_hook("after_init_config", function(){
-	if(typeof Language != 'undefined' && Language == 'English'){ return }
+	if(I18n.locale === 'en'){ return }
 	update("custom_clip");
 	if(Config.use_custom_clip == "off"){
 		Element.show("config_for_ldclip");
@@ -743,7 +743,7 @@ DOMArray.extend({
 
 var clip_overlay;
 (function(){
-	if(typeof Language != 'undefined' && Language == 'English'){ return }
+	if(I18n.locale === 'en'){ return }
 	State.clip_overlay = false;
 	var Keybind_clip = new HotKey(null, "clip_overlay");
 	Keybind_clip.activate(false);
@@ -1438,7 +1438,7 @@ new function(){
 };
 
 // for English mode
-if(typeof Language != 'undefined' && Language == 'English'){
+if(I18n.locale === 'en'){
 	function fit_screen(){
 		var leftpane_width = State.leftpane_width;
 		if(State.fullscreen) return fit_fullscreen();
