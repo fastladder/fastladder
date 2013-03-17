@@ -17,6 +17,29 @@
 require 'spec_helper'
 
 describe Feed do
+  describe ".initialize_from_uri" do
+    include_context(:use_stub_feed)
+    subject { Feed.initialize_from_uri("https://github.com/fastladder/fastladder/commits/master.atom") }
+    its(:title) { should == "Recent Commits to fastladder:master" }
+    its(:feedlink) { should == "https://github.com/fastladder/fastladder/commits/master.atom" }
+    its(:link) { should == "https://github.com/fastladder/fastladder/commits/master" }
+    its(:description) { should == "" }
+  end
+
+  describe ".create_from_uri" do
+    include_context(:use_stub_feed)
+    it "create feed" do
+      expect {
+        Feed.create_from_uri("https://github.com/fastladder/fastladder/commits/master.atom")
+      }.to change{ Feed.count }.from(0).to(1)
+    end
+    it "create crawl_status" do
+      expect {
+        Feed.create_from_uri("https://github.com/fastladder/fastladder/commits/master.atom")
+      }.to change{ CrawlStatus.count }.from(0).to(1)
+    end
+  end
+
   describe "fetch favicon" do
     before do
       favicon = open(File.expand_path(File.join(File.dirname(__FILE__), '..', 'fixtures', 'favicon.ico'))).read
