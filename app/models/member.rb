@@ -179,14 +179,21 @@ class Member < ActiveRecord::Base
         folders[folder_name] << item
       end
 
-      output = SimpleOPML.new
-      folders.delete("").each do |item|
-        output.add_item(item)
+      opml = SimpleOPML.new
+      folders.each do |key, items|
+        outline = key === "" ? opml : (opml << SimpleOPML::Outline.new(:text => key)).last
+        items.each do |item|
+          attributes = {
+            :title => item[:title],
+            :html_url => item[:link],
+            :text => item[:title],
+            :type => "rss",
+            :xml_url => item[:feedlink]
+          }
+          outline << SimpleOPML::Outline.new(attributes)
+        end
       end
-      folders.each do |key, value|
-        output.add_outline(key, value)
-      end
-      return output.generate_opml
+      return opml.to_xml
     when 'json'
       self.subscriptions.includes(feed: :favicon).map{|x| x.feed}.to_json
     end
