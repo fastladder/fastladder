@@ -56,7 +56,8 @@ describe Api::FeedController do
 
   describe 'POST /fetch_favicon' do
     it 'renders json' do
-      @feed.stub(:fetch_favicon!)
+      Feed.stub(:find_by_feedlink).with(@feed.feedlink).and_return(@feed)
+      @feed.should_receive(:fetch_favicon!)
       post :fetch_favicon, { feedlink: @feed.feedlink }, { member_id: @member.id }
       expect(response.body).to be_json
     end
