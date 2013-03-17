@@ -45,6 +45,7 @@ group :development, :test do
   gem 'factory_girl_rails'
   gem 'simplecov'
   gem 'simplecov-rcov'
+  gem 'webmock'
 end
 
 # To use ActiveModel has_secure_password
