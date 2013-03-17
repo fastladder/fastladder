@@ -14,14 +14,12 @@ class ImportController < ApplicationController
   end
 
   def fetch
-    opml_uri = File.join(File.dirname(url_for(only_path: false)), params[:url])
-    #begin
-      str = open(opml_uri).read
-      @opml = Opml.new(str)
+    unless params[:url].blank?
+      opml_uri = request.post? ? params[:url] : request.original_fullpath.slice(8..-1)
+      opml = Fastladder.simple_fetch(opml_uri)
+      @opml = Opml.new(opml)
       return confirm
-    #rescue => e
-      render :json => e
-    #end
+    end
   end
 
   def finish
