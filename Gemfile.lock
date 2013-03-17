@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/kyanny/opml.git
+  remote: git://github.com/fastladder/opml.git
   revision: 9f6eb1367b22e5f038de86f115fda434a773a3f2
   specs:
     opml (1.0.0)
