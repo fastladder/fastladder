@@ -6,7 +6,7 @@ Fastladder::Application.routes.draw do
   match 'subscribe/*url' => 'subscribe#confirm', as: :subscribe, format: false
   match 'about/*url' => 'about#index', as: :about, format: false
   match 'user/:login_name/:action' => 'user'
-  match 'user/:login_name' => 'user#index'
+  match 'user/:login_name' => 'user#index', :as => 'user'
   match 'icon/:feed' => 'icon#get'
   match 'favicon/:feed' => 'icon#get'
 
@@ -26,13 +26,16 @@ Fastladder::Application.routes.draw do
   match 'api/feed/:action' => 'api/feed'
   match 'api/folder/:action' => 'api/folder'
 
+  get 'share', :to => 'share#index', :as => 'share'
+
   match 'import/finish' => 'import#finish'
   post 'import/fetch' => 'import#fetch'
   match 'import' => 'import#index'
   get 'import/*url' => 'import#fetch'
+  get 'export/opml', :to => 'export#opml', :as => 'export'
 
-  match 'account' => 'account#index'
-  match 'password' => 'account#password'
+  get 'account', :to => 'account#index', :as => 'account_index'
+  get 'account/:action', :to => 'account', :as => 'account'
 
   match 'rpc/:action' => 'rpc'
 

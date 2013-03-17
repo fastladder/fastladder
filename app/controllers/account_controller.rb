@@ -3,13 +3,13 @@ class AccountController < ApplicationController
 
   def password
     if request.post?
-      unless @member.authenticated?(params[:password])
+      unless @member.authenticated?(params[:account][:password])
         @member.errors.add :password, "is invalid"
         return
       end
       @member.crypted_password = ""
-      @member.password = params[:new_password]
-      @member.password_confirmation = params[:new_password_confirmation]
+      @member.password = params[:account][:new_password]
+      @member.password_confirmation = params[:account][:new_password_confirmation]
       @member.save
     end
   end

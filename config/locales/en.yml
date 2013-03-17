@@ -61,3 +61,9 @@ en:
   leave it uncategorized: leave it uncategorized
   uncategorized: uncategorized
   New Folder Name: New Folder Name
+
+  account:
+    password: Password
+    apikey: API key
+    backup: Backup data
+    share: Share
