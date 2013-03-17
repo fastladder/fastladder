@@ -12,7 +12,7 @@ class Api::FeedController < ApplicationController
 
   def discover
     feeds = []
-    Rfeedfinder.feeds(params[:url]).each do |feedlink|
+    Feedisco.find(params[:url]).each do |feedlink|
       if feed = Feed.find_by_feedlink(feedlink)
         result = {
           :subscribers_count => feed.subscribers_count,
@@ -26,7 +26,6 @@ class Api::FeedController < ApplicationController
         feeds << result
       else
         html = Fastladder::simple_fetch(feedlink)
-        logger.debug html
         unless feed = Feedzirra::Feed.parse(html)
           next
         end

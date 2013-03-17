@@ -8,7 +8,7 @@ class SubscribeController < ApplicationController
       return self.confirm
     end
   end
-  
+
   def confirm
     if request.post?
       return self.subscribe
@@ -16,7 +16,7 @@ class SubscribeController < ApplicationController
     feeds = []
     # params[:url] is http:/example.com because of squeeze("/")
     @url = request.original_fullpath.slice(11..-1) unless params[:url].blank?
-    Rfeedfinder.feeds(@url).each do |feedlink|
+    Feedisco.find(@url).each do |feedlink|
       if feed = Feed.find_by_feedlink(feedlink)
         if sub = @member.subscribed(feed)
           feed[:subscribe_id] = sub.id
@@ -29,7 +29,7 @@ class SubscribeController < ApplicationController
       end
       feeds << Feed.new({
         :feedlink => feedlink,
-        :link => feed_dom.urls[0] || feedlink,
+        :link => feed_dom.url || feedlink,
         :title => feed_dom.title || feed_dom.link || "",
       })
     end
