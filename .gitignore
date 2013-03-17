@@ -8,3 +8,5 @@ db/schema.rb
 lib/*.dylib
 db/*.sqlite3
 coverage
+.ruby-version
+.rbenv-gemsets
