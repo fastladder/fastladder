@@ -18,6 +18,11 @@ require 'spec_helper'
 
 describe Feed do
   describe "fetch favicon" do
+    before do
+      favicon = open(File.expand_path(File.join(File.dirname(__FILE__), '..', 'fixtures', 'favicon.ico'))).read
+      stub_request(:any, /.*/).to_return(content_type: 'image/vnd.microsoft.icon', body: favicon)
+    end
+
     it "favicon.ico store as PNG" do
       feed = Factory(:feed)
       feed.fetch_favicon!

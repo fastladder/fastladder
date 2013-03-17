@@ -9,6 +9,10 @@ describe Api::FeedController do
   end
 
   describe 'POST /discover' do
+    before do
+      stub_request(:any, 'http://feeds.feedburner.com/mala/blog')
+    end
+
     it 'renders json' do
       post :discover, { url: @feed.feedlink }, { member_id: @member.id }
       expect(response.body).to be_json
