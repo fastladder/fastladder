@@ -111,6 +111,7 @@ class Member < ActiveRecord::Base
       else
         feed = Feed.create_from_uri(feedlink)
       end
+      feed.fetch_favicon!
     end
 
     options.delete(:quick)
