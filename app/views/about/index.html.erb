@@ -1,14 +1,11 @@
 <div id="content" class="page_about">
 <div id="content-inner">
 
-<script type="text/javascript">
-var Language = 'English';
-</script>
+<% if @is_feedlink && @feed %>
+<% avg_rate = @feed.subscriptions.average(:rate, :conditions => ["rate > ?", 0]).to_i  %>
+<% subscribed = @member.subscribed(@feed) unless @member.nil? %>
 
-<% if @is_feedlink and @feed.present? -%>
-<%= render "feed", feed: @feed %>
-<% elsif @feeds.present? -%>
-<h2><% @feeds.length > 1 ? "select feed" : "About this feed" %></h2>
+<h2>Feed Infomation</h2>
 <div class="feedinfo">
 	<ul class="feedlist">
 		<% @feeds.uniq {|feed| feed.feedlink }.each do |feed, i| -%>
