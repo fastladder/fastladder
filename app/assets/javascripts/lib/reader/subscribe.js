@@ -131,6 +131,18 @@ function subs_edit(e){
 			w.innerHTML = "登録されていません";
 		} else {
 			w.innerHTML = tmpl(res);
+			(function() {
+				var form = document.getElementById("subs_edit_form") || {};
+				var rate_el = form.rate;
+				if (!rate_el) {
+					return;
+				}
+				rate_el.value = res.rate;
+				rate_el.style.display = "none";
+				rate_el.parentNode.insertBefore(Rate.create(function(v) {
+					rate_el.value = v;
+				}, res.rate), rate_el);
+			})();
 			Form.fill("subs_edit_form", res);
 			ajaxize("subs_edit_form", function(){
 				subs_edit.hide();
@@ -298,9 +310,9 @@ function reverse_checkbox(el){
 	})
 }
 var Rate = {};
-Rate.create = function(callback){
+Rate.create = function(callback, defaultRate){
 	var el = $N("IMG",{
-		src: Rate.pad_img(0)
+		src: Rate.pad_img(defaultRate || 0)
 	});
 	Event.observe(el, "mousemove", Rate.hover.bind(el));
 	Event.observe(el, "mouseout", Rate.out.bind(el));
