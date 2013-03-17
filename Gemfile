@@ -49,6 +49,7 @@ end
 
 group :test do
   gem 'webmock'
+  gem 'konacha'
 end
 
 # To use ActiveModel has_secure_password
