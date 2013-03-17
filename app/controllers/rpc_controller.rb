@@ -2,7 +2,7 @@ class RpcController < ApplicationController
   skip_before_filter :verify_authenticity_token
   before_filter :auth
   def update_feed
-    sub = @member.subscribe_feed params[:feedlink] 
+    sub = @member.subscribe_feed params[:feedlink]
     if params[:json]
       params.merge JSON.parse(params[:json]).symbolize_keys
     end
@@ -25,7 +25,7 @@ class RpcController < ApplicationController
   def update_feeds
     JSON.parse(params[:feeds]).each{|x|
       x.symbolize_keys!
-      sub = @member.subscribe_feed x[:feedlink] 
+      sub = @member.subscribe_feed x[:feedlink]
       item = Item.find_or_create_by_link_and_feed_id x[:link], sub.feed.id
       item.title = x[:title]
       item.body = x[:body]
@@ -39,7 +39,7 @@ class RpcController < ApplicationController
 
   def export
     case params[:format]
-    when 'opml' 
+    when 'opml'
       render xml: @member.export('opml')
     when 'json'
       render json: @member.export('json')
@@ -47,7 +47,7 @@ class RpcController < ApplicationController
       render 'public/404', layout: false, status: 404
     end
   end
-  
+
   private
   def auth
     @member = Member.where(auth_key: params[:api_key]).first
