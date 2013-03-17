@@ -4,8 +4,6 @@ Fastladder::Application.routes.draw do
 
   match 'api/:action' => 'api'
   match 'subscribe/*url' => 'subscribe#confirm', as: :subscribe, format: false
-  match 'import/finish' => 'import#finish'
-  match 'import/:url' => 'import#fetch'
   match 'about/*url' => 'about#index', as: :about, format: false
   match 'user/:login_name/:action' => 'user'
   match 'user/:login_name' => 'user#index'
@@ -28,7 +26,10 @@ Fastladder::Application.routes.draw do
   match 'api/feed/:action' => 'api/feed'
   match 'api/folder/:action' => 'api/folder'
 
+  match 'import/finish' => 'import#finish'
+  post 'import/fetch' => 'import#fetch'
   match 'import' => 'import#index'
+  get 'import/*url' => 'import#fetch'
 
   match 'account' => 'account#index'
   match 'password' => 'account#password'
