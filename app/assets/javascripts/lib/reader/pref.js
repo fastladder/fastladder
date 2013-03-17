@@ -21,7 +21,7 @@
 		[ 'compact', 'toggle_leftpane', 'focus_findbox'],
 	];
 
-	if (typeof Language === 'undefined' || Language !== 'English') {
+	if (I18n.locale !== 'en') {
 		LDR.KeyHelpOrder.push([ '', 'toggle_clip', 'instant_clip']);
 	}
 

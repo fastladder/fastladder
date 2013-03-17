@@ -1,6 +1,10 @@
 //= require i18n
 //= require i18n/translations
-I18n.locale = (typeof Language !== 'undefined' && Language === 'English') ? 'en' : 'ja';
+I18n.locale = (function() {
+	var root = document.lastChild;
+	var lang = root.getAttribute('xml:lang') || root.getAttribute('lang') || I18n.defaultLocale;
+	return lang.split('-')[0];
+})();
 I18n.defaultSeparator = '/';
 I18n.missingTranslation = function(scope) {
 	return scope;
@@ -27,10 +31,7 @@ $.cache = {};
 $.cacheable = {};
 
 function getlocale(){
-	var na = window.navigator;
-	/*
-	na.language
-	na.userLanguage*/
+	return I18n.locale;
 }
 
 
