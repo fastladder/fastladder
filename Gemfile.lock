@@ -87,7 +87,7 @@ GEM
     factory_girl_rails (1.7.0)
       factory_girl (~> 2.6.0)
       railties (>= 3.0.0)
-    feed_searcher (0.0.2)
+    feed_searcher (0.0.3)
       mechanize (>= 1.0.0)
       nokogiri
     ffi (1.4.0)
@@ -224,7 +224,7 @@ DEPENDENCIES
   capybara
   coffee-rails (~> 3.2.1)
   factory_girl_rails
-  feed_searcher
+  feed_searcher (~> 0.0.3)
   feedzirra!
   haml
   hpricot
