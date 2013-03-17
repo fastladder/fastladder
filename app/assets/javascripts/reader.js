@@ -1,8 +1,8 @@
 //= require application
-//= require reader_proto
-//= require reader_common
-//= require reader_pref
-//= require reader_main
-//= require reader_manage
-//= require reader_widgets_en
-//= require reader_addon
+//= require lib/reader/proto
+//= require lib/reader/common
+//= require lib/reader/pref
+//= require lib/reader/main
+//= require lib/reader/manage
+//= require lib/reader/widgets_en
+//= require lib/reader/addon

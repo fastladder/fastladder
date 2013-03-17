@@ -1,9 +1,4 @@
 //= require application
-//= require compat
-//= require common
-//= require event
-//= require template
-//= require api
-//= require reader_proto
-//= require reader_pref
-//= require reader_share
+//= require lib/reader/proto
+//= require lib/reader/pref
+//= require lib/reader/share

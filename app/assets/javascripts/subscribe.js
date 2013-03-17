@@ -1,2 +1,2 @@
 //= require application
-//= require reader_subscribe
+//= require lib/reader/subscribe
