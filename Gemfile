@@ -49,8 +49,13 @@ end
 
 group :test do
   gem 'webmock'
-  gem 'konacha'
 end
+
+group :test, :development do
+  gem 'konacha'
+  gem 'poltergeist'
+end
+
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
