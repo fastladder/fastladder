@@ -1,5 +1,5 @@
 class Api::FeedController < ApplicationController
-  before_filter :login
+  before_filter :login_required
   #verify_nothing :session => :member
   #verify_nothing :method => :post, :except => [:discover, :subscribed]
   #verify_json :params => :url, :only => :discover

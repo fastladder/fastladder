@@ -39,7 +39,7 @@
 	<table>
 		<tr><th>Folder</th>
 		<td>
-			<%= select_tag :folder_id, options_for_select([["Leave it uncategorized", 0], ["Create new folder", "-"]].concat(@member.folders.map {|folder| [folder.name, folder.id] })), :onchange => "folder_change.call(this,event)" %>
+			<%= select_tag :folder_id, options_for_select([["Leave it uncategorized", 0], ["Create new folder", "-"]].concat(current_member.folders.map {|folder| [folder.name, folder.id] })), :onchange => "folder_change.call(this,event)" %>
 		</td></tr>
 		<tr><th>Rating</th>
 		<td>
@@ -53,12 +53,12 @@
 			</select>
 		</td>
 		</tr>
-		<% if @member.public -%>
+		<% if current_member.public -%>
 		<tr><th>Share</th>
 		<td>
-			<%= radio_button_tag :public, 1, @member.default_public %>
+			<%= radio_button_tag :public, 1, current_member.default_public %>
 			<%= label_tag :public_1, "Public" %>
-			<%= radio_button_tag :public, 0, @member.default_public %>
+			<%= radio_button_tag :public, 0, current_member.default_public %>
 			<%= label_tag :public_0, "Private" %>
 		</td>
 		</tr>
