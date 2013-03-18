@@ -1,6 +1,8 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
 
+  helper_method :current_member
+
   def self.json_status(success, option = nil)
     result = { :isSuccess => success, :ErrorCode => success ? 0 : 1 }
     case option
@@ -12,14 +14,12 @@ class ApplicationController < ActionController::Base
     result.to_json
   end
 
-
-  def login
-    @member = Member.where(id: session[:member_id]).first
-    redirect_to login_path unless @member
+  def login_required
+    redirect_to login_path unless logged_in?
   end
 
   def logged_in?
-    !session[:member_id].blank?
+    current_member.present?
   end
 
   def self.verify_json(options = {})
@@ -52,5 +52,11 @@ class ApplicationController < ActionController::Base
       url = request.original_fullpath.slice(path.size-1..-1)
     end
     url
+  end
+
+  private
+
+  def current_member
+    @member ||= Member.where(id: session[:member_id]).first
   end
 end

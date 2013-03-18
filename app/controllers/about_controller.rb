@@ -1,7 +1,6 @@
 class AboutController < ApplicationController
  def index
     url = url_from_path(:url) unless params[:url].blank?
-    @member = Member.where(id: session[:member_id]).first
     @feed = Feed.find_by_feedlink(url) unless url.blank?
     unless @feed.nil?
       @is_feedlink = true

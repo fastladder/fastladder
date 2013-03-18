@@ -145,15 +145,15 @@
 			<tr>
 				<th>Sharing subscriptions</th>
 				<td>
-					<% if @member %>
-					If you enable sharing, others can read your public subscriptions at "<%= url_for(:controller => "public", :action => @member.username, :only_path => false)%>"
+					<% if current_member.present? %>
+					If you enable sharing, others can read your public subscriptions at "<%= url_for(:controller => "public", :action => current_member.username, :only_path => false)%>"
 					<% end %>
-					<% if @member.public %>
-						(<a href="/user/<%= @member.username %>">Show public subscriptions</a>)
+					<% if current_member.public %>
+						(<a href="/user/<%= current_member.username %>">Show public subscriptions</a>)
 					<% end %>
 					<br>
-					<input type="radio" name="member_public" value="1" <% @member.public ? 'checked' : '' %>> Enable Sharing<br>
-					<input type="radio" name="member_public" value="0" <% @member.public ? '' : 'checked' %>> Disable Sharing<br>
+					<input type="radio" name="member_public" value="1" <% current_member.public ? 'checked' : '' %>> Enable Sharing<br>
+					<input type="radio" name="member_public" value="0" <% current_member.public ? '' : 'checked' %>> Disable Sharing<br>
 				</td>
 			</tr>
 			<tr>
