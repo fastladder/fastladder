@@ -30,7 +30,7 @@ class ApiController < ApplicationController
   end
 
   def unread
-    items = @sub.feed.items.stored_since(@sub.viewed_on).order("created_on DESC, id DESC").limit(MAX_UNREAD_COUNT)
+    items = @sub.feed.items.stored_since(@sub.viewed_on).recent(MAX_UNREAD_COUNT)
     result = {
       :subscribe_id => @id,
       :channel => @sub.feed,
