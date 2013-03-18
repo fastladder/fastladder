@@ -41,8 +41,16 @@ class ApplicationController < ActionController::Base
 
   # extract URL from request_path(e.g. /about/http://example.com)
   def url_from_path(name)
-    # params[name] is http:/example.com because of squeeze("/")
-    path = url_for(name => ".", :only_path => true)
-    request.original_fullpath.slice(path.size-1..-1)
+    if (url = params[name]).present?
+      if not (parsed_url = URI.parse(url)).is_a? URI::HTTP or parsed_url.host.nil?
+        url = nil
+      end
+    end
+    unless url.present?
+      # params[name] is http:/example.com because of squeeze("/")
+      path = url_for(name => ".", :only_path => true)
+      url = request.original_fullpath.slice(path.size-1..-1)
+    end
+    url
   end
 end
