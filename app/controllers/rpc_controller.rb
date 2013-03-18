@@ -6,7 +6,19 @@ class RpcController < ApplicationController
     if options[:json]
       options.merge! JSON.parse(options[:json]).symbolize_keys
     end
-    sub = @member.subscribe_feed options[:feedlink]
+    if options[:feedtitle]
+      feed = Feed.where(feedlink: options[:feedlink]).first
+      unless feed
+        description = options[:feeddescription] ? options[:feeddescription] : options[:feedtitle]
+        feed = Feed.create(feedlink: options[:feedlink], title: options[:feedtitle], link: options[:feedlink], description: description)
+      end
+      sub = @member.subscriptions.where(feed_id: feed.id).first
+      unless sub
+        sub = @member.subscriptions.create(feed_id: feed.id, has_unread: true)
+      end
+    else
+      sub = @member.subscribe_feed options[:feedlink]
+    end
     item = Item.find_or_create_by_link_and_feed_id options[:link], sub.feed.id
     item.title = options[:title]
     item.body = options[:body]
@@ -24,15 +36,27 @@ class RpcController < ApplicationController
 
   # TODO Fix Baaaaaad SQL
   def update_feeds
-    JSON.parse(params[:feeds]).each{|x|
-      x.symbolize_keys!
-      sub = @member.subscribe_feed x[:feedlink]
-      item = Item.find_or_create_by_link_and_feed_id x[:link], sub.feed.id
-      item.title = x[:title]
-      item.body = x[:body]
-      item.author = x[:author]
-      item.category = x[:category]
-      item.modified_on = x[:published_date]
+    JSON.parse(params[:feeds]).each{|options|
+      options.symbolize_keys!
+      if options[:feedtitle]
+        feed = Feed.where(feedlink: options[:feedlink]).first
+        unless feed
+          description = options[:feeddescription] ? options[:feeddescription] : options[:feedtitle]
+          feed = Feed.create(feedlink: options[:feedlink], title: options[:feedtitle], link: options[:feedlink], description: description)
+        end
+        sub = @member.subscriptions.where(feed_id: feed.id).first
+        unless sub
+          sub = @member.subscriptions.create(feed_id: feed.id, has_unread: true)
+        end
+      else
+        sub = @member.subscribe_feed options[:feedlink]
+      end
+      item = Item.find_or_create_by_link_and_feed_id options[:link], sub.feed.id
+      item.title = options[:title]
+      item.body = options[:body]
+      item.author = options[:author]
+      item.category = options[:category]
+      item.modified_on = options[:published_date]
       item.save
     }
     render json: {result: true}
