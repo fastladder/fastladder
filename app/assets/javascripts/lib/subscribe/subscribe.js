@@ -309,6 +309,8 @@ function reverse_checkbox(el){
 		}
 	})
 }
+
+//あとでui/rate.jsと一般化
 var Rate = {};
 Rate.create = function(callback, defaultRate){
 	var el = $N("IMG",{
