@@ -3,10 +3,10 @@ class RpcController < ApplicationController
   before_filter :auth
   def update_feed
     options = params.dup
-    sub = @member.subscribe_feed options[:feedlink]
     if options[:json]
       options.merge! JSON.parse(options[:json]).symbolize_keys
     end
+    sub = @member.subscribe_feed options[:feedlink]
     item = Item.find_or_create_by_link_and_feed_id options[:link], sub.feed.id
     item.title = options[:title]
     item.body = options[:body]
