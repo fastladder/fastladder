@@ -5,6 +5,9 @@ var initialized = false;
 window.onload   = init;
 window.onresize = function(){invoke_hook('WINDOW_RESIZE')};
 
+//TODO move to local var
+var FlatMenu = LDR.FlatMenu;
+
 LDR.ASSET_IMAGES = [
 	'/img/rate/0.gif',
 	'/img/rate/1.gif',
