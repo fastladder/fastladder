@@ -215,15 +215,20 @@ function subscribe_submit(e){
 		});
 	}
 	var links = [];
+	var c = form["check_for_subscribe[]"];
 	// multiple
-	if(form.feedlink.length){
-		Array.forEach(form.feedlink, function(el, i){
-			var c = form["check_for_subscribe[" + i + "]"];
+	if(form['feedlink'].length && c.length){
+		Array.forEach(form['feedlink'], function(el){
+			Array.some(c, function(e) {
+				if (c.value === e.value) {
+					return false;
+				}
+				return (c = e)
+			});
 			(el.checked || (c && c.checked) ) && links.push(el.value);
 		});
 	} else {
-		var c = form["check_for_subscribe[" + 0 + "]"];
-		(this.feedlink.checked || (c && c.checked)) && links.push(this.feedlink.value);
+		(form['feedlink'].checked || (c && c.checked)) && links.push(this.feedlink.value);
 	}
 	if(!links.length) return;
 
