@@ -2,5 +2,6 @@
 
 FactoryGirl.define do
   factory :subscription do
+    feed { FactoryGirl.create(:feed) }
   end
 end
