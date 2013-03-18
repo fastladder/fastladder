@@ -2,10 +2,10 @@ require 'spec_helper'
 
 describe ApiController do
   before do
-    @member = Factory(:member, password: 'mala', password_confirmation: 'mala')
-    @feed = Factory(:feed)
-    @subscription = Factory(:subscription, feed: @feed, member: @member)
-    @crawl_status = Factory(:crawl_status, feed: @feed)
+    @member = FactoryGirl.create(:member, password: 'mala', password_confirmation: 'mala')
+    @feed = FactoryGirl.create(:feed)
+    @subscription = FactoryGirl.create(:subscription, feed: @feed, member: @member)
+    @crawl_status = FactoryGirl.create(:crawl_status, feed: @feed)
   end
 
   describe 'POST /touch_all' do

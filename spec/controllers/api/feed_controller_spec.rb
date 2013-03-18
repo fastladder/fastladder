@@ -2,10 +2,10 @@ require 'spec_helper'
 
 describe Api::FeedController do
   before do
-    @member = Factory(:member, password: 'mala', password_confirmation: 'mala')
-    @feed = Factory(:feed, feedlink: "http://feeds.feedburner.com/mala/blog")
-    @subscription = Factory(:subscription, feed: @feed, member: @member)
-    @folder = Factory(:folder, member: @member)
+    @member = FactoryGirl.create(:member, password: 'mala', password_confirmation: 'mala')
+    @feed = FactoryGirl.create(:feed, feedlink: "http://feeds.feedburner.com/mala/blog")
+    @subscription = FactoryGirl.create(:subscription, feed: @feed, member: @member)
+    @folder = FactoryGirl.create(:folder, member: @member)
   end
 
   describe 'POST /discover' do

@@ -19,7 +19,7 @@ require 'spec_helper'
 
 describe CrawlStatus do
   describe 'mass-assignment error' do
-    before { @crawl_status = Factory(:crawl_status) }
+    before { @crawl_status = FactoryGirl.create(:crawl_status) }
 
     it 'not raises mass-assignment exception' do
       expect {

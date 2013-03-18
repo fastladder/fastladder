@@ -20,7 +20,7 @@ require 'spec_helper'
 
 describe Member do
   describe '.authenticate' do
-    before { @member = Factory(:member, password: 'mala', password_confirmation: 'mala') }
+    before { @member = FactoryGirl.create(:member, password: 'mala', password_confirmation: 'mala') }
 
     context 'password is correct' do
       it { expect(Member.authenticate('bulkneets', 'mala')).to be }
