@@ -1,5 +1,5 @@
 window.onload = init;
-API.StickyQuery = { ApiKey: ApiKey };
+LDR.API.StickyQuery = { ApiKey: ApiKey };
 
 var State = {};
 State.offset = 0;
@@ -24,7 +24,7 @@ function init(){
 			'</tr>'
 		].join("");
 		if(State.show_all){
-			this.innerHTML = header + 
+			this.innerHTML = header +
 				 FilteredSubs.map(formatter).join("") +
 				 "</table>";
 			$("show_all").style.display = "none";
@@ -240,7 +240,7 @@ function item(id){
 	return SubsIndex["_" + id];
 }
 function load_subs(){
-	var api = new API("/api/lite_subs");
+	var api = new LDR.API("/api/lite_subs");
 	api.post({}, function(res){
 		Subs = res;
 		var parted = res.partition(function(sub){
@@ -314,7 +314,7 @@ function setup_mspace(){
 }
 
 function load_config(){
-	var api = new API("/api/config/load");
+	var api = new LDR.API("/api/config/load");
 	api.post({}, function(res){
 		if(res.hasOwnProperty("default_public_status")){
 			var s = res.default_public_status ? I18n.t('Private') : I18n.t('Public');
@@ -323,7 +323,7 @@ function load_config(){
 	});
 }
 function set_member_public(v){
-	var api = new API("/api/config/save");
+	var api = new LDR.API("/api/config/save");
 	api.post({member_public: v}, function(){
 		location.href = location.href;
 	});
@@ -340,7 +340,7 @@ function select_all(){
 var progress = false;
 function set_public(flag){
 	if(progress) return;
-	var api = new API("/api/feed/set_public");
+	var api = new LDR.API("/api/feed/set_public");
 	var selected = Subs.filter(function(sub){
 		return (sub.selected && sub["public"] != flag);
 	});

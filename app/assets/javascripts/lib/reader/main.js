@@ -1,9 +1,12 @@
 // API
-API.StickyQuery = { ApiKey: ApiKey };
+LDR.API.StickyQuery = { ApiKey: ApiKey };
 
 var initialized = false;
 window.onload   = init;
 window.onresize = function(){invoke_hook('WINDOW_RESIZE')};
+
+//TODO move to local var
+var FlatMenu = LDR.FlatMenu;
 
 LDR.ASSET_IMAGES = [
 	'/img/rate/0.gif',
@@ -207,7 +210,7 @@ function LDR_getApiKey(){
 	}
 }
 if(/^\[/.test(ApiKey)){
-	API.StickyQuery = { ApiKey: LDR_getApiKey() };
+	LDR.API.StickyQuery = { ApiKey: LDR_getApiKey() };
 }
 
 /*
@@ -356,7 +359,7 @@ function setup_hook(){
 	// revert pins
 	register_hook('AFTER_CONFIGLOAD', function(){
 		if(!Config.use_pinsaver) return;
-		var api = new API("/api/pin/all");
+		var api = new LDR.API("/api/pin/all");
 		api.post({}, function(pins){
 			if(!pins || !pins.length){ return }
 			pins.forEach(function(v){
@@ -458,7 +461,7 @@ function ajaxize(element, callback){
 		if(e) Event.stop(e);
 		var request = Form.toJson(element);
 		if(before(request)){
-			var api = new API(action);
+			var api = new LDR.API(action);
 			api.onload = function(response){
 				after(response,request);
 			}
@@ -678,11 +681,11 @@ Config.set = function(key,value){
 	Config.save();
 };
 Config.save = function(){
-	var api = new API("/api/config/save");
+	var api = new LDR.API("/api/config/save");
 	api.post(Config);
 };
 Config.load = function(todo){
-	var api = new API("/api/config/load");
+	var api = new LDR.API("/api/config/load");
 	api.post({timestamp:new Date - 0},function(data){
 		data = typecast_config(data);
 		each(data,function(value,key){
@@ -930,7 +933,7 @@ function message(str){
 
 /* 購読停止 */
 function unsubscribe(sid,callback){
-	var api = new API("/api/feed/unsubscribe");
+	var api = new LDR.API("/api/feed/unsubscribe");
 	callback = callback || Function.empty;
 	var info = subs_item(sid);
 	var tmpl = I18n.t('unsubscribe_confirm');  // 'Are you sure to remove [[title]] from your subscription?'
@@ -952,7 +955,7 @@ function touch(id, state){
 /* 既読化 */
 function touch_all(id){
 	if(!id) return;
-	var api = new API("/api/touch_all");
+	var api = new LDR.API("/api/touch_all");
 	var el = $("subs_item_"+id);
 	var info = subs_item(id);
 	if(el && info){
@@ -976,7 +979,7 @@ function touch_all(id){
 /* レートの設定インターフェース */
 function set_rate(id,rate){
 	var ap = "/api/feed/set_rate";
-	var rate_api = new API(ap);
+	var rate_api = new LDR.API(ap);
 	rate_api.onload = function(res){
 		subs_item(id).rate = rate;
 		message("set_rate_complete");
@@ -992,7 +995,7 @@ function create_folder(name){
 		name = prompt(I18n.t('Folder Name'),"");
 		if(!name) return;
 	}
-	var api = new API("/api/folder/create");
+	var api = new LDR.API("/api/folder/create");
 	api.post({name:name},function(res){
 		message('create_folder_complete');
 		// clear cache
@@ -1105,7 +1108,7 @@ Pin.extend({
 	},
 	open_group: function(){
 		if(!this.pins.length) return;
-		var queue = new Queue();
+		var queue = new LDR.Queue();
 		var can_popup = false;
 		var self = this;
 		var count = 0;
@@ -1124,7 +1127,7 @@ Pin.extend({
 			if(can_popup){
 				(max_pin).times(function(){
 					var p = self.shift();
-					p && new API("/api/pin/remove").post({
+					p && new LDR.API("/api/pin/remove").post({
 						link:p.url.unescapeHTML()
 					});
 				})
@@ -1145,7 +1148,7 @@ var Pinsaver = Class.create();
 Pinsaver.extend({
 	add: function(url,title){
 		if(!Config.use_pinsaver) return;
-		var api = new API("/api/pin/add");
+		var api = new LDR.API("/api/pin/add");
 		api.post({
 			link : url.unescapeHTML(),
 			title: title.unescapeHTML()
@@ -1153,13 +1156,13 @@ Pinsaver.extend({
 	},
 	remove: function(url){
 		if(!Config.use_pinsaver) return;
-		var api = new API("/api/pin/remove");
+		var api = new LDR.API("/api/pin/remove");
 		api.post({
 			link:url.unescapeHTML()
 		});
 	},
 	clear: function(){
-		var api = new API("/api/pin/clear");
+		var api = new LDR.API("/api/pin/clear");
 		api.post({});
 	}
 })
@@ -1707,7 +1710,7 @@ var Control = {
 			State.viewrange.start = Math.max(0,State.viewrange.start - limit);
 			limit = State.viewrange.end - State.viewrange.start;
 		}
-		var api = new API("/api/all");
+		var api = new LDR.API("/api/all");
 		api.onload = function(json){
 			print_feed(json);
 			// リクエストよりも件数が少ない場合
@@ -2028,7 +2031,7 @@ var Control = {
 			info.unread_count = 0;
 		});
 		var postdata = post_list.join(",");
-		var api = new API("/api/touch_all");
+		var api = new LDR.API("/api/touch_all");
 		api.post({subscribe_id : postdata}, function(){
 			message("Marked as read");
 			update("total_unread_count");
@@ -2059,14 +2062,14 @@ function prefetch(sid,count){
 		message("prefetch_complete");
 	}
 	if(subs_item(sid).unread_count == 0 && Config.show_all == true){
-		var api = new API("/api/all");
+		var api = new LDR.API("/api/all");
 		api.post({
 			subscribe_id : sid,
 			offset : 0,
 			limit  : 1
 		}, store_cache);
 	} else {
-		var api = new API("/api/unread?prefetch");
+		var api = new LDR.API("/api/unread?prefetch");
 		api.post({ subscribe_id : sid }, store_cache);
 	}
 }
@@ -2466,22 +2469,22 @@ var SubsItem = new (Class.base(ListItem).extend({
 
 /* フィードの追加 */
 function feed_discover(url){
-	var api = new API("/api/feed/discover");
+	var api = new LDR.API("/api/feed/discover");
 	api.post({url:url}, print_discover);
 }
 function feed_subscribe(feedlink,callback){
-	var api = new API("/api/feed/subscribe");
+	var api = new LDR.API("/api/feed/subscribe");
 	callback = callback || Function.empty;
 	api.post({feedlink:feedlink},function(res){
 		message("Subscription completed");
 		callback(res);
 		subs.update(true);
-		var api = new API("/api/feed/fetch_favicon");
+		var api = new LDR.API("/api/feed/fetch_favicon");
 		api.post({feedlink: feedlink});
 	})
 }
 function feed_unsubscribe(sid, callback){
-	var api = new API("/api/feed/unsubscribe");
+	var api = new LDR.API("/api/feed/unsubscribe");
 	callback = callback || Function.empty;
 	api.post({subscribe_id:sid},function(res){
 		message("購読停止しました");
@@ -2902,7 +2905,7 @@ Subscribe.Controller = Class.create("controller").extend({
 		} else {
 			State.subs_reloading = true;
 			invoke_hook('BEFORE_SUBS_LOAD');
-			new API("/api/subs?unread="+(Config.show_all ? 0 : 1)).post({},
+			new LDR.API("/api/subs?unread="+(Config.show_all ? 0 : 1)).post({},
 			function(list){
 				self.loaded = true;
 				State.subs_reloading = false;
@@ -2949,7 +2952,7 @@ Subscribe.Controller = Class.create("controller").extend({
 			var load_request = function(){
 				limit = is_first ? limit1 : limit2;
 				is_first = 0;
-				var api = new API([
+				var api = new LDR.API([
 					"/api/subs?",
 					"unread=", (Config.show_all ? 0 : 1),
 					"&from_id=", from_id,
@@ -3298,7 +3301,7 @@ function init(){
 	fit_screen();
 	DOM.show("right_container");
 
-	API.registerCallback({
+	LDR.API.registerCallback({
 		Create  : LoadEffect.Start,
 		Complete: LoadEffect.Stop
 	});
@@ -3421,7 +3424,7 @@ function set_focus(id){
 
 
 function get_folders(callback){
-	var api = new API("/api/folders");
+	var api = new LDR.API("/api/folders");
 	api.post({},function(json){
 		folder = json;
 		folder.id2name = {};
@@ -3461,7 +3464,7 @@ function get_first(id,callback){
 		set_focus(id);
 		return;
 	} else {
-		var api = new API("/api/all");
+		var api = new LDR.API("/api/all");
 		set_focus(id)
 		api.post({
 			 subscribe_id : id,
@@ -3508,7 +3511,7 @@ function get_unread(id,callback){
 		loaded(cached_data);
 	}
 	function no_cache(){
-		var api = new API(api_url);
+		var api = new LDR.API(api_url);
 		var success = false;
 		set_focus(id)
 		api.post({ subscribe_id : id }, function(data){
@@ -3532,7 +3535,7 @@ function get_unread(id,callback){
 get_unread.cache = new Cache({max:50});
 
 function move_to(sid,to,callback){
-	var api = new API("/api/feed/move");
+	var api = new LDR.API("/api/feed/move");
 	api.post({
 		subscribe_id : sid,
 		to : to

@@ -15,4 +15,4 @@
 //= require_tree ./lib/events
 //= require lib/template
 //= require lib/api
-//= require lib/ui
+//= require_tree ./lib/ui
