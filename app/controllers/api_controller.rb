@@ -19,7 +19,7 @@ class ApiController < ApplicationController
       end
     end
     offset = params[:offset].blank? ? 0 : params[:offset].to_i
-    items = @sub.feed.items.find(:all, :order => "created_on DESC, id DESC", :limit => limit, :offset => offset)
+    items = @sub.feed.items.recent(limit, offset)
     result = {
       :subscribe_id => @id,
       :channel => @sub.feed,
@@ -30,8 +30,7 @@ class ApiController < ApplicationController
   end
 
   def unread
-    conditions = @sub.viewed_on ? ["stored_on >= ?", @sub.viewed_on] : nil
-    items = @sub.feed.items.find(:all, :conditions => conditions, :order => "created_on DESC, id DESC", :limit => MAX_UNREAD_COUNT)
+    items = @sub.feed.items.stored_since(@sub.viewed_on).recent(MAX_UNREAD_COUNT)
     result = {
       :subscribe_id => @id,
       :channel => @sub.feed,
@@ -75,9 +74,10 @@ class ApiController < ApplicationController
     limit = (params[:limit] || 0).to_i
     from_id = (params[:from_id] || 0).to_i
     items = []
-    conditions = params[:unread].to_i != 0 ? ["has_unread = ?", true] : nil
-    @member.subscriptions.find(:all, :conditions => conditions, :order => "subscriptions.id", :include => [:folder, { :feed => :crawl_status }]).each do |sub|
-      unread_count = sub.feed.items.count(:conditions => sub.viewed_on ? ["stored_on >= ?", sub.viewed_on] : nil)
+    subscriptions = @member.subscriptions
+    subscriptions = subscriptions.has_unread if params[:unread].to_i != 0
+    subscriptions.order("subscriptions.id").includes(:folder, { :feed => :crawl_status }).each do |sub|
+      unread_count = sub.feed.items.stored_since(sub.viewed_on).count
       next if params[:unread].to_i > 0 and unread_count == 0
       next if sub.id < from_id
       feed = sub.feed
@@ -110,7 +110,7 @@ class ApiController < ApplicationController
 
   def lite_subs
     items = []
-    @member.subscriptions.find(:all, :include => [:folder, :feed]).each do |sub|
+    @member.subscriptions.includes(:folder, :feed).each do |sub|
       feed = sub.feed
       modified_on = feed.modified_on
       item = {
@@ -173,11 +173,12 @@ protected
   end
 
   def count_items(options = {})
-    conditions = options[:unread] ? ["has_unread = ?", true] : nil
-    stored_on_list = @member.subscriptions.find(:all, :conditions => conditions, :order => "id").map do |sub|
+    subscriptions = @member.subscriptions
+    subscriptions = subscriptions.has_unread if options[:unread]
+    stored_on_list = subscriptions.order("id").map do |sub|
       {
         :subscription => sub,
-        :stored_on => sub.feed.items.find(:all, :select => "stored_on", :order => "stored_on DESC", :limit => MAX_UNREAD_COUNT).map { |item| item.stored_on.to_time },
+        :stored_on => sub.feed.items.select("stored_on").order("stored_on DESC").limit(MAX_UNREAD_COUNT).map { |item| item.stored_on.to_time },
       }
     end
     counts = []

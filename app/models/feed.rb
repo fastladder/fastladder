@@ -29,6 +29,11 @@ class Feed < ActiveRecord::Base
   #has_many :members, :through => :subscriptions
   #has_many :folders, :through => :subscriptions
 
+  scope :has_subscriptions, ->{ where("subscribers_count > 0") }
+  scope :crawlable, ->{
+    includes(:crawl_status).has_subscriptions.merge(CrawlStatus.status_ok).merge(CrawlStatus.expired(30.minutes))
+  }
+
   def self.initialize_from_uri(uri)
     feed_dom = Feedzirra::Feed.parse(Fastladder::simple_fetch(uri))
     return nil unless feed_dom
@@ -143,5 +148,9 @@ class Feed < ActiveRecord::Base
     uri_list << Addressable::URI.join(feedlink, "/favicon.ico").normalize
     uri_list << Addressable::URI.join(link, "/favicon.ico").normalize
     uri_list.uniq
+  end
+
+  def avg_rate
+    subscriptions.where("rate > ?", 0).average(:rate).to_i
   end
 end

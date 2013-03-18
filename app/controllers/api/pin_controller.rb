@@ -14,7 +14,7 @@ class Api::PinController < ApplicationController
     title = params[:title]
     @member.pins.create(:link => link, :title => title)
     if (diff = @member.pins.size - SAVE_PIN_LIMIT) > 0
-      @member.pins.find(:all, :order => "created_on", :limit => diff).each do |pin|
+      @member.pins.past(diff).each do |pin|
         pin.destroy
       end
     end

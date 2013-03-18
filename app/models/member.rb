@@ -142,15 +142,15 @@ class Member < ActiveRecord::Base
   end
 
   def public_subscribe_count
-    self.subscriptions.count(:conditions => ["public = ?", true])
+    self.subscriptions.public.count
   end
 
   def public_subs
-    self.subscriptions.find(:all, :conditions => ["public = ?", true])
+    self.subscriptions.public
   end
 
   def recent_subs(num)
-    self.subscriptions.find(:all, :order => "created_on DESC", :limit => num)
+    self.subscriptions.recent(num)
   end
 
   def set_auth_key

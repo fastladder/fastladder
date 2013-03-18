@@ -15,6 +15,8 @@ class Pin < ActiveRecord::Base
 
   attr_accessible :link, :title
 
+  scope :past, ->(num){ order("created_on").limit(num) }
+
   def to_json(options = {})
     result = {}
     result[:link] = self.link.purify_uri
