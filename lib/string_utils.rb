@@ -3,6 +3,10 @@ require "erb"
 require "nkf"
 require "uri"
 
+module ActionView::Helpers::SanitizeHelper
+  alias_method :helper_sanitize, :sanitize
+end
+
 class String
   # for strip_tags
   #include ActionView::Helpers::TextHelper
@@ -46,7 +50,7 @@ class String
   def scrub_html
     # str = self.delete([0xe280a8].pack("U*")).scrub
     str = self
-    str = sanitize str, :tags => ALLOW_TAGS, :attributes => ALLOW_ATTRIBUTES
+    str = helper_sanitize str, :tags => ALLOW_TAGS, :attributes => ALLOW_ATTRIBUTES
     # , :attributes => %w(id class style)
     str
   end
