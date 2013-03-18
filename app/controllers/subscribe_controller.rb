@@ -4,7 +4,7 @@ class SubscribeController < ApplicationController
   # Ffeed = Struct.new('Candidates', :link, :feedlink, :title, :subscribers_count, :subscribe_id)
 
   def index
-    if params[:url]
+    if (@url = params[:url]).present?
       return self.confirm
     end
   end
@@ -15,7 +15,7 @@ class SubscribeController < ApplicationController
     end
     feeds = []
     # params[:url] is http:/example.com because of squeeze("/")
-    @url = url_from_path(:url) unless params[:url].blank?
+    @url ||= url_from_path(:url) unless params[:url].blank?
     FeedSearcher.search(@url).each do |feedlink|
       if feed = Feed.find_by_feedlink(feedlink)
         if sub = @member.subscribed(feed)

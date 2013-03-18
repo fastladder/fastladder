@@ -3,7 +3,8 @@ Fastladder::Application.routes.draw do
   match 'api/config/save' => 'api/config#setter'
 
   match 'api/:action' => 'api'
-  match 'subscribe/*url' => 'subscribe#confirm', as: :subscribe, format: false
+  get 'subscribe', :to => 'subscribe#index'
+  get 'subscribe/*url', :to => 'subscribe#confirm', :as => :subscribe, :format => false, :constraints => {:url => /https?:.+/}
   match 'about/*url' => 'about#index', as: :about, format: false
   match 'user/:login_name/:action' => 'user'
   match 'user/:login_name' => 'user#index', :as => 'user'
