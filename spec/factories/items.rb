@@ -3,7 +3,7 @@
 
 FactoryGirl.define do
   factory :item do
-    feed { Factory(:feed) }
+    feed { FactoryGirl.create(:feed) }
     link 'http://la.ma.la/blog/diary_200810292006.htm'
     title '最速インターフェース研究会 :: 近況'
     body '観光目的で7ヶ月ほど京都旅行に行っていた。<br>祇園祭楽しかったですね。'

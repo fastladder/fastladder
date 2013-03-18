@@ -2,7 +2,7 @@
 require 'spec_helper'
 
 describe RpcController do
-  let(:member) { Factory(:member, password: 'mala', password_confirmation: 'mala') }
+  let(:member) { FactoryGirl.create(:member, password: 'mala', password_confirmation: 'mala') }
 
   before do
     member.set_auth_key
