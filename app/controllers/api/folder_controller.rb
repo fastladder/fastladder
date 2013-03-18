@@ -1,5 +1,5 @@
 class Api::FolderController < ApplicationController
-  before_filter :login
+  before_filter :login_required
   #verify_nothing :method => :post
   verify_json :params => :name, :only => :create
   verify_json :params => [:name, :folder_id], :only => :update

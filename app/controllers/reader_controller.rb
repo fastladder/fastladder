@@ -1,6 +1,6 @@
 class ReaderController < ApplicationController
   #verify :session => :member, :redirect_to => "/login"
-  before_filter :login
+  before_filter :login_required
 
   def welcome
     redirect_to :action => :index, :trailing_slash => true

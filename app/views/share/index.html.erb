@@ -11,14 +11,14 @@
 <h2>Manage Sharing</h2>
 <div class="share_body">
 	<div class="status">
-		<% if @member.public %>
+		<% if current_member.public %>
 			<button onclick="set_member_public(0);return false">Disable Sharing</button>
 		<% else %>
 			<button onclick="set_member_public(1);return false">Enable Sharing</button>
 		<% end %>
 		<ul>
-			<li>Sharing: <span id="member_public"><%= @member.public ? "ON" : "OFF" %></span>
-			<% if @member.public %>(<a href="/user/<% @member.username %>">Show public subscriptions</a>)<% end %>
+			<li>Sharing: <span id="member_public"><%= current_member.public ? "ON" : "OFF" %></span>
+			<% if current_member.public %>(<a href="/user/<% current_member.username %>">Show public subscriptions</a>)<% end %>
 			</li>
 			<li>Public feeds: <span id="public_subs_count"></span></li>
 		 	<li>Private feeds: <span id="private_subs_count"></span></li>

@@ -1,5 +1,5 @@
 class AccountController < ApplicationController
-  before_filter :login
+  before_filter :login_required
 
   def password
     if request.post?
