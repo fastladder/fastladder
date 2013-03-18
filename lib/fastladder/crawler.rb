@@ -138,7 +138,7 @@ module Fastladder
           :feed_id => feed.id,
           :link => item.url || "",
           :title => item.title || "",
-          :body => item.content,
+          :body => item.content || item.summary,
           :author => item.author,
           :category => item.categories.first,
           :enclosure => nil,
