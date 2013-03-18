@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe ImportController do
   before do
-    @member = Factory(:member, password: 'mala', password_confirmation: 'mala')
+    @member = FactoryGirl.create(:member, password: 'mala', password_confirmation: 'mala')
   end
 
   describe 'GET /import' do

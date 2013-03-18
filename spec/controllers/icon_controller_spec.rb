@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe IconController do
   before do
-    @feed = Factory(:feed)
+    @feed = FactoryGirl.create(:feed)
   end
 
   let(:image_header) {

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe UserController do
 
   let :member do
-    Factory(:member, username: 'bulkneets', password: 'mala', password_confirmation: 'mala')
+    FactoryGirl.create(:member, username: 'bulkneets', password: 'mala', password_confirmation: 'mala')
   end
 
   let :rss_mime_type do

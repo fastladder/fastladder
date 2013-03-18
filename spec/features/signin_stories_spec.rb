@@ -4,7 +4,7 @@ describe "SigninStories" do
   subject { page }
 
   let(:member) {
-    Factory(:member, password: 'mala', password_confirmation: 'mala')
+    FactoryGirl.create(:member, password: 'mala', password_confirmation: 'mala')
   }
 
   context "when sign in as a member" do
