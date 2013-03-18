@@ -165,7 +165,7 @@ Class.merge = function(a,b){
 				return bp[key].apply(this,arguments);
 			}
 		} else {
-			cp[key] = 
+			cp[key] =
 				isFunction(ap[key]) ? ap[key] :
 				isFunction(bp[key]) ? bp[key] : null
 		}
@@ -671,10 +671,10 @@ Form.getValue = function(el){
 Form.fill = function(form,json){
 	form = $(form);
 	foreach(form.elements, function(el){
-		var name = el.name; 
+		var name = el.name;
 		var value = json[name];
 		if(!name || value == null) return;
-		(/text|hidden|select|submit/.test(el.type)) ? 
+		(/text|hidden|select|submit/.test(el.type)) ?
 			(el.value = value) :
 		(el.type == "checkbox") ? (el.value = value, el.checked = true) :
 		(el.type == "radio") ?
@@ -684,7 +684,7 @@ Form.fill = function(form,json){
 }
 Form.setValue = function(el, value){
 	el.value = value;
-	
+
 }
 
 Object.extend(Form,{
@@ -918,7 +918,7 @@ String.prototype.toJSON = function(){
 		(c >= ' ') ?
 			(c == '\\') ? (tmp[i] = '\\\\'):
 			(c == '"')  ? (tmp[i] = '\\"' ): 0 :
-		(tmp[i] = 
+		(tmp[i] =
 			(c == '\n') ? '\\n' :
 			(c == '\r') ? '\\r' :
 			(c == '\t') ? '\\t' :
@@ -1269,17 +1269,17 @@ Element.getStyle = getStyle;
  並列してリクエストを投げる、
   - 完了したものからcompleteフラグを立てる
   - 監視者のupdateメソッドを呼び出す
- 
+
  var task = new Task([loadConfig,func,func]);
  task.oncomplete = function(){
  	// complete !
  };
  task.exec();
 
- api["config/load"] = new API("/api/config/load").requester("post");
+ api["config/load"] = new LDR.API("/api/config/load").requester("post");
  new Task(loadconfig);
- API.prototype.toTask = function(){
-  
+ LDR.API.prototype.toTask = function(){
+
  }
 */
 
@@ -1321,7 +1321,7 @@ Object.extend(Function.prototype,{
 })
 function loadConfig(){
 	var task = arguments.callee;
-	var api = new API("/api/config/load");
+	var api = new LDR.API("/api/config/load");
 	return api.post({},function(res){
 		extend(Config,res);
 		task.complete();
@@ -1346,7 +1346,7 @@ Task.prototype = {
 	},
 	update : function(f){
 		send(this,"onprogress");
-		
+
 	}
 }
 
@@ -1355,7 +1355,7 @@ Array.prototype.toTask = function(){
 }
 
 /*
- super 
+ super
 */
 /*
  parent
@@ -1390,7 +1390,7 @@ function invoke(obj, method, args){
  next たらいまわしにする。
   this.parent.childs
    next(this, "initialize");
-  
+
 */
 function next(obj, method, args){
 	obj.parent.childs.invoke(method,args)

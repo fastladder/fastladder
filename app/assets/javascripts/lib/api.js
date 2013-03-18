@@ -1,8 +1,8 @@
 /*
  API
 */
-var API = Class.create();
-API.extend({
+LDR.API = Class.create();
+LDR.API.extend({
 	initialize: function(ap){ this.ap = ap; this.raw_mode = false; },
 	onCreate:   function(){},
 	onComplete: function(){},
@@ -14,7 +14,7 @@ API.extend({
 			onload = Function.empty;
 		}
 		var req = this.req;
-		Object.extend(param, API.StickyQuery);
+		Object.extend(param, LDR.API.StickyQuery);
 		var postdata = Object.toQuery(param);
 		this.req.open("POST",this.ap,true);
 		this.req.setRequestHeader(
@@ -27,7 +27,7 @@ API.extend({
 		this.req.onload = function(){
 			oncomplete();
 			//alert([this.ap,this.req.responseText.length]);
-			API.last_response = req.responseText;
+			LDR.API.last_response = req.responseText;
 			if(this.raw_mode){
 				onload(this.req.responseText);
 			} else {
@@ -54,12 +54,12 @@ API.extend({
 			onload = Function.empty;
 		}
 		var req = this.req;
-		Object.extend(param, API.StickyQuery);
+		Object.extend(param, LDR.API.StickyQuery);
 		var postdata = Object.toQuery(param);
 		this.req.open("GET",this.ap + "?" + postdata,true);
 		this.req.onload = function(){
 			oncomplete();
-			API.last_response = req.responseText;
+			LDR.API.last_response = req.responseText;
 			var json = JSON.parse(this.req.responseText);
 			if(json){
 				onload(json);
@@ -82,10 +82,10 @@ API.extend({
 		alert("エラーコード :"+ error_code)
 	}
 });
-API.last_response = "";
-API.registerCallback = function(options){
+LDR.API.last_response = "";
+LDR.API.registerCallback = function(options){
 	each(options,function(value,key){
-		API.prototype["on"+key] = value;
+		LDR.API.prototype["on"+key] = value;
 	})
 };
 

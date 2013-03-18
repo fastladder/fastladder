@@ -1,11 +1,11 @@
 /* LDR /subscribe/ */
 
-API.StickyQuery = { ApiKey: ApiKey };
+LDR.API.StickyQuery = { ApiKey: ApiKey };
 var LDReader = {};
 
 LDReader.Folder = Class.create();
 LDReader.Folder.create = function(name, callback){
-	var api = new API("/api/folder/create");
+	var api = new LDR.API("/api/folder/create");
 	api.post({name:name},function(res){
 		// if(res.isSuccess){callback()}
 		callback();
@@ -17,7 +17,7 @@ LDReader.Folder.create = function(name, callback){
 var ReaderSubscribe = Class.create();
 ReaderSubscribe.extend({
 	initialize: function(){
-		
+
 	},
 	get_feedlinks: function(){
 		return Array.filter(document.getElementsByTagName("input"),function(el){
@@ -38,13 +38,13 @@ ReaderSubscribe.extend({
 			// location.href = base + url;
 			location.href = location.href;
 		}
-		var api = new API("/api/feed/unsubscribe");
+		var api = new LDR.API("/api/feed/unsubscribe");
 		api.post({subscribe_id:subscribe_id}, function(res){
 			onload();
 		});
 	},
 	subscribe: function(option, callback){
-		var api = new API("/api/feed/subscribe");
+		var api = new LDR.API("/api/feed/subscribe");
 		var param = {};
 		api.post({
 			feedlink  : option.feedlink,
@@ -109,7 +109,7 @@ function subs_edit(e){
 		});
 		return;
 	}
-	var api = new API("/api/feed/subscribed");
+	var api = new LDR.API("/api/feed/subscribed");
 	var tmpl = new Template(subs_edit.template).compile();
 	var pos = Position.cumulativeOffset(el);
 	var w = document.createElement("div");
@@ -188,7 +188,7 @@ function update_folders(el, option){
 	el.options[0] = new Option(I18n.t('leave it uncategorized'), "0");
 	el.options[1] = new Option(I18n.t('create new folder'), "-");
 	var op = el.options;
-	var api = new API("/api/folders");
+	var api = new LDR.API("/api/folders");
 	api.post({},function(folder){
 		var name2id = folder.name2id;
 		folder.names.forEach(function(name,i){
@@ -309,6 +309,8 @@ function reverse_checkbox(el){
 		}
 	})
 }
+
+//あとでui/rate.jsと一般化
 var Rate = {};
 Rate.create = function(callback, defaultRate){
 	var el = $N("IMG",{
@@ -501,7 +503,7 @@ function ajaxize(element, callback){
 		if(e) Event.stop(e);
 		var request = Form.toJson(element);
 		if(before(request)){
-			var api = new API(action);
+			var api = new LDR.API(action);
 			api.onload = function(response){
 				after(response,request);
 			}

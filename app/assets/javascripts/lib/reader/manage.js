@@ -170,7 +170,7 @@ Manage.Item = {
 	load : function(){
 		var self = this;
 		this.data = new Subscribe.Model;
-		new API("/api/subs?unread=0").post({},
+		new LDR.API("/api/subs?unread=0").post({},
 			function(list){
 				self.loaded = true;
 				self.data.load(list);
@@ -286,7 +286,7 @@ Manage.Item = {
 		});
 		update("manage_item")
 	},
-	
+
 	toggle_notify: function(){
 		var ids = TRSelector.get_selected();
 		if(!ids.length) return;
@@ -299,7 +299,7 @@ Manage.Item = {
 			item.ignore_notify = turn;
 			sids.push(sid);
 		});
-		var api = new API("/api/feed/set_notify");
+		var api = new LDR.API("/api/feed/set_notify");
 		api.post({
 			subscribe_id:sids.join(","),
 			ignore : turn
@@ -318,7 +318,7 @@ Manage.Item = {
 		if(!c) return;
 		TRSelector.clear();
 		foreach(ids,function(sid,n){
-			var api = new API("/api/feed/unsubscribe");
+			var api = new LDR.API("/api/feed/unsubscribe");
 			api.post({subscribe_id:sid},function(){
 				l--;
 				message(
@@ -339,21 +339,21 @@ Manage.Item = {
 			if(!item) return;
 			if(item.unread_count > 0){
 				item.unread_count = 0;
-				var api = new API("/api/touch_all");
+				var api = new LDR.API("/api/touch_all");
 				api.post({subscribe_id:sid})
 			}
 		});
 		message('Marked as read');
 		update("manage_item")
 	}
-	
+
 };
 
 /*
  再描画
 */
 Manage.rewrite = {
-	
+
 }
 
 updater("manage_offset", function(){
@@ -511,7 +511,7 @@ Manage.Folder = {
 	create_folder: function(callback){
 		var name = prompt(I18n.t('Folder Name'),"");
 		if(!name) return;
-		var api = new API("/api/folder/create");
+		var api = new LDR.API("/api/folder/create");
 		api.post({name:name},function(res){
 			message('folder created');
 			folder = null;
@@ -524,7 +524,7 @@ Manage.Folder = {
 		if(!folder_id) return false;
 		var new_name = $("rename_to").value;
 		if(!new_name) return false;
-		var api = new API("/api/folder/update");
+		var api = new LDR.API("/api/folder/update");
 		api.post({folder_id : folder_id, name : new_name},function(){
 			message(folder.id2name[folder_id] + "-&gt;" + new_name);
 			folder = null; callback();
@@ -541,7 +541,7 @@ Manage.Folder = {
 			tmpl.fill({ folder: folder.id2name[folder_id]})
 		);
 		if(!c) return false;
-		var api = new API("/api/folder/delete");
+		var api = new LDR.API("/api/folder/delete");
 		api.post({folder_id : folder_id},function(){
 			message(folder.id2name[folder_id] + I18n.t(' deleted'));
 			MF.folder_id = null;
@@ -564,7 +564,7 @@ Manage.hide_help = function(){
 
 // deleteを実行
 function delete_folder(folder_id){
-	var api = new API("/api/folder/delete");
+	var api = new LDR.API("/api/folder/delete");
 	api.post({folder_id : folder_id},function(){
 		message(folder.id2name[folder_id] + I18n.t(' deleted'));
 		folder = null; callback();
@@ -576,7 +576,7 @@ function delete_folder(folder_id){
 
 // renameを実行
 function rename_folder(folder_id, new_name){
-	var api = new API("/api/folder/update");
+	var api = new LDR.API("/api/folder/update");
 	api.post({folder_id : folder_id, name : new_name},function(){
 		message(folder.id2name[folder_id] + "-&gt;" + new_name);
 		folder = null; callback();
@@ -616,7 +616,7 @@ function preview(sid){
 	centering("mini_window");
 	var item = subs_item(sid);
 	if(true){
-		var api = new API("/api/all");
+		var api = new LDR.API("/api/all");
 		api.onload = function(json){
 			print_feed(json)
 		};
