@@ -16,4 +16,3 @@
 //= require lib/template
 //= require lib/api
 //= require_tree ./lib/ui
-//= require lib/ui
