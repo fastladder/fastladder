@@ -1105,7 +1105,7 @@ Pin.extend({
 	},
 	open_group: function(){
 		if(!this.pins.length) return;
-		var queue = new Queue();
+		var queue = new LDR.Queue();
 		var can_popup = false;
 		var self = this;
 		var count = 0;

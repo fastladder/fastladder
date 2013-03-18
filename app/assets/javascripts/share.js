@@ -1,3 +1,3 @@
 //= require application
 //= require lib/reader/pref
-//= require lib/reader/share
+//= require lib/share/share
