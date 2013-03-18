@@ -4,18 +4,15 @@ class SubscribeController < ApplicationController
   # Ffeed = Struct.new('Candidates', :link, :feedlink, :title, :subscribers_count, :subscribe_id)
 
   def index
-    if (@url = params[:url]).present?
+    if params[:url].present?
       return self.confirm
     end
   end
   
   def confirm
-    if request.post?
-      return self.subscribe
-    end
     feeds = []
     # params[:url] is http:/example.com because of squeeze("/")
-    @url ||= url_from_path(:url) unless params[:url].blank?
+    @url = url_from_path(:url)
     FeedSearcher.search(@url).each do |feedlink|
       if feed = Feed.find_by_feedlink(feedlink)
         if sub = @member.subscribed(feed)
@@ -36,7 +33,6 @@ class SubscribeController < ApplicationController
     render :action => "confirm"
   end
 
-protected
   def subscribe
     unless params[:check_for_subscribe]
       flash[:notice] = "please check for subscribe"
@@ -50,7 +46,7 @@ protected
       folder_id = nil
     end
     options[:folder_id] = folder_id
-    params[:check_for_subscribe].values.each do |feedlink|
+    params[:check_for_subscribe].each do |feedlink|
       @member.subscribe_feed(feedlink, options)
     end
     # render :json => params.to_json
