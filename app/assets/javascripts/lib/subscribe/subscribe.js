@@ -215,15 +215,21 @@ function subscribe_submit(e){
 		});
 	}
 	var links = [];
+	var feedlink = form["feedlink"];
+	var feedlink_checkbox = form["check_for_subscribe[]"];
 	// multiple
-	if(form.feedlink.length){
-		Array.forEach(form.feedlink, function(el, i){
-			var c = form["check_for_subscribe[" + i + "]"];
-			(el.checked || (c && c.checked) ) && links.push(el.value);
+	if(feedlink.length && feedlink_checkbox.length){
+		Array.forEach(feedlink, function(el){
+			Array.some(feedlink_checkbox, function(checkbox) {
+				if (el.value === checkbox.value) {
+					return false;
+				}
+				return (feedlink_checkbox = checkbox)
+			});
+			(el.checked || (feedlink_checkbox && feedlink_checkbox.checked) ) && links.push(el.value);
 		});
 	} else {
-		var c = form["check_for_subscribe[" + 0 + "]"];
-		(this.feedlink.checked || (c && c.checked)) && links.push(this.feedlink.value);
+		(feedlink.checked || (feedlink_checkbox && feedlink_checkbox.checked)) && links.push(feedlink.value);
 	}
 	if(!links.length) return;
 
