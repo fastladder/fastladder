@@ -2,16 +2,17 @@ class RpcController < ApplicationController
   skip_before_filter :verify_authenticity_token
   before_filter :auth
   def update_feed
-    sub = @member.subscribe_feed params[:feedlink]
-    if params[:json]
-      params.merge! JSON.parse(params[:json]).symbolize_keys
+    options = params.dup
+    sub = @member.subscribe_feed options[:feedlink]
+    if options[:json]
+      options.merge! JSON.parse(options[:json]).symbolize_keys
     end
-    item = Item.find_or_create_by_link_and_feed_id params[:link], sub.feed.id
-    item.title = params[:title]
-    item.body = params[:body]
-    item.author = params[:author]
-    item.category = params[:category]
-    item.modified_on = params[:published_date]
+    item = Item.find_or_create_by_link_and_feed_id options[:link], sub.feed.id
+    item.title = options[:title]
+    item.body = options[:body]
+    item.author = options[:author]
+    item.category = options[:category]
+    item.modified_on = options[:published_date]
     item.save
     render json: {result: true}
   end
