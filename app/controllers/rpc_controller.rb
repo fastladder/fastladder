@@ -6,14 +6,7 @@ class RpcController < ApplicationController
     if options[:json]
       options.merge! JSON.parse(options[:json]).symbolize_keys
     end
-    sub = @member.subscribe_feed options[:feedlink]
-    item = Item.find_or_create_by_link_and_feed_id options[:link], sub.feed.id
-    item.title = options[:title]
-    item.body = options[:body]
-    item.author = options[:author]
-    item.category = options[:category]
-    item.modified_on = options[:published_date]
-    item.save
+    create_item options, @member
     render json: {result: true}
   end
 
@@ -24,16 +17,9 @@ class RpcController < ApplicationController
 
   # TODO Fix Baaaaaad SQL
   def update_feeds
-    JSON.parse(params[:feeds]).each{|x|
-      x.symbolize_keys!
-      sub = @member.subscribe_feed x[:feedlink]
-      item = Item.find_or_create_by_link_and_feed_id x[:link], sub.feed.id
-      item.title = x[:title]
-      item.body = x[:body]
-      item.author = x[:author]
-      item.category = x[:category]
-      item.modified_on = x[:published_date]
-      item.save
+    JSON.parse(params[:feeds]).each{|options|
+      options.symbolize_keys!
+      create_item options, @member
     }
     render json: {result: true}
   end
@@ -53,5 +39,29 @@ class RpcController < ApplicationController
   def auth
     @member = Member.where(auth_key: params[:api_key]).first
     render 'public/404', layout: false, status: 404 and return unless @member
+  end
+  
+
+  def create_item options, member
+    if options[:feedtitle]
+      feed = Feed.where(feedlink: options[:feedlink]).first
+      unless feed
+        description = options[:feeddescription] ? options[:feeddescription] : options[:feedtitle]
+        feed = Feed.create(feedlink: options[:feedlink], title: options[:feedtitle], link: options[:feedlink], description: description)
+      end
+      sub = member.subscriptions.where(feed_id: feed.id).first
+      unless sub
+        sub = member.subscriptions.create(feed_id: feed.id, has_unread: true)
+      end
+    else
+      sub = member.subscribe_feed options[:feedlink]
+    end
+    item = Item.find_or_create_by_link_and_feed_id options[:link], sub.feed.id
+    item.title = options[:title]
+    item.body = options[:body]
+    item.author = options[:author]
+    item.category = options[:category]
+    item.modified_on = options[:published_date]
+    item.save
   end
 end
