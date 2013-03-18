@@ -147,7 +147,7 @@ Control.instant_clip = function(){
 	}
 	var id = item.id;
 	var body = $("item_body_"+id);
-	var api = new API("/clip/add");
+	var api = new LDR.API("/clip/add");
 	var onload = function(json){
 		if(json.StatusCode == 401){
 			body.innerHTML = Template.get("clip_register").fill();
@@ -199,7 +199,7 @@ function toggle_clip(id){
 	var param = get_item_info(id);
 	var rate = subs_item(get_active_feed().subscribe_id).rate;
 	function fetch_clip(url,callback){
-		var api = new API("/clip/in_my_clip");
+		var api = new LDR.API("/clip/in_my_clip");
 		api.post({
 			link : url.unescapeHTML()
 		}, callback);
@@ -279,8 +279,8 @@ function toggle_clip(id){
 	}
 }
 function get_selection(){
-	return ( window.getSelection 
-			? window.getSelection().toString() 
+	return ( window.getSelection
+			? window.getSelection().toString()
 			: document.selection.createRange().text
 	).slice(0,150);
 }
@@ -509,7 +509,7 @@ ListView.extend({
 		}
 	},
 	last_item: function(){
-		
+
 	},
 	next_page: function(){
 		if(this.loading) return;
@@ -560,7 +560,7 @@ ListView.extend({
 		if(browser.isOpera) this.redraw();
 	},
 	focus: function(){
-		
+
 	},
 	unfocus: function(){
 		if(this.selected_item){
@@ -772,7 +772,7 @@ var clip_overlay;
 			this.requested = 0;
 			this.selected_item;
 			this.selected_index = 0;
-			this.loader = new API(this.clip_api);
+			this.loader = new LDR.API(this.clip_api);
 		},
 		show_error : function(){
 			this.window.innerHTML = [
@@ -1012,7 +1012,7 @@ var clip_overlay;
 			this.unselect_all();
 			this.rewrite();
 			function delete_clip(item,callback){
-				var api = new API("/clip/delete");
+				var api = new LDR.API("/clip/delete");
 				api.post({
 					link : item.link.unescapeHTML(),
 					postkey : postkey
@@ -1128,7 +1128,7 @@ var clip_overlay;
 		}
 	});
 	function sync_clip(item, callback){
-		var api = new API("/clip/add");
+		var api = new LDR.API("/clip/add");
 		var onload = function(json){
 			message("保存しました");
 			if(callback) callback();
@@ -1196,7 +1196,7 @@ function Set(a){
 		}
 	}
 	a.filter(can_set).forEach(self.add);
-	
+
 	// s <= t
 	self.issubset = function(t){return self.every(t._has)};
 	// s >= t
@@ -1334,9 +1334,9 @@ TagParser.split_tags = function(){
 	if(m){
 		var livedoor_id = m[1];
 		log(livedoor_id);
-		API.StickyQuery.users = livedoor_id;
+		LDR.API.StickyQuery.users = livedoor_id;
 	}
-	API.prototype.initialize = function(ap){
+	LDR.API.prototype.initialize = function(ap){
 		if(is_supported_api(ap)){
 			this.ap = replace_api(ap);
 		} else {
