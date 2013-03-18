@@ -59,4 +59,44 @@ describe Feed do
       feed.favicon.image.start_with?("\x89PNG\r\n".force_encoding('ascii-8bit')).should be_true
     end
   end
+
+  describe '.crawlable' do
+    context "crawl_status" do
+      before {
+        @ok_feed = FactoryGirl.create(:crawl_ok_feed)
+        @ng_feed = FactoryGirl.create(:crawl_ok_feed, crawl_status: FactoryGirl.create(:crawl_status, status: Fastladder::Crawler::CRAWL_NOW))
+      }
+      it { expect(Feed.crawlable).to include(@ok_feed)}
+      it { expect(Feed.crawlable).not_to include(@ng_feed)}
+    end
+
+    context "subscribers_count" do
+      before {
+        @ok_feed = FactoryGirl.create(:crawl_ok_feed)
+        @ng_feed = FactoryGirl.create(:crawl_ok_feed, subscribers_count: 0)
+      }
+      it { expect(Feed.crawlable).to include(@ok_feed)}
+      it { expect(Feed.crawlable).not_to include(@ng_feed)}
+    end
+
+    context "crawled_on" do
+      before {
+        @ok_feed_1 = FactoryGirl.create(:crawl_ok_feed, crawl_status: FactoryGirl.create(:crawl_status, crawled_on: nil))
+        @ok_feed_2 = FactoryGirl.create(:crawl_ok_feed, crawl_status: FactoryGirl.create(:crawl_status, crawled_on: 31.minutes.ago))
+        @ng_feed = FactoryGirl.create(:crawl_ok_feed, crawl_status: FactoryGirl.create(:crawl_status, crawled_on: 29.minutes.ago))
+      }
+      it { expect(Feed.crawlable).to include(@ok_feed_1, @ok_feed_2)}
+      it { expect(Feed.crawlable).not_to include(@ng_feed)}
+    end
+  end
+
+  describe "#avg_rate" do
+    before {
+      @feed = FactoryGirl.create(:feed)
+      FactoryGirl.create(:subscription, feed: @feed, member_id: 1, rate: 5)
+      FactoryGirl.create(:subscription, feed: @feed, member_id: 2, rate: 5)
+      FactoryGirl.create(:subscription, feed: @feed, member_id: 3, rate: 3)
+    }
+    it { expect(@feed.avg_rate).to eq(4) }
+  end
 end

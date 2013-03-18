@@ -1,4 +1,4 @@
-<% avg_rate = feed.subscriptions.average(:rate, :conditions => ["rate > ?", 0]).to_i  -%>
+<% avg_rate = feed.avg_rate -%>
 <h2>Feed Infomation</h2>
 <div class="feedinfo">
 	<div class="feed_info">

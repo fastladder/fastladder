@@ -36,4 +36,34 @@ describe Item do
     it { expect(json).to include(modified_on: item.modified_on.to_i) }
     it { expect(json).to include(created_on:  item.created_on.to_i)  }
   end
+
+  describe '.stored_since' do
+    before {
+      @item_1 = FactoryGirl.create(:item, stored_on: 20.hours.ago)
+      @item_2 = FactoryGirl.create(:item, stored_on: 10.hours.ago)
+    }
+    context 'with nil' do
+      it { expect(Item.stored_since(nil)).to include(@item_1, @item_2) }
+    end
+    context 'with time' do
+      it { expect(Item.stored_since(15.hours.ago)).to include(@item_2) }
+    end
+  end
+
+  describe '.recent' do
+    before {
+      @item_1 = FactoryGirl.create(:item, created_on: 1.hour.ago)
+      @item_2 = FactoryGirl.create(:item, created_on: 3.hour.ago)
+      @item_3 = FactoryGirl.create(:item, created_on: 2.hour.ago)
+    }
+    context "with nil, nil" do
+      it { expect(Item.recent).to eq([@item_1, @item_3, @item_2]) }
+    end
+    context "with limit" do
+      it { expect(Item.recent(2)).to eq([@item_1, @item_3]) }
+    end
+    context "with limit, offset" do
+      it { expect(Item.recent(1, 1)).to eq([@item_3]) }
+    end
+  end
 end

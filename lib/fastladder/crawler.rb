@@ -180,7 +180,7 @@ module Fastladder
 
       if result[:updated_items] + result[:new_items] > 0
         modified_on = Time.now
-        if last_item = feed.items.find(:first, :order => "created_on DESC")
+        if last_item = feed.items.recent.first
           modified_on = last_item.created_on
         elsif last_modified = sourece["last-modified"]
           @logger.info source['last-modified']

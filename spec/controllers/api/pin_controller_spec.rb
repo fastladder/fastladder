@@ -11,6 +11,17 @@ describe Api::PinController do
       post :add, { link: 'http://la.ma.la/blog/diary_200810292006.htm', title: '近況' }, { member_id: @member.id }
       expect(response.body).to be_json
     end
+
+    context "when over limit pins added" do
+      before {
+        old_pins = Array.new(SAVE_PIN_LIMIT) {|n| FactoryGirl.create(:pin, member: @member, link: "http://example.com/?#{n}") }
+        @oldest_pin = old_pins[0]
+      }
+      it "older will collection" do
+        post :add, { link: 'http://la.ma.la/blog/diary_200810292006.htm', title: '近況' }, { member_id: @member.id }
+        expect { @oldest_pin.reload }.to raise_error ActiveRecord::RecordNotFound # be_destroyed
+      end
+    end
   end
 
   describe 'POST /remove' do
