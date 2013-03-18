@@ -40,7 +40,7 @@ class Item < ActiveRecord::Base
   end
 
 
-  def to_json(options = {})
+  def as_json(options = {})
     result = {}
     result[:created_on] = self.created_on ? self.created_on.to_time.to_i : 0
     result[:modified_on] = self.modified_on ? self.modified_on.to_time.to_i : 0
@@ -52,6 +52,6 @@ class Item < ActiveRecord::Base
     end
     result[:link] = (self.link || "").purify_uri
     result[:body] = (self.body || "").scrub_html
-    result.to_json
+    result
   end
 end
