@@ -6,6 +6,13 @@ GIT
       activesupport (~> 3.2.12)
 
 GIT
+  remote: git://github.com/fnando/i18n-js.git
+  revision: eeec14066b50f72876aa789c9b1f226172452798
+  specs:
+    i18n-js (2.1.2)
+      i18n
+
+GIT
   remote: git://github.com/sikachu/verification.git
   revision: 7c692e3cdb7e3c9dd075503baeb63a1022025f08
   specs:
@@ -101,8 +108,6 @@ GEM
     hike (1.2.1)
     http_parser.rb (0.5.3)
     i18n (0.6.1)
-    i18n-js (2.1.2)
-      i18n
     journey (1.0.4)
     json (1.7.7)
     konacha (2.5.1)
@@ -249,7 +254,7 @@ DEPENDENCIES
   feed_searcher (>= 0.0.4)
   feedzirra!
   haml
-  i18n-js
+  i18n-js!
   konacha
   launchy
   mini_magick
