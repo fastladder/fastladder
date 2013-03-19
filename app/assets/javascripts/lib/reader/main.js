@@ -9,14 +9,6 @@ window.onresize = function(){invoke_hook('WINDOW_RESIZE')};
 //TODO move to local var
 var FlatMenu = LDR.FlatMenu;
 
-function as_event(obj,element){
-	var f = isFunction(obj) ? obj : new Function("event", obj);
-	return function(event){
-		event = event || window.event;
-		return f.call(element, event)
-	}
-}
-
 function LDR_getApiKey(){
 	var ck = new Cookie().parse();
 	for(var key in ck){
