@@ -1,34 +1,10 @@
 (function(){
 	// API
 	LDR.API.StickyQuery = { ApiKey: ApiKey };
-
-	LDR.Buttons = {
-		"up:mousedown": function(event){
-			if(event.shiftKey){
-				Control.reverse()
-			} else {
-				Control.go_prev()
-			}
-		},
-		"down:mousedown"    : "autoscroll.call(this, event)",
-		// keyhelp
-		"keyhelp:click"     : "Control.open_keyhelp()",
-		"keyhelp:mouseover" : "Control.show_keyhelp.call(this,event)",
-		"keyhelp:mouseout"  : "Control.hide_keyhelp.call(this,event)",
-		// pin
-		"pin:onclick"       : "Control.pin_click.call(this,event);",
-		"pin:onmouseover"   : "Control.pin_hover.call(this,event);",
-		"pin:onmouseout"    : "Control.pin_mouseout.call(this,event);",
-		// guide
-		"guide:onclick"     : "init_guide()"
-	}
-
 }).call(LDR);
 
 window.onload   = init;
 window.onresize = function(){invoke_hook('WINDOW_RESIZE')};
-
-
 
 // function show_all_mouseover(){
 // 	State.help_show = true;
@@ -50,34 +26,6 @@ function as_event(obj,element){
 	return function(event){
 		event = event || window.event;
 		return f.call(element, event)
-	}
-}
-function create_button(v){
-	var li = $N("li", {});
-	li.id = v.id;
-	li.className = "button icon";
-	li.style.backgroundImage = 'url('+v.icon+')';
-	if(v.innerHTML){
-		li.innerHTML = v.innerHTML;
-	}
-	var button_id = v.id.split("_")[0];
-	var events = (""+v.observe).split(",");
-	events.forEach(function(ev){
-		li["on"+ev] = as_event(LDR.Buttons[button_id+":"+ev], li);
-	});
-	return li;
-}
-
-function add_button(el){
-	var ul = $("control_buttons_ul");
-	if(isElement(el)){
-		ul.appendChild(el);
-	} else if(isString(el)){
-		var li = document.createElement("li");
-		li.innerHTML = el;
-		ul.appendChild(li);
-	} else {
-		ul.appendChild(create_button(el));
 	}
 }
 
