@@ -10,19 +10,6 @@ window.onresize = function(){invoke_hook('WINDOW_RESIZE')};
 var FlatMenu = LDR.FlatMenu;
 
 
-// last_error
-window.__ERROR__ = null;
-Function.prototype._try = function(){
-	var self = this;
-	return function(){
-		try{
-			return self.apply(this, arguments)
-		} catch(e){
-			__ERROR__ = e;
-			// alert(e);
-		}
-	}
-};
 // for customize
 function _addRule(){
 	if(document.styleSheets){
