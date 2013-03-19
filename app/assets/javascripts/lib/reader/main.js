@@ -6,18 +6,6 @@
 window.onload   = init;
 window.onresize = function(){invoke_hook('WINDOW_RESIZE')};
 
-// function show_all_mouseover(){
-// 	State.help_show = true;
-// 	State.help_snap = this;
-// 	var tmpl = I18n.t('show_all_help_message_tmpl');
-// 	State.help_message = tmpl.fill({state: Config.show_all ? 'disabled' : 'enabled' });
-// 	update("help_window");
-// }
-// function show_all_mouseout(){
-// 	State.help_show = false;
-// 	update("help_window");
-// }
-
 //TODO move to local var
 var FlatMenu = LDR.FlatMenu;
 
@@ -47,6 +35,7 @@ if(/^\[/.test(ApiKey)){
 $.enable_cache = function(id){
 	$.cacheable[id] = true;
 }.forEachArgs();
+
 $.enable_cache(
 	'right_container',
 	'left_container',
