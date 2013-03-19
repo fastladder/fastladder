@@ -1,6 +1,6 @@
 require "string_utils"
 class ApiController < ApplicationController
-  before_filter :login
+  before_filter :login_required
   #verify_nothing :session => :member
   #verify_nothing :method => :post, :only => [:subs, :lite_subs, :error_subs, :folders]
   #verify_json :params => :subscribe_id, :only => :touch_all
