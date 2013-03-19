@@ -1,19 +1,19 @@
 //API Key
-(function(){
-	// API
-	LDR.API.StickyQuery = { ApiKey: ApiKey };
-	function getApiKey(){
-		var ck = new Cookie().parse();
-		for(var key in ck){
-			if(/_sid/.test(key)){
-				return ck[key]
-			}
-		}
-	}
-	if(/^\[/.test(ApiKey)){
-		LDR.API.StickyQuery = { ApiKey: getApiKey() };
-	}
-}).call(LDR);
+// (function(){
+// 	// API
+// 	LDR.API.StickyQuery = { ApiKey: ApiKey };
+// 	function getApiKey(){
+// 		var ck = new Cookie().parse();
+// 		for(var key in ck){
+// 			if(/_sid/.test(key)){
+// 				return ck[key]
+// 			}
+// 		}
+// 	}
+// 	if(/^\[/.test(ApiKey)){
+// 		LDR.API.StickyQuery = { ApiKey: getApiKey() };
+// 	}
+// }).call(LDR);
 
 window.onload   = init;
 window.onresize = function(){LDR.invoke_hook('WINDOW_RESIZE')};
