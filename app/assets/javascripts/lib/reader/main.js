@@ -1,3 +1,24 @@
+/*
+ DOM Cache
+*/
+(function(){
+	$.enable_cache = function(id){
+		$.cacheable[id] = true;
+	}.forEachArgs();
+
+	$.enable_cache(
+		'right_container',
+		'left_container',
+		'subs_container',
+		'right_body',
+		'message',
+		'loadicon',
+		'loading',
+		'total_unread_count'
+	);
+}).call(LDR);
+
+//API Key
 (function(){
 	// API
 	LDR.API.StickyQuery = { ApiKey: ApiKey };
@@ -185,24 +206,6 @@ window.onresize = function(){LDR.invoke_hook('WINDOW_RESIZE')};
 
 //TODO move to local var
 var FlatMenu = LDR.FlatMenu;
-
-/*
- DOM Cache
-*/
-$.enable_cache = function(id){
-	$.cacheable[id] = true;
-}.forEachArgs();
-
-$.enable_cache(
-	'right_container',
-	'left_container',
-	'subs_container',
-	'right_body',
-	'message',
-	'loadicon',
-	'loading',
-	'total_unread_count'
-);
 
 
 /*
