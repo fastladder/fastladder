@@ -1,6 +1,28 @@
 (function(){
 	// API
 	LDR.API.StickyQuery = { ApiKey: ApiKey };
+
+	LDR.Buttons = {
+		"up:mousedown": function(event){
+			if(event.shiftKey){
+				Control.reverse()
+			} else {
+				Control.go_prev()
+			}
+		},
+		"down:mousedown"    : "autoscroll.call(this, event)",
+		// keyhelp
+		"keyhelp:click"     : "Control.open_keyhelp()",
+		"keyhelp:mouseover" : "Control.show_keyhelp.call(this,event)",
+		"keyhelp:mouseout"  : "Control.hide_keyhelp.call(this,event)",
+		// pin
+		"pin:onclick"       : "Control.pin_click.call(this,event);",
+		"pin:onmouseover"   : "Control.pin_hover.call(this,event);",
+		"pin:onmouseout"    : "Control.pin_mouseout.call(this,event);",
+		// guide
+		"guide:onclick"     : "init_guide()"
+	}
+
 }).call(LDR);
 
 window.onload   = init;
@@ -23,50 +45,6 @@ window.onresize = function(){invoke_hook('WINDOW_RESIZE')};
 //TODO move to local var
 var FlatMenu = LDR.FlatMenu;
 
-LDR.Buttons = {
-	"up:mousedown": function(event){
-		if(event.shiftKey){
-			Control.reverse()
-		} else {
-			Control.go_prev()
-		}
-	},
-	"down:mousedown"    : "autoscroll.call(this, event)",
-	// keyhelp
-	"keyhelp:click"     : "Control.open_keyhelp()",
-	"keyhelp:mouseover" : "Control.show_keyhelp.call(this,event)",
-	"keyhelp:mouseout"  : "Control.hide_keyhelp.call(this,event)",
-	// pin
-	"pin:onclick"       : "Control.pin_click.call(this,event);",
-	"pin:onmouseover"   : "Control.pin_hover.call(this,event);",
-	"pin:onmouseout"    : "Control.pin_mouseout.call(this,event);",
-	// guide
-	"guide:onclick"     : "init_guide()"
-}
-
-var buttons = [
-	{
-		id      : "up_button",
-		observe : "mousedown",
-		icon    : '/img/icon/allow_up.gif'
-	},
-	{
-		id      : "down_button",
-		observe : "mousedown",
-		icon    : '/img/icon/allow_down.gif'
-	},
-	{
-		id      : "pin_button",
-		observe : "click,mouseover,mouseout",
-		icon    : '/img/icon/pin.gif',
-		innerHTML : '<span id="pin_count"></span>'
-	},
-	{
-		id      : "keyhelp_button",
-		observe : "click,mouseover,mouseout",
-		icon    : '/img/icon/key_q.gif'
-	}
-];
 function as_event(obj,element){
 	var f = isFunction(obj) ? obj : new Function("event", obj);
 	return function(event){
@@ -89,13 +67,7 @@ function create_button(v){
 	});
 	return li;
 }
-function setup_buttons(){
-	var ul = $("control_buttons_ul");
-	buttons.forEach(function(v){
-		var li =create_button(v);
-		ul.appendChild(li);
-	});
-}
+
 function add_button(el){
 	var ul = $("control_buttons_ul");
 	if(isElement(el)){
@@ -108,7 +80,6 @@ function add_button(el){
 		ul.appendChild(create_button(el));
 	}
 }
-//setup_buttons();
 
 function LDR_getApiKey(){
 	var ck = new Cookie().parse();
