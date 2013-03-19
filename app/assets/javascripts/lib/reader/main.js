@@ -11,10 +11,6 @@ var FlatMenu = LDR.FlatMenu;
 
 
 
-function ld_check(){
-	var c = document.cookie;
-	return (c.indexOf(".LUID") != -1) || (c.indexOf(".LL") != -1);
-}
 function show_error(){
 	State.show_error = true;
 	update("error_window")
@@ -414,17 +410,25 @@ updater("help_window", function(){
 		Element.hide(this);
 	}
 });
-updater("error_window",function(){
-	Element.show(this);
-	centering(this,0,50);
-	if(!ld_check()){
-		print_error("login");
-	} else if(typeof _XMLHttpRequest == "undefined"){
-		print_error("xmlhttp");
-	} else {
-		print_error("busy")
-	}
-});
+
+(function(){
+	var ld_check = function(){
+		var c = document.cookie;
+		return (c.indexOf(".LUID") != -1) || (c.indexOf(".LL") != -1);
+	};
+	updater("error_window",function(){
+		Element.show(this);
+		centering(this,0,50);
+		if(!ld_check()){
+			print_error("login");
+		} else if(typeof _XMLHttpRequest == "undefined"){
+			print_error("xmlhttp");
+		} else {
+			print_error("busy");
+		}
+	});
+}).call(LDR);
+
 updater("mode_text_view",function(){
 	this.innerHTML = I18n.t(Config.view_mode);
 });
