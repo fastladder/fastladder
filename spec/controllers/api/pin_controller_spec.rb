@@ -14,7 +14,7 @@ describe Api::PinController do
 
     context "when over limit pins added" do
       before {
-        old_pins = Array.new(SAVE_PIN_LIMIT) {|n| FactoryGirl.create(:pin, member: @member, link: "http://example.com/?#{n}") }
+        old_pins = Array.new(Settings.save_pin_limit) {|n| FactoryGirl.create(:pin, member: @member, link: "http://example.com/?#{n}") }
         @oldest_pin = old_pins[0]
       }
       it "older will collection" do
