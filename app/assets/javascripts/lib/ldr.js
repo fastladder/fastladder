@@ -104,25 +104,6 @@
                     that.css_initializer.applyRule();
                     flow.pass();
                 },
-
-                // TODO: LDR.API.StickyQuery を別の場所に移動
-                function(){
-                    // API
-                    LDR.API.StickyQuery = { ApiKey: ApiKey };
-                    function getApiKey(){
-                        var ck = new Cookie().parse();
-                        for(var key in ck){
-                            if(/_sid/.test(key)){
-                                return ck[key]
-                            }
-                        }
-                    }
-                    if(/^\[/.test(ApiKey)){
-                        LDR.API.StickyQuery = { ApiKey: getApiKey() };
-                    }
-                    flow.pass();
-                },
-
                 //dom cache
                 function(){
                     $.enable_cache = function(id){
