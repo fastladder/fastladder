@@ -6,7 +6,7 @@ class IconController < ApplicationController
     if feed and feed.favicon
       image = feed.favicon.image
     else
-      File.open(DEFAULT_FAVICON) do |f|
+      File.open(Settings.default_favicon) do |f|
         image = f.binmode.read
       end
     end

@@ -11,11 +11,11 @@ class ApiController < ApplicationController
 
   def all
     if params[:limit].blank?
-      limit = MAX_UNREAD_COUNT
+      limit = Settings.max_unread_count
     else
       limit = params[:limit].to_i
-      if limit <= 0 or MAX_UNREAD_COUNT < limit
-        limit = MAX_UNREAD_COUNT
+      if limit <= 0 or Settings.max_unread_count < limit
+        limit = Settings.max_unread_count
       end
     end
     offset = params[:offset].blank? ? 0 : params[:offset].to_i
@@ -30,7 +30,7 @@ class ApiController < ApplicationController
   end
 
   def unread
-    items = @sub.feed.items.stored_since(@sub.viewed_on).recent(MAX_UNREAD_COUNT)
+    items = @sub.feed.items.stored_since(@sub.viewed_on).recent(Settings.max_unread_count)
     result = {
       :subscribe_id => @id,
       :channel => @sub.feed,
@@ -84,7 +84,7 @@ class ApiController < ApplicationController
       modified_on = feed.modified_on
       item = {
         :subscribe_id => sub.id,
-        :unread_count => [unread_count, MAX_UNREAD_COUNT].min,
+        :unread_count => [unread_count, Settings.max_unread_count].min,
         :folder => (sub.folder ? sub.folder.name : "").utf8_roundtrip.html_escape,
         :tags => [],
         :rate => sub.rate,
@@ -178,7 +178,7 @@ protected
     stored_on_list = subscriptions.order("id").map do |sub|
       {
         :subscription => sub,
-        :stored_on => sub.feed.items.select("stored_on").order("stored_on DESC").limit(MAX_UNREAD_COUNT).map { |item| item.stored_on.to_time },
+        :stored_on => sub.feed.items.select("stored_on").order("stored_on DESC").limit(Settings.max_unread_count).map { |item| item.stored_on.to_time },
       }
     end
     counts = []

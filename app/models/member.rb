@@ -94,7 +94,7 @@ class Member < ActiveRecord::Base
   end
 
   def subscribe_feed(feedlink, options = {})
-    if self.subscriptions.size >= SUBSCRIBE_LIMIT
+    if self.subscriptions.size >= Settings.subscribe_limit
       logger.warn "SUBSCRIBE LIMIT: #{self.username}(#{self.id}) #{feedlink}"
       return nil
     end
