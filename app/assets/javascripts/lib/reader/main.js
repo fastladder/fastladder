@@ -10,51 +10,6 @@ window.onresize = function(){invoke_hook('WINDOW_RESIZE')};
 var FlatMenu = LDR.FlatMenu;
 
 
-// for customize
-function _addRule(){
-	if(document.styleSheets){
-		// Mozilla, (safari?)
-		if(document.styleSheets[0].insertRule){
-			_addRule = function(selector, property){
-				document.styleSheets[0].insertRule(
-					selector + "{" + property + "}", document.styleSheets[0].cssRules.length);
-			}._try();
-		// IE
-		} else if(document.styleSheets[0].addRule){
-			_addRule = function(selector, property){
-				document.styleSheets[0].addRule(selector, "{" + property + "}");
-			}._try();
-		}
-	} else if(window.opera){
-		_addRule = function(selector, property){
-			var sheet = selector + "{" + property + "}";
-			var link = document.createElement('link');
-			link.setAttribute('rel',  'stylesheet');
-			link.setAttribute('type', 'text/css');
-			link.setAttribute('href', 'data:text/css,' + encodeURIComponent(sheet));
-			document.getElementsByTagName('head')[0].appendChild(link);
-		}._try();
-	}
-}
-_addRule._try();
-
-function LDR_addStyle(){
-	var arg = arguments;
-	if(isString(arg[0]) && isArray(arg[1])){
-		arg[1].forEach(function(v){
-			_addRule(arg[0],v);
-		});
-	} else {
-		_addRule.apply(this,arguments)
-	}
-}
-
-LDR_addStyle("pre",[
-	"font-family:monospace;",
-	"border:1px solid #808080;",
-	"background:#f4f2ef;",
-	"padding:1em;"
-]);
 
 function ld_check(){
 	var c = document.cookie;
