@@ -3,7 +3,8 @@ require "open-uri"
 require "string_utils"
 
 class ImportController < ApplicationController
-  before_filter :login
+  before_filter :login_required
+
   def index
      if request.post?
        opml = params[:opml].read.to_s

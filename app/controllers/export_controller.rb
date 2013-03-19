@@ -1,8 +1,6 @@
-require 'cgi'
-require 'time'
-
 class ExportController < ApplicationController
-  before_filter :login
+  before_filter :login_required
+
   def opml
     @opml = []
     @sites = []

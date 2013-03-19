@@ -1,5 +1,5 @@
 class Api::PinController < ApplicationController
-  before_filter :login
+  before_filter :login_required
   #verify_nothing :method => :post
   #verify_json :params => [:link, :title], :only => :add
   #verify_json :params => :link, :only => :remove

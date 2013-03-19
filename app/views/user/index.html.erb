@@ -3,7 +3,7 @@
 <% rss_link_tag = %w!<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="[% config.base_url %]/user/[% target.livedoor_id %]/rss" />! %>
 <% end %>
 
-<% is_owner = 1 if @member && @member.username == @target.username %>
+<% is_owner = 1 if current_member.present? && current_member.username == @target.username %>
 <% total_subscribe_count = @target.total_subscribe_count %>
 <% public_subscribe_count = @target.public_subscribe_count %>
 <% recent_subs_feed = "" %>
