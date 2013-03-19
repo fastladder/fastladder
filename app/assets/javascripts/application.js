@@ -10,9 +10,11 @@
 // WARNING: THE FIRST BLANK LINE MARKS THE END OF WHAT'S TO BE PROCESSED, ANY BLANK LINE SHOULD
 // GO AFTER THE REQUIRES BELOW.
 //
+//= require_tree ./vendor
 //= require lib/namespace
 //= require_tree ./lib/utils
 //= require_tree ./lib/events
 //= require lib/template
 //= require lib/api
+//= require lib/ldr
 //= require_tree ./lib/ui
