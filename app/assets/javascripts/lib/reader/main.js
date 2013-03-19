@@ -65,31 +65,7 @@
 	});
 }).call(LDR);
 
-window.onload   = init;
-window.onresize = function(){LDR.invoke_hook('WINDOW_RESIZE')};
-
-//TODO move to local var
-var FlatMenu = LDR.FlatMenu;
-
-
-/*
- DOM Cache
-*/
-$.enable_cache = function(id){
-	$.cacheable[id] = true;
-}.forEachArgs();
-
-$.enable_cache(
-	'right_container',
-	'left_container',
-	'subs_container',
-	'right_body',
-	'message',
-	'loadicon',
-	'loading',
-	'total_unread_count'
-);
-
+//event trigger
 (function(){
 	// まだ作ってないのもあり。
 	LDR.trigger = new LDR.EventTrigger(
@@ -203,6 +179,31 @@ $.enable_cache(
 		});
 	}
 }).call(LDR);
+
+window.onload   = init;
+window.onresize = function(){LDR.invoke_hook('WINDOW_RESIZE')};
+
+//TODO move to local var
+var FlatMenu = LDR.FlatMenu;
+
+/*
+ DOM Cache
+*/
+$.enable_cache = function(id){
+	$.cacheable[id] = true;
+}.forEachArgs();
+
+$.enable_cache(
+	'right_container',
+	'left_container',
+	'subs_container',
+	'right_body',
+	'message',
+	'loadicon',
+	'loading',
+	'total_unread_count'
+);
+
 
 /*
  State
@@ -322,6 +323,7 @@ updater("help_window", function(){
 	}
 });
 
+//updaters
 (function(){
 	var ld_check = function(){
 		var c = document.cookie;
@@ -338,101 +340,102 @@ updater("help_window", function(){
 			print_error("busy");
 		}
 	});
-}).call(LDR);
 
-updater("mode_text_view",function(){
-	this.innerHTML = I18n.t(Config.view_mode);
-});
-updater("mode_text_sort",function(){
-	this.innerHTML = I18n.t(Config.sort_mode);
-});
-/* navi */
-updater("right_bottom_navi", print_navi);
-updater("right_top_navi", print_navi);
-updater("scroll_offset",function(){
-	this.innerHTML = State.scroll_offset + "/"
-});
-
-updater("folder_label",function(){
-	var item = subs_item(State.now_reading);
-	this.innerHTML = [
-		(item.folder ? item.folder.ry(8,"...") : I18n.t('Uncategolized')),
-		'<img src="/img/icon/tri_d.gif">'
-	].join("");
-});
-
-/* 未読件数合計 */
-updater("total_unread_count", function(){
-	var count = subs.model.get_unread_count();
-	// var feed_count = subs.model.get_unread_feeds().length;
-	var feed_count = subs.model.get_unread_feeds_count();
-	var param = {
-		count : count || "0",
-		feed_count : feed_count || "0"
-	};
-	if(param.count < 0) return;
-	if(State.load_progress){
-		addClass(this, "progress")
-	} else {
-		removeClass(this, "progress")
-	}
-	var tmpl = I18n.t('unread_count_tmpl');
-	var tmpl_title = I18n.t('unread_count_title_tmpl');
-	this.innerHTML = tmpl.fill(param);
-	if(!State.guest_mode){
-		document.title = tmpl_title.fill(param);
-	}
-});
-
-updater("keybind_table", function(){
-	this.innerHTML = format_keybind();
-	var h = State.keyhelp_more ? this.offsetHeight + 65 + "px" : "150px";
-	$("keyhelp").style.height = h;
-});
-updater("feed_next", function(){
-	this.className = (!State.has_next) ? "disable" : "";
-	update("feed_paging_next");
-});
-updater("feed_prev", function(){
-	this.className = (State.viewrange.start == 0) ? "disable" : "";
-	update("feed_paging_prev");
-});
-
-updater("feed_paging_next", function(){
-	this.className = (!State.has_next) ? "disable" : "";
-});
-updater("feed_paging_prev", function(){
-	this.className = (State.viewrange.start == 0) ? "disable" : "";
-});
-
-updater("myfeed_tab", function(){
-	this.style.borderColor = State.show_left
-	 ? '#a5c5ff white white white'
-	 : 'white white #a5c5ff white';
-}._try());
-
-updater("show_all_button", function(){
-	var style = {
-		active : {
-			border : "1px solid #fff",
-			backgroundColor : "#d4d0c8",
-			borderColor : "gray white white gray"
-		},
-		inactive : {
-			border : "1px solid #f5f5f5",
-			backgroundColor : "#f5f5f5"
-		}
-	};
-	setStyle(this, style[Config.show_all ? "inactive" : "active"] );
-});
-updater("reload_button", function(){
-	var img_path = State.subs_reloading ? '/img/icon/reload_anime.gif' : '/img/icon/reload.gif';
-	var cursor   = State.subs_reloading ? 'wait' : 'pointer';
-	setStyle(this, {
-		backgroundImage: 'url('+img_path+')',
-		cursor: cursor
+	updater("mode_text_view",function(){
+		this.innerHTML = I18n.t(Config.view_mode);
 	});
-});
+	updater("mode_text_sort",function(){
+		this.innerHTML = I18n.t(Config.sort_mode);
+	});
+	/* navi */
+	updater("right_bottom_navi", print_navi);
+	updater("right_top_navi", print_navi);
+	updater("scroll_offset",function(){
+		this.innerHTML = State.scroll_offset + "/"
+	});
+
+	updater("folder_label",function(){
+		var item = subs_item(State.now_reading);
+		this.innerHTML = [
+			(item.folder ? item.folder.ry(8,"...") : I18n.t('Uncategolized')),
+			'<img src="/img/icon/tri_d.gif">'
+		].join("");
+	});
+
+	/* 未読件数合計 */
+	updater("total_unread_count", function(){
+		var count = subs.model.get_unread_count();
+		// var feed_count = subs.model.get_unread_feeds().length;
+		var feed_count = subs.model.get_unread_feeds_count();
+		var param = {
+			count : count || "0",
+			feed_count : feed_count || "0"
+		};
+		if(param.count < 0) return;
+		if(State.load_progress){
+			addClass(this, "progress")
+		} else {
+			removeClass(this, "progress")
+		}
+		var tmpl = I18n.t('unread_count_tmpl');
+		var tmpl_title = I18n.t('unread_count_title_tmpl');
+		this.innerHTML = tmpl.fill(param);
+		if(!State.guest_mode){
+			document.title = tmpl_title.fill(param);
+		}
+	});
+
+	updater("keybind_table", function(){
+		this.innerHTML = format_keybind();
+		var h = State.keyhelp_more ? this.offsetHeight + 65 + "px" : "150px";
+		$("keyhelp").style.height = h;
+	});
+	updater("feed_next", function(){
+		this.className = (!State.has_next) ? "disable" : "";
+		update("feed_paging_next");
+	});
+	updater("feed_prev", function(){
+		this.className = (State.viewrange.start == 0) ? "disable" : "";
+		update("feed_paging_prev");
+	});
+
+	updater("feed_paging_next", function(){
+		this.className = (!State.has_next) ? "disable" : "";
+	});
+	updater("feed_paging_prev", function(){
+		this.className = (State.viewrange.start == 0) ? "disable" : "";
+	});
+
+	updater("myfeed_tab", function(){
+		this.style.borderColor = State.show_left
+		 ? '#a5c5ff white white white'
+		 : 'white white #a5c5ff white';
+	}._try());
+
+	updater("show_all_button", function(){
+		var style = {
+			active : {
+				border : "1px solid #fff",
+				backgroundColor : "#d4d0c8",
+				borderColor : "gray white white gray"
+			},
+			inactive : {
+				border : "1px solid #f5f5f5",
+				backgroundColor : "#f5f5f5"
+			}
+		};
+		setStyle(this, style[Config.show_all ? "inactive" : "active"] );
+	});
+	updater("reload_button", function(){
+		var img_path = State.subs_reloading ? '/img/icon/reload_anime.gif' : '/img/icon/reload.gif';
+		var cursor   = State.subs_reloading ? 'wait' : 'pointer';
+		setStyle(this, {
+			backgroundImage: 'url('+img_path+')',
+			cursor: cursor
+		});
+	});
+
+}).call(LDR);
 
 /*
  Ajax and Ahah
@@ -2852,7 +2855,7 @@ Subscribe.Controller = Class.create("controller").extend({
 				//} else {
 				//	update("total_unread_count");
 				//}
-				invoke_hook('AFTER_SUBS_LOAD');
+				LDR.invoke_hook('AFTER_SUBS_LOAD');
 				message('Loading completed.');
 				setTimeout(function(){self.readyState=0},3000);
 			};
