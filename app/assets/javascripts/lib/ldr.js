@@ -103,6 +103,25 @@
                 function(){
                     that.css_initializer.applyRule();
                     flow.pass();
+                },
+
+                //dom cache
+                function(){
+                    $.enable_cache = function(id){
+                        $.cacheable[id] = true;
+                    }.forEachArgs();
+
+                    $.enable_cache(
+                        'right_container',
+                        'left_container',
+                        'subs_container',
+                        'right_body',
+                        'message',
+                        'loadicon',
+                        'loading',
+                        'total_unread_count'
+                    );
+                    flow.pass();
                 }
             ];
             flow = new Flow(parallel_initializers.length, function(){

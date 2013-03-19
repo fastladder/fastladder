@@ -1,23 +1,3 @@
-/*
- DOM Cache
-*/
-(function(){
-	$.enable_cache = function(id){
-		$.cacheable[id] = true;
-	}.forEachArgs();
-
-	$.enable_cache(
-		'right_container',
-		'left_container',
-		'subs_container',
-		'right_body',
-		'message',
-		'loadicon',
-		'loading',
-		'total_unread_count'
-	);
-}).call(LDR);
-
 //API Key
 (function(){
 	// API
