@@ -4,19 +4,14 @@
         var image = new Image();
         image.src = url;
         image.onload = done;
+        image.onerror = done; //allow failure
     };
 
-    var preload = this.preload = function(assets_list, done){
-        var asset_count = assets_list.length;
-        var done_count = 0;
-
+    this.preload = function(assets_list, done){
+        var flow = new Flow(assets_list.length, done);
         assets_list.map(function(url){
             _preload(url, function(){
-                if(++done_count >= asset_count){
-                    if(typeof done === 'function'){
-                        done();
-                    }
-                }
+                flow.pass();
             });
         });
     };

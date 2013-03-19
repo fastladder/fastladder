@@ -1,34 +1,13 @@
-// API
-LDR.API.StickyQuery = { ApiKey: ApiKey };
+(function(){
+	// API
+	LDR.API.StickyQuery = { ApiKey: ApiKey };
+}).call(LDR);
 
-var initialized = false;
 window.onload   = init;
 window.onresize = function(){invoke_hook('WINDOW_RESIZE')};
 
 //TODO move to local var
 var FlatMenu = LDR.FlatMenu;
-
-LDR.ASSET_IMAGES = [
-	'/img/rate/0.gif',
-	'/img/rate/1.gif',
-	'/img/rate/2.gif',
-	'/img/rate/3.gif',
-	'/img/rate/4.gif',
-	'/img/rate/5.gif',
-	'/img/rate/pad/0.gif',
-	'/img/rate/pad/1.gif',
-	'/img/rate/pad/2.gif',
-	'/img/rate/pad/3.gif',
-	'/img/rate/pad/4.gif',
-	'/img/rate/pad/5.gif',
-	'/img/icon/default.gif',
-	'/img/icon/p.gif',
-	'/img/icon/m.gif'
-];
-
-LDR.preload(LDR.ASSET_IMAGES, function(){
-	//preload done
-});
 
 
 // last_error
@@ -3285,84 +3264,86 @@ var LoadEffect = {
  初期化処理
 */
 function init(){
-	if(initialized) return;
-	initialized = true;
-	setup_hook();
-	invoke_hook('BEFORE_INIT');
-	window.onerror = function(a,b,c){
-		$("message").innerHTML = [a,b,c];
-		return false;
-	}
-
-	State.leftpane_width = LDR.VARS.LeftpaneWidth;
-
-	DOM.show("container");
-	DOM.show("footer");
-	fit_screen();
-	DOM.show("right_container");
-
-	LDR.API.registerCallback({
-		Create  : LoadEffect.Start,
-		Complete: LoadEffect.Stop
-	});
-
-
-	subs = new Subscribe.Controller({
-		model : new Subscribe.Model,
-		view  : new Subscribe.View("subs_body")
-	})
-
-	finder = new Finder("finder");
-	finder.clear();
-	finder.add_callback(function(q){
-		if(!q){
-			return subs.find("");
+	var app = LDR.Application.getInstance();
+	app.load({}, function(){
+		setup_hook();
+		invoke_hook('BEFORE_INIT');
+		window.onerror = function(a,b,c){
+			$("message").innerHTML = [a,b,c];
+			return false;
 		}
-		var query;
-		if(typeof Roma == "function"){
-			var roma = new Roma();
-			try{
-				query = new RegExp(roma.toRegExp(q),"i");
-			} catch(e){
-				query = q;
-			}
-		} else {
-			try{
-				query = new RegExp(q, "i");
-			} catch(e){
-				query = q;
-			}
-		}
-		subs.find(query)
-	});
 
-	setup_event();
-	setup_hotkey();
+		State.leftpane_width = LDR.VARS.LeftpaneWidth;
 
-	// ajaxize
-	ajaxize("discover_form",{
-		before:function(){
-			var output = $("discover_items");
-			output.innerHTML = [
-				'<div class="discover_loading">',
-				'<img src="/img/icon/loading.gif">　',
-				I18n.t("print_discover_loading"),
-				'</div>'
-			].join("");
-			return true;
-		},
-		after: print_discover
-	});
+		DOM.show("container");
+		DOM.show("footer");
+		fit_screen();
+		DOM.show("right_container");
 
-	(function(){
-		load_content();
-		invoke_hook('BEFORE_CONFIGLOAD');
-		Config.load(function(){
-			invoke_hook('AFTER_CONFIGLOAD');
-			subs.update();
+		LDR.API.registerCallback({
+			Create  : LoadEffect.Start,
+			Complete: LoadEffect.Stop
 		});
-	}).later(10)();
-	invoke_hook('AFTER_INIT');
+
+
+		subs = new Subscribe.Controller({
+			model : new Subscribe.Model,
+			view  : new Subscribe.View("subs_body")
+		})
+
+		finder = new Finder("finder");
+		finder.clear();
+		finder.add_callback(function(q){
+			if(!q){
+				return subs.find("");
+			}
+			var query;
+			if(typeof Roma == "function"){
+				var roma = new Roma();
+				try{
+					query = new RegExp(roma.toRegExp(q),"i");
+				} catch(e){
+					query = q;
+				}
+			} else {
+				try{
+					query = new RegExp(q, "i");
+				} catch(e){
+					query = q;
+				}
+			}
+			subs.find(query)
+		});
+
+		setup_event();
+		setup_hotkey();
+
+		// ajaxize
+		ajaxize("discover_form",{
+			before:function(){
+				var output = $("discover_items");
+				output.innerHTML = [
+					'<div class="discover_loading">',
+					'<img src="/img/icon/loading.gif">　',
+					I18n.t("print_discover_loading"),
+					'</div>'
+				].join("");
+				return true;
+			},
+			after: print_discover
+		});
+
+		(function(){
+			load_content();
+			invoke_hook('BEFORE_CONFIGLOAD');
+			Config.load(function(){
+				invoke_hook('AFTER_CONFIGLOAD');
+				subs.update();
+			});
+		}).later(10)();
+		invoke_hook('AFTER_INIT');
+
+	});
 }
 
 function print_discover(list){
