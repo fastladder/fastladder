@@ -17,11 +17,19 @@ class Pin < ActiveRecord::Base
 
   scope :past, ->(num){ order("created_on").limit(num) }
 
+  after_create :destroy_over_limit_pins
+
   def to_json(options = {})
     result = {}
     result[:link] = self.link.purify_uri
     result[:title] = self.title.purify_html
     result[:created_on] = self.created_on.to_time.to_i
     result.to_json
+  end
+
+  # older pins are collectioned
+  def destroy_over_limit_pins
+    over_count = member.pins.size - Settings.save_pin_limit
+    member.pins.past(over_count).destroy_all if over_count > 0
   end
 end
