@@ -6,8 +6,6 @@
 window.onload   = init;
 window.onresize = function(){invoke_hook('WINDOW_RESIZE')};
 
-//TODO move to local var
-var FlatMenu = LDR.FlatMenu;
 
 
 // function show_all_mouseover(){
@@ -22,27 +20,10 @@ var FlatMenu = LDR.FlatMenu;
 // 	update("help_window");
 // }
 
-function show_error(){
-	State.show_error = true;
-	update("error_window")
-}
-function hide_error(){
-	State.show_error = false;
-	Element.hide("error_window");
-}
-function show_all_mouseover(){
-	State.help_show = true;
-	State.help_snap = this;
-	var tmpl = I18n.t('show_all_help_message_tmpl');
-	State.help_message = tmpl.fill({state: Config.show_all ? 'disabled' : 'enabled' });
-	update("help_window");
-}
-function show_all_mouseout(){
-	State.help_show = false;
-	update("help_window");
-}
+//TODO move to local var
+var FlatMenu = LDR.FlatMenu;
 
-var Buttons = {
+LDR.Buttons = {
 	"up:mousedown": function(event){
 		if(event.shiftKey){
 			Control.reverse()
@@ -104,7 +85,7 @@ function create_button(v){
 	var button_id = v.id.split("_")[0];
 	var events = (""+v.observe).split(",");
 	events.forEach(function(ev){
-		li["on"+ev] = as_event(Buttons[button_id+":"+ev], li);
+		li["on"+ev] = as_event(LDR.Buttons[button_id+":"+ev], li);
 	});
 	return li;
 }
@@ -777,42 +758,56 @@ function IME_off(msg){
 	}._try(),10);
 }
 
-function setup_hotkey(){
-	Keybind = new HotKey(null, "reader");
-	Keybind.globalCallback = function(){
-		State.LastUserAction = new Date;
-		if(State.show_error) hide_error();
-	};
-	var keyconfig = [];
-	each(LDR.KeyConfig, function(value,key){
-		keyconfig.push([
-			value, Control[key]
-		])
-	});
-	if(browser.isWin && browser.isFirefox){
-		keyconfig.push([
-			"IME",
-			function(){
-				if(this.lastInvoke == "IME"){
-					IME_off(true);
+
+(function(){
+	function show_error(){
+		State.show_error = true;
+		update("error_window")
+	}
+
+	function hide_error(){
+		State.show_error = false;
+		Element.hide("error_window");
+	}
+
+	LDR.setup_hotkey= function(){
+		Keybind = new HotKey(null, "reader");
+		Keybind.globalCallback = function(){
+			State.LastUserAction = new Date;
+			if(State.show_error) hide_error();
+		};
+		var keyconfig = [];
+		each(LDR.KeyConfig, function(value,key){
+			keyconfig.push([
+				value, Control[key]
+			])
+		});
+		if(browser.isWin && browser.isFirefox){
+			keyconfig.push([
+				"IME",
+				function(){
+					if(this.lastInvoke == "IME"){
+						IME_off(true);
+					}
 				}
-			}
-		]);
-	}
-	keyconfig.forEach(function(a){
-		Keybind.add(a[0],a[1])
-	});
+			]);
+		}
+		keyconfig.forEach(function(a){
+			Keybind.add(a[0],a[1])
+		});
 
-	// 入力フォームでキー操作を効かせる
-	Keybind.allow = /finder/i;
-	Keybind.filter = hotkey_filter;
+		// 入力フォームでキー操作を効かせる
+		Keybind.allow = /finder/i;
+		Keybind.filter = hotkey_filter;
 
-	// for safari
-	if(browser.isKHTML){
-		Keybind.add("up", Event.stop);
-		Keybind.add("down", Event.stop);
+		// for safari
+		if(browser.isKHTML){
+			Keybind.add("up", Event.stop);
+			Keybind.add("down", Event.stop);
+		}
 	}
-}
+}).call(LDR);
+
 function print_navi(){
 	var next_id = get_next();
 	var prev_id = get_prev();
@@ -3273,7 +3268,7 @@ function init(){
 		});
 
 		setup_event();
-		setup_hotkey();
+		LDR.setup_hotkey();
 
 		// ajaxize
 		ajaxize("discover_form",{
