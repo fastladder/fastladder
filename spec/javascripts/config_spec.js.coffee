@@ -1,5 +1,5 @@
 #= require application
-#= require lib/reader/config
+#= require lib/models/config
 #= require sinon
 
 describe "LDR.Config", ->
