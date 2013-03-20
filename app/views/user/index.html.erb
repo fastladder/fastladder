@@ -1,15 +1,15 @@
-<% if @member.public -%>
+<% if @target_member.public -%>
 <% content_for :extract_header do -%>
-<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="<%= user_path(@member.username, :format => "rss") %>" />
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="<%= user_path(@target_member.username, :format => "rss") %>" />
 <% end -%>
 <% end -%>
 <div id="content" class="page_user">
 <h2>User Information</h2>
 <div id="content-inner">
 <div class="user_info">
-	<h3><%= @member.username %></h3>
-	<% if logged_in? and @member == current_member %>
-	<% if @member.public -%>
+	<h3><%= @target_member.username %></h3>
+	<% if logged_in? and @target_member == current_member %>
+	<% if @target_member.public -%>
 	<p><%= link_to "Manage Sharing", share_path %></p>
 	<% else -%>
 	<p>Share-setting is disabled. This page is not accessible to others.<br />You may set publicity of your subscription from "<%= link_to "Manage Sharing", share_path %>"</p>
@@ -18,28 +18,26 @@
 
 	<div class="user_stats">
 		<ul>
-			<li>Total Subscriptions : <span id="total_subscribe_count"><%= @member.total_subscribe_count %></span></li>
-			<li>Public Subscriptions : <span id="public_subscribe_count"><%= @member.public_subscribe_count %></span></li> 
+			<li>Total Subscriptions : <span id="total_subscribe_count"><%= @target_member.total_subscribe_count %></span></li>
+			<li>Public Subscriptions : <span id="public_subscribe_count"><%= @target_member.public_subscribe_count %></span></li> 
 		</ul>
-		<% if @member.public -%>
+		<% if @target_member.public -%>
 		<ul class="link_rss">
 			<li><%= link_to "Read public subscriptions", "#recent_subscribed" %></li>
 			<li>
-				<%= link_to "import subscription list", import_path(:url => user_url(@member.username, :format => "opml")) %>
-				<%= link_to image_tag("/img/icon/opml.gif", :alt => "", :border => "0"), user_path(@member.username, :format => "opml") %>
+				<%= link_to "import subscription list", import_path(:url => user_url(@target_member.username, :format => "opml")) %>
+				<%= link_to image_tag("/img/icon/opml.gif", :alt => "", :border => "0"), user_path(@target_member.username, :format => "opml") %>
 			</li>
 		</ul>
 		<% end -%>
 	</div>
 
-	<% if @member.public and @subscriptions.present? -%>
+	<% if @target_member.public and @subscriptions.present? -%>
 	<div class="recent_subscribed" id="recent_subscribed">
 		<h3>Recent Subscriptions</h3>
 		<p>
-			<%= @member.username %>'s recent public subscriptions.
-			<% unless current_member != @member -%>
-			<%= subscribe_button(user_url(@member.username, :format => "rss")) %>
-			<% end -%>
+			<%= @target_member.username %>'s recent public subscriptions.
+			<%= subscribe_button(user_url(@target_member.username, :format => "rss")) %>
 		</p>
 		<ul class="recent_feeds">
 		<% @subscriptions.map {|subs| [subs, subs.feed] }.each_with_index do |(subs, feed), i| %>
