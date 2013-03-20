@@ -41,22 +41,21 @@ describe Feed do
   end
 
   describe "fetch favicon" do
+    let(:feed) { FactoryGirl.create(:feed, :link => "http://bike-o.hatenablog.com/", :feedlink => "http://bike-o.hatenablog.com/feed") }
     before do
       favicon = open(File.expand_path(File.join(File.dirname(__FILE__), '..', 'fixtures', 'favicon.ico'))).read
-      stub_request(:any, /.*/).to_return(content_type: 'image/vnd.microsoft.icon', body: favicon)
+      stub_request(:any, %r{\Ahttp://bike-o.hatenablog.com/.*\Z}).to_return(content_type: 'image/vnd.microsoft.icon', body: favicon)
     end
 
     it "favicon.ico store as PNG" do
-      feed = FactoryGirl.create(:feed)
       feed.fetch_favicon!
       feed.favicon.image.start_with?("\x89PNG\r\n".force_encoding('ascii-8bit')).should be_true
     end
 
-    it "complex favicon url detection" do
-      # <link rel="shortcut icon" href="http://cdn.image.st-hatena.com/image/favicon/6b9137a793a9f489e05eda5e4ad702443965775e/version=1/http%3A%2F%2Fcdn.mogile.archive.st-hatena.com%2Fv1%2Fimage%2Fbike-o%2F171679000384244621.gif">
-      feed = FactoryGirl.create(:feed, :link => "http://bike-o.hatenablog.com/", :feedlink => "http://bike-o.hatenablog.com/feed")
+    it 'logs errors and does `next` when favicon.ico is not valid data' do
+      MiniMagick::Image.should_receive(:open).at_least(:once).and_raise(MiniMagick::Error)
+      Rails.logger.should_receive(:error).at_least(:once)
       feed.fetch_favicon!
-      feed.favicon.image.start_with?("\x89PNG\r\n".force_encoding('ascii-8bit')).should be_true
     end
   end
 
