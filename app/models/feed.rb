@@ -121,7 +121,8 @@ class Feed < ActiveRecord::Base
         self.favicon.image = blob
         self.favicon.save
         break
-      rescue MiniMagick::Invalid
+      rescue MiniMagick::Invalid, MiniMagick::Error => e
+        Rails.logger.error("#{e.class} (#{e.message}")
         next
       ensure
         tmp.close!
