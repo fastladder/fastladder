@@ -132,7 +132,7 @@ class ApiController < ApplicationController
     end
     render :json => items.to_json
   end
-  
+
   def error_subs
   end
 

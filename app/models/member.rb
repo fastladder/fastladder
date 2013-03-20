@@ -36,11 +36,11 @@ class Member < ActiveRecord::Base
   validates_uniqueness_of :username, :case_sensitive => false
   validates_uniqueness_of :auth_key, :allow_nil => true
   before_save :encrypt_password
-  
+
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
   attr_accessible :username, :password, :password_confirmation
-  
+
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(username, password)
     u = find_by_username(username) # need to get the salt
@@ -62,7 +62,7 @@ class Member < ActiveRecord::Base
   end
 
   def remember_token?
-    remember_token_expires_at && Time.now.utc < remember_token_expires_at 
+    remember_token_expires_at && Time.now.utc < remember_token_expires_at
   end
 
   # These create and unset the fields required for remembering users between browser closes
@@ -98,7 +98,7 @@ class Member < ActiveRecord::Base
       logger.warn "SUBSCRIBE LIMIT: #{self.username}(#{self.id}) #{feedlink}"
       return nil
     end
-    
+
     unless feed = Feed.find_by_feedlink(feedlink)
       if options[:quick]
         feed = Feed.create({
@@ -205,7 +205,7 @@ protected
     self.salt = Digest::SHA1.hexdigest("--#{Time.now.to_s}--#{username}--") if new_record?
     self.crypted_password = encrypt(password)
   end
-  
+
   def password_required?
     crypted_password.blank? || !password.blank?
   end

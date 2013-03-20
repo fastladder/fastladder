@@ -5,7 +5,7 @@ class Api::FolderController < ApplicationController
   verify_json :params => [:name, :folder_id], :only => :update
   verify_json :params => :folder_id, :only => :delete
   skip_before_filter :verify_authenticity_token
-  
+
   ERR_ALREADY_EXISTS = 10
 
   def create

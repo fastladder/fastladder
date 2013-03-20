@@ -7,14 +7,14 @@ class AboutController < ApplicationController
       respond_to do |format|
         format.html { render action: :index }
         format.json { render json: @feed.to_json }
-      end 
+      end
     else
       respond_to do |format|
         format.html { render file: "#{Rails.root}/public/404", status: :not_found }
         format.json { render json: @feed.to_json } # for backward compatibility
         format.any { head :not_found }
-      end 
-    end 
-  end 
+      end
+    end
+  end
 end
 

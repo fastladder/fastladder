@@ -25,7 +25,7 @@ class ApplicationController < ActionController::Base
   def self.verify_json(options = {})
     verify options.merge(:render => { :json => json_status(false) })
   end
-  
+
   NOTHING = { :nothing => true }
   def self.verify_nothing(options = {})
     verify options.merge(:render => NOTHING)
@@ -34,7 +34,7 @@ class ApplicationController < ActionController::Base
   def json_status(success, option = nil)
     self.class.json_status(success, option)
   end
-  
+
   def render_json_status(success, option = nil)
     render :json => json_status(success, option)
   end

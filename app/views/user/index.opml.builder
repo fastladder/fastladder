@@ -1,4 +1,4 @@
-xml.instruct! :xml, :version => '1.0' 
+xml.instruct! :xml, :version => '1.0'
 xml.opml :version => '1.0' do
   xml.head do
     xml.title "#{@username}'s subscriptions"

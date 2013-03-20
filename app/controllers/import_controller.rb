@@ -50,7 +50,7 @@ class ImportController < ApplicationController
       }
       @member.subscribe_feed(feedlink, options)
     end
-    
+
     # render :json => feedlinks.to_json
     redirect_to :controller => "reader"
   end
@@ -61,7 +61,7 @@ class ImportController < ApplicationController
     @folders = {}
     @in_folder = {}
     opml = @opml.flatten
-    
+
     folders = opml.select {|o|
       o.outlines.size > 0
     }.map {|o|
@@ -88,17 +88,17 @@ class ImportController < ApplicationController
       end
       item.attributes
     }
-    if toplevel.size > 0 
+    if toplevel.size > 0
       @folders[""] = toplevel
     end
-    
+
     @all_count = @folders.values.inject(0) {|a,b| a + b.size }
     @subscribed_count = 0
     @folders.values.each do |outline|
       c = outline.select{|item| item["subscribed"] }.size
       @subscribed_count += c
     end
-    
+
     @not_subscribed_count = @all_count - @subscribed_count
     render :action => "confirm"
   end

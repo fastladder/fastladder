@@ -8,7 +8,7 @@ class SubscribeController < ApplicationController
       return self.confirm
     end
   end
-  
+
   def confirm
     feeds = []
     # params[:url] is http:/example.com because of squeeze("/")

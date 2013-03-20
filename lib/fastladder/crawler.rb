@@ -76,7 +76,7 @@ module Fastladder
         :response_code => nil,
       }
       REDIRECT_LIMIT.times do
-        begin 
+        begin
           @logger.info "fetch: #{feed.feedlink}"
           response = Fastladder::fetch(feed.feedlink, :modified_on => feed.modified_on)
         end
@@ -120,7 +120,7 @@ module Fastladder
       result[:response_code] = response.code.to_i
       result
     end
-    
+
     private
     def update(feed, source)
       result = {

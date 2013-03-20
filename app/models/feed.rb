@@ -53,7 +53,7 @@ class Feed < ActiveRecord::Base
     feed.create_crawl_status
     feed
   end
-  
+
   def icon
     if self.favicon
       "/icon/#{self.id}"
@@ -61,7 +61,7 @@ class Feed < ActiveRecord::Base
       "/img/icon/default.png"
     end
   end
-  
+
   def to_json(options = {})
     result = {}
     %w(title description).each do |s|

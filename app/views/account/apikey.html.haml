@@ -1,11 +1,11 @@
-= flash[:error] 
+= flash[:error]
 #content
   %h2 Account
   = render "navi"
   .account_form
     %h4 Set API Auth Key
     - if @member.auth_key
-      %p 
+      %p
         Your API Auth Key is:
         = @member.auth_key
     %p

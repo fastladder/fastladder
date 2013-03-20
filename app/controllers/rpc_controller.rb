@@ -40,7 +40,7 @@ class RpcController < ApplicationController
     @member = Member.where(auth_key: params[:api_key]).first
     render 'public/404', layout: false, status: 404 and return unless @member
   end
-  
+
 
   def create_item options, member
     if options[:feedtitle]

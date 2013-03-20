@@ -4,7 +4,7 @@ class Api::PinController < ApplicationController
   #verify_json :params => [:link, :title], :only => :add
   #verify_json :params => :link, :only => :remove
   skip_before_filter :verify_authenticity_token
-  
+
   def all
     render :json => @member.pins.to_json
   end
