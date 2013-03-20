@@ -29,8 +29,8 @@ updater("manage_item", function(){
 		data.list.slice(MI.offset, MI.offset + MI.perpage).map(fmt).join(""),
 		"</table></div>"
 	].join("");
-	addEvent($("manage_table"), "selectstart", Event.stop);
-	addEvent($("manage_table"), "mousedown", Event.stop);
+	addEvent(_$("manage_table"), "selectstart", Event.stop);
+	addEvent(_$("manage_table"), "mousedown", Event.stop);
 	update("manage_select","move_to", "manage_offset");
 });
 
@@ -148,7 +148,7 @@ var TRSelector = new ItemSelector;
 
 var Manage = {};
 Manage.message = function(str){
-	$("manage_select").innerHTML = str;
+	_$("manage_select").innerHTML = str;
 };
 
 Manage.Item = {
@@ -276,7 +276,7 @@ Manage.Item = {
 		update("manage_item","mi_paging");
 	},
 	do_move : function(){
-		var sel = $("move_to");
+		var sel = _$("move_to");
 		var to  = Form.getValue(sel);
 		var ids = TRSelector.get_selected();
 		move_to(ids.join(","),to);
@@ -377,8 +377,8 @@ updater("manage_offset", function(){
 
 
 updater("mi_paging", function(){
-	var prev = $("mi_prev");
-	var next = $("mi_next");
+	var prev = _$("mi_prev");
+	var next = _$("mi_next");
 	MI.has_next() ? removeClass(next,"disable") : addClass(next, "disable");
 	MI.has_prev() ? removeClass(prev,"disable") : addClass(prev, "disable");
 });
@@ -411,7 +411,7 @@ updater("manage_folder", function(){
 			selected : MF.folder_id == id ? "selected" : ""
 		})
 	};
-	$("manage_folder").innerHTML = [
+	_$("manage_folder").innerHTML = [
 		'<li class="button ' + (MF.folder_id == 0 ? 'selected' : '')  + '" onclick="MF.select(0)">', I18n.t('Uncategolized'), '</li>',
 		folder.names.map(fmt).join(" ")
 	].join("");
@@ -522,7 +522,7 @@ Manage.Folder = {
 	rename_folder : function(callback){
 		var folder_id = MF.folder_id;
 		if(!folder_id) return false;
-		var new_name = $("rename_to").value;
+		var new_name = _$("rename_to").value;
 		if(!new_name) return false;
 		var api = new LDR.API("/api/folder/update");
 		api.post({folder_id : folder_id, name : new_name},function(){
@@ -555,10 +555,10 @@ Manage.Folder = {
 
 Manage.show_help = function(){
 	if(this.disabled) return;
-	$("manage_help").innerHTML = "-&gt; &nbsp;&nbsp;" + this.title;
+	_$("manage_help").innerHTML = "-&gt; &nbsp;&nbsp;" + this.title;
 }
 Manage.hide_help = function(){
-	$("manage_help").innerHTML = "";
+	_$("manage_help").innerHTML = "";
 }
 
 
@@ -597,8 +597,8 @@ MouseUp.apply();
 
 // 描画領域を入れ替える。
 function change_buffer(){
-	var current_buffer = $("right_body");
-	var background = $("buffer");
+	var current_buffer = _$("right_body");
+	var background = _$("buffer");
 
 	current_buffer.id = "buffer";
 	current_buffer.style.display = "none";
@@ -606,7 +606,7 @@ function change_buffer(){
 	background.id = "right_body";
 	background.style.display = "block";
 }
-addEvent($("mini_window"),"dblclick",function(e){
+addEvent(_$("mini_window"),"dblclick",function(e){
 	Event.stop(e);
 	DOM.hide("mini_window");
 });
@@ -627,7 +627,7 @@ function preview(sid){
 	}
 }
 function centering(element,x,y){
-	element = $(element);
+	element = _$(element);
 	x = x || 0;
 	y = y || 0;
 	var w = element.offsetWidth;

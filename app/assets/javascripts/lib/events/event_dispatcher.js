@@ -103,7 +103,7 @@ Trigger.extend({
 		if(!target){
 			target = document.body;
 		} else {
-			target = $(target)
+			target = _$(target)
 		}
 		addEvent(target, this.type, function(e){
 			var e = e || window.event;

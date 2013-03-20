@@ -10,7 +10,7 @@ function Template(str){
 	}
 	this.tmpl = str;
 	if(str.charAt(0) == "$"){
-		var el = $(str.slice(1));
+		var el = _$(str.slice(1));
 		this.tmpl = (el.tagName == "textarea") ? el.value : el.innerHTML;
 	}
 	this.stash = {
@@ -29,7 +29,7 @@ Template.prototype = {
 		return builder.apply(this,args);
 	},
 	pre_fill : function(){
-	
+
 	},
 	add_filter: function(expr,filter){
 		this.use_filter = true;
@@ -50,7 +50,7 @@ Template.prototype = {
 			self.add_filter(key,value)
 		});
 	},
-	
+
 	get_param : function(key){
 		var params = this.stash.params;
 		var pre = this.stash.pre;
@@ -118,9 +118,9 @@ Template.prototype = {
 				n.toString = function(){
 					var expr = stash.params[key];
 					var res = (expr != null) ?
-						(expr.isFunction) 
+						(expr.isFunction)
 							? "" + expr()
-							: "" + self.filtered(key) 
+							: "" + self.filtered(key)
 							: "";
 					return res
 				}
@@ -134,7 +134,7 @@ Template.prototype = {
 
 
 Template.get = function(id){
-	var el = $(id);
+	var el = _$(id);
 	var is_textarea = (el.tagName.toLowerCase() == "textarea");
 	var v = is_textarea ? el.value : el.innerHTML;
 	return new Template(v)

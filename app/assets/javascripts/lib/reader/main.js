@@ -78,7 +78,7 @@ function typecast_config(obj){
 
 // formをAjax化する
 function ajaxize(element, callback){
-	element = $(element);
+	element = _$(element);
 	var method = element.method;
 	var action = element.getAttribute("action");
 	// ひとつの場合は完了時処理
@@ -127,7 +127,7 @@ function ahah(url,el,onload){
 	var uniq = new Date - 0;
 	onload = onload || Function.empty;
 	ajax(url+"?"+uniq,function(txt){
-		el = $(el);
+		el = _$(el);
 		txt = ahah.filter(txt);
 		el.innerHTML = txt;
 		ahah.global_callback(el);
@@ -236,7 +236,7 @@ function TabClick(e){
 	var target = get_target(tab)[1];
 	Element.show(target);
 	TabManager[base] = target;
-	foreach($(base).getElementsByTagName("*"), function(el){
+	foreach(_$(base).getElementsByTagName("*"), function(el){
 		var cl = el.className;
 		if(!contain(cl,"tab") || !el.getAttribute("rel")) return;
 		if(el == tab){
@@ -295,7 +295,7 @@ function setup_event(){
 		Event.stop(e);
 		var el = this;
 		var url = this.href;
-		var fm = $("discover_form");
+		var fm = _$("discover_form");
 		fm.url.value = url;
 		fm.submit();
 		Control.show_subscribe_form();
@@ -309,7 +309,7 @@ function setup_event(){
 			Event.stop(e);
 			var el = this;
 			url = url.replace(subscribe_base,"");
-			var fm = $("discover_form");
+			var fm = _$("discover_form");
 			fm.url.value = url;
 			fm.submit();
 			Control.show_subscribe_form();
@@ -337,7 +337,7 @@ function IME_off(msg){
 	s.innerHTML = '<input type="password" id="ime_off" style="visibility:hidden">';
 	document.body.appendChild(s);
 	setTimeout(function(){
-		var el = $("ime_off");
+		var el = _$("ime_off");
 		if(el){
 			el.focus();
 			document.body.removeChild(s);
@@ -352,7 +352,7 @@ function IME_off(msg){
 
 
 function getStyle(element, style){
-	element = $(element);
+	element = _$(element);
 	var value = element.style[style.camelize()];
 	if (!value) {
 		if (document.defaultView && document.defaultView.getComputedStyle) {
@@ -382,7 +382,7 @@ function Dumper(obj){
 var subs,inbox;
 
 function message(str){
-	$("message").innerHTML = I18n.t(str) || str;
+	_$("message").innerHTML = I18n.t(str) || str;
 }
 
 /* 購読停止 */
@@ -410,7 +410,7 @@ function touch(id, state){
 function touch_all(id){
 	if(!id) return;
 	var api = new LDR.API("/api/touch_all");
-	var el = $("subs_item_"+id);
+	var el = _$("subs_item_"+id);
 	var info = subs_item(id);
 	if(el && info){
 		el.innerHTML = info.title;
@@ -466,8 +466,8 @@ function default_error(){}
 
 
 function toggle_pin(item_id){
-	var pin_button = $("pin_" + item_id);
-	var item = $("item_" + item_id);
+	var pin_button = _$("pin_" + item_id);
+	var item = _$("item_" + item_id);
 	var a = item.getElementsByTagName("a");
 	if(!a.length) return;
 	var title = a[0].innerHTML;
@@ -486,7 +486,7 @@ function toggle_pin(item_id){
 }
 
 function close_item(item_id){
-	DOM.remove($("item_" + item_id));
+	DOM.remove(_$("item_" + item_id));
 }
 
 /* Config */
@@ -535,8 +535,8 @@ Pin.extend({
 		}
 	},
 	update_view: function(){
-		$("pin_button").style.width = "29px";
-		$("pin_count").innerHTML = this.pins.length;
+		_$("pin_button").style.width = "29px";
+		_$("pin_count").innerHTML = this.pins.length;
 	},
 	write_list: function(){
 		if(!this.pins.length) return;
@@ -639,10 +639,10 @@ function stop_mousetracking(){
 // スクロール位置から現在フォーカスが当たっているアイテムを取得
 function get_active_item(detail){
 	// return 1;
-	var sc = $("right_container").scrollTop;
-	var divs = $("right_body").getElementsByTagName("h2");
+	var sc = _$("right_container").scrollTop;
+	var divs = _$("right_body").getElementsByTagName("h2");
 	// for Opera9 beta
-	var top_offset = $("right_body").offsetTop;
+	var top_offset = _$("right_body").offsetTop;
 
 	var len = divs.length;
 	if(!len) return;
@@ -661,12 +661,12 @@ function get_active_item(detail){
 	}
 	*/
 
-	var screen = [sc, sc + $("right_container").offsetHeight];
+	var screen = [sc, sc + _$("right_container").offsetHeight];
 	var pairs = offsets.map(function(v,i,self){
 		if(self[i+1]){
 			return [v, self[i+1]];
 		} else {
-			return [v, $("right_body").offsetHeight]
+			return [v, _$("right_body").offsetHeight]
 		}
 	});
 	var full_contain = [];
@@ -902,7 +902,7 @@ var Control = {
 			// 開く件数
 			var open_num = Config.max_pin;
 			// containerの高さにあわせて調整
-			var ch = $("right_container").offsetHeight;
+			var ch = _$("right_container").offsetHeight;
 			var view_num = Math.floor((ch-92) / 24);
 			menu.add([
 				'<span class="button flat_menu pin_list"',
@@ -943,7 +943,7 @@ var Control = {
 	compact: function(){
 		var o = get_active_item();
 		toggleClass("right_body", "compact");
-		if(contain($("right_body").className, "compact")){
+		if(contain(_$("right_body").className, "compact")){
 			message("expanded items / press c to collapse")
 		} else {
 			message("collapsed items / press c to expand")
@@ -953,9 +953,9 @@ var Control = {
 	close_and_next_item: function(id,e){
 		if(e) Event.stop(e);
 		addClass("item_"+id, "item_read");
-		var h = $("item_"+id).offsetHeight;
+		var h = _$("item_"+id).offsetHeight;
 		Control.add_scroll_padding();
-		$("right_container").scrollTop += h + 2;
+		_$("right_container").scrollTop += h + 2;
 	},
 	view_original: function(){
 		var item = get_active_item(true);
@@ -977,7 +977,7 @@ var Control = {
 	},
 	toggle_keyhelp: function(){
 		(!State.keyhelp_visible) ?
-			 Control.show_keyhelp.call($("keyhelp_button")) :
+			 Control.show_keyhelp.call(_$("keyhelp_button")) :
 			 Control.hide_keyhelp()
 
 	},
@@ -1027,10 +1027,10 @@ var Control = {
 		State.keyhelp_more = old_state;
 	},
 	focus_findbox : function(){
-		$("finder").focus();
+		_$("finder").focus();
 	},
 	blur_findbox : function(){
-		var f = $("finder");
+		var f = _$("finder");
 		f.value = "";
 		f.blur();
 	},
@@ -1040,9 +1040,9 @@ var Control = {
 		show_overlay();
 		setTimeout(function(){
 			try{
-				TabClick.call($("tab_add_feed"));
-				$("discover_url").focus();
-				$("discover_url").select();
+				TabClick.call(_$("tab_add_feed"));
+				_$("discover_url").focus();
+				_$("discover_url").select();
 			} catch(e){
 			}
 		},10);
@@ -1184,7 +1184,7 @@ var Control = {
 	get_past: function(){
 	},
 	scroll_top: function(){
-		var target = $("right_container");
+		var target = _$("right_container");
 		target.scrollTop = 0;
 	},
 	prefetch: function(){
@@ -1203,24 +1203,24 @@ var Control = {
 
 	},
 	add_scroll_padding:function(){
-		var container = $("right_container");
+		var container = _$("right_container");
 		setStyle("scroll_padding",{height:container.offsetHeight+"px"});
 	},
 	del_scroll_padding:function(){
 		setStyle("scroll_padding",{height:"0px"})
 	},
 	scroll_to_px: function(top){
-		var container = $("right_container");
+		var container = _$("right_container");
 		// for opera9 beta
-		var top_offset = $("right_body").offsetTop;
+		var top_offset = _$("right_body").offsetTop;
 		container.scrollTop = top - top_offset;
 	},
 	scroll_to_zero: function(){
-		var container = $("right_container");
+		var container = _$("right_container");
 		container.scrollTop = 0;
 	},
 	scroll_to_offset: function(o){
-		var divs = $("right_body").getElementsByTagName("h2");
+		var divs = _$("right_body").getElementsByTagName("h2");
 		var item = divs[o] || null;
 		if (!item){
 			return
@@ -1230,10 +1230,10 @@ var Control = {
 		Control.scroll_to_px(scroll_to);
 	},
 	next_item_offset: function(){
-		var container = $("right_container");
+		var container = _$("right_container");
 		var sc = container.scrollTop;
-		var top_offset = $("right_body").offsetTop;
-		var divs = $("right_body").getElementsByTagName("h2");
+		var top_offset = _$("right_body").offsetTop;
+		var divs = _$("right_body").getElementsByTagName("h2");
 		var active = (sc == 0) ? -1 : get_active_item();
 		if(active != null && active != -1 && divs[active].offsetTop - top_offset > sc){
 			return active;
@@ -1242,10 +1242,10 @@ var Control = {
 		return (can_scroll) ? active + 1 : null;
 	},
 	prev_item_offset: function(){
-		var container = $("right_container");
+		var container = _$("right_container");
 		var sc = container.scrollTop;
-		var top_offset = $("right_body").offsetTop;
-		var divs = $("right_body").getElementsByTagName("h2");
+		var top_offset = _$("right_body").offsetTop;
+		var divs = _$("right_body").getElementsByTagName("h2");
 		var active = get_active_item();
 		if(!active || active == 0){
 			return null;
@@ -1281,7 +1281,7 @@ var Control = {
 	scroll_next_item_auto: function(){
 	},
 	go_next: function(){
-		var container = $("right_container");
+		var container = _$("right_container");
 		var old = container.scrollTop;
 		Control.scroll_next_item();
 		if(old == container.scrollTop){
@@ -1294,7 +1294,7 @@ var Control = {
 		}
 	},
 	go_prev: function(){
-		var container = $("right_container");
+		var container = _$("right_container");
 		var old = container.scrollTop;
 		Control.scroll_prev_item();
 		if(old == container.scrollTop) Control.read_prev_subs();
@@ -1435,17 +1435,17 @@ var Control = {
 		Control.scroll_page(-1)
 	},
 	scroll_page: function(num){
-		var h = $("right_container").offsetHeight - 40;
+		var h = _$("right_container").offsetHeight - 40;
 		var c =
 			(Config.scroll_type == "page") ? h:
 			(Config.scroll_type == "half") ? h / 2 :
 			(Config.scroll_px || 100);
-		$("right_container").scrollTop += c * num;
+		_$("right_container").scrollTop += c * num;
 	},
 	scroll_page_or_subs: function(num){
-		var before = $("right_container").scrollTop;
-		$("right_container").scrollTop += num;
-		var after  = $("right_container").scrollTop;
+		var before = _$("right_container").scrollTop;
+		_$("right_container").scrollTop += num;
+		var after  = _$("right_container").scrollTop;
 		if(before == after && writing_complete()){
 			num > 0 ? Control.read_next_subs() : Control.read_prev_subs();
 		}
@@ -1474,7 +1474,7 @@ var Control = {
 		if (!c) return;
 		post_list.forEach(function(id){
 			var info = subs_item(id);
-			var el = $("subs_item_"+id);
+			var el = _$("subs_item_"+id);
 			if(el){
 				el.innerHTML = info.title;
 				switchClass(el, "rs-read");
@@ -1567,11 +1567,11 @@ function scroll_hilight(){
 			if (target){
 				removeClass(target, "hilight");
 			}
-			target = $("item_count_" + item.offset);
+			target = _$("item_count_" + item.offset);
 			addClass(target, "hilight");
 		}
 	}
-	Event.observe($('right_container'), 'scroll', function(){
+	Event.observe(_$('right_container'), 'scroll', function(){
 		if(Config.use_scroll_hilight){
 			clearTimeout(timer);
 			timer = setTimeout(update_hilight,100);
@@ -1952,7 +1952,7 @@ function feed_unsubscribe(sid, callback){
 */
 Class.Traits["view"] = {
 	initialize: function(element){
-		this.element = $(element);
+		this.element = _$(element);
 	},
 	print: function(v){
 		isElement(v)
@@ -2495,7 +2495,7 @@ Subscribe.Controller = Class.create("controller").extend({
 		this.view.clear();
 		this.view.setClass(mode);
 		this.view.print( SF[mode](data) );
-		$("subs_container").scrollLeft = 0;
+		_$("subs_container").scrollLeft = 0;
 		if(State.now_reading){
 			set_focus(State.now_reading)
 		}
@@ -2591,7 +2591,7 @@ style_updater("left_container", function(){
 }._try());
 
 style_updater("subs_container", function(){
-	var h = State.container_height - $("subs_tools").offsetHeight;
+	var h = State.container_height - _$("subs_tools").offsetHeight;
 	setStyle(this,{
 		display : State.show_left ? "block": "none",
 		width   : State.leftpane_width + "px",
@@ -2612,8 +2612,8 @@ function fit_screen(){
 	var leftpane_width = State.leftpane_width;
 	if(State.fullscreen) return fit_fullscreen();
 	var body_h = document.body.offsetHeight;
-	var top_padding    = $("container").offsetTop;
-	var bottom_padding = $("footer").offsetHeight - 20;
+	var top_padding    = _$("container").offsetTop;
+	var bottom_padding = _$("footer").offsetHeight - 20;
 	if(browser.isMac && browser.isFirefox){
 		bottom_padding += 20;
 	}
@@ -2624,7 +2624,7 @@ function fit_screen(){
 
 function fit_fullscreen(){
 	var body_h = document.body.offsetHeight;
-	var top_padding = $("container").offsetTop;
+	var top_padding = _$("container").offsetTop;
 	State.container_height = body_h - top_padding + 16;
 	style_update(/container/);
 }
@@ -2648,7 +2648,7 @@ Channel = {};
 
 var finder;
 function Finder(id){
-	this.input = $(id);
+	this.input = _$(id);
 	this.enable = true;
 	this.callback = [];
 	this.input.style.color = "#444";
@@ -2696,7 +2696,7 @@ function find_from(key){
 var show_tips = function(){
 	show_tips.count ++;
 	if(show_tips.count > 10){
-		$("loadicon").src = show_tips.icon;
+		_$("loadicon").src = show_tips.icon;
 		message(show_tips.text);
 		show_tips.count = 0;
 	}
@@ -2719,7 +2719,7 @@ var LoadEffect = {
 		} else {
 			path += "loading.gif";
 		}
-		$("loadicon").src = path;
+		_$("loadicon").src = path;
 		setStyle("loading",{visibility:"visible"})
 	},
 	Stop : function(){
@@ -2731,7 +2731,7 @@ var LoadEffect = {
 		} else {
 			path += "rest.gif";
 		}
-		$("loadicon").src = path;
+		_$("loadicon").src = path;
 	}
 };
 
@@ -2744,7 +2744,7 @@ function init(){
 		LDR.setup_hook();
 		LDR.invoke_hook('BEFORE_INIT');
 		window.onerror = function(a,b,c){
-			$("message").innerHTML = [a,b,c];
+			_$("message").innerHTML = [a,b,c];
 			return false;
 		}
 
@@ -2796,7 +2796,7 @@ function init(){
 		// ajaxize
 		ajaxize("discover_form",{
 			before:function(){
-				var output = $("discover_items");
+				var output = _$("discover_items");
 				output.innerHTML = [
 					'<div class="discover_loading">',
 					'<img src="/img/icon/loading.gif">　',
@@ -2822,7 +2822,7 @@ function init(){
 }
 
 function print_discover(list){
-	var output = $("discover_items");
+	var output = _$("discover_items");
 	var sub   = Template.get("discover_select_sub").compile()
 	var unsub = Template.get("discover_select_unsub").compile()
 	if(list.length == 0){
@@ -2855,7 +2855,7 @@ function print_discover(list){
 
 
 function set_focus(id){
-	var el = $("subs_item_"+id);
+	var el = _$("subs_item_"+id);
 	if(State.last_element){
 		removeClass(State.last_element, "fs-reading");
 		touch(State.last_id, "onclose");
@@ -2871,8 +2871,8 @@ function set_focus(id){
 			tv = TreeView.get_control(tvroot.id);
 			tv && tv.open()
 		}
-		var sc = $("subs_container");
-		sc.scrollTop = el.offsetTop - $("subs_container").offsetTop - 64;
+		var sc = _$("subs_container");
+		sc.scrollTop = el.offsetTop - _$("subs_container").offsetTop - 64;
 		sc.scrollLeft = 0;
 	}
 	// window.status = "sid = " + id;
@@ -2893,7 +2893,7 @@ function get_folders(callback){
 
 function QueryCSS(){}
 QueryCSS.findParent = function(rule,element){
-	elememt = $(element);
+	elememt = _$(element);
 	if(!isFunction(rule)){
 		rule = rule.isQueryCSS ? rule : new QueryCSS(rule).match;
 	}
@@ -3136,7 +3136,7 @@ function print_feed(feed){
 	State.now_reading = subscribe_id;
 
 	var Now = (new Date - 0)/1000;
-	var output = $(print_feed.target);
+	var output = _$(print_feed.target);
 	var channel = feed.channel;
 	var items = feed.items;
 	if(Config.reverse_mode){
@@ -3251,7 +3251,7 @@ print_feed.target = "right_body";
 var base_target = "_blank";
 
 function fix_linktarget(el){
-	el = el || $(print_feed.target);
+	el = el || _$(print_feed.target);
 	foreach(el.getElementsByTagName("a"),
 		function(a){
 			a.target != "_self" && (a.target = base_target)
@@ -3268,12 +3268,12 @@ var Callbacks = {};
 var Element = {
 	show: function(el){
 		if(el) el.style.display = "block"
-	}.forEachArgs($),
+	}.forEachArgs(_$),
 	hide: function(el){
 		if(el) el.style.display = "none"
-	}.forEachArgs($),
+	}.forEachArgs(_$),
 	toggle: function(el){
-		el = $(el);
+		el = _$(el);
 		el.style.display = (el.style.display != "block") ? "block" : "none";
 	},
 	childOf: function(){},
@@ -3322,7 +3322,7 @@ function init_config(){
 				Object.extend(Config, req);
 			}
 		});
-		TabClick.call($("tab_config_basic"));
+		TabClick.call(_$("tab_config_basic"));
 		LDR.invoke_hook('AFTER_INIT_CONFIG');
 	});
 }

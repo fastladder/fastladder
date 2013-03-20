@@ -27,8 +27,8 @@
         var guide_fix = function(){
             if(!hasClass("right_container","mode-guide")) return;
             if(browser.isIE){
-                if(!$("guiderankbody")) return;
-                $("guiderankbody").style.width = $("right_container").offsetWidth - 15 + "px";
+                if(!_$("guiderankbody")) return;
+                _$("guiderankbody").style.width = _$("right_container").offsetWidth - 15 + "px";
             }
         }
         register_hook('WINDOW_RESIZE', fit_screen);
@@ -55,7 +55,7 @@
             setStyle("right_body", {
                 fontSize: Config.current_font + "px"
             });
-            if($("config_form")){
+            if(_$("config_form")){
                 Form.fill("config_form", Config);
             }
             update("show_all_button");
@@ -97,12 +97,12 @@
                 [
                     "right_bottom_navi","right_top_navi","feed_next","feed_prev"
                 ].forEach(function(id){
-                    var el = $(id);
+                    var el = _$(id);
                     if(el)el.innerHTML = "";
                 });
-                $("feed_paging").style.display = "none";
+                _$("feed_paging").style.display = "none";
             } else {
-                $("feed_paging").style.display = "block";
+                _$("feed_paging").style.display = "block";
                 update(
                     "right_bottom_navi",
                     "right_top_navi",
