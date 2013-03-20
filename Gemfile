@@ -8,14 +8,15 @@ gem 'rails', '3.2.13'
 gem 'sqlite3'
 gem 'mysql2'
 gem 'haml'
+
 # current release version has no `feed.description` method. this is why :git used
-gem 'feedzirra', :git => "https://github.com/pauldix/feedzirra"
+gem 'feedzirra', git: "https://github.com/pauldix/feedzirra"
 gem 'opml', github: 'fastladder/opml'
 gem 'verification', github: 'sikachu/verification'
 gem 'feed_searcher', '>= 0.0.5'
 gem 'nokogiri'
 gem "mini_magick"
-gem "addressable", :require => "addressable/uri"
+gem "addressable", require: "addressable/uri"
 gem "settingslogic"
 
 # Gems used only for assets and not required
