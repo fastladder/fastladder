@@ -1,64 +1,3 @@
-// Application is singleton class for manage global state.
-(function(){
-    // What happen? plz someone add test
-    LDR.CSSInitializer = (function(){
-        function CSSInitializer(){
-            var that = this;
-            // self override
-            that.addRule = function(){
-                if(document.styleSheets){
-                    // Mozilla, (safari?)
-                    if(document.styleSheets[0].insertRule){
-                        that.addRule = (function(selector, property){
-                            document.styleSheets[0].insertRule(
-                                selector + "{" + property + "}",
-                                document.styleSheets[0].cssRules.length);
-                        })._try();
-                    // IE
-                    } else if(document.styleSheets[0].addRule){
-                        that.addRule = function(selector, property){
-                            document.styleSheets[0].addRule(selector, "{" + property + "}");
-                        }._try();
-                    }
-                } else if(window.opera){
-                    that.addRule = function(selector, property){
-                        var sheet = selector + "{" + property + "}";
-                        var link = document.createElement('link');
-                        link.setAttribute('rel',  'stylesheet');
-                        link.setAttribute('type', 'text/css');
-                        link.setAttribute('href', 'data:text/css,' + encodeURIComponent(sheet));
-                        document.getElementsByTagName('head')[0].appendChild(link);
-                    }._try();
-                }
-            }._try();
-        }
-
-        var fn = CSSInitializer.prototype;
-
-        fn.applyRule = function(){
-            var that = this;
-            (function(tag, props){
-                var arg = arguments;
-                if(isString(tag) && isArray(props)){
-                    props.forEach(function(v){
-                        that.addRule(tag,v);
-                    });
-                } else {
-                    that.addRule.apply(this,arguments)
-                }
-            })("pre",[
-                "font-family:monospace;",
-                "border:1px solid #808080;",
-                "background:#f4f2ef;",
-                "padding:1em;"
-            ]);
-        }
-
-        return CSSInitializer;
-    })();
-
-}).call(LDR);
-
 (function(){
     LDR.ASSET_IMAGES = [
         '/img/rate/0.gif',
@@ -81,7 +20,9 @@
     this.Application = (function(done){
         function Application() {
             this.initialized = false;
-            this.css_initializer = new LDR.CSSInitializer;
+            this.style_initializer = new LDR.StyleInitializer;
+            this.state  = new LDR.StateClass;
+            this.config = new LDR.Config;
         };
 
         var fn = Application.prototype;
@@ -90,6 +31,10 @@
         fn.load = function(options, done){
             var that = this;
             var flow;
+            var with_pass = function(f){
+                return function(){flow.pass();};
+            };
+
             // call parallel
             var parallel_initializers = [
                 //aseet preload
@@ -99,11 +44,9 @@
                     });
                 },
 
-                //css custormize
-                function(){
-                    that.css_initializer.applyRule();
-                    flow.pass();
-                },
+                with_pass(that.config.startListener.bind(that)),
+                with_pass(that.style_initializer.applyRule.bind(that)),
+
                 //dom cache
                 function(){
                     _$.enable_cache = function(id){

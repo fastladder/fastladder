@@ -1324,7 +1324,7 @@ function loadConfig(){
 	var task = arguments.callee;
 	var api = new LDR.API("/api/config/load");
 	return api.post({},function(res){
-		extend(Config,res);
+		extend(app.config,res);
 		task.complete();
 	});
 }

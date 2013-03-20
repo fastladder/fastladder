@@ -16,5 +16,6 @@
 //= require_tree ./lib/events
 //= require lib/template
 //= require lib/api
+//= require lib/reader/style_initializer
 //= require lib/ldr
 //= require_tree ./lib/ui

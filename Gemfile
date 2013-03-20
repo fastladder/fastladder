@@ -55,6 +55,7 @@ end
 group :test, :development do
   gem 'konacha'
   gem 'poltergeist'
+  gem 'sinon-rails'
 end
 
 
