@@ -27,21 +27,21 @@ function init(){
 			this.innerHTML = header +
 				 FilteredSubs.map(formatter).join("") +
 				 "</table>";
-			$("show_all").style.display = "none";
+			_$("show_all").style.display = "none";
 		} else {
 			this.innerHTML = header +
 				 FilteredSubs.slice(State.offset, State.offset + State.limit).map(formatter).join("") +
 				 "</table>";
 			if(FilteredSubs.length > State.limit){
-				$("show_all").innerHTML = I18n.t('Show all') + " (" + FilteredSubs.length + " " + I18n.t('items') + ")" ;
-				$("show_all").style.display = "block";
+				_$("show_all").innerHTML = I18n.t('Show all') + " (" + FilteredSubs.length + " " + I18n.t('items') + ")" ;
+				_$("show_all").style.display = "block";
 			} else {
-				$("show_all").style.display = "none";
+				_$("show_all").style.display = "none";
 			}
 		}
 		setup_style();
 	});
-	$("filtered_subs").innerHTML = "<div class='loading'>" + I18n.t('Loading ...') + "</div>";
+	_$("filtered_subs").innerHTML = "<div class='loading'>" + I18n.t('Loading ...') + "</div>";
 	load_config();
 	load_subs();
 	setup_event();
@@ -55,20 +55,20 @@ function init(){
 function setup_style(){
 	var browser = new BrowserDetect();
 	if(!browser.isIE){
-		$("result").style.width = "100%";
+		_$("result").style.width = "100%";
 	}
 }
 
 function setup_event(){
 	["filter_from_all","filter_from_public","filter_from_private"].forEach(function(id){
-		Event.observe($(id), "click", do_search);
+		Event.observe(_$(id), "click", do_search);
 	});
 	var search_queue;
 	var delayed_search = do_search.later(300);
 	["filter_subscriber_min","filter_subscriber_max","filter_string"].forEach(function(id){
 		var old_value;
-		Event.observe($(id), "keyup", function(){
-			var current_value = $(id).value;
+		Event.observe(_$(id), "keyup", function(){
+			var current_value = _$(id).value;
 			if(old_value != current_value){
 				if(search_queue){
 					search_queue.cancel();
@@ -82,13 +82,13 @@ function setup_event(){
 
 function set_query(param){
 	keys(param).forEach(function(v){
-		$("filter_" + v).value = param[v];
+		_$("filter_" + v).value = param[v];
 	});
 	do_search();
 }
 
 function mspace_reset(t){
-	Array.forEach($("filter_"+t).options, function(op){
+	Array.forEach(_$("filter_"+t).options, function(op){
 		op.selected = true;
 	});
 	do_search();
@@ -134,11 +134,11 @@ function formatter(s){
 
 function mark(id, flag){
 	if(flag == -1){
-		$("check_" + id).checked = !$("check_" + id).checked;
+		_$("check_" + id).checked = !_$("check_" + id).checked;
 	} else {
-		$("check_" + id).checked = flag;
+		_$("check_" + id).checked = flag;
 	}
-	var selected = $("check_" + id).checked;
+	var selected = _$("check_" + id).checked;
 	if(selected){
 		addClass("tr_" + id, "selected")
 	} else {
@@ -175,26 +175,26 @@ function make_filter(){
 	function add_filter(f){
 		filters.push(f);
 	}
-	if(!$("filter_from_all").checked){
-		if($("filter_from_public").checked){
+	if(!_$("filter_from_all").checked){
+		if(_$("filter_from_public").checked){
 			add_filter(function(s){ return s["public"] })
 		}
-		if($("filter_from_private").checked){
+		if(_$("filter_from_private").checked){
 			add_filter(function(s){ return !s["public"] })
 		}
 	}
-	if($("filter_subscriber_min").value){
-		var min = $("filter_subscriber_min").value;
+	if(_$("filter_subscriber_min").value){
+		var min = _$("filter_subscriber_min").value;
 		add_filter(function(s){ return s.subscribers_count >= min })
 	}
-	if($("filter_subscriber_max").value){
-		var max = $("filter_subscriber_max").value;
+	if(_$("filter_subscriber_max").value){
+		var max = _$("filter_subscriber_max").value;
 		add_filter(function(s){ return s.subscribers_count <= max })
 	}
 
 	var selected = function(el){return el.selected};
-	if($("filter_rate")){
-		var el = $("filter_rate");
+	if(_$("filter_rate")){
+		var el = _$("filter_rate");
 		if(!Array.every(el.options, selected)){
 			(function(){
 				var p = [];
@@ -208,8 +208,8 @@ function make_filter(){
 			})();
 		}
 	}
-	if($("filter_folder")){
-		var el = $("filter_folder");
+	if(_$("filter_folder")){
+		var el = _$("filter_folder");
 		if(!Array.every(el.options, selected)){
 			(function(){
 				var tmp = {};
@@ -223,8 +223,8 @@ function make_filter(){
 		}
 	}
 
-	if($("filter_string").value){
-		var str = $("filter_string").value;
+	if(_$("filter_string").value){
+		var str = _$("filter_string").value;
 		add_filter(function(sub){
 			var lc = str.toLowerCase();
 			return (contain(sub.title_lc, lc) || contain(sub.link_lc, lc))
@@ -246,8 +246,8 @@ function load_subs(){
 		var parted = res.partition(function(sub){
 			return sub["public"]
 		});
-		$("public_subs_count").innerHTML = parted[0].length +" "+ I18n.t('items');
-		$("private_subs_count").innerHTML = parted[1].length +" "+ I18n.t('items');
+		_$("public_subs_count").innerHTML = parted[0].length +" "+ I18n.t('items');
+		_$("private_subs_count").innerHTML = parted[1].length +" "+ I18n.t('items');
 		res.forEach(function(sub){
 			SubsIndex["_" + sub.subscribe_id] = sub;
 			sub.link_lc = sub.link.toLowerCase();
@@ -275,8 +275,8 @@ Array.prototype.count_by_key = function(key, prefix){
 };
 
 function setup_mspace(){
-	var rate_cell = $("mspace_rate");
-	var folder_cell = $("mspace_folders");
+	var rate_cell = _$("mspace_rate");
+	var folder_cell = _$("mspace_folders");
 	var rate_count = Subs.count_by_key("rate");
 	var folder_count = Subs.count_by_key("folder");
 	var rate_text = [
@@ -355,7 +355,7 @@ function set_public(flag){
 		subscribe_id: sid,
 		"public" : flag
 	};
-	var status = $("set_public_progress");
+	var status = _$("set_public_progress");
 	status.style.display = "inline";;
 	status.innerHTML = I18n.t('Now saving');
 	api.post(param, function(){

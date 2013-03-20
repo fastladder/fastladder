@@ -84,7 +84,7 @@
         }
     });
     FlatMenu.create_on = function(parent, base_element){
-        return new FlatMenu(parent, $(base_element));
+        return new FlatMenu(parent, _$(base_element));
     }
     FlatMenu._instance = [];
     FlatMenu.hideAll = function(){
@@ -108,7 +108,7 @@
             var op = extend({},this.default_config);
             this.config = extend(op,config);
             this.observers = [];
-            this.base   = $(id);
+            this.base   = _$(id);
             this.bar    = $N("DIV",{"class":"slider-bar"});
             this.handle = $N("DIV",{"class":"slider-handle"});
             this.setup_style();
@@ -128,8 +128,8 @@
             // click pos
             this.click_pos = o.handle_width / 2;
 
-            $(id).appendChild(this.bar);
-            $(id).appendChild(this.handle);
+            _$(id).appendChild(this.bar);
+            _$(id).appendChild(this.handle);
             this.mdown = false;
             Event.observe(this.handle, "mousedown", this._handle_mousedown.bind(this));
             Event.observe(this.base, "mousedown", this._base_mousedown.bind(this));

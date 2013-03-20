@@ -17,18 +17,19 @@ I18n.missingTranslation = function(scope) {
 var GLOBAL = this;
 
 // bench
-function $(el){
+function _$(el){
 	//return typeof el == 'string' ? document.getElementById(el) : el;
 	if(typeof el == 'string'){
-		return ($.cacheable[el])
-			? $.cache[el] || ($.cache[el] = document.getElementById(el))
+		return (_$.cacheable[el])
+			? _$.cache[el] || (_$.cache[el] = document.getElementById(el))
 			: document.getElementById(el)
 	} else {
 		return el
 	}
 }
-$.cache = {};
-$.cacheable = {};
+
+_$.cache = {};
+_$.cacheable = {};
 
 function getlocale(){
 	return I18n.locale;
@@ -57,7 +58,7 @@ $N = function (name, attr, childs) {
 };
 function $DF(){
 	var df = document.createDocumentFragment();
-	foreach(arguments,function(f){ df.appendChild(f) });
+		foreach(arguments,function(f){ df.appendChild(f) });
 	return df;
 }
 function reserveName(name){
@@ -595,26 +596,26 @@ function loadJson(url,callback){
  className
 */
 function hasClass(element,classname){
-	element = $(element);
+	element = _$(element);
 	var cl = element.className;
 	var cls = cl.split(/\s+/);
 	return cls.indexOf(classname) != -1;
 }
 function addClass(element,classname){
-	element = $(element);
+	element = _$(element);
 	var cl = element.className;
 	if(!contain(cl,classname)){
 		element.className += " " + classname;
 	}
 }
 function removeClass(element,classname){
-	element = $(element);
+	element = _$(element);
 	var cl = element.className;
 	var cls = cl.split(/\s+/);
 	element.className = cls.remove(classname).join(" ");
 }
 function switchClass(element, classname){
-	element = $(element);
+	element = _$(element);
 	var cl = element.className;
 	var tmp = classname.split("-");
 	var ns = tmp[0];
@@ -627,7 +628,7 @@ function switchClass(element, classname){
 	element.className = buf.join(" ");
 }
 function toggleClass(element, classname){
-	element = $(element);
+	element = _$(element);
 	hasClass(element, classname) ?
 		removeClass(element, classname):
 		addClass(element, classname);
@@ -669,7 +670,7 @@ Form.getValue = function(el){
 };
 // formを埋める
 Form.fill = function(form,json){
-	form = $(form);
+	form = _$(form);
 	foreach(form.elements, function(el){
 		var name = el.name;
 		var value = json[name];
@@ -689,19 +690,19 @@ Form.setValue = function(el, value){
 
 Object.extend(Form,{
 	disable: function(el){
-		$(el).disabled = "disabled";
+		_$(el).disabled = "disabled";
 	},
 	enable: function(el){
-		$(el).disabled = "";
+		_$(el).disabled = "";
 	},
 	disable_all: function(el){
-		el = $(el);
+		el = _$(el);
 		Form.disable(el);
 		var child = el.getElementsByTagName("*");
 		foreach(child, Form.disable);
 	},
 	enable_all: function(el){
-		el = $(el);
+		el = _$(el);
 		Form.enable(el);
 		var child = el.getElementsByTagName("*");
 		foreach(child, Form.enable);
@@ -1065,8 +1066,8 @@ var Position = {
   },
 
   clone: function(source, target) {
-    source = $(source);
-    target = $(target);
+    source = _$(source);
+    target = _$(target);
     target.style.position = 'absolute';
     var offsets = this.cumulativeOffset(source);
     target.style.top    = offsets[1] + 'px';
@@ -1109,11 +1110,11 @@ var Position = {
     }, arguments[2] || {})
 
     // find page position of source
-    source = $(source);
+    source = _$(source);
     var p = Position.page(source);
 
     // find coordinate system to use
-    target = $(target);
+    target = _$(target);
     var delta = [0, 0];
     var parent = null;
     // delta [0,0] will do fine with position: fixed elements,
@@ -1137,7 +1138,7 @@ var Position = {
   },
 
   absolutize: function(element) {
-    element = $(element);
+    element = _$(element);
     if (element.style.position == 'absolute') return;
     Position.prepare();
 
@@ -1160,7 +1161,7 @@ var Position = {
   },
 
   relativize: function(element) {
-    element = $(element);
+    element = _$(element);
     if (element.style.position == 'relative') return;
     Position.prepare();
 
@@ -1217,7 +1218,7 @@ function parseCSS(text){
 }
 // cssセット、透明度、floatの互換性を取る
 function setStyle(element,style){
-	element = $(element);
+	element = _$(element);
 	var es = element.style;
 	if(isString(style)){
 		es.cssText ? (es.cssText = style) : setStyle(element,parseCSS(style));
@@ -1397,12 +1398,12 @@ function next(obj, method, args){
 }
 
 function childOf(element, ancestor){
-	element = $(element), ancestor = $(ancestor);
+	element = _$(element), ancestor = _$(ancestor);
     while (element = element.parentNode)
       if (element == ancestor) return true;
     return false;
 }
-function $ref(element){
+function _$ref(element){
 }
 String.prototype.op = function(){
 	return new Function("a,b","return a"+this+"b");
@@ -1488,10 +1489,10 @@ function MakeUpdater(label){
 				return label.test(l)
 			}).forEach(function(label){
 				label = label.slice(1);
-				get_func(label).call($(label));
+				get_func(label).call(_$(label));
 			})
 		} else {
-			return get_func(label).call($(label));
+			return get_func(label).call(_$(label));
 		}
 	}.forEachArgs();
 	GLOBAL[updater] = function(label, callback){

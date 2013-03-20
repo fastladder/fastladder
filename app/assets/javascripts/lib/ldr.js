@@ -106,11 +106,11 @@
                 },
                 //dom cache
                 function(){
-                    $.enable_cache = function(id){
-                        $.cacheable[id] = true;
+                    _$.enable_cache = function(id){
+                        _$.cacheable[id] = true;
                     }.forEachArgs();
 
-                    $.enable_cache(
+                    _$.enable_cache(
                         'right_container',
                         'left_container',
                         'subs_container',

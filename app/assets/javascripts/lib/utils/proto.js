@@ -164,7 +164,7 @@ Function.prototype.add_bench = function(id){
 		var start = new Date;
 		var res = self.apply(this,arguments);
 		var end = new Date;
-		$(id).innerHTML = end-start + "ms";
+		_$(id).innerHTML = end-start + "ms";
 		return res;
 	}
 };
