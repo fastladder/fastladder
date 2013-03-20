@@ -3,7 +3,7 @@ xml.rss :version => '2.0', 'xmlns:dc' => 'http://purl.org/dc/elements/1.1/' do
   xml.channel do
     xml.title "#{@member.username}'s subscriptions"
     xml.description "recent subscriptions of #{@member.username}"
-    xml.link user_url(@memberusername)
+    xml.link user_url(@member)
     for sub in @subscriptions
       feed = sub.feed
       xml.item do
