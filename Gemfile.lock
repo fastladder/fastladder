@@ -14,11 +14,11 @@ GIT
 
 GIT
   remote: git://github.com/sikachu/verification.git
-  revision: 7c692e3cdb7e3c9dd075503baeb63a1022025f08
+  revision: 5bb2ffc2c057a7c6a5a403ebb3f4a6369eac75ed
   specs:
     verification (1.0.3)
-      actionpack (>= 3.0.0, < 3.3.0)
-      activesupport (>= 3.0.0, < 3.3.0)
+      actionpack (>= 3.0.0, < 5.0)
+      activesupport (>= 3.0.0, < 5.0)
 
 GIT
   remote: https://github.com/pauldix/feedzirra
@@ -81,7 +81,7 @@ GEM
     coffee-script (2.2.0)
       coffee-script-source
       execjs
-    coffee-script-source (1.6.1)
+    coffee-script-source (1.6.2)
     colorize (0.5.8)
     crack (0.3.2)
     curb (0.8.3)
@@ -140,7 +140,7 @@ GEM
     mysql2 (0.3.11)
     net-http-digest_auth (1.2.1)
     net-http-persistent (2.8)
-    nokogiri (1.5.6)
+    nokogiri (1.5.8)
     ntlm-http (0.1.1)
     poltergeist (1.1.0)
       capybara (~> 2.0, >= 2.0.1)
