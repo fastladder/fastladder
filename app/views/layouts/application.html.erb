@@ -5,6 +5,9 @@
 	<meta http-equiv="Content-Script-Type" content="text/javascript" />
 	<meta http-equiv="Content-Style-Type" content="text/css" />
 	<link href="/css/main.css" rel="stylesheet" type="text/css" />
+	<% if content_for? :extract_header -%>
+	<%= yield :extract_header %>
+	<% end -%>
 </head>
 <body class="<%= params[:controller] %>">
 <script type="text/javascript">var ApiKey = "<%= session[:session_id] %>";</script>
