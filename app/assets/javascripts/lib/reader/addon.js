@@ -32,7 +32,7 @@ new function(){
 	KeyConfig.instant_clip = "i";
 }
 
-State.clipped_item = new Cache();
+app.state.clipped_item = new Cache();
 
 function clip_click(id){
 	var item = get_item_info(id);
@@ -99,13 +99,13 @@ Control.instant_clip = function(){
 		if(json.StatusCode == 401){
 			body.innerHTML = Template.get("clip_register").fill();
 			_$("clip_icon_"+item.id).src = "/img/icon/clip.gif";
-			State.clipped_item.clear();
+			app.state.clipped_item.clear();
 			fix_linktarget(body);
 		} else {
 			message("クリップしました")
 		}
 	};
-	State.clipped_item.set(item.id, item);
+	app.state.clipped_item.set(item.id, item);
 	_$("clip_icon_"+item.id).src = "/img/icon/clipped.gif";
 	var param = {
 		link  : item.link.unescapeHTML(),
@@ -215,7 +215,7 @@ function toggle_clip(id){
 		ajaxize(form,{
 			before: function(){
 				toggle_clip(id);
-				State.clipped_item.set(id, param);
+				app.state.clipped_item.set(id, param);
 				_$("clip_icon_"+id).src = "/img/icon/clipped.gif";
 				return true;
 			},
@@ -345,8 +345,8 @@ register_command("q|quit",function(){
 // set rate
 "0,1,2,3,4,5".split(",").forEach(function(v){
 	register_command(v, function(){
-		if(!State.now_reading) return;
-		var sid = State.now_reading;
+		if(!app.state.now_reading) return;
+		var sid = app.state.now_reading;
 		var rate = v - 0;
 		set_rate(sid, rate);
 		_$("rate_img").src = Rate.image_path_p + rate + ".gif";
@@ -372,7 +372,7 @@ register_command("rev", function(){	Control.reverse() });
 function get_hotlevel(num){
 	return (num < 3) ? 0 : (num >= 3 && num < 10) ? 1 : 2;
 }
-State.now = Math.floor(new Date / 1000);
+app.state.now = Math.floor(new Date / 1000);
 var ListView = Class.create();
 ListView.extend({
 	element_id: "listview_items",
@@ -621,20 +621,20 @@ ListView.get_instance = function(id){
 };
 ListView.mouseout = function(e){};
 ListView.mouseover = function(e){
-	if(!State.mdown) return;
+	if(!app.state.mdown) return;
 	var el = this;
 	var ul = el.parentNode;
 	var id = ul.id;
 	var listview = ListView.get_instance(id);
 	var item_id = el.id;
-	if(State.turn){
+	if(app.state.turn){
 		listview.select(item_id);
 	} else {
 		listview.unselect(item_id);
 	}
 };
 ListView.mousedown = function(e){
-	State.mdown = true;
+	app.state.mdown = true;
 	var el = this;
 	var ul = el.parentNode;
 	var id = ul.id;
@@ -642,10 +642,10 @@ ListView.mousedown = function(e){
 	var item_id = el.id;
 	if(hasClass(el,"selected")){
 		listview.unselect(item_id);
-		State.turn = false;
+		app.state.turn = false;
 	} else {
 		listview.select(item_id);
-		State.turn = true;
+		app.state.turn = true;
 	}
 	Event.stop(e);
 };
@@ -692,11 +692,11 @@ DOMArray.extend({
 var clip_overlay;
 (function(){
 	if(I18n.locale === 'en'){ return }
-	State.clip_overlay = false;
+	app.state.clip_overlay = false;
 	var Keybind_clip = new HotKey(null, "clip_overlay");
 	Keybind_clip.activate(false);
 	var template = [
-		'<span class="date">[[#{ (State.now-created_on).toRelativeDate() }]]</span>',
+		'<span class="date">[[#{ (app.state.now-created_on).toRelativeDate() }]]</span>',
 		'<a href="[[link]]" target="_blank" class="[[ classname ]]">[[title]]</a>',
 		'<span class="clip-count">',
 		'<a href="[[#{ clip_page_link(link) }]]" class="hotlevel_[[#{get_hotlevel(public_clip_count)}]]" target="_blank">',
@@ -778,7 +778,7 @@ var clip_overlay;
 		},
 		rewrite: function(){
 			var self = this;
-			State.now = Math.floor(new Date / 1000);
+			app.state.now = Math.floor(new Date / 1000);
 			var rewrite = function(){
 				var items = self.get_page();
 				self.window.innerHTML = self.format(self.last_response, items);
@@ -837,7 +837,7 @@ var clip_overlay;
 			centering(clip_window);
 			this.window = clip_window;
 			this.rewrite();
-			State.clip_overlay = true;
+			app.state.clip_overlay = true;
 			HotKey.use_only("clip_overlay");
 		},
 		hide: function(){
@@ -846,10 +846,10 @@ var clip_overlay;
 			HotKey.use_only("reader");
 			DOM.remove("clip_overlay");
 			hide_overlay();
-			State.clip_overlay = false;
+			app.state.clip_overlay = false;
 		},
 		toggle: function(){
-			State.clip_overlay ? this.hide() : this.show();
+			app.state.clip_overlay ? this.hide() : this.show();
 		},
 		reset: function(){
 			this.items = [];
@@ -1233,7 +1233,7 @@ TagParser.split_tags = function(){
 */
 (function(){
 	if(location.pathname.indexOf("/public") != 0) return;
-	State.guest_mode = true;
+	app.state.guest_mode = true;
 
 	// default settings for guest mode
 	Config.view_mode = "flat";
@@ -1388,30 +1388,30 @@ new function(){
 // for English mode
 if(I18n.locale === 'en'){
 	function fit_screen(){
-		var leftpane_width = State.leftpane_width;
-		if(State.fullscreen) return fit_fullscreen();
+		var leftpane_width = app.state.leftpane_width;
+		if(app.state.fullscreen) return fit_fullscreen();
 		DOM.hide("footer");
 		var body_h = document.body.offsetHeight;
 		var top_padding    = _$("container").offsetTop;
 		// var bottom_padding = _$("footer").offsetHeight - 20;
 		var bottom_padding = 0 - 20;
 		var ch = body_h - top_padding - bottom_padding - 4;
-		State.container_height = ch;
+		app.state.container_height = ch;
 		style_update(/container/);
 	}
 	style_updater("left_container", function(){
 		setStyle(this,{
-			display : State.show_left ? "block": "none",
-			width   : State.leftpane_width   + "px",
-			height  : State.container_height + 33 + "px"
+			display : app.state.show_left ? "block": "none",
+			width   : app.state.leftpane_width   + "px",
+			height  : app.state.container_height + 33 + "px"
 		});
 	}._try());
 
 	style_updater("subs_container", function(){
-		var h = State.container_height - _$("subs_tools").offsetHeight;
+		var h = app.state.container_height - _$("subs_tools").offsetHeight;
 		setStyle(this,{
-			display : State.show_left ? "block": "none",
-			width   : State.leftpane_width + "px",
+			display : app.state.show_left ? "block": "none",
+			width   : app.state.leftpane_width + "px",
 			height  : h + 33 +"px"
 		})
 	}._try());
@@ -1424,8 +1424,8 @@ if(I18n.locale === 'en'){
 			border_h = 2;
 		}
 		setStyle(this,{
-			 height : State.container_height - border_h + "px",
-			 width  : document.body.offsetWidth - State.leftpane_width - border_w + "px"
+			 height : app.state.container_height - border_h + "px",
+			 width  : document.body.offsetWidth - app.state.leftpane_width - border_w + "px"
 		});
 	}._try());
 
@@ -1443,8 +1443,8 @@ if(I18n.locale === 'en'){
 		return (isNaN(k)) ? "nan" : k +" "+ v + ((k>1)?"s":"") + " " + vec;
 	};
 	Control.open_keyhelp = function(){
-		var old_state = State.keyhelp_more;
-		State.keyhelp_more = true;
+		var old_state = app.state.keyhelp_more;
+		app.state.keyhelp_more = true;
 		var w = window.open("","keyhelp","width=580,height=400");
 		w.document.write([
 			"<style>",
@@ -1456,7 +1456,7 @@ if(I18n.locale === 'en'){
 			format_keybind()
 		].join(""));
 		w.document.close();
-		State.keyhelp_more = old_state;
+		app.state.keyhelp_more = old_state;
 	};
 	show_tips.text = "What's up?";
 	function ld_check(){

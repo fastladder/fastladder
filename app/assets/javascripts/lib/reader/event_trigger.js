@@ -63,13 +63,13 @@
         });
         // autoreload
         register_hook('AFTER_CONFIGLOAD', function(){
-            clearInterval(State.reloadTimer);
+            clearInterval(app.state.reloadTimer);
             if(!Config.use_autoreload) return;
             var freq  = Math.max(Config.autoreload,60);
-            State.reloadTimer = setInterval(function(){
-                if((new Date - State.LastUserAction) > freq * 1000){
+            app.state.reloadTimer = setInterval(function(){
+                if((new Date - app.state.LastUserAction) > freq * 1000){
                     Control.reload_subs();
-                    State.LastUserAction = new Date;
+                    app.state.LastUserAction = new Date;
                 }
             },freq * 200);
         });

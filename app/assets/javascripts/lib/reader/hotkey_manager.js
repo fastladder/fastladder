@@ -1,19 +1,19 @@
 (function(){
     function show_error(){
-        State.show_error = true;
+        app.state.show_error = true;
         update("error_window")
     }
 
     function hide_error(){
-        State.show_error = false;
+        app.state.show_error = false;
         Element.hide("error_window");
     }
 
     LDR.setup_hotkey = function(){
         Keybind = new HotKey(null, "reader");
         Keybind.globalCallback = function(){
-            State.LastUserAction = new Date;
-            if(State.show_error) hide_error();
+            app.state.LastUserAction = new Date;
+            if(app.state.show_error) hide_error();
         };
         var keyconfig = [];
         each(LDR.KeyConfig, function(value,key){

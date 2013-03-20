@@ -37,17 +37,17 @@ updater("manage_item", function(){
 updater("manage_select",function(){
 	var size = TRSelector.cart.keys.length;
 	if(size){
-		if(State.manage_disabled){
+		if(app.state.manage_disabled){
 			Form.enable_all("manage_control");
 			removeClass("manage_control", "grayout");
-			State.manage_disabled = false;
+			app.state.manage_disabled = false;
 		}
 		Manage.message(size + I18n.t(' items selected'));
 	} else {
 		Manage.message(I18n.t('Select item(s) you want to edit'));
 		addClass("manage_control", "grayout");
 		Form.disable_all("manage_control");
-		State.manage_disabled = true;
+		app.state.manage_disabled = true;
 	}
 });
 
@@ -62,18 +62,18 @@ var Selector = Class.create().extend({
 		self.setup && self.setup.apply(this,arguments)
 	},
 	onmousedown : function(el,event){
-		State.mdown = true;
+		app.state.mdown = true;
 		if(hasClass(el,"selected")){
 			removeClass(el, "selected");
-			State.turn = false;
+			app.state.turn = false;
 		} else {
 			addClass(el, "selected");
-			State.turn = true;
+			app.state.turn = true;
 		}
 	},
 	onmouseover : function(el,event){
-		if(State.mdown){
-			(State.turn) ? addClass(el, "selected") : removeClass(el, "selected")
+		if(app.state.mdown){
+			(app.state.turn) ? addClass(el, "selected") : removeClass(el, "selected")
 		} else {
 			addClass(el, "focus")
 		}
@@ -591,7 +591,7 @@ var MI = Manage.Item;
 var MF = Manage.Folder;
 
 MouseUp = new Trigger("mouseup");
-MouseUp.add(True,function(){State.mdown = false});
+MouseUp.add(True,function(){app.state.mdown = false});
 MouseUp.apply();
 
 

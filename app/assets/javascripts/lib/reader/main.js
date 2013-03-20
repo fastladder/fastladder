@@ -2,7 +2,7 @@ window.onload   = init;
 window.onresize = function(){LDR.invoke_hook('WINDOW_RESIZE')};
 
 var app = LDR.Application.getInstance();
-var State = new LDR.StateClass;
+// var State = new LDR.StateClass;
 
 // API
 LDR.API.StickyQuery = { ApiKey: ApiKey };
@@ -309,7 +309,7 @@ function setup_event(){
 
 	ClickEvent.add('[rel^="tab:"]', TabClick);
 	ClickEvent.add(True, FlatMenu.hide);
-	ClickEvent.add(True, function(){ State.LastUserAction = new Date });
+	ClickEvent.add(True, function(){ app.state.LastUserAction = new Date });
 	ClickEvent.add('[rel^="sort:"]', function(e){
 		var el = this;
 		var rel = el.getAttribute("rel");
@@ -468,7 +468,7 @@ function toggle_pin(item_id){
 		removeClass(item, "pinned");
 	} else {
 		// feed info
-		var info = subs_item(State.now_reading);
+		var info = subs_item(app.state.now_reading);
 		pin.add(url,title,info);
 		pin_button && addClass(pin_button, "pin_active");
 		addClass(item, "pinned");
@@ -688,17 +688,17 @@ function get_active_item(detail){
 
 // 現在読んでいるフィードを取得
 function get_active_feed(){
-	if(State.last_feed){
-		return State.last_feed;
+	if(app.state.last_feed){
+		return app.state.last_feed;
 	} else {
 		return false;
 	}
 }
 
-State.last_items = {};
+app.state.last_items = {};
 // id指定で記事の情報を取得
 function get_item_info(id){
-	return State.last_items["_"+id];
+	return app.state.last_items["_"+id];
 }
 
 /*
@@ -727,7 +727,7 @@ function format_keybind(){
 	var help = [];
 	var kbd = function(str){
 		var list = str.split("|");
-		if(!State.keyhelp_more){list = [list[0]]};
+		if(!app.state.keyhelp_more){list = [list[0]]};
 		return list.map(function(v){
 			if(/\w/.test(v) && v == v.toUpperCase()){
 				v = "shift+" + v.toLowerCase();
@@ -738,7 +738,7 @@ function format_keybind(){
 		}).join("<br>");
 	};
 	LDR.KeyHelpOrder.forEach(function(row, num){
-		if(!State.keyhelp_more && num > 1) return;
+		if(!app.state.keyhelp_more && num > 1) return;
 		help.push("<tr>");
 		row.forEach(function(f){
 			var l  = LDR.KeyHelp[f];
@@ -760,7 +760,7 @@ function format_keybind(){
 		'<div class="keyhelp_more">',
 			'<span class="button"r onclick="Control.open_keyhelp.call(this,event)">' + I18n.t('Show in window') + '</span>',
 			'<span class="button" onclick="Control.toggle_more_keyhelp.call(this,event)">'+
-			 (State.keyhelp_more ? I18n.t('Compact') : I18n.t('More') + '...') + '</span>',
+			 (app.state.keyhelp_more ? I18n.t('Compact') : I18n.t('More') + '...') + '</span>',
 		'</div>',
 		'</div>',
 		'<div class="keyhelp_hide">',
@@ -811,21 +811,21 @@ var Control = {
 		pin.open(url);
 	},
 	toggle_menu: function(event){
-		if(State.show_menu){
+		if(app.state.show_menu){
 			Control.hide_menu.call(this,event);
 		} else {
 			Control.show_menu.call(this,event);
 		}
 	},
 	hide_menu: function(){
-		State.show_menu = false;
+		app.state.show_menu = false;
 	},
 	show_menu: function(){
-		State.show_menu = true;
+		app.state.show_menu = true;
 		Event.cancelNext("click");
 		var menu = FlatMenu.create_on(this);
 		// menu.setStyle({ width : "300px" });
-		menu.onhide = function(){ State.show_menu = false };
+		menu.onhide = function(){ app.state.show_menu = false };
 		menu.show();
 		var sep = '<div style="height:0px;border-top:1px dotted #ccc;font-size:0px;"></div>';
 		var menus = LDR.VARS.MenuItems;
@@ -851,7 +851,7 @@ var Control = {
 		return
 	},
 	pin_mouseout: function(){
-		State.pin_timer = function(){
+		app.state.pin_timer = function(){
 			FlatMenu.hide();
 		}.later(1000)();
 	},
@@ -860,7 +860,7 @@ var Control = {
 	},
 	pin_hover: function(e){
 		function stophide(){
-			if(State.pin_timer){ State.pin_timer.cancel() }
+			if(app.state.pin_timer){ app.state.pin_timer.cancel() }
 		}
 		stophide();
 		if(!pin.pins.length){
@@ -945,9 +945,9 @@ var Control = {
 		var name = create_folder();
 	},
 	move_to: function(folder){
-		subs_item(State.now_reading).folder = folder;
+		subs_item(app.state.now_reading).folder = folder;
 		update("folder_label");
-		move_to(State.now_reading,folder,[
+		move_to(app.state.now_reading,folder,[
 			message.bindArgs(
 				(folder ? 'Moved to ' + folder : 'Moved to Uncategolized')
 			),
@@ -955,7 +955,7 @@ var Control = {
 		].asCallback());
 	},
 	toggle_keyhelp: function(){
-		(!State.keyhelp_visible) ?
+		(!app.state.keyhelp_visible) ?
 			 Control.show_keyhelp.call(_$("keyhelp_button")) :
 			 Control.hide_keyhelp()
 
@@ -963,31 +963,31 @@ var Control = {
 	show_keyhelp: function(){
 		Element.show("keyhelp");
 		update("keybind_table");
-		State.keyhelp_visible = true;
+		app.state.keyhelp_visible = true;
 	},
 	hide_keyhelp: function(){
 		Element.hide("keyhelp");
-		State.keyhelp_visible = false;
+		app.state.keyhelp_visible = false;
 	},
 	toggle_more_keyhelp: function(){
 		var el = this;
-		if(!State.keyhelp_more){
+		if(!app.state.keyhelp_more){
 			Control.show_more_keyhelp();
 		} else {
 			Control.hide_more_keyhelp();
 		}
 	},
 	show_more_keyhelp: function(){
-		State.keyhelp_more = true;
+		app.state.keyhelp_more = true;
 		Control.show_keyhelp();
 	},
 	hide_more_keyhelp: function(){
-		State.keyhelp_more = false;
+		app.state.keyhelp_more = false;
 		Control.show_keyhelp();
 	},
 	open_keyhelp: function(){
-		var old_state = State.keyhelp_more;
-		State.keyhelp_more = true;
+		var old_state = app.state.keyhelp_more;
+		app.state.keyhelp_more = true;
 		var w = window.open("","keyhelp","width=580,height=400");
 		w.document.write([
 			"<style>",
@@ -1003,7 +1003,7 @@ var Control = {
 			'</p>'
 		].join(""));
 		w.document.close();
-		State.keyhelp_more = old_state;
+		app.state.keyhelp_more = old_state;
 	},
 	focus_findbox : function(){
 		_$("finder").focus();
@@ -1031,8 +1031,8 @@ var Control = {
 		DOM.remove("overlay");
 	},
 	unsubscribe: function(){
-		if(State.now_reading){
-			unsubscribe(State.now_reading);
+		if(app.state.now_reading){
+			unsubscribe(app.state.now_reading);
 		}
 	},
 	show_folder: function(){
@@ -1052,7 +1052,7 @@ var Control = {
 				move_to : ""
 			}));
 			foreach(folder.names,function(v){
-				var checked = subs_item(State.now_reading).folder == v ? "checked" : "";
+				var checked = subs_item(app.state.now_reading).folder == v ? "checked" : "";
 				var item = tmpl({folder_name : (""+v).ry(8,"..."),  move_to : v, checked : checked});
 				menu.add(item);
 			});
@@ -1123,7 +1123,7 @@ var Control = {
 	},
 	feed_page: function(num){
 		// 過去記事取得
-		var sid = State.now_reading;
+		var sid = app.state.now_reading;
 		if(!sid) return;
 		var limit;
 		var c = Config.items_per_page;
@@ -1135,28 +1135,28 @@ var Control = {
 			limit = c;
 		}
 		if(num == 1){
-			if(!State.has_next) return;
-			State.viewrange.start = State.viewrange.end;
+			if(!app.state.has_next) return;
+			app.state.viewrange.start = app.state.viewrange.end;
 		} else if(num == -1){
-			if(State.viewrange.start == 0) return;
-			State.viewrange.end = State.viewrange.start;
-			State.viewrange.start = Math.max(0,State.viewrange.start - limit);
-			limit = State.viewrange.end - State.viewrange.start;
+			if(app.state.viewrange.start == 0) return;
+			app.state.viewrange.end = app.state.viewrange.start;
+			app.state.viewrange.start = Math.max(0,app.state.viewrange.start - limit);
+			limit = app.state.viewrange.end - app.state.viewrange.start;
 		}
 		var api = new LDR.API("/api/all");
 		api.onload = function(json){
 			print_feed(json);
 			// リクエストよりも件数が少ない場合
 			if(json.items.length < limit){
-				State.has_next = false;
+				app.state.has_next = false;
 			} else {
-				State.has_next = true;
+				app.state.has_next = true;
 			}
 			update("feed_next","feed_prev");
 		};
 		api.post({
 			subscribe_id : sid,
-			offset: State.viewrange.start,
+			offset: app.state.viewrange.start,
 			limit : limit
 		});
 	},
@@ -1264,11 +1264,11 @@ var Control = {
 		var old = container.scrollTop;
 		Control.scroll_next_item();
 		if(old == container.scrollTop){
-			if(State.go_next_flag){
+			if(app.state.go_next_flag){
 				Control.read_next_subs();
-				State.go_next_flag = false;
+				app.state.go_next_flag = false;
 			} else {
-				State.go_next_flag = true;
+				app.state.go_next_flag = true;
 			}
 		}
 	},
@@ -1292,49 +1292,49 @@ var Control = {
 	},
 	read_next_item: function(){},
 	read_head_subs: function(){
-		if(State.requested) return;
+		if(app.state.requested) return;
 		var head = get_head();
 		if(head){
-			State.requested = true;
-			touch(State.now_reading, "onclose");
+			app.state.requested = true;
+			touch(app.state.now_reading, "onclose");
 			Control.read(head);
 			// get_unread(head)
 		}
 	},
 	read_end_subs: function(){
-		if(State.requested) return;
+		if(app.state.requested) return;
 		var end = get_end();
 		if(end){
-			State.requested = true;
-			touch(State.now_reading, "onclose");
+			app.state.requested = true;
+			touch(app.state.now_reading, "onclose");
 			Control.read(end);
 			// get_unread(end)
 		}
 	},
 	read_next_subs: function(){
-		if(State.requested) return;
+		if(app.state.requested) return;
 		var next = get_next();
 		if(next){
-			State.requested = true;
-			touch(State.now_reading, "onclose");
+			app.state.requested = true;
+			touch(app.state.now_reading, "onclose");
 			Control.read(next, Control.prefetch);
 			// get_unread(next, Control.prefetch)
 		} else {
-			if(State.return_to_head){
-				State.return_to_head = false;
+			if(app.state.return_to_head){
+				app.state.return_to_head = false;
 				Control.read_head_subs();
 			} else {
 				message(I18n.t('End of feeds.  Press s to return to the top.'));
-				State.return_to_head = true;
+				app.state.return_to_head = true;
 			}
 		}
 	},
 	read_prev_subs: function(){
-		if(State.requested) return;
+		if(app.state.requested) return;
 		var prev = get_prev();
 		if(prev){
-			State.requested = true;
-			touch(State.now_reading, "onclose");
+			app.state.requested = true;
+			touch(app.state.now_reading, "onclose");
 			Control.read(prev)
 			// get_unread(prev)
 		}
@@ -1346,7 +1346,7 @@ var Control = {
 	},
 	/* 次に読むフィードを判別 */
 	get_next: function(){
-		var now_id = State.now_reading;
+		var now_id = app.state.now_reading;
 		next_id ;
 	},
 	change_view: function(view){
@@ -1359,18 +1359,18 @@ var Control = {
 		subs.update();
 	},
 	toggle_leftpane: function(){
-		(!State.show_left) ? Control.show_leftpane() : Control.hide_leftpane();
+		(!app.state.show_left) ? Control.show_leftpane() : Control.hide_leftpane();
 	},
 	show_leftpane: function(){
-		State.leftpane_width = LDR.VARS.LeftpaneWidth;
-		State.show_left = true;
+		app.state.leftpane_width = LDR.VARS.LeftpaneWidth;
+		app.state.show_left = true;
 		fit_screen();
 		DOM.hide("right_top_navi");
 		update("myfeed_tab");
 	},
 	hide_leftpane: function(){
-		State.leftpane_width = 0;
-		State.show_left = false;
+		app.state.leftpane_width = 0;
+		app.state.show_left = false;
 		fit_screen();
 		DOM.show("right_top_navi");
 		update("myfeed_tab");
@@ -1381,15 +1381,15 @@ var Control = {
 		fs[0] = ["header","menu","control","footer"];
 		fs[1] = ["menu","control"];
 		fs[2] = [];
-		if(!State.fullscreen){
-			State.fullscreen = 1;
-		} else if(State.fullscreen == fs.length-1){
-			State.fullscreen = 0;
+		if(!app.state.fullscreen){
+			app.state.fullscreen = 1;
+		} else if(app.state.fullscreen == fs.length-1){
+			app.state.fullscreen = 0;
 		} else {
-			State.fullscreen++
+			app.state.fullscreen++
 		}
 		Element.hide(elements);
-		Element.show(fs[State.fullscreen]);
+		Element.show(fs[app.state.fullscreen]);
 		fit_screen()
 	},
 	font: function(num){
@@ -1523,7 +1523,7 @@ function get_prefetch_num(){
 function get_next_group(){
 	var prefetch_num = get_prefetch_num();
 	if(prefetch_num == 0) return null;
-	var sid = State.now_reading;
+	var sid = app.state.now_reading;
 	if(!sid && Ordered.list){
 		return Ordered.list[0].slice(0, prefetch_num - 1);
 	}
@@ -1563,13 +1563,13 @@ function is_last(){
 	var list = Ordered.list;
 	if(!list) return true;
 	var last_id = list[list.length-1];
-	return (State.now_reading == last_id)
+	return (app.state.now_reading == last_id)
 }
 function writing_complete(){
-	if(State.writer && State.writer.complete == false){
+	if(app.state.writer && app.state.writer.complete == false){
 		return false;
 	}
-	if(State.writer2 && State.writer2.complete == false){
+	if(app.state.writer2 && app.state.writer2.complete == false){
 		return false;
 	}
 	return true;
@@ -1665,7 +1665,7 @@ function get_head(){
 	if(!list) return;
 	var i = list.indexOfA(function(sid){
 		var item = subs_item(sid);
-		return (item.unread_count && State.now_reading != item.subscribe_id);
+		return (item.unread_count && app.state.now_reading != item.subscribe_id);
 	});
 	if(i == -1){return list[0]}
 	return list[i] || list[0];
@@ -1677,14 +1677,14 @@ function get_end(){
 	list = list.concat().reverse();
 	var i = list.indexOfA(function(sid){
 		var item = subs_item(sid);
-		return (item.unread_count && State.now_reading != item.subscribe_id);
+		return (item.unread_count && app.state.now_reading != item.subscribe_id);
 	});
 	if(i == -1){return list[0]}
 	return list[i] || list[0];
 }
 // 次のアイテム
 function get_next(){
-	var sid = State.now_reading;
+	var sid = app.state.now_reading;
 	if(!sid && Ordered.list){
 		return Ordered.list[0];
 	}
@@ -1696,7 +1696,7 @@ function get_next(){
 }
 // 前のアイテム
 function get_prev(){
-	var sid = State.now_reading;
+	var sid = app.state.now_reading;
 	if(!sid && Ordered.list){
 		return Ordered.list[0];
 	}
@@ -2314,12 +2314,12 @@ Subscribe.Controller = Class.create("controller").extend({
 			this.show();
 			update("total_unread_count");
 		} else {
-			State.subs_reloading = true;
+			app.state.subs_reloading = true;
 			LDR.invoke_hook('BEFORE_SUBS_LOAD');
 			new LDR.API("/api/subs?unread="+(Config.show_all ? 0 : 1)).post({},
 			function(list){
 				self.loaded = true;
-				State.subs_reloading = false;
+				app.state.subs_reloading = false;
 				self.model.load(list);
 				self.sort();
 				self.update();
@@ -2337,12 +2337,12 @@ Subscribe.Controller = Class.create("controller").extend({
 			update("total_unread_count");
 		} else {
 			self.readyState = 0;
-			if(State.subs_loader){
-				State.subs_loader.cancel();
+			if(app.state.subs_loader){
+				app.state.subs_loader.cancel();
 			}
-			State.subs_reloading = true;
-			State.load_progress = true;
-			State.subs_loader = {
+			app.state.subs_reloading = true;
+			app.state.load_progress = true;
+			app.state.subs_loader = {
 				cancel: function(){
 					message("Aborted.");
 					canceled = true;
@@ -2403,9 +2403,9 @@ Subscribe.Controller = Class.create("controller").extend({
 			var load_complete = function(){
 				self.readyState = 4;
 				self.loaded = true;
-				State.load_progress = false;
-				State.subs_reloading = false;
-				State.subs_loader = null;
+				app.state.load_progress = false;
+				app.state.subs_reloading = false;
+				app.state.subs_loader = null;
 				//if(!writed){
 					self.model.load_data(list);
 					self.sort();
@@ -2453,8 +2453,8 @@ Subscribe.Controller = Class.create("controller").extend({
 		this.view.setClass(mode);
 		this.view.print( SF[mode](data) );
 		_$("subs_container").scrollLeft = 0;
-		if(State.now_reading){
-			set_focus(State.now_reading)
+		if(app.state.now_reading){
+			set_focus(app.state.now_reading)
 		}
 		this.update_order()
 	},
@@ -2541,17 +2541,17 @@ var FF = Feed.Formatter;
 MakeUpdater("style");
 style_updater("left_container", function(){
 	setStyle(this,{
-		display : State.show_left ? "block": "none",
-		width   : State.leftpane_width   + "px",
-		height  : State.container_height + "px"
+		display : app.state.show_left ? "block": "none",
+		width   : app.state.leftpane_width   + "px",
+		height  : app.state.container_height + "px"
 	});
 }._try());
 
 style_updater("subs_container", function(){
-	var h = State.container_height - _$("subs_tools").offsetHeight;
+	var h = app.state.container_height - _$("subs_tools").offsetHeight;
 	setStyle(this,{
-		display : State.show_left ? "block": "none",
-		width   : State.leftpane_width + "px",
+		display : app.state.show_left ? "block": "none",
+		width   : app.state.leftpane_width + "px",
 		height  : h + "px"
 	})
 }._try());
@@ -2559,15 +2559,15 @@ style_updater("subs_container", function(){
 style_updater("right_container", function(){
 	var border_w = 2;
 	setStyle(this,{
-		 height : State.container_height + "px",
-		 width  : document.body.offsetWidth - State.leftpane_width - border_w + "px"
+		 height : app.state.container_height + "px",
+		 width  : document.body.offsetWidth - app.state.leftpane_width - border_w + "px"
 	});
 }._try());
 
 
 function fit_screen(){
-	var leftpane_width = State.leftpane_width;
-	if(State.fullscreen) return fit_fullscreen();
+	var leftpane_width = app.state.leftpane_width;
+	if(app.state.fullscreen) return fit_fullscreen();
 	var body_h = document.body.offsetHeight;
 	var top_padding    = _$("container").offsetTop;
 	var bottom_padding = _$("footer").offsetHeight - 20;
@@ -2575,14 +2575,14 @@ function fit_screen(){
 		bottom_padding += 20;
 	}
 	var ch = body_h - top_padding - bottom_padding - 4;
-	State.container_height = ch;
+	app.state.container_height = ch;
 	style_update(/container/);
 }
 
 function fit_fullscreen(){
 	var body_h = document.body.offsetHeight;
 	var top_padding = _$("container").offsetTop;
-	State.container_height = body_h - top_padding + 16;
+	app.state.container_height = body_h - top_padding + 16;
 	style_update(/container/);
 }
 
@@ -2704,7 +2704,7 @@ function init(){
 			return false;
 		}
 
-		State.leftpane_width = LDR.VARS.LeftpaneWidth;
+		app.state.leftpane_width = LDR.VARS.LeftpaneWidth;
 
 		DOM.show("container");
 		DOM.show("footer");
@@ -2812,13 +2812,13 @@ function print_discover(list){
 
 function set_focus(id){
 	var el = _$("subs_item_"+id);
-	if(State.last_element){
-		removeClass(State.last_element, "fs-reading");
-		touch(State.last_id, "onclose");
+	if(app.state.last_element){
+		removeClass(app.state.last_element, "fs-reading");
+		touch(app.state.last_id, "onclose");
 	}
 	if(el){
-		State.last_element = el;
-		State.last_id = id;
+		app.state.last_element = el;
+		app.state.last_id = id;
 		switchClass(el, "fs-reading");
 		if(Config.view_mode != "flat"){
 			var tvroot = QueryCSS.findParent(function(){
@@ -2863,8 +2863,8 @@ QueryCSS.findParent = function(rule,element){
  先頭の記事を読み込む
 */
 function get_first(id,callback){
-	State.viewrange.start = 0;
-	State.has_next = true;
+	app.state.viewrange.start = 0;
+	app.state.has_next = true;
 	if(get_unread.cache.has(id)){
 		var cached_data = get_unread.cache.get(id);
 		// 読み込み中
@@ -2894,8 +2894,8 @@ function get_first(id,callback){
 LDR.VARS.PrefetchTimeout = 2000;
 LDR.VARS.LockTimeout = 2000;
 function get_unread(id,callback){
-	State.viewrange.start = 0;
-	State.has_next = true;
+	app.state.viewrange.start = 0;
+	app.state.has_next = true;
 	var api_url = '/api/unread';
 	function has_cache(){
 		var cached_data = get_unread.cache.get(id);
@@ -2933,12 +2933,12 @@ function get_unread(id,callback){
 		});
 		// release lock
 		setTimeout(function(){
-			if(!success){State.requested = false}
+			if(!success){app.state.requested = false}
 		}, LDR.VARS.LockTimeout);
 	}
 	function prefetch_timeout(){
 		// unlock
-		State.requested = false;
+		app.state.requested = false;
 		api_url = '/api/unread?timeout';
 		no_cache();
 	}
@@ -3086,10 +3086,10 @@ function print_feed(feed){
 	LDR.invoke_hook('BEFORE_PRINTFEED', feed);
 	var subscribe_id = feed.subscribe_id;
 
-	State.last_feed = feed;
-	State.last_items = {};
-	State.requested = false;
-	State.now_reading = subscribe_id;
+	app.state.last_feed = feed;
+	app.state.last_items = {};
+	app.state.requested = false;
+	app.state.now_reading = subscribe_id;
 
 	var Now = (new Date - 0)/1000;
 	var output = _$(print_feed.target);
@@ -3113,7 +3113,7 @@ function print_feed(feed){
 	var item_count = 0;
 	var item_f = function(v){
 		item_count++;
-		State.last_items["_"+v.id] = v;
+		app.state.last_items["_"+v.id] = v;
 		var widgets = entry_widgets.process(feed, v);
 		return item_formatter(v,{
 			relative_date : (v.created_on) ? (Now-v.created_on).toRelativeDate() : I18n.t('Unknown date'),
@@ -3133,7 +3133,7 @@ function print_feed(feed){
 
 	var subscribe_info = subs_item(subscribe_id);
 	var size = items.length;
-	State.viewrange.end = State.viewrange.start + size;
+	app.state.viewrange.end = app.state.viewrange.start + size;
 
 	var first_write_num = LDR.VARS.PrintFeedFirstNum;
 	var widgets = channel_widgets.process(feed, items);
@@ -3148,8 +3148,8 @@ function print_feed(feed){
 	);
 	fix_linktarget();
 
-	State.writer && State.writer.cancel();
-	State.writer2 && State.writer2.cancel();
+	app.state.writer && app.state.writer.cancel();
+	app.state.writer2 && app.state.writer2.cancel();
 	function DIV(text){
 		var div = document.createElement("div");
 		div.innerHTML = text;
@@ -3170,15 +3170,15 @@ function print_feed(feed){
 				more.className = "hide";
 				more.innerHTML = "";
 			}
-			State.writer2 = (function(){
+			app.state.writer2 = (function(){
 				more.appendChild(DIV(remain_items))
 				more.className = "";
 			}).later(10)();
 			if(writed < size){
-				State.writer = writer.later(delay2)();
+				app.state.writer = writer.later(delay2)();
 			}
 		};
-		State.writer = writer.later(delay)();
+		app.state.writer = writer.later(delay)();
 	}
 	if(items.length > first_write_num){
 		var more = $N("div",{"class":"more"});
@@ -3190,7 +3190,7 @@ function print_feed(feed){
 
 	Control.scroll_top();
 	Control.del_scroll_padding();
-	touch(State.now_reading, "onload");
+	touch(app.state.now_reading, "onload");
 	print_feed.target = "right_body";
 	LDR.invoke_hook('AFTER_PRINTFEED', feed);
 }
@@ -3198,8 +3198,8 @@ function print_feed(feed){
 
 
 function rewrite_feed(){
-	if(State.last_feed){
-		print_feed(State.last_feed);
+	if(app.state.last_feed){
+		print_feed(app.state.last_feed);
 	}
 }
 
@@ -3252,7 +3252,7 @@ function check_xmlhttp(){
 check_xmlhttp();
 
 function init_manage(){
-	if(State.guest_mode){
+	if(app.state.guest_mode){
 		message('この機能は使えません');
 		return;
 	}

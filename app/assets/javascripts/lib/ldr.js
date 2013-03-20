@@ -82,6 +82,7 @@
         function Application() {
             this.initialized = false;
             this.css_initializer = new LDR.CSSInitializer;
+            this.state = new LDR.StateClass;
         };
 
         var fn = Application.prototype;
