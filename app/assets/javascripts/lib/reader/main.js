@@ -1,6 +1,8 @@
 window.onload   = init;
 window.onresize = function(){LDR.invoke_hook('WINDOW_RESIZE')};
 
+var app = LDR.Application.getInstance();
+var State = new LDR.StateClass;
 
 // API
 LDR.API.StickyQuery = { ApiKey: ApiKey };
@@ -11,7 +13,9 @@ function getApiKey(){
             return ck[key]
         }
     }
-}
+};
+
+
 if(/^\[/.test(ApiKey)){
     LDR.API.StickyQuery = { ApiKey: getApiKey() };
 }
@@ -20,23 +24,9 @@ if(/^\[/.test(ApiKey)){
 var FlatMenu = LDR.FlatMenu;
 
 /*
- State
-*/
-var State = {};
-State.requested = false;
-State.last_scroll = 0;
-State.LastUserAction = new Date;
-State.offset_cache = [];
-// どの範囲を表示しているのかを管理する
-State.viewrange = {
-	start : 0,
-	end   : 0
-};
-State.has_next = true;
-
-/*
  browser
 */
+// TODO replace $.browser
 var browser = new BrowserDetect;
 
 /*
@@ -624,18 +614,6 @@ Pin = Class.merge(Pin, Pinsaver);
 var pin = new Pin;
 
 
-function start_mousetracking(callback){
-	State.mousemove = function(e){
-		var pos = [e.clientX,e.clientY];
-		message(pos);
-		isFunction(callback) && callback(pos)
-	};
-	State.stop_mousemove = Event.observe(document.body, "mousemove", State.mousemove);
-}
-function stop_mousetracking(){
-	State.stop_mousemove();
-}
-
 // スクロール位置から現在フォーカスが当たっているアイテムを取得
 function get_active_item(detail){
 	// return 1;
@@ -707,6 +685,7 @@ function get_active_item(detail){
 		return offset;
 	}
 }
+
 // 現在読んでいるフィードを取得
 function get_active_feed(){
 	if(State.last_feed){
@@ -1595,27 +1574,6 @@ function writing_complete(){
 	}
 	return true;
 }
-State.autoscroll_wait = 2000;
-function autoscroll(e){
-	if(e.shiftKey){
-		if(State.autoscroll_timer){
-			clearInterval(State.autoscroll_timer);
-			State.autoscroll_wait = State.autoscroll_wait * 0.8;
-		}
-		State.autoscroll_timer = setInterval(function(){
-			writing_complete() && Control.go_next();
-			if(is_last()) stop_autoscroll();
-		}, State.autoscroll_wait);
-	} else {
-		stop_autoscroll();
-		Control.go_next();
-	}
-}
-function stop_autoscroll(){
-	State.autoscroll_wait = 2000;
-	clearInterval(State.autoscroll_timer);
-	State.autoscroll_timer = null;
-}
 
 /*
  Toggle Base
@@ -1697,7 +1655,6 @@ SortmodeToggle = new SortmodeToggle;
 
 
 
-State.show_left = true;
 
 // 未読の記事のキャッシュ
 var UnreadCache = new Cache({max : 30});
@@ -2739,7 +2696,6 @@ var LoadEffect = {
  初期化処理
 */
 function init(){
-	var app = LDR.Application.getInstance();
 	app.load({}, function(){
 		LDR.setup_hook();
 		LDR.invoke_hook('BEFORE_INIT');
