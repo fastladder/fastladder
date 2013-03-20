@@ -3215,7 +3215,7 @@ function init_manage(){
 		return;
 	}
 	switchClass("right_container","mode-manage");
-	ahah("/manage/index.txt","right_body",function(){
+	ahah("/contents/manage","right_body",function(){
 		get_folders(function(){
 			update("manage_item");
 			update("manage_folder");
