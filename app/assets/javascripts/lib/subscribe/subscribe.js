@@ -28,7 +28,7 @@ ReaderSubscribe.extend({
 		return "http://" + location.host + "/subscribe/";
 	},
 	get_target_url: function(){
-		return $("target_url").value;
+		return _$("target_url").value;
 	},
 	unsubscribe: function(subscribe_id, callback){
 		var self = this;
@@ -90,7 +90,7 @@ function subs_edit(e){
 	if(e){
 		Event.stop(e);
 	}
-	if($("subs_edit_window")){
+	if(_$("subs_edit_window")){
 		subs_edit.hide();
 		if(subs_edit.current_button == el){
 			return
@@ -147,8 +147,8 @@ function subs_edit(e){
 			ajaxize("subs_edit_form", function(){
 				subs_edit.hide();
 			});
-			$("subs_edit_folder").focus();
-			update_folders($("subs_edit_folder"), {selected_id: res.folder_id});
+			_$("subs_edit_folder").focus();
+			update_folders(_$("subs_edit_folder"), {selected_id: res.folder_id});
 		}
 	});
 }
@@ -160,7 +160,7 @@ subs_edit.template_url = (function() {
 	return "/static/edit" + suffix + ".txt";
 })();
 subs_edit.hide = function(){
-	document.body.removeChild($("subs_edit_window"));
+	document.body.removeChild(_$("subs_edit_window"));
 	removeClass(subs_edit.current_button, "toggle-on");
 	return;
 }
@@ -290,7 +290,7 @@ function try_back(errback, timeout){
 }
 
 function update_checkbox(){
-	var ul = $("feed_candidates");
+	var ul = _$("feed_candidates");
 	if(!ul) return;
 	Array.forEach(ul.getElementsByTagName("li"), function(el){
 		var check = el.getElementsByTagName("input");
@@ -383,12 +383,12 @@ updater("history_back", function(){
 	var hide = function(){
 		el.checked = false;
 		el.style.display = "none";
-		$("label_"+el.id).style.display = "none";
+		_$("label_"+el.id).style.display = "none";
 	};
 	var show = function(){
 		el.checked = true;
 		el.style.display = "inline";
-		$("label_"+el.id).style.display = "inline";
+		_$("label_"+el.id).style.display = "inline";
 	}
 	ReaderSubscribe.get_backurl() ? show() : hide();
 });
@@ -412,13 +412,13 @@ function init(){
 		rate_el.parentNode.insertBefore(Rate.create(set_rate), rate_el);
 	}
 	update_checkbox();
-	$("history_back") && update("history_back");
-	if($("subscribe_container")){
+	_$("history_back") && update("history_back");
+	if(_$("subscribe_container")){
 		round_corner("subscribe_container");
 	}
 }
 function round_corner(el){
-	el = $(el);
+	el = _$(el);
 	var browser = new BrowserDetect;
 	if(browser.isFirefox){
 		setStyle(el, {"-moz-border-radius" : "5px"});
@@ -494,7 +494,7 @@ Pipe.get = function(label){
 }
 
 function ajaxize(element, callback){
-	element = $(element);
+	element = _$(element);
 	var method = element.method;
 	var action = element.getAttribute("action");
 	// ひとつの場合は完了時処理

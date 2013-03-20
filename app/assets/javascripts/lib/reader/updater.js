@@ -21,8 +21,8 @@
 
     function print_error(t){
         var options = {scope: "error_message/" + t};
-        $("error_title").innerHTML = I18n.t('title', options);
-        $("error_body").innerHTML =  I18n.t('body', options);
+        _$("error_title").innerHTML = I18n.t('title', options);
+        _$("error_body").innerHTML =  I18n.t('body', options);
     }
     var ld_check = function(){
         var c = document.cookie;
@@ -102,7 +102,7 @@
     updater("keybind_table", function(){
         this.innerHTML = format_keybind();
         var h = State.keyhelp_more ? this.offsetHeight + 65 + "px" : "150px";
-        $("keyhelp").style.height = h;
+        _$("keyhelp").style.height = h;
     });
     updater("feed_next", function(){
         this.className = (!State.has_next) ? "disable" : "";

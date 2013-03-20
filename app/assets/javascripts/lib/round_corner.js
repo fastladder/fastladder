@@ -10,7 +10,7 @@ var round_corner_init;
 	}
 	function make_corner(){
 		if(document.body.className == "top") return;
-		var c = $("content");
+		var c = _$("content");
 		round_corner(c);
 		return;
 	}
@@ -18,7 +18,7 @@ var round_corner_init;
 		addEvent(window, "load", make_corner);
 	}
 	function round_corner(el){
-		el = $(el);
+		el = _$(el);
 		var browser = new BrowserDetect;
 		if(browser.isFirefox){
 			setStyle(el, {"-moz-border-radius" : "20px"});

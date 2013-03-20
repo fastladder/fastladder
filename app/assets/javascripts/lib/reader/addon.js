@@ -7,7 +7,7 @@ function print_ads(ads){
 	if(!ads) return;
 	var tmpl = Template.get("ads_body").compile();
 	var fmt  = Template.get("ads_item").compile();
-	$("ads_bottom").innerHTML = tmpl({
+	_$("ads_bottom").innerHTML = tmpl({
 		items: ads.map(function(v){
 			return fmt(v,{domain:get_domain(v.url)})
 		}).join("")
@@ -93,12 +93,12 @@ Control.instant_clip = function(){
 		return;
 	}
 	var id = item.id;
-	var body = $("item_body_"+id);
+	var body = _$("item_body_"+id);
 	var api = new LDR.API("/clip/add");
 	var onload = function(json){
 		if(json.StatusCode == 401){
 			body.innerHTML = Template.get("clip_register").fill();
-			$("clip_icon_"+item.id).src = "/img/icon/clip.gif";
+			_$("clip_icon_"+item.id).src = "/img/icon/clip.gif";
 			State.clipped_item.clear();
 			fix_linktarget(body);
 		} else {
@@ -106,7 +106,7 @@ Control.instant_clip = function(){
 		}
 	};
 	State.clipped_item.set(item.id, item);
-	$("clip_icon_"+item.id).src = "/img/icon/clipped.gif";
+	_$("clip_icon_"+item.id).src = "/img/icon/clipped.gif";
 	var param = {
 		link  : item.link.unescapeHTML(),
 		title : item.title.unescapeHTML(),
@@ -142,7 +142,7 @@ function not_clip_user(){
 	);
 }
 function toggle_clip(id){
-	var body = $("item_body_"+id);
+	var body = _$("item_body_"+id);
 	var param = get_item_info(id);
 	var rate = subs_item(get_active_feed().subscribe_id).rate;
 	function fetch_clip(url,callback){
@@ -152,16 +152,16 @@ function toggle_clip(id){
 		}, callback);
 	}
 	function set_ratepad(n){
-		$("clip_rate_"+id).src = Rate.image_path_p + n + ".gif";
+		_$("clip_rate_"+id).src = Rate.image_path_p + n + ".gif";
 	}
 	if(hasClass(body, "clip_mode")){
-		var form = $("clip_form_"+id);
+		var form = _$("clip_form_"+id);
 		// focus
 		(function(){
 			var tmp = $N("span");
 			tmp.innerHTML = '<input type="password" id="tmp_focus" style="visibility:hidden">';
 			document.body.appendChild(tmp);
-			var el = $("tmp_focus");
+			var el = _$("tmp_focus");
 			if(el){
 				el.focus();
 				document.body.removeChild(tmp);
@@ -170,15 +170,15 @@ function toggle_clip(id){
 		})._try()();
 		body.innerHTML = '<div class="body">'+param.body+'</div>';
 		fix_linktarget(body);
-		removeClass($("clip_"+id), "clip_active");
+		removeClass(_$("clip_"+id), "clip_active");
 		removeClass(body, "clip_mode");
 	} else {
 		var item_html = body.innerHTML;
 		var tmpl = Template.get("clip_form").compile();
 		body.innerHTML = tmpl(param);
 		addClass(body, "clip_mode");
-		addClass($("clip_"+id), "clip_active");
-		var form = $("clip_form_"+id);
+		addClass(_$("clip_"+id), "clip_active");
+		var form = _$("clip_form_"+id);
 		// form fill
 		Form.fill(form, {
 			tags     : Config.clip_tags,
@@ -205,7 +205,7 @@ function toggle_clip(id){
 				}
 				Form.fill(form, json);
 				if(json["rate"] > 0) set_ratepad(json["rate"]);
-				var clip_info = $("clip_info_"+id);
+				var clip_info = _$("clip_info_"+id);
 				if(clip_info) clip_info.innerHTML = Template.get("clip_info").fill(json);
 			} else if(json.StatusCode == 401) {
 				body.innerHTML = Template.get("clip_register").fill();
@@ -216,7 +216,7 @@ function toggle_clip(id){
 			before: function(){
 				toggle_clip(id);
 				State.clipped_item.set(id, param);
-				$("clip_icon_"+id).src = "/img/icon/clipped.gif";
+				_$("clip_icon_"+id).src = "/img/icon/clipped.gif";
 				return true;
 			},
 			after: function(res,req){
@@ -237,7 +237,7 @@ function clip_page_link(url){
 }
 function custom_clip_change(e){
 	if(this.value.indexOf("http://") != -1){
-		$("config_form").custom_clip_url.value = this.value;
+		_$("config_form").custom_clip_url.value = this.value;
 	}
 	if(this.value == "off"){
 		Element.show("config_for_ldclip");
@@ -256,7 +256,7 @@ LDR.register_hook("after_init_config", function(){
 	} else {
 		Element.hide("config_for_ldclip");
 		Element.show("config_for_customclip");
-		$("custom_clip").value = "on";
+		_$("custom_clip").value = "on";
 	}
 });
 
@@ -328,7 +328,7 @@ LDR.register_hook("after_init", function(){
 		Element.show("message_box");
 		message("<input type='text' id='vi' onkeyup='vi_exec.call(this,event)'>");
 		setTimeout(function(){
-			var i = $("vi");
+			var i = _$("vi");
 			i.focus();
 			i.value = ":";
 			try{
@@ -349,7 +349,7 @@ register_command("q|quit",function(){
 		var sid = State.now_reading;
 		var rate = v - 0;
 		set_rate(sid, rate);
-		$("rate_img").src = Rate.image_path_p + rate + ".gif";
+		_$("rate_img").src = Rate.image_path_p + rate + ".gif";
 	})
 });
 // change mode
@@ -524,7 +524,7 @@ ListView.extend({
 	select: function(id){
 		if(id){
 			var item = this.get_item_by_id(id);
-			var item_element = $(id);
+			var item_element = _$(id);
 		} else if(this.selected_item){
 			var id = this.selected_item.id;
 			var item = this.get_item_by_id(id);
@@ -538,7 +538,7 @@ ListView.extend({
 	unselect: function(id){
 		if(id){
 			var item = this.get_item_by_id(id);
-			var item_element = $(id);
+			var item_element = _$(id);
 		} else if(this.selected_item){
 			var id = this.selected_item.id;
 			var item = this.get_item_by_id(id);
@@ -609,7 +609,7 @@ ListView.extend({
 		if(browser.isOpera) this.redraw();
 	},
 	redraw: function(element){
-		element = element || $(this.element_id);
+		element = element || _$(this.element_id);
 		var old = element.style.backgroundColor;
 		element.style.backgroundColor = 'transparent';
 		element.style.backgroundColor = old;
@@ -654,7 +654,7 @@ ListView.mousedown = function(e){
 var DOMArray = Class.create();
 DOMArray.extend({
 	initialize: function(element, child_tag){
-		this.element = $(element);
+		this.element = _$(element);
 		this.child_tag = child_tag;
 	},
 	_create: function(v, outer){
@@ -1025,14 +1025,14 @@ var clip_overlay;
 			this.update();
 		},
 		print: function(value){
-			var el = $(this.element_id);
+			var el = _$(this.element_id);
 			if(el){
 				el.innerHTML = value;
 			}
 		},
 		oncomplete: function(){
 			this.reset();
-			var el = $(this.element_id);
+			var el = _$(this.element_id);
 			el.innerHTML = "<span class='progress_complete'>" + this.complete_text + "</span>";
 			setTimeout(function(){
 				el.innerHTML = '<span class="button" onclick="clip_overlay.hide()">閉じる</span>';
@@ -1299,9 +1299,9 @@ TagParser.split_tags = function(){
 		}
 	};
 
-	$("subs_toolbar").style.display = "none"
-	$("subs_buttons").style.display = "none";
-	$("subs_search").style.paddingTop = "6px";
+	_$("subs_toolbar").style.display = "none"
+	_$("subs_buttons").style.display = "none";
+	_$("subs_search").style.paddingTop = "6px";
 	addClass("right_body", "guest_mode");
 
 	register_hook('AFTER_INIT', function(){
@@ -1319,7 +1319,7 @@ TagParser.split_tags = function(){
 	if(now > 1167058800000) return;
 	LoadEffect.Stop = function(){
 		var L = LoadEffect;
-		$("loadicon").src = "/img/icon/xmas2006/xmas1.gif";
+		_$("loadicon").src = "/img/icon/xmas2006/xmas1.gif";
 	};
 })();
 
@@ -1382,7 +1382,7 @@ new function(){
 	});
 	WheelUp.apply(target);
 
-	Event.observe($(target), 'selectstart', click);
+	Event.observe(_$(target), 'selectstart', click);
 };
 
 // for English mode
@@ -1392,8 +1392,8 @@ if(I18n.locale === 'en'){
 		if(State.fullscreen) return fit_fullscreen();
 		DOM.hide("footer");
 		var body_h = document.body.offsetHeight;
-		var top_padding    = $("container").offsetTop;
-		// var bottom_padding = $("footer").offsetHeight - 20;
+		var top_padding    = _$("container").offsetTop;
+		// var bottom_padding = _$("footer").offsetHeight - 20;
 		var bottom_padding = 0 - 20;
 		var ch = body_h - top_padding - bottom_padding - 4;
 		State.container_height = ch;
@@ -1408,7 +1408,7 @@ if(I18n.locale === 'en'){
 	}._try());
 
 	style_updater("subs_container", function(){
-		var h = State.container_height - $("subs_tools").offsetHeight;
+		var h = State.container_height - _$("subs_tools").offsetHeight;
 		setStyle(this,{
 			display : State.show_left ? "block": "none",
 			width   : State.leftpane_width + "px",
