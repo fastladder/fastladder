@@ -1,6 +1,14 @@
 #= require application
+#= require lib/ldr
+#= require sinon
 
 describe "LDR.Application", ->
+  before ->
+    window.ApiKey = 'dummy'
+    LDR.StateClass = ->
+      this.startListener = ->
+    LDR.StateClass::startListener = ->
+    LDR.Config = ->
 
   describe "getInstance", ->
     it "return same instance", ->
@@ -11,9 +19,10 @@ describe "LDR.Application", ->
   describe "#load", ->
     it "callback with `initialized` true", (done) ->
       app = LDR.Application.getInstance()
-      expect(app.initialized).to.be.false
 
-      # TODO: sinon stub when internal initializers affect to others
+      # bind function can't stub...
+      app.config = startListener: ->
+
       app.load {}, ->
         expect(app.initialized).to.be.true
         done()

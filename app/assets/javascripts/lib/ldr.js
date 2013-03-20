@@ -92,6 +92,10 @@
         fn.load = function(options, done){
             var that = this;
             var flow;
+            var with_pass = function(f){
+                return function(){flow.pass();};
+            };
+
             // call parallel
             var parallel_initializers = [
                 //aseet preload
@@ -101,17 +105,9 @@
                     });
                 },
 
-                //config setting
-                function(){
-                    that.config.startListener();
-                    flow.pass();
-                },
+                with_pass(that.config.startListener.bind(that)),
+                with_pass(that.css_initializer.applyRule.bind(that)),
 
-                //css custormize
-                function(){
-                    that.css_initializer.applyRule();
-                    flow.pass();
-                },
                 //dom cache
                 function(){
                     _$.enable_cache = function(id){
