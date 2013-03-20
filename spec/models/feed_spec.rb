@@ -41,18 +41,13 @@ describe Feed do
   end
 
   describe "fetch favicon" do
-    let(:feed) { FactoryGirl.create(:feed) }
+    let(:feed) { FactoryGirl.create(:feed, :link => "http://bike-o.hatenablog.com/", :feedlink => "http://bike-o.hatenablog.com/feed") }
     before do
       favicon = open(File.expand_path(File.join(File.dirname(__FILE__), '..', 'fixtures', 'favicon.ico'))).read
-      stub_request(:any, /.*/).to_return(content_type: 'image/vnd.microsoft.icon', body: favicon)
+      stub_request(:any, %r{\Ahttp://bike-o.hatenablog.com/.*\Z}).to_return(content_type: 'image/vnd.microsoft.icon', body: favicon)
     end
 
     it "favicon.ico store as PNG" do
-      feed.fetch_favicon!
-      feed.favicon.image.start_with?("\x89PNG\r\n".force_encoding('ascii-8bit')).should be_true
-    end
-
-    it "complex favicon url detection" do
       feed.fetch_favicon!
       feed.favicon.image.start_with?("\x89PNG\r\n".force_encoding('ascii-8bit')).should be_true
     end
