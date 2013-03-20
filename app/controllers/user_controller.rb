@@ -1,8 +1,7 @@
 class UserController < ApplicationController
   def index
-    @target = Member.where(username: params[:login_name]).first
-    @username = @target.username
-    @recent = @target.subscriptions.where(public: true).order('created_on DESC').limit(30).all
+    @member = Member.where(username: params[:login_name]).first
+    @subscriptions = @member.subscriptions.where(:public => true).order("created_on DESC").limit(30) if @member.public
     respond_to do |format|
       format.html
       format.rss { render layout: false }
@@ -11,15 +10,13 @@ class UserController < ApplicationController
   end
 
   def rss
-    @target = Member.where(username: params[:login_name]).first
-    @username = @target.username
-    @recent = @target.subscriptions.public.recent(30).all
+    @member = Member.where(username: params[:login_name]).first
+    @subscriptions = @member.subscriptions.public.recent(30).all
     render action: :index, formats: [:rss], type: :builder
   end
 
   def opml
-    @target = Member.where(username: params[:login_name]).first
-    @username = @target.username
+    @member = Member.where(username: params[:login_name]).first
     render action: :index, formats: [:opml], type: :builder
   end
 end

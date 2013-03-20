@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
 
-  helper_method :current_member
+  helper_method :current_member, :logged_in?
 
   def self.json_status(success, option = nil)
     result = { :isSuccess => success, :ErrorCode => success ? 0 : 1 }

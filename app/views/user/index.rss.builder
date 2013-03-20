@@ -1,10 +1,10 @@
 xml.instruct! :xml, :version => '1.0'
 xml.rss :version => '2.0', 'xmlns:dc' => 'http://purl.org/dc/elements/1.1/' do
   xml.channel do
-    xml.title "#{@username}'s subscriptions"
-    xml.description "recent subscriptions of #{@username}"
-    xml.link user_url(@username)
-    for sub in @recent
+    xml.title "#{@member.username}'s subscriptions"
+    xml.description "recent subscriptions of #{@member.username}"
+    xml.link user_url(@memberusername)
+    for sub in @subscriptions
       feed = sub.feed
       xml.item do
         xml.title feed.title
