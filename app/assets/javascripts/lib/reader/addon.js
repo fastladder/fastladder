@@ -1,5 +1,5 @@
 // print_ads
-register_hook('BEFORE_PRINTFEED', function(feed){
+LDR.register_hook('BEFORE_PRINTFEED', function(feed){
 	print_ads(feed.ads);
 });
 
@@ -247,7 +247,7 @@ function custom_clip_change(e){
 		Element.show("config_for_customclip");
 	}
 }
-register_hook("after_init_config", function(){
+LDR.register_hook("after_init_config", function(){
 	if(I18n.locale === 'en'){ return }
 	update("custom_clip");
 	if(Config.use_custom_clip == "off"){
@@ -322,7 +322,8 @@ function register_command(name,func){
 		vi[name] = func;
 	}
 }
-register_hook("after_init", function(){
+
+LDR.register_hook("after_init", function(){
 	Keybind.add(":",function(){
 		Element.show("message_box");
 		message("<input type='text' id='vi' onkeyup='vi_exec.call(this,event)'>");
@@ -1109,7 +1110,7 @@ var clip_overlay;
 		Keybind_clip.add(key, f);
 	});
 	var toggle_clip_overlay = function(){clip_overlay.toggle()}
-	register_hook('AFTER_INIT', function(){
+	LDR.register_hook('AFTER_INIT', function(){
 		Keybind.add("C", toggle_clip_overlay);
 	});
 })();

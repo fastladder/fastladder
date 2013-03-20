@@ -1,359 +1,23 @@
-(function(){
-	// API
-	LDR.API.StickyQuery = { ApiKey: ApiKey };
-}).call(LDR);
-
 window.onload   = init;
-window.onresize = function(){invoke_hook('WINDOW_RESIZE')};
+window.onresize = function(){LDR.invoke_hook('WINDOW_RESIZE')};
+
+
+// API
+LDR.API.StickyQuery = { ApiKey: ApiKey };
+function getApiKey(){
+    var ck = new Cookie().parse();
+    for(var key in ck){
+        if(/_sid/.test(key)){
+            return ck[key]
+        }
+    }
+}
+if(/^\[/.test(ApiKey)){
+    LDR.API.StickyQuery = { ApiKey: getApiKey() };
+}
 
 //TODO move to local var
 var FlatMenu = LDR.FlatMenu;
-
-
-// last_error
-window.__ERROR__ = null;
-Function.prototype._try = function(){
-	var self = this;
-	return function(){
-		try{
-			return self.apply(this, arguments)
-		} catch(e){
-			__ERROR__ = e;
-			// alert(e);
-		}
-	}
-};
-// for customize
-function _addRule(){
-	if(document.styleSheets){
-		// Mozilla, (safari?)
-		if(document.styleSheets[0].insertRule){
-			_addRule = function(selector, property){
-				document.styleSheets[0].insertRule(
-					selector + "{" + property + "}", document.styleSheets[0].cssRules.length);
-			}._try();
-		// IE
-		} else if(document.styleSheets[0].addRule){
-			_addRule = function(selector, property){
-				document.styleSheets[0].addRule(selector, "{" + property + "}");
-			}._try();
-		}
-	} else if(window.opera){
-		_addRule = function(selector, property){
-			var sheet = selector + "{" + property + "}";
-			var link = document.createElement('link');
-			link.setAttribute('rel',  'stylesheet');
-			link.setAttribute('type', 'text/css');
-			link.setAttribute('href', 'data:text/css,' + encodeURIComponent(sheet));
-			document.getElementsByTagName('head')[0].appendChild(link);
-		}._try();
-	}
-}
-_addRule._try();
-
-function LDR_addStyle(){
-	var arg = arguments;
-	if(isString(arg[0]) && isArray(arg[1])){
-		arg[1].forEach(function(v){
-			_addRule(arg[0],v);
-		});
-	} else {
-		_addRule.apply(this,arguments)
-	}
-}
-
-LDR_addStyle("pre",[
-	"font-family:monospace;",
-	"border:1px solid #808080;",
-	"background:#f4f2ef;",
-	"padding:1em;"
-]);
-
-function ld_check(){
-	var c = document.cookie;
-	return (c.indexOf(".LUID") != -1) || (c.indexOf(".LL") != -1);
-}
-function show_error(){
-	State.show_error = true;
-	update("error_window")
-}
-function hide_error(){
-	State.show_error = false;
-	Element.hide("error_window");
-}
-function show_all_mouseover(){
-	State.help_show = true;
-	State.help_snap = this;
-	var tmpl = I18n.t('show_all_help_message_tmpl');
-	State.help_message = tmpl.fill({state: Config.show_all ? 'disabled' : 'enabled' });
-	update("help_window");
-}
-function show_all_mouseout(){
-	State.help_show = false;
-	update("help_window");
-}
-
-var Buttons = {
-	"up:mousedown": function(event){
-		if(event.shiftKey){
-			Control.reverse()
-		} else {
-			Control.go_prev()
-		}
-	},
-	"down:mousedown"    : "autoscroll.call(this, event)",
-	// keyhelp
-	"keyhelp:click"     : "Control.open_keyhelp()",
-	"keyhelp:mouseover" : "Control.show_keyhelp.call(this,event)",
-	"keyhelp:mouseout"  : "Control.hide_keyhelp.call(this,event)",
-	// pin
-	"pin:onclick"       : "Control.pin_click.call(this,event);",
-	"pin:onmouseover"   : "Control.pin_hover.call(this,event);",
-	"pin:onmouseout"    : "Control.pin_mouseout.call(this,event);",
-	// guide
-	"guide:onclick"     : "init_guide()"
-}
-
-var buttons = [
-	{
-		id      : "up_button",
-		observe : "mousedown",
-		icon    : '/img/icon/allow_up.gif'
-	},
-	{
-		id      : "down_button",
-		observe : "mousedown",
-		icon    : '/img/icon/allow_down.gif'
-	},
-	{
-		id      : "pin_button",
-		observe : "click,mouseover,mouseout",
-		icon    : '/img/icon/pin.gif',
-		innerHTML : '<span id="pin_count"></span>'
-	},
-	{
-		id      : "keyhelp_button",
-		observe : "click,mouseover,mouseout",
-		icon    : '/img/icon/key_q.gif'
-	}
-];
-function as_event(obj,element){
-	var f = isFunction(obj) ? obj : new Function("event", obj);
-	return function(event){
-		event = event || window.event;
-		return f.call(element, event)
-	}
-}
-function create_button(v){
-	var li = $N("li", {});
-	li.id = v.id;
-	li.className = "button icon";
-	li.style.backgroundImage = 'url('+v.icon+')';
-	if(v.innerHTML){
-		li.innerHTML = v.innerHTML;
-	}
-	var button_id = v.id.split("_")[0];
-	var events = (""+v.observe).split(",");
-	events.forEach(function(ev){
-		li["on"+ev] = as_event(Buttons[button_id+":"+ev], li);
-	});
-	return li;
-}
-function setup_buttons(){
-	var ul = $("control_buttons_ul");
-	buttons.forEach(function(v){
-		var li =create_button(v);
-		ul.appendChild(li);
-	});
-}
-function add_button(el){
-	var ul = $("control_buttons_ul");
-	if(isElement(el)){
-		ul.appendChild(el);
-	} else if(isString(el)){
-		var li = document.createElement("li");
-		li.innerHTML = el;
-		ul.appendChild(li);
-	} else {
-		ul.appendChild(create_button(el));
-	}
-}
-//setup_buttons();
-
-function LDR_getApiKey(){
-	var ck = new Cookie().parse();
-	for(var key in ck){
-		if(/_sid/.test(key)){
-			return ck[key]
-		}
-	}
-}
-if(/^\[/.test(ApiKey)){
-	LDR.API.StickyQuery = { ApiKey: LDR_getApiKey() };
-}
-
-/*
- DOM Cache
-*/
-$.enable_cache = function(id){
-	$.cacheable[id] = true;
-}.forEachArgs();
-$.enable_cache(
-	'right_container',
-	'left_container',
-	'subs_container',
-	'right_body',
-	'message',
-	'loadicon',
-	'loading',
-	'total_unread_count'
-);
-
-/*
- Hook
-*/
-var Hook = Class.create();
-Hook.extend({
-	initialize: function(){
-		this.callbacks = [];
-	},
-	isHook: true,
-	add: function(f){
-		this.callbacks.push(f)
-	},
-	exec: function(){
-		var args = arguments;
-		this.callbacks.forEach(function(f){
-			isFunction(f) && f.apply(null,args)
-		})
-	},
-	clear: function(){
-		this.callbacks = []
-	}
-});
-
-Class.Trigger = Class.create();
-Class.Trigger.extend({
-	initialize: function(){
-		var points = Array.from(arguments);
-		var triggers = {};
-		points.forEach(function(name){
-			var hook_name = name.toLowerCase();
-			triggers[hook_name] = new Hook;
-		});
-		this.triggers = triggers;
-	},
-	add_trigger: function(point, callback){
-		var point = point.toLowerCase();
-		if(this.triggers.hasOwnProperty(point)){
-			this.triggers[point].add(callback)
-		}
-	},
-	call_trigger: function(point, args){
-		point = point.toLowerCase();
-		if(this.triggers.hasOwnProperty(point)){
-			this.triggers[point].exec(args);
-		}
-	}
-});
-
-// まだ作ってないのもあり。
-LDR.trigger = new Class.Trigger(
-	// Window LOAD/UNLOAD
-	'AFTER_LOAD','BEFORE_UNLOAD',
-	// Application INIT
-	'BEFORE_INIT', 'AFTER_INIT',
-	'BEFORE_CONFIGLOAD','AFTER_CONFIGLOAD',
-	// sub contents
-	'AFTER_INIT_CONFIG','AFTER_INIT_GUIDE','AFTER_INIT_MANAGE',
-	// EVENT
-	'WINDOW_RESIZE',
-	'BEFORE_ANYKEYDOWN','AFTER_ANYKEYDOWN',
-	'BEFORE_SUBS_LOAD','AFTER_SUBS_LOAD',
-	'BEFORE_PRINTFEED','AFTER_PRINTFEED','COMPLATE_PRINTFEED'
-);
-LDR.register_hook = function(point, callback){
-	this.trigger.add_trigger(point, callback);
-}
-LDR.invoke_hook = function(point, args){
-	this.trigger.call_trigger(point, args);
-}
-function register_hook(point, callback){
-	LDR.register_hook(point, callback);
-}
-function invoke_hook(point, args){
-	LDR.invoke_hook(point, args);
-}
-
-function setup_hook(){
-	var guide_fix = function(){
-		if(!hasClass("right_container","mode-guide")) return;
-		if(browser.isIE){
-			if(!$("guiderankbody")) return;
-			$("guiderankbody").style.width = $("right_container").offsetWidth - 15 + "px";
-		}
-	}
-	register_hook('WINDOW_RESIZE', fit_screen);
-	register_hook('WINDOW_RESIZE', guide_fix);
-	register_hook('AFTER_INIT_GUIDE', guide_fix);
-	register_hook('AFTER_INIT', IME_off);
-	// switch mode
-	register_hook('BEFORE_PRINTFEED', function(){
-		if(!hasClass("right_container","mode-feedview")){
-			switchClass("right_container","mode-feedview");
-		}
-	});
-
-	// loading
-	register_hook('BEFORE_SUBS_LOAD', function(){update("reload_button")});
-	register_hook('BEFORE_SUBS_LOAD', function(){
-		TreeView.destroy();
-		TreeView.count = 0;
-	});
-	register_hook('AFTER_SUBS_LOAD', function(){update("reload_button")});
-
-	// config load
-	register_hook('AFTER_CONFIGLOAD', function(){
-		setStyle("right_body", {
-			fontSize: Config.current_font + "px"
-		});
-		if($("config_form")){
-			Form.fill("config_form", Config);
-		}
-		update("show_all_button");
-		update(/mode_text.*/);
-	});
-	// autoreload
-	register_hook('AFTER_CONFIGLOAD', function(){
-		clearInterval(State.reloadTimer);
-		if(!Config.use_autoreload) return;
-		var freq  = Math.max(Config.autoreload,60);
-		State.reloadTimer = setInterval(function(){
-			if((new Date - State.LastUserAction) > freq * 1000){
-				Control.reload_subs();
-				State.LastUserAction = new Date;
-			}
-		},freq * 200);
-	});
-	// revert pins
-	register_hook('AFTER_CONFIGLOAD', function(){
-		if(!Config.use_pinsaver) return;
-		var api = new LDR.API("/api/pin/all");
-		api.post({}, function(pins){
-			if(!pins || !pins.length){ return }
-			pins.forEach(function(v){
-				// 新しいのが上
-				pin.pins.unshift({
-					url  : v.link,
-					title: v.title,
-					created_on: v.created_on
-				});
-				pin.hash[v.link] = true;
-			});
-			pin.update_view();
-		});
-	});
-}
 
 /*
  State
@@ -412,17 +76,6 @@ function typecast_config(obj){
 	return obj;
 }
 
-
-function debugPrint(text){
-	var wd = debugPrint.wd || (debugPrint.wd = window.open());
-	try{
-		wd.document.write(text);
-		wd.document.close();
-	}catch(e){
-		debugPrint.wd = null;
-		debugPrint(text);
-	}
-}
 // formをAjax化する
 function ajaxize(element, callback){
 	element = $(element);
@@ -450,132 +103,6 @@ function ajaxize(element, callback){
 	addEvent(element, "submit", onsubmit);
 	element.submit = onsubmit;
 }
-
-function print_error(t){
-	var options = {scope: "error_message/" + t};
-	$("error_title").innerHTML = I18n.t('title', options);
-	$("error_body").innerHTML =  I18n.t('body', options);
-}
-/*
- DHTML Functions
-*/
-updater("help_window", function(){
-	if(State.help_show){
-		Element.show("help_window");
-		this.innerHTML = State.help_message;
-		var el   = State.help_snap;
-		var pos  = Position.cumulativeOffset(el);
-		var left = pos[0] + el.offsetWidth + 10;
-		var top  = pos[1] - 8;
-		DOM.move(this, left,top);
-	} else {
-		Element.hide(this);
-	}
-});
-updater("error_window",function(){
-	Element.show(this);
-	centering(this,0,50);
-	if(!ld_check()){
-		print_error("login");
-	} else if(typeof _XMLHttpRequest == "undefined"){
-		print_error("xmlhttp");
-	} else {
-		print_error("busy")
-	}
-});
-updater("mode_text_view",function(){
-	this.innerHTML = I18n.t(Config.view_mode);
-});
-updater("mode_text_sort",function(){
-	this.innerHTML = I18n.t(Config.sort_mode);
-});
-/* navi */
-updater("right_bottom_navi", print_navi);
-updater("right_top_navi", print_navi);
-updater("scroll_offset",function(){
-	this.innerHTML = State.scroll_offset + "/"
-});
-
-updater("folder_label",function(){
-	var item = subs_item(State.now_reading);
-	this.innerHTML = [
-		(item.folder ? item.folder.ry(8,"...") : I18n.t('Uncategolized')),
-		'<img src="/img/icon/tri_d.gif">'
-	].join("");
-});
-
-/* 未読件数合計 */
-updater("total_unread_count", function(){
-	var count = subs.model.get_unread_count();
-	// var feed_count = subs.model.get_unread_feeds().length;
-	var feed_count = subs.model.get_unread_feeds_count();
-	var param = {
-		count : count || "0",
-		feed_count : feed_count || "0"
-	};
-	if(param.count < 0) return;
-	if(State.load_progress){
-		addClass(this, "progress")
-	} else {
-		removeClass(this, "progress")
-	}
-	var tmpl = I18n.t('unread_count_tmpl');
-	var tmpl_title = I18n.t('unread_count_title_tmpl');
-	this.innerHTML = tmpl.fill(param);
-	if(!State.guest_mode){
-		document.title = tmpl_title.fill(param);
-	}
-});
-
-updater("keybind_table", function(){
-	this.innerHTML = format_keybind();
-	var h = State.keyhelp_more ? this.offsetHeight + 65 + "px" : "150px";
-	$("keyhelp").style.height = h;
-});
-updater("feed_next", function(){
-	this.className = (!State.has_next) ? "disable" : "";
-	update("feed_paging_next");
-});
-updater("feed_prev", function(){
-	this.className = (State.viewrange.start == 0) ? "disable" : "";
-	update("feed_paging_prev");
-});
-
-updater("feed_paging_next", function(){
-	this.className = (!State.has_next) ? "disable" : "";
-});
-updater("feed_paging_prev", function(){
-	this.className = (State.viewrange.start == 0) ? "disable" : "";
-});
-
-updater("myfeed_tab", function(){
-	this.style.borderColor = State.show_left
-	 ? '#a5c5ff white white white'
-	 : 'white white #a5c5ff white';
-}._try());
-
-updater("show_all_button", function(){
-	var style = {
-		active : {
-			border : "1px solid #fff",
-			backgroundColor : "#d4d0c8",
-			borderColor : "gray white white gray"
-		},
-		inactive : {
-			border : "1px solid #f5f5f5",
-			backgroundColor : "#f5f5f5"
-		}
-	};
-	setStyle(this, style[Config.show_all ? "inactive" : "active"] );
-});
-updater("reload_button", function(){
-	var img_path = State.subs_reloading ? '/img/icon/reload_anime.gif' : '/img/icon/reload.gif';
-	var cursor   = State.subs_reloading ? 'wait' : 'pointer';
-	setStyle(this, {
-		backgroundImage: 'url('+img_path+')',
-		cursor: cursor
-	});
-});
 
 /*
  Ajax and Ahah
@@ -639,17 +166,17 @@ Pipe.get = function(label){
 	return Pipe["_" + label];
 }
 
-
 /*
   Config
 */
-
 var Config = {};
 var onConfigChange = {};
 Object.extend(Config, LDR.DefaultConfig);
+
 Config.addCallback = function(key, callback){
 	onConfigChange[key] = callback;
-}
+};
+
 Config.set = function(key,value){
 	var old_value = this[key];
 	var new_value = value;
@@ -659,6 +186,7 @@ Config.set = function(key,value){
 	}
 	Config.save();
 };
+
 Config.save = function(){
 	var api = new LDR.API("/api/config/save");
 	api.post(Config);
@@ -820,60 +348,7 @@ function IME_off(msg){
 	}._try(),10);
 }
 
-function setup_hotkey(){
-	Keybind = new HotKey(null, "reader");
-	Keybind.globalCallback = function(){
-		State.LastUserAction = new Date;
-		if(State.show_error) hide_error();
-	};
-	var keyconfig = [];
-	each(LDR.KeyConfig, function(value,key){
-		keyconfig.push([
-			value, Control[key]
-		])
-	});
-	if(browser.isWin && browser.isFirefox){
-		keyconfig.push([
-			"IME",
-			function(){
-				if(this.lastInvoke == "IME"){
-					IME_off(true);
-				}
-			}
-		]);
-	}
-	keyconfig.forEach(function(a){
-		Keybind.add(a[0],a[1])
-	});
 
-	// 入力フォームでキー操作を効かせる
-	Keybind.allow = /finder/i;
-	Keybind.filter = hotkey_filter;
-
-	// for safari
-	if(browser.isKHTML){
-		Keybind.add("up", Event.stop);
-		Keybind.add("down", Event.stop);
-	}
-}
-function print_navi(){
-	var next_id = get_next();
-	var prev_id = get_prev();
-	var buf = [];
-	if(prev_id){
-		buf.push([
-			'<div class="button prev" onclick="Control.read_prev_subs()">',
-			'<span class="navi_text">≪ [[title]]</span></div>'
-		].join("").fill( subs_item(prev_id) ))
-	}
-	if(next_id){
-		buf.push([
-			'<div class="next button" onclick="Control.read_next_subs()">',
-			'<span class="navi_text">[[title]] ≫</span></div>'
-		].join("").fill( subs_item(next_id) ))
-	}
-	this.innerHTML = buf.join("");
-};
 
 
 function getStyle(element, style){
@@ -2883,7 +2358,7 @@ Subscribe.Controller = Class.create("controller").extend({
 			update("total_unread_count");
 		} else {
 			State.subs_reloading = true;
-			invoke_hook('BEFORE_SUBS_LOAD');
+			LDR.invoke_hook('BEFORE_SUBS_LOAD');
 			new LDR.API("/api/subs?unread="+(Config.show_all ? 0 : 1)).post({},
 			function(list){
 				self.loaded = true;
@@ -2891,7 +2366,7 @@ Subscribe.Controller = Class.create("controller").extend({
 				self.model.load(list);
 				self.sort();
 				self.update();
-				invoke_hook('AFTER_SUBS_LOAD');
+				LDR.invoke_hook('AFTER_SUBS_LOAD');
 			});
 		}
 	},
@@ -2916,7 +2391,7 @@ Subscribe.Controller = Class.create("controller").extend({
 					canceled = true;
 				}
 			};
-			invoke_hook('BEFORE_SUBS_LOAD');
+			LDR.invoke_hook('BEFORE_SUBS_LOAD');
 			self.model.load_start();
 			var canceled = false;
 			var from_id = 0;
@@ -2981,7 +2456,7 @@ Subscribe.Controller = Class.create("controller").extend({
 				//} else {
 				//	update("total_unread_count");
 				//}
-				invoke_hook('AFTER_SUBS_LOAD');
+				LDR.invoke_hook('AFTER_SUBS_LOAD');
 				message('Loading completed.');
 				setTimeout(function(){self.readyState=0},3000);
 			};
@@ -3266,8 +2741,8 @@ var LoadEffect = {
 function init(){
 	var app = LDR.Application.getInstance();
 	app.load({}, function(){
-		setup_hook();
-		invoke_hook('BEFORE_INIT');
+		LDR.setup_hook();
+		LDR.invoke_hook('BEFORE_INIT');
 		window.onerror = function(a,b,c){
 			$("message").innerHTML = [a,b,c];
 			return false;
@@ -3316,7 +2791,7 @@ function init(){
 		});
 
 		setup_event();
-		setup_hotkey();
+		LDR.setup_hotkey();
 
 		// ajaxize
 		ajaxize("discover_form",{
@@ -3335,13 +2810,13 @@ function init(){
 
 		(function(){
 			load_content();
-			invoke_hook('BEFORE_CONFIGLOAD');
+			LDR.invoke_hook('BEFORE_CONFIGLOAD');
 			Config.load(function(){
-				invoke_hook('AFTER_CONFIGLOAD');
+				LDR.invoke_hook('AFTER_CONFIGLOAD');
 				subs.update();
 			});
 		}).later(10)();
-		invoke_hook('AFTER_INIT');
+		LDR.invoke_hook('AFTER_INIT');
 
 	});
 }
@@ -3652,7 +3127,7 @@ var entry_widgets = new LDRWidgets;
 var channel_widgets = new LDRWidgets;
 
 function print_feed(feed){
-	invoke_hook('BEFORE_PRINTFEED', feed);
+	LDR.invoke_hook('BEFORE_PRINTFEED', feed);
 	var subscribe_id = feed.subscribe_id;
 
 	State.last_feed = feed;
@@ -3761,29 +3236,9 @@ function print_feed(feed){
 	Control.del_scroll_padding();
 	touch(State.now_reading, "onload");
 	print_feed.target = "right_body";
-	invoke_hook('AFTER_PRINTFEED', feed);
+	LDR.invoke_hook('AFTER_PRINTFEED', feed);
 }
 
-// update paging
-register_hook('AFTER_PRINTFEED', function(feed){
-	if(feed.ad){
-		[
-			"right_bottom_navi","right_top_navi","feed_next","feed_prev"
-		].forEach(function(id){
-			var el = $(id);
-			if(el)el.innerHTML = "";
-		});
-		$("feed_paging").style.display = "none";
-	} else {
-		$("feed_paging").style.display = "block";
-		update(
-			"right_bottom_navi",
-			"right_top_navi",
-			"feed_next",
-			"feed_prev"
-		);
-	}
-});
 
 
 function rewrite_feed(){
@@ -3868,14 +3323,14 @@ function init_config(){
 			}
 		});
 		TabClick.call($("tab_config_basic"));
-		invoke_hook('AFTER_INIT_CONFIG');
+		LDR.invoke_hook('AFTER_INIT_CONFIG');
 	});
 }
 function init_guide(){
 	ahah("/contents/guide", "right_body", function(){
 		switchClass("right_container", "mode-guide");
 		Control.scroll_top();
-		invoke_hook('AFTER_INIT_GUIDE');
+		LDR.invoke_hook('AFTER_INIT_GUIDE');
 	});
 }
 
