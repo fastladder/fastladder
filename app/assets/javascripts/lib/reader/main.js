@@ -94,6 +94,18 @@ function ajaxize(element, callback){
 	element.submit = onsubmit;
 }
 
+function show_all_mouseover(){
+	app.state.help_show = true;
+	app.state.help_snap = this;
+	var tmpl = I18n.t('show_all_help_message_tmpl');
+	app.state.help_message = tmpl.fill({state: app.config.show_all ? 'disabled' : 'enabled' });
+	update("help_window");
+}
+function show_all_mouseout(){
+	app.state.help_show = false;
+	update("help_window");
+}
+
 /*
  Ajax and Ahah
 */
