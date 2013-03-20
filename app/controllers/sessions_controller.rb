@@ -15,7 +15,10 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    session[:member_id] = nil if logged_in?
+    if logged_in?
+      session[:member_id] = nil
+      @member = nil
+    end
     reset_session
     redirect_to root_url, notice: "You have been signed out."
   end
