@@ -37,9 +37,7 @@
 		<h3>Recent Subscriptions</h3>
 		<p>
 			<%= @target_member.username %>'s recent public subscriptions.
-			<% unless current_member != @target_member -%>
 			<%= subscribe_button(user_url(@target_member.username, :format => "rss")) %>
-			<% end -%>
 		</p>
 		<ul class="recent_feeds">
 		<% @subscriptions.map {|subs| [subs, subs.feed] }.each_with_index do |(subs, feed), i| %>
