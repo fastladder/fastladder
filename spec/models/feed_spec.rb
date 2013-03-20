@@ -41,21 +41,47 @@ describe Feed do
   end
 
   describe "fetch favicon" do
-    let(:feed) { FactoryGirl.create(:feed, :link => "http://bike-o.hatenablog.com/", :feedlink => "http://bike-o.hatenablog.com/feed") }
-    before do
-      favicon = open(File.expand_path(File.join(File.dirname(__FILE__), '..', 'fixtures', 'favicon.ico'))).read
-      stub_request(:any, %r{\Ahttp://bike-o.hatenablog.com/.*\Z}).to_return(content_type: 'image/vnd.microsoft.icon', body: favicon)
-    end
+    let(:feed) { FactoryGirl.create(:feed) }
+    let(:favicon) { open(File.expand_path(File.join(File.dirname(__FILE__), '..', 'fixtures', 'favicon.ico'))).read }
 
     it "favicon.ico store as PNG" do
+      stub_request(:any, /.*/).to_return(content_type: 'image/vnd.microsoft.icon', body: favicon)
+      feed.fetch_favicon!
+      feed.favicon.image.start_with?("\x89PNG\r\n".force_encoding('ascii-8bit')).should be_true
+    end
+
+    it "if favicon url is *.gif and returning vnd.microsoft.icon" do
+      stub_request(:any, /.*/).to_return(body: favicon, headers: {"Content-Type" => 'image/vnd.microsoft.icon'})
+      feed.stub(:favicon_list).and_return([Addressable::URI.parse("http://example.com/favicon?file=favicon.gif")])
       feed.fetch_favicon!
       feed.favicon.image.start_with?("\x89PNG\r\n".force_encoding('ascii-8bit')).should be_true
     end
 
     it 'logs errors and does `next` when favicon.ico is not valid data' do
+      stub_request(:any, /.*/).to_return(body: "invalid image data")
       MiniMagick::Image.should_receive(:open).at_least(:once).and_raise(MiniMagick::Error)
       Rails.logger.should_receive(:error).at_least(:once)
       feed.fetch_favicon!
+    end
+  end
+
+  describe ".favicon_list" do
+    let(:favicon_url) { Addressable::URI.parse("http://icon.example.com/favicon.gif").normalize }
+
+    it "favicon url detection from feed.link" do
+      feed = FactoryGirl.create(:feed, :link => "http://example.com/")
+      stub_request(:get, feed.link).to_return(
+        body: <<-HTML
+          <html>
+            <head>
+              <link rel="shortcut icon" href="#{favicon_url.to_s}">
+            </head>
+            <body></body>
+          </html>
+        HTML
+      )
+      stub_request(:get, feed.feedlink).to_return(body: "")
+      feed.favicon_list.should include(favicon_url)
     end
   end
 
