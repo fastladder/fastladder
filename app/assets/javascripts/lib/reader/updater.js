@@ -56,10 +56,10 @@
     });
 
     updater("mode_text_view",function(){
-        this.innerHTML = I18n.t(Config.view_mode);
+        this.innerHTML = I18n.t(app.config.view_mode);
     });
     updater("mode_text_sort",function(){
-        this.innerHTML = I18n.t(Config.sort_mode);
+        this.innerHTML = I18n.t(app.config.sort_mode);
     });
     /* navi */
     updater("right_bottom_navi", print_navi);
@@ -138,7 +138,7 @@
                 backgroundColor : "#f5f5f5"
             }
         };
-        setStyle(this, style[Config.show_all ? "inactive" : "active"] );
+        setStyle(this, style[app.config.show_all ? "inactive" : "active"] );
     });
     updater("reload_button", function(){
         var img_path = app.state.subs_reloading ? '/img/icon/reload_anime.gif' : '/img/icon/reload.gif';

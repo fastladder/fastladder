@@ -63,7 +63,7 @@
         return Config;
     })();
 
-    window.Config = new LDR.Config;
-    Config.startListener();
+    // window.Config = new LDR.Config;
+    // Config.startListener();
 
 }).call(LDR);

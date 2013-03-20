@@ -53,7 +53,7 @@ function setup_widgets(){
 	});
 
 	channel_widgets.add('touch_button', function(feed){
-		if(Config.touch_when != "manual") return;
+		if(app.config.touch_when != "manual") return;
 		return [
 			"<span class='button' onclick='touch_all(\"",feed.subscribe_id,"\")'>既読にする</span>"
 		].join("");
@@ -72,8 +72,8 @@ setup_widgets();
 		var add_link = tmpl.fill({
 			url   : encodeURIComponent(item.link.unescapeHTML()),
 			title : encodeURIComponent(item.title.unescapeHTML()),
-			tags  : Config.clip_tags,
-			"public" : Config.use_clip_public
+			tags  : app.config.clip_tags,
+			"public" : app.config.use_clip_public
 		});
 		return [
 			'<a href="', add_link, '">','<img src="http://parts.blog.livedoor.jp/img/cmn/clip_16_12_w.gif" border=0></a>',

@@ -57,16 +57,16 @@ function setup_widgets(){
 
 	channel_widgets.add('about', function(feed, items){
 		return (
-			'<a href="/about/' 
+			'<a href="/about/'
 			+ feed.channel.feedlink
 			+ '" style="background-image:url(/img/icon/about.gif);background-position:0 0;background-repeat:no-repeat;padding:0 0 4px 20px;">'
-			+ 'about feed' 
+			+ 'about feed'
 			+ '</a>'
 		);
 	});
 
 	channel_widgets.add('touch_button', function(feed){
-		if(Config.touch_when != "manual") return;
+		if(app.config.touch_when != "manual") return;
 		return [
 			"<span class='button' onclick='touch_all(\"",feed.subscribe_id,"\")'>mark as read</span>"
 		].join("");
@@ -85,8 +85,8 @@ setup_widgets();
 		var add_link = tmpl.fill({
 			url   : encodeURIComponent(item.link.unescapeHTML()),
 			title : encodeURIComponent(item.title.unescapeHTML()),
-			tags  : Config.clip_tags,
-			"public" : Config.use_clip_public
+			tags  : app.config.clip_tags,
+			"public" : app.config.use_clip_public
 		});
 		return [
 			'<a href="', add_link, '">','<img src="http://parts.blog.livedoor.jp/img/cmn/clip_16_12_w.gif" border=0></a>',

@@ -337,7 +337,7 @@ function unsubscribe(sid,callback){
 }
 
 function touch(id, state){
-	if(Config.touch_when == state){
+	if(app.config.touch_when == state){
 		touch_all(id)
 	}
 }
@@ -502,7 +502,7 @@ Pin.extend({
 		var can_popup = false;
 		var self = this;
 		var count = 0;
-		var max_pin = Config.max_pin;
+		var max_pin = app.config.max_pin;
 		if(!isNumber(max_pin)) max_pin = LDR.DefaultConfig.max_pin;
 		foreach(this.pins, function(p){
 			if(max_pin > count){
@@ -537,7 +537,7 @@ Pin.extend({
 var Pinsaver = Class.create();
 Pinsaver.extend({
 	add: function(url,title){
-		if(!Config.use_pinsaver) return;
+		if(!app.config.use_pinsaver) return;
 		var api = new LDR.API("/api/pin/add");
 		api.post({
 			link : url.unescapeHTML(),
@@ -545,7 +545,7 @@ Pinsaver.extend({
 		})
 	},
 	remove: function(url){
-		if(!Config.use_pinsaver) return;
+		if(!app.config.use_pinsaver) return;
 		var api = new LDR.API("/api/pin/remove");
 		api.post({
 			link:url.unescapeHTML()
@@ -719,7 +719,7 @@ function format_keybind(){
 
 
 function check_wait(){
-	if(Config.use_wait != 1) return false;
+	if(app.config.use_wait != 1) return false;
 	var st = check_wait.state;
 	var key = Keybind.lastInput;
 	// 初回
@@ -728,7 +728,7 @@ function check_wait(){
 		return false;
 	} else {
 		var now = new Date;
-		if(now - st[key] > Config.wait){
+		if(now - st[key] > app.config.wait){
 			st[key] = new Date;
 			return false;
 		} else {
@@ -825,7 +825,7 @@ var Control = {
 		var write_menu = function(){
 			menu.clear();
 			// 開く件数
-			var open_num = Config.max_pin;
+			var open_num = app.config.max_pin;
 			// containerの高さにあわせて調整
 			var ch = _$("right_container").offsetHeight;
 			var view_num = Math.floor((ch-92) / 24);
@@ -857,9 +857,9 @@ var Control = {
 		return menu;
 	},
 	reverse: function(){
-		Config.set("reverse_mode", !Config.reverse_mode);
+		app.config.set("reverse_mode", !app.config.reverse_mode);
 		message(
-			(Config.reverse_mode)
+			(app.config.reverse_mode)
 			 ? 'Show older items first'
 			 : 'Show newer items first'
 		);
@@ -1026,7 +1026,7 @@ var Control = {
 			var item = tmpl({
 				label : I18n.t(v),
 				mode  : v,
-				checked : Config.view_mode == v ? "checked" : ""
+				checked : app.config.view_mode == v ? "checked" : ""
 			});
 			menu.add(item);
 		});
@@ -1051,7 +1051,7 @@ var Control = {
 			var item = tmpl({
 				label : I18n.t(v),
 				mode  : v,
-				checked : Config.sort_mode == v ? "checked" : ""
+				checked : app.config.sort_mode == v ? "checked" : ""
 			});
 			menu.add(item);
 		});
@@ -1072,7 +1072,7 @@ var Control = {
 		var sid = app.state.now_reading;
 		if(!sid) return;
 		var limit;
-		var c = Config.items_per_page;
+		var c = app.config.items_per_page;
 		if(!c){
 			limit = 20;
 		} else if(c > 200) {
@@ -1226,7 +1226,7 @@ var Control = {
 	},
 	read: function(sid, todo){
 		// 全件表示で未読0件のフィードを表示
-		if(Config.show_all == true){
+		if(app.config.show_all == true){
 			if(subs_item(sid).unread_count == 0){
 				get_first(sid, todo);
 			} else {
@@ -1296,11 +1296,11 @@ var Control = {
 		next_id ;
 	},
 	change_view: function(view){
-		Config.set("view_mode", view);
+		app.config.set("view_mode", view);
 		subs.update();
 	},
 	change_sort: function(sort){
-		Config.set("sort_mode", sort);
+		app.config.set("sort_mode", sort);
 		subs.sort();
 		subs.update();
 	},
@@ -1340,14 +1340,14 @@ var Control = {
 	},
 	font: function(num){
 		var to;
-		var old = Config.current_font;
+		var old = app.config.current_font;
 		if(num == 0){to = 14} else { to = old + num }
-		Config.set("current_font", to);
+		app.config.set("current_font", to);
 	},
 	load_config: function(){},
 	save_config: function(){},
 	toggle_show_all: function(){
-		Config.set("show_all", !Config.show_all);
+		app.config.set("show_all", !app.config.show_all);
 		update("show_all_button");
 		Control.reload_subs()
 	},
@@ -1362,9 +1362,9 @@ var Control = {
 	scroll_page: function(num){
 		var h = _$("right_container").offsetHeight - 40;
 		var c =
-			(Config.scroll_type == "page") ? h:
-			(Config.scroll_type == "half") ? h / 2 :
-			(Config.scroll_px || 100);
+			(app.config.scroll_type == "page") ? h:
+			(app.config.scroll_type == "half") ? h / 2 :
+			(app.config.scroll_px || 100);
 		_$("right_container").scrollTop += c * num;
 	},
 	scroll_page_or_subs: function(num){
@@ -1440,7 +1440,7 @@ function prefetch(sid,count){
 		switchClass("subs_item_" + sid, "ps-prefetched");
 		message("prefetch_complete");
 	}
-	if(subs_item(sid).unread_count == 0 && Config.show_all == true){
+	if(subs_item(sid).unread_count == 0 && app.config.show_all == true){
 		var api = new LDR.API("/api/all");
 		api.post({
 			subscribe_id : sid,
@@ -1455,8 +1455,8 @@ function prefetch(sid,count){
 
 function get_prefetch_num(){
 	var prefetch_num;
-	if(Config.use_prefetch_hack){
-		prefetch_num = Config.prefetch_num;
+	if(app.config.use_prefetch_hack){
+		prefetch_num = app.config.prefetch_num;
 		if(0 <= prefetch_num && prefetch_num <= LDR.VARS.MaxPrefetch){
 			return prefetch_num;
 		} else {
@@ -1497,7 +1497,7 @@ function scroll_hilight(){
 		}
 	}
 	Event.observe(_$('right_container'), 'scroll', function(){
-		if(Config.use_scroll_hilight){
+		if(app.config.use_scroll_hilight){
 			clearTimeout(timer);
 			timer = setTimeout(update_hilight,100);
 		}
@@ -1953,8 +1953,8 @@ Subscribe.Model = Class.create().extend({
 		this._generate_cache(list);
 	},
 	get_list: function(){
-		if(Config.use_limit_subs && Config.limit_subs){
-			return this.list.slice(0, Config.limit_subs)
+		if(app.config.use_limit_subs && app.config.limit_subs){
+			return this.list.slice(0, app.config.limit_subs)
 		} else {
 			return this.list
 		}
@@ -2072,7 +2072,7 @@ Subscribe.Model = Class.create().extend({
 	get_subscribers_names: function(){
 		if(this.subscribers_names){
 			// 多い順で保存されている。
-			if(Config.sort_mode == "subscribers_count:reverse"){
+			if(app.config.sort_mode == "subscribers_count:reverse"){
 				return this.subscribers_names.concat().reverse();
 			} else {
 				return this.subscribers_names;
@@ -2172,7 +2172,7 @@ Subscribe.Formatter = {
 			folder.param = param;
 			return folder;
 		});
-		if(Config.show_all){
+		if(app.config.show_all){
 			return rates.pluck("element").toDF()
 		} else {
 			return rates.filter(
@@ -2198,7 +2198,7 @@ Subscribe.Formatter = {
 			folder.param = param;
 			return folder;
 		});
-		if(Config.show_all){
+		if(app.config.show_all){
 			return subscribers.pluck("element").toDF()
 		} else {
 			return subscribers.filter(
@@ -2262,7 +2262,7 @@ Subscribe.Controller = Class.create("controller").extend({
 		} else {
 			app.state.subs_reloading = true;
 			LDR.invoke_hook('BEFORE_SUBS_LOAD');
-			new LDR.API("/api/subs?unread="+(Config.show_all ? 0 : 1)).post({},
+			new LDR.API("/api/subs?unread="+(app.config.show_all ? 0 : 1)).post({},
 			function(list){
 				self.loaded = true;
 				app.state.subs_reloading = false;
@@ -2311,7 +2311,7 @@ Subscribe.Controller = Class.create("controller").extend({
 				is_first = 0;
 				var api = new LDR.API([
 					"/api/subs?",
-					"unread=", (Config.show_all ? 0 : 1),
+					"unread=", (app.config.show_all ? 0 : 1),
 					"&from_id=", from_id,
 					"&limit=", limit
 				].join(""));
@@ -2376,7 +2376,7 @@ Subscribe.Controller = Class.create("controller").extend({
 		}
 	},
 	sort: function(){
-		var tmp = Config.sort_mode.split(':');
+		var tmp = app.config.sort_mode.split(':');
 		var key = tmp[0];
 		var option = tmp[1];
 		this.model.list.sort_by(key);
@@ -2392,7 +2392,7 @@ Subscribe.Controller = Class.create("controller").extend({
 			var mode = "flat";
 			var data = this.filter(this.model);
 		} else {
-			var mode = Config.view_mode;
+			var mode = app.config.view_mode;
 			var data = this.model;
 		}
 		this.view.clear();
@@ -2713,7 +2713,7 @@ function init(){
 		(function(){
 			load_content();
 			LDR.invoke_hook('BEFORE_CONFIGLOAD');
-			Config.load(function(){
+			app.config.load(function(){
 				LDR.invoke_hook('AFTER_CONFIGLOAD');
 				subs.update();
 			});
@@ -2766,7 +2766,7 @@ function set_focus(id){
 		app.state.last_element = el;
 		app.state.last_id = id;
 		switchClass(el, "fs-reading");
-		if(Config.view_mode != "flat"){
+		if(app.config.view_mode != "flat"){
 			var tvroot = QueryCSS.findParent(function(){
 				return /^treeview/.test(this.id)
 			},el);
@@ -3041,12 +3041,12 @@ function print_feed(feed){
 	var output = _$(print_feed.target);
 	var channel = feed.channel;
 	var items = feed.items;
-	if(Config.reverse_mode){
+	if(app.config.reverse_mode){
 		items = items.concat().reverse();
 	}
-	if(Config.max_view){
-		if(Config.max_view < items.length)
-		items = items.slice(0, Math.max(1,Config.max_view));
+	if(app.config.max_view){
+		if(app.config.max_view < items.length)
+		items = items.slice(0, Math.max(1,app.config.max_view));
 	}
 	var item_formatter = new ItemFormatter().compile();
 	var ads_expire = null;
@@ -3215,13 +3215,13 @@ function init_config(){
 	ahah("/contents/config", "right_body", function(){
 		switchClass("right_container", "mode-config");
 		Control.scroll_top();
-		Form.fill("config_form", Config);
+		Form.fill("config_form", app.config);
 		ajaxize("config_form",{
 			before: function(){return true},
 			after: function(res,req){
 				message("Your settings have been saved");
 				typecast_config(req);
-				Object.extend(Config, req);
+				Object.extend(app.config, req);
 			}
 		});
 		TabClick.call(_$("tab_config_basic"));

@@ -53,10 +53,10 @@
         // config load
         register_hook('AFTER_CONFIGLOAD', function(){
             setStyle("right_body", {
-                fontSize: Config.current_font + "px"
+                fontSize: app.config.current_font + "px"
             });
             if(_$("config_form")){
-                Form.fill("config_form", Config);
+                Form.fill("config_form", app.config);
             }
             update("show_all_button");
             update(/mode_text.*/);
@@ -64,8 +64,8 @@
         // autoreload
         register_hook('AFTER_CONFIGLOAD', function(){
             clearInterval(app.state.reloadTimer);
-            if(!Config.use_autoreload) return;
-            var freq  = Math.max(Config.autoreload,60);
+            if(!app.config.use_autoreload) return;
+            var freq  = Math.max(app.config.autoreload,60);
             app.state.reloadTimer = setInterval(function(){
                 if((new Date - app.state.LastUserAction) > freq * 1000){
                     Control.reload_subs();
@@ -75,7 +75,7 @@
         });
         // revert pins
         register_hook('AFTER_CONFIGLOAD', function(){
-            if(!Config.use_pinsaver) return;
+            if(!app.config.use_pinsaver) return;
             var api = new LDR.API("/api/pin/all");
             api.post({}, function(pins){
                 if(!pins || !pins.length){ return }

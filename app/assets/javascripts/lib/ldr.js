@@ -83,6 +83,7 @@
             this.initialized = false;
             this.css_initializer = new LDR.CSSInitializer;
             this.state = new LDR.StateClass;
+            this.config = new LDR.Config;
         };
 
         var fn = Application.prototype;
@@ -98,6 +99,12 @@
                     that._preloadAssets(function(){
                         flow.pass();
                     });
+                },
+
+                //config setting
+                function(){
+                    that.config.startListener();
+                    flow.pass();
                 },
 
                 //css custormize

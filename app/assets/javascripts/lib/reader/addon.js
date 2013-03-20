@@ -37,8 +37,8 @@ app.state.clipped_item = new Cache();
 function clip_click(id){
 	var item = get_item_info(id);
 	// use custom clip
-	if(Config.use_custom_clip != "off"){
-		var link_template = Config.custom_clip_url;
+	if(app.config.use_custom_clip != "off"){
+		var link_template = app.config.custom_clip_url;
 		var link = link_template.fill({
 			url   : encodeURIComponent(item.link.unescapeHTML()),
 			title : encodeURIComponent(item.title.unescapeHTML()),
@@ -46,7 +46,7 @@ function clip_click(id){
 			select : encodeURIComponent(get_selection())
 		});
 		window.open(link) || message('cannot_popup');
-	} else if(Config.use_inline_clip){
+	} else if(app.config.use_inline_clip){
 		toggle_clip(item.id)
 	} else {
 		window.open(make_clip_url(item)) || message('cannot_popup');
@@ -65,8 +65,8 @@ function make_clip_url(item){
 	return tmpl.fill({
 		url   : encodeURIComponent(item.link.unescapeHTML()),
 		title : encodeURIComponent(item.title.unescapeHTML()),
-		tags  : Config.clip_tags,
-		"public" : Config.use_clip_public
+		tags  : app.config.clip_tags,
+		"public" : app.config.use_clip_public
 	});
 }
 function get_item_body(item_id){
@@ -78,7 +78,7 @@ Control.instant_clip = function(){
 	if(!item) return;
 	// copy rate
 	var rate = subs_item(get_active_feed().subscribe_id).rate;
-	if(Config.use_instant_clip == -1){
+	if(app.config.use_instant_clip == -1){
 		var c = confirm([
 			"ショートカットキー「i」で、今見ている記事をすぐにlivedoor クリップへ登録できます。",
 			"",
@@ -86,9 +86,9 @@ Control.instant_clip = function(){
 			"（※ 「設定変更→クリップの設定」から詳細な設定を行えます）"
 		].join("\n"));
 		if(!c) return;
-		Config.set("use_instant_clip", 1);
+		app.config.set("use_instant_clip", 1);
 	}
-	if(!Config.use_instant_clip){
+	if(!app.config.use_instant_clip){
 		message("一発クリップ機能を使用するには、「設定変更」でクリップの設定を変更してください");
 		return;
 	}
@@ -110,11 +110,11 @@ Control.instant_clip = function(){
 	var param = {
 		link  : item.link.unescapeHTML(),
 		title : item.title.unescapeHTML(),
-		"public" : Config.use_instant_clip_public,
+		"public" : app.config.use_instant_clip_public,
 		from  : "reader"
 	};
-	if(Config.use_instant_clip_ratecopy) param.rate = rate;
-	if(Config.instantclip_tags) param.tags = Config.instantclip_tags;
+	if(app.config.use_instant_clip_ratecopy) param.rate = rate;
+	if(app.config.instantclip_tags) param.tags = app.config.instantclip_tags;
 	api.post(param, onload);
 };
 
@@ -181,10 +181,10 @@ function toggle_clip(id){
 		var form = _$("clip_form_"+id);
 		// form fill
 		Form.fill(form, {
-			tags     : Config.clip_tags,
-			"public" : Config.use_clip_public
+			tags     : app.config.clip_tags,
+			"public" : app.config.use_clip_public
 		});
-		if(Config.use_clip_ratecopy){
+		if(app.config.use_clip_ratecopy){
 			Form.fill(form, {rate : rate});
 			set_ratepad(rate);
 			param.rate = rate;
@@ -201,7 +201,7 @@ function toggle_clip(id){
 					json["public"] = "off";
 				} else {
 					// config
-					json["public"] = Config.use_clip_public;
+					json["public"] = app.config.use_clip_public;
 				}
 				Form.fill(form, json);
 				if(json["rate"] > 0) set_ratepad(json["rate"]);
@@ -250,7 +250,7 @@ function custom_clip_change(e){
 LDR.register_hook("after_init_config", function(){
 	if(I18n.locale === 'en'){ return }
 	update("custom_clip");
-	if(Config.use_custom_clip == "off"){
+	if(app.config.use_custom_clip == "off"){
 		Element.show("config_for_ldclip");
 		Element.hide("config_for_customclip");
 	} else {
@@ -805,7 +805,7 @@ var clip_overlay;
 			var count = 0;
 			this.get_selected_items().forEach(function(item){
 				count++;
-				if(count > Config.max_pin){
+				if(count > app.config.max_pin){
 					return
 				}
 				window.open(item.link.unescapeHTML());
@@ -1236,10 +1236,10 @@ TagParser.split_tags = function(){
 	app.state.guest_mode = true;
 
 	// default settings for guest mode
-	Config.view_mode = "flat";
-	Config.sort_mode = "modified_on";
-	Config.use_limit_subs = 1;
-	Config.limit_subs = 200;
+	app.config.view_mode = "flat";
+	app.config.sort_mode = "modified_on";
+	app.config.use_limit_subs = 1;
+	app.config.limit_subs = 200;
 	var log = function(){};
 	/*
 	if(typeof console != "undefined"){
