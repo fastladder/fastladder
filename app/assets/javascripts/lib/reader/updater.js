@@ -30,10 +30,10 @@
     };
 
     updater("help_window", function(){
-        if(State.help_show){
+        if(app.state.help_show){
             Element.show("help_window");
-            this.innerHTML = State.help_message;
-            var el   = State.help_snap;
+            this.innerHTML = app.state.help_message;
+            var el   = app.state.help_snap;
             var pos  = Position.cumulativeOffset(el);
             var left = pos[0] + el.offsetWidth + 10;
             var top  = pos[1] - 8;
@@ -56,20 +56,20 @@
     });
 
     updater("mode_text_view",function(){
-        this.innerHTML = I18n.t(Config.view_mode);
+        this.innerHTML = I18n.t(app.config.view_mode);
     });
     updater("mode_text_sort",function(){
-        this.innerHTML = I18n.t(Config.sort_mode);
+        this.innerHTML = I18n.t(app.config.sort_mode);
     });
     /* navi */
     updater("right_bottom_navi", print_navi);
     updater("right_top_navi", print_navi);
     updater("scroll_offset",function(){
-        this.innerHTML = State.scroll_offset + "/"
+        this.innerHTML = app.state.scroll_offset + "/"
     });
 
     updater("folder_label",function(){
-        var item = subs_item(State.now_reading);
+        var item = subs_item(app.state.now_reading);
         this.innerHTML = [
             (item.folder ? item.folder.ry(8,"...") : I18n.t('Uncategolized')),
             '<img src="/img/icon/tri_d.gif">'
@@ -86,7 +86,7 @@
             feed_count : feed_count || "0"
         };
         if(param.count < 0) return;
-        if(State.load_progress){
+        if(app.state.load_progress){
             addClass(this, "progress")
         } else {
             removeClass(this, "progress")
@@ -94,34 +94,34 @@
         var tmpl = I18n.t('unread_count_tmpl');
         var tmpl_title = I18n.t('unread_count_title_tmpl');
         this.innerHTML = tmpl.fill(param);
-        if(!State.guest_mode){
+        if(!app.state.guest_mode){
             document.title = tmpl_title.fill(param);
         }
     });
 
     updater("keybind_table", function(){
         this.innerHTML = format_keybind();
-        var h = State.keyhelp_more ? this.offsetHeight + 65 + "px" : "150px";
+        var h = app.state.keyhelp_more ? this.offsetHeight + 65 + "px" : "150px";
         _$("keyhelp").style.height = h;
     });
     updater("feed_next", function(){
-        this.className = (!State.has_next) ? "disable" : "";
+        this.className = (!app.state.has_next) ? "disable" : "";
         update("feed_paging_next");
     });
     updater("feed_prev", function(){
-        this.className = (State.viewrange.start == 0) ? "disable" : "";
+        this.className = (app.state.viewrange.start == 0) ? "disable" : "";
         update("feed_paging_prev");
     });
 
     updater("feed_paging_next", function(){
-        this.className = (!State.has_next) ? "disable" : "";
+        this.className = (!app.state.has_next) ? "disable" : "";
     });
     updater("feed_paging_prev", function(){
-        this.className = (State.viewrange.start == 0) ? "disable" : "";
+        this.className = (app.state.viewrange.start == 0) ? "disable" : "";
     });
 
     updater("myfeed_tab", function(){
-        this.style.borderColor = State.show_left
+        this.style.borderColor = app.state.show_left
          ? '#a5c5ff white white white'
          : 'white white #a5c5ff white';
     }._try());
@@ -138,11 +138,11 @@
                 backgroundColor : "#f5f5f5"
             }
         };
-        setStyle(this, style[Config.show_all ? "inactive" : "active"] );
+        setStyle(this, style[app.config.show_all ? "inactive" : "active"] );
     });
     updater("reload_button", function(){
-        var img_path = State.subs_reloading ? '/img/icon/reload_anime.gif' : '/img/icon/reload.gif';
-        var cursor   = State.subs_reloading ? 'wait' : 'pointer';
+        var img_path = app.state.subs_reloading ? '/img/icon/reload_anime.gif' : '/img/icon/reload.gif';
+        var cursor   = app.state.subs_reloading ? 'wait' : 'pointer';
         setStyle(this, {
             backgroundImage: 'url('+img_path+')',
             cursor: cursor

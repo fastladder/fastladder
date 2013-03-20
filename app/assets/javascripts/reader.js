@@ -1,6 +1,5 @@
 //= require application
-//= require lib/queue
-//= require lib/reader/pref
+//= require_tree ./lib/models
 //= require lib/reader/event_hook
 //= require lib/reader/event_trigger
 //= require lib/reader/hotkey_manager
