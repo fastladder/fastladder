@@ -105,7 +105,7 @@ GEM
       railties (>= 3.0.0)
     faye-websocket (0.4.7)
       eventmachine (>= 0.12.0)
-    feed_searcher (0.0.5)
+    feed_searcher (0.0.6)
       mechanize (>= 1.0.0)
       nokogiri
     ffi (1.4.0)
@@ -263,7 +263,7 @@ DEPENDENCIES
   coffee-rails (~> 3.2.1)
   coveralls
   factory_girl_rails
-  feed_searcher (>= 0.0.5)
+  feed_searcher (>= 0.0.6)
   feedzirra!
   haml
   i18n-js!
