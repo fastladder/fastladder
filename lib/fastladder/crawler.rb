@@ -107,7 +107,7 @@ module Fastladder
 =end
         when Net::HTTPRedirection
           @logger.info "Redirect: #{feed.feedlink} => #{response["location"]}"
-          feed.feedlink = response["location"]
+          feed.feedlink = URI.join(feed.feedlink, response["location"])
           feed.modified_on = nil
           feed.save
         else
