@@ -160,6 +160,8 @@ class Feed < ActiveRecord::Base
       parsed_feedlink = Addressable::URI.parse(feedlink)
       parsed_feedlink.fragment = nil
       parsed_feedlink.to_s
+    rescue
+      feedlink
     end
     super
   end

@@ -40,6 +40,11 @@ describe Feed do
     end
   end
 
+  describe "has fragment identify" do
+    subject { FactoryGirl.create(:feed, feedlink: "http://example.com/rss#_=_") }
+    its(:feedlink) { should == "http://example.com/rss#_=_" }
+  end
+
   describe "fetch favicon" do
     let(:feed) { FactoryGirl.create(:feed) }
     let(:favicon) { open(File.expand_path(File.join(File.dirname(__FILE__), '..', 'fixtures', 'favicon.ico'))).read }
