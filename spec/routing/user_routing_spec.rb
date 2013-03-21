@@ -6,19 +6,5 @@ describe 'routing to user' do
                                           "action"     => "index",
                                           "login_name" => "mala")
   end
-
-  it 'routes :login_name.:format' do
-    expect(get('/user/mala.rss')).to route_to("controller" => "user",
-                                              "action"     => "index",
-                                              "login_name" => "mala",
-                                              "format"     => "rss")
-  end
-
-  it 'routes :login_name/:format' do
-    expect(get('/user/mala/rss')).to route_to("controller" => "user",
-                                              "action"     => "index",
-                                              "login_name" => "mala",
-                                              "format"     => "rss")
-  end
 end
 
