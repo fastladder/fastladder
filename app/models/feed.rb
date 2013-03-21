@@ -35,9 +35,6 @@ class Feed < ActiveRecord::Base
   }
 
   def self.initialize_from_uri(uri)
-    parsed_uri = Addressable::URI.parse(uri)
-    parsed_uri.fragment = nil
-    uri = parsed_uri.to_s
     feed_dom = Feedzirra::Feed.parse(Fastladder.simple_fetch(uri))
     return nil unless feed_dom
 
@@ -156,5 +153,14 @@ class Feed < ActiveRecord::Base
 
   def avg_rate
     subscriptions.where("rate > ?", 0).average(:rate).to_i
+  end
+
+  def save(*args)
+    self.feedlink = begin
+      parsed_feedlink = Addressable::URI.parse(feedlink)
+      parsed_feedlink.fragment = nil
+      parsed_feedlink.to_s
+    end
+    super
   end
 end
