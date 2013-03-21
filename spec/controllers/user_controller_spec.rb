@@ -37,25 +37,4 @@ describe UserController do
       expect(response.content_type).to be_equal opml_mime_type
     end
   end
-
-  describe 'GET /rss' do
-    it 'renders rss' do
-      request.accept = rss_mime_type
-      get :rss, login_name: member.username
-      expect(response).to be_success
-      expect(response).to render_template('index')
-      expect(response.content_type).to be_equal rss_mime_type
-    end
-  end
-
-  describe 'GET /opml' do
-    it 'renders opml' do
-      request.accept = opml_mime_type
-      get :opml, login_name: member.username
-      expect(response).to be_success
-      expect(response).to render_template('index')
-      expect(response.content_type).to be_equal opml_mime_type
-    end
-  end
-
 end

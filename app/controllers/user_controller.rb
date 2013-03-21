@@ -8,15 +8,4 @@ class UserController < ApplicationController
       format.opml { render layout: false }
     end
   end
-
-  def rss
-    @member = Member.where(username: params[:login_name]).first
-    @subscriptions = @member.subscriptions.public.recent(30).all
-    render action: :index, formats: [:rss], type: :builder
-  end
-
-  def opml
-    @member = Member.where(username: params[:login_name]).first
-    render action: :index, formats: [:opml], type: :builder
-  end
 end

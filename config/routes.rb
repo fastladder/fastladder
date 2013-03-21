@@ -7,7 +7,6 @@ Fastladder::Application.routes.draw do
   get 'subscribe/*url', :to => 'subscribe#confirm', :as => :subscribe, :format => false
   post 'subscribe/*url', :to => 'subscribe#subscribe', :format => false
   match 'about/*url' => 'about#index', as: :about, format: false
-  match 'user/:login_name/:action' => 'user'
   match 'user/:login_name' => 'user#index', :as => 'user'
   match 'icon/*feed' => 'icon#get'
   match 'favicon/*feed' => 'icon#get'
