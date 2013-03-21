@@ -1,6 +1,6 @@
 <div id="config" style="padding:0 10px;width:95%">
 <h2 style="margin-top:0">Fastladder Settings</h2>
-<%= form_for :save, url: url_for(controller: "api/config", action: "save"), html: {id: "config_form", style: "clear: both; width: 100%; display: block;", onreset: "Form.fill(this, Config); return false;"} do |f| %>
+<%= form_for :save, url: url_for(controller: "api/config", action: "save"), html: {id: "config_form", style: "clear: both; width: 100%; display: block;", onreset: "Form.fill(this, app.config); return false;"} do |f| %>
 <div class="tabs">
 	<div id="tab_config_basic" class="tab tab-active" rel="tab:config_form&gt;config_basic">General</div>
 	<div id="tab_config_view" class="tab" rel="tab:config_form&gt;config_view">Display</div>
@@ -87,7 +87,7 @@
 			<th>Prefetching</th>
 			<td>
 				Set the number of feeds to prefetch<br>
-				<%= f.label :use_prefetch_hack_1 do %><%= f.radio_button :use_prefetch_hack, 1, name: "use_prefetch_hack" %> <%= f.text_field :prefetch_num, size: 2 %> items (max: 5)<% end %><br>
+				<%= f.label :use_prefetch_hack_1 do %><%= f.radio_button :use_prefetch_hack, 1, name: "use_prefetch_hack" %> <%= f.text_field :prefetch_num, name: "prefetch_num", size: 2 %> items (max: 5)<% end %><br>
 				<%= f.label :use_prefetch_hack_0 do %><%= f.radio_button :use_prefetch_hack, 0, name: "use_prefetch_hack" %> Use default setting<% end %>
 			</td>
 		</tr>
