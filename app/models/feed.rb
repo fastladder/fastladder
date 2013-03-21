@@ -35,7 +35,10 @@ class Feed < ActiveRecord::Base
   }
 
   def self.initialize_from_uri(uri)
-    feed_dom = Feedzirra::Feed.parse(Fastladder::simple_fetch(uri))
+    parsed_uri = Addressable::URI.parse(uri)
+    parsed_uri.fragment = nil
+    uri = parsed_uri.to_s
+    feed_dom = Feedzirra::Feed.parse(Fastladder.simple_fetch(uri))
     return nil unless feed_dom
 
     self.new(
