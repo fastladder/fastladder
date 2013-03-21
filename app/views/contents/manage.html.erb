@@ -10,13 +10,7 @@
 	</tr>
 </textarea>
 <textarea class="template" id="man_items">
-	<tr
-	 class="[[classname]]"
-	 subscribe_id="[[subscribe_id]]"
-	 onmouseover="TRSelector.mouseover.call(this,event)"
-	 onmouseout="TRSelector.mouseout.call(this,event)"
-	 onmousedown="TRSelector.mousedown.call(this,event)"
-	>
+	<tr class="[[classname]]" subscribe_id="[[subscribe_id]]" onmouseover="TRSelector.mouseover.call(this,event)" onmouseout="TRSelector.mouseout.call(this,event)" onmousedown="TRSelector.mousedown.call(this,event)">
 		<td nowrap><img src="[[icon]]" width="16" height="16">
 		<!--<img src="/img/icon/view.gif" width="21" height="16" class="button" onclick="preview([[subscribe_id]])">-->
 		</td>
@@ -25,16 +19,15 @@
 		<td>[[folder]]</td>
 		<td>
 			<span style="position:relative">
-			<img class="rate_pad" src="/img/rate/pad/[[ rate ]].gif" sid="[[subscribe_id]]" onclick="Rate.click.call(this,event)" onmouseout="Rate.out.call(this,event)"
-			onmousedown="Event.stop(event)"
-			onmousemove="Rate.hover.call(this,event)"></span></td>
+				<img class="rate_pad" src="/img/rate/pad/[[ rate ]].gif" sid="[[subscribe_id]]" onclick="Rate.click.call(this,event)" onmouseout="Rate.out.call(this,event)" onmousedown="Event.stop(event)" onmousemove="Rate.hover.call(this,event)">
+			</span>
+		</td>
 		<td>[[ update ]]</td>
 	</tr>
 </textarea>
 
 <textarea class="template" id="man_folder">
-	<li class="button [[selected]]"
-	 onclick="MF.select([[id]])">[[folder]]</li>
+	<li class="button [[selected]]" onclick="MF.select([[id]])">[[folder]]</li>
 </textarea>
 
 <textarea class="template" id="man_offset">
@@ -57,10 +50,7 @@
 <h2 class="manage_h" style="margin-top:10px">Edit Feeds</h2>
 
 <!-- manage_folder -->
-<div id="manage_foldertools"
-	style="clear:both;margin:5px 10px;padding:5px 5px 5px 30px;
-	background:url('/img/icon/close.gif') no-repeat 7px 5px;"
->
+<div id="manage_foldertools" style="clear:both; margin:5px 10px;padding:5px 5px 5px 30px; background:url('/img/icon/close.gif') no-repeat 7px 5px;">
 	<u class="button" onclick="MF.create_folder(updater('manage_folder'))">Create New Folder</u>
 	<div id="update_folder" style="display:inline"></div>
 </div>
@@ -78,12 +68,9 @@
 </div>
 
 <!-- manage_item -->
-<div id="manage_control" class="grayout"
-	style="clear:both;margin:5px 10px;
-	background:url('/img/icon/default.gif') no-repeat 7px 9px;
-	padding:5px 5px 0px 30px;
-	vertical-align:bottom;
-"><table><tr>
+<div id="manage_control" class="grayout" style="clear:both;margin:5px 10px; background:url('/img/icon/default.gif') no-repeat 7px 9px; padding:5px 5px 0px 30px; vertical-align:bottom;">
+<table>
+<tr>
 	<td valign="middle" nowrap>
 	<select id="move_to">
 	[[ folders ]]
@@ -106,13 +93,15 @@
 	 onmouseover="Manage.show_help.call(this,event)"
 	 onmouseout="Manage.hide_help()"
 	>Unsubscribe</u>
-	</td></tr>
-	</table>
+	</td>
+</tr>
+</table>
 </div>
 <table width="95%" id="manage_item_tool">
-	<tr>
+<tr>
 	<td width="200" height="32" nowrap>
-		 Find :&nbsp;<input type="text" onkeyup="MI.search.call(this,event)" style="width:150px"></td>
+		 Find :&nbsp;<input type="text" onkeyup="MI.search.call(this,event)" style="width:150px">
+	</td>
 	<td >Select :&nbsp;
 		<span class="button" onclick="MI.select_all()" title="Select all">Select All</span>&nbsp;&nbsp;|&nbsp;&nbsp;
 		<span class="button" onclick="MI.page_select()" title="Select / Unselect this page">Select this page</span>&nbsp;&nbsp;|&nbsp;&nbsp;
@@ -120,8 +109,7 @@
 		<span class="button" onclick="MI.clear_select()" title="Select None">None</span>
 	</td>
 	<td width="50" nowrap align="right">
-		<select onchange="MI.perpage=(this.options[this.selectedIndex].value-0) || 20;update('manage_item')"
-		 style="font-size:1em">
+		<select onchange="MI.perpage=(this.options[this.selectedIndex].value-0) || 20;update('manage_item')" style="font-size:1em">
 			<option>items / page</option>
 			<option value="10">10</option>
 			<option value="20">20</option>
@@ -130,11 +118,12 @@
 	</td>
 	<td width="50" nowrap align="right">
 		<div id="mi_paging">
-		<span onclick="MI.prev()" id="mi_prev" class="paging">&lt;</span>
-		<span onclick="MI.next()" id="mi_next" class="paging">&gt;</span>
+			<span onclick="MI.prev()" id="mi_prev" class="paging">&lt;</span>
+			<span onclick="MI.next()" id="mi_next" class="paging">&gt;</span>
 		</div>
 	</td>
-</tr></table>
+</tr>
+</table>
 <div id="manage_item" style="padding:0">
 	<div class="wait" style="margin:0 10px">Loading ..</div>
 </div>

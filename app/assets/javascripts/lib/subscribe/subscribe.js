@@ -152,13 +152,7 @@ function subs_edit(e){
 		}
 	});
 }
-subs_edit.template_url = (function() {
-	var suffix = "";
-	if (I18n.locale === "en") {
-		suffix = "_en";
-	}
-	return "/static/edit" + suffix + ".txt";
-})();
+subs_edit.template_url = "/contents/edit";
 subs_edit.hide = function(){
 	document.body.removeChild(_$("subs_edit_window"));
 	removeClass(subs_edit.current_button, "toggle-on");
