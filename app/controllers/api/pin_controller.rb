@@ -13,11 +13,6 @@ class Api::PinController < ApplicationController
     link = params[:link]
     title = params[:title]
     @member.pins.create(:link => link, :title => title)
-    if (diff = @member.pins.size - Settings.save_pin_limit) > 0
-      @member.pins.past(diff).each do |pin|
-        pin.destroy
-      end
-    end
     render_json_status(true)
   end
 
