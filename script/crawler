@@ -12,7 +12,7 @@ ARGV.options do |opt|
   opt.parse!
 end
 
-require File.expand_path(File.dirname(__FILE__) + '/../config/environment')
+require File.expand_path('../../config/environment', __FILE__)
 require "fastladder/crawler"
 
 if options[:daemon]
