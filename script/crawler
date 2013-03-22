@@ -17,16 +17,10 @@ require "fastladder/crawler"
 
 if options[:daemon]
   options[:log_file] ||= Rails.root.join('log', 'crawler.log')
-  exit!(0) if fork
-  Process::setsid
   pidfile = options[:pid_file] || Rails.root.join('tmp', 'pids', 'crawler.pid')
-  exit!(0) if fork
+  Process.daemon
   open(pidfile, 'w') { |f| f << Process.pid }
-  Dir::chdir('/')
-  File::umask(0)
-  STDIN.reopen('/dev/null')
-  STDOUT.reopen('/dev/null', 'w')
-  STDERR.reopen('/dev/null', 'w')
+  File.umask(0)
 end
 
 Fastladder::Crawler.start(options)
