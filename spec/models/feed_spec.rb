@@ -40,9 +40,9 @@ describe Feed do
     end
   end
 
-  describe "has fragment identify" do
+  describe "except fragment identifier" do
     subject { FactoryGirl.create(:feed, feedlink: "http://example.com/rss#_=_") }
-    its(:feedlink) { should == "http://example.com/rss#_=_" }
+    its(:feedlink) { should == "http://example.com/rss" }
   end
 
   describe "fetch favicon" do
