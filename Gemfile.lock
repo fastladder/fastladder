@@ -13,15 +13,7 @@ GIT
       i18n
 
 GIT
-  remote: git://github.com/sikachu/verification.git
-  revision: 5bb2ffc2c057a7c6a5a403ebb3f4a6369eac75ed
-  specs:
-    verification (1.0.3)
-      actionpack (>= 3.0.0, < 5.0)
-      activesupport (>= 3.0.0, < 5.0)
-
-GIT
-  remote: https://github.com/pauldix/feedzirra
+  remote: git://github.com/pauldix/feedzirra.git
   revision: 80cd35766e40ee3058db1c5c0c25448baeea4212
   specs:
     feedzirra (0.2.0.rc2)
@@ -29,6 +21,14 @@ GIT
       loofah (~> 1.2.1)
       nokogiri (~> 1.5.3)
       sax-machine (~> 0.2.0.rc1)
+
+GIT
+  remote: git://github.com/sikachu/verification.git
+  revision: 5bb2ffc2c057a7c6a5a403ebb3f4a6369eac75ed
+  specs:
+    verification (1.0.3)
+      actionpack (>= 3.0.0, < 5.0)
+      activesupport (>= 3.0.0, < 5.0)
 
 GEM
   remote: https://rubygems.org/
