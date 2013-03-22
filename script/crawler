@@ -19,6 +19,7 @@ if options[:daemon]
   options[:log_file] ||= Rails.root.join('log', 'crawler.log')
   pidfile = options[:pid_file] || Rails.root.join('tmp', 'pids', 'crawler.pid')
   Process.daemon
+  FileUtils.mkdir_p pidfile.dirname
   open(pidfile, 'w') { |f| f << Process.pid }
   File.umask(0)
 end
