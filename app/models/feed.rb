@@ -29,6 +29,8 @@ class Feed < ActiveRecord::Base
   #has_many :members, :through => :subscriptions
   #has_many :folders, :through => :subscriptions
 
+  before_save :except_fragment_identifier
+
   scope :has_subscriptions, ->{ where("subscribers_count > 0") }
   scope :crawlable, ->{
     includes(:crawl_status).has_subscriptions.merge(CrawlStatus.status_ok).merge(CrawlStatus.expired(Settings.crawl_interval.minutes))
@@ -155,7 +157,7 @@ class Feed < ActiveRecord::Base
     subscriptions.where("rate > ?", 0).average(:rate).to_i
   end
 
-  def save(*args)
+  def except_fragment_identifier
     self.feedlink = begin
       parsed_feedlink = Addressable::URI.parse(feedlink)
       parsed_feedlink.fragment = nil
@@ -163,6 +165,5 @@ class Feed < ActiveRecord::Base
     rescue
       feedlink
     end
-    super
   end
 end
