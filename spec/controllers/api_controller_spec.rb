@@ -4,6 +4,7 @@ describe ApiController do
   before do
     @member = FactoryGirl.create(:member, password: 'mala', password_confirmation: 'mala')
     @feed = FactoryGirl.create(:feed)
+    @item = FactoryGirl.create(:item, feed: @feed)
     @subscription = FactoryGirl.create(:subscription, feed: @feed, member: @member)
     @crawl_status = FactoryGirl.create(:crawl_status, feed: @feed)
   end
@@ -32,11 +33,21 @@ describe ApiController do
       post :touch_all, { subscribe_id: @subscription.id }, { member_id: @member.id }
       expect(response.body).to be_json
     end
+    
+    it 'reders error' do
+      post :touch_all, {}, { member_id: @member.id }
+      expect(response.body).to be_json_error
+    end
   end
 
   describe 'POST /touch' do
     it 'renders json' do
       post :touch, { timestamp: Time.now.to_i, subscribe_id: @subscription.id }, { member_id: @member.id }
+      expect(response.body).to be_json
+    end
+    
+    it 'renders error' do
+      post :touch, {}, { member_id: @member.id }
       expect(response.body).to be_json
     end
   end
@@ -70,6 +81,38 @@ describe ApiController do
     it 'renders json' do
       get :lite_subs, {}, { member_id: @member.id }
       expect(response.body).to be_json
+    end
+  end
+  
+  describe 'GET /item_count' do
+    it 'renders json' do
+      get :item_count, { since: @item.stored_on }, { member_id: @member.id }
+      expect(response.body.to_i).to eq(1)
+    end
+    
+    it 'renders error' do
+      get :item_count, {}, { member_id: @member.id }
+      expect(response.body).to be_json_error
+    end
+  end
+  
+  describe 'GET /unread_count' do
+    it 'renders json' do
+      get :unread_count, { since: @item.stored_on }, { member_id: @member.id }
+      expect(response.body.to_i).to eq(0)
+    end
+    
+    it 'renders error' do 
+      get :unread_count, {}, { member_id: @member.id }
+      expect(response.body).to be_json_error
+    end
+  end
+  
+  
+  context 'not logged in' do
+    it 'renders blank' do
+      get :subs, {}, {}
+      expect(response.body).to be_blank
     end
   end
 end
