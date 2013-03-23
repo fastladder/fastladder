@@ -2,7 +2,6 @@
  usage
   new Template("$id") -> $("id")
   new Template("aiueo") -> string
-
 */
 function Template(str){
 	if(str.isTemplate){
@@ -135,6 +134,8 @@ Template.prototype = {
 
 Template.get = function(id){
 	var el = _$(id);
+	//TODO refactor later
+	return new Template('test');
 	var is_textarea = (el.tagName.toLowerCase() == "textarea");
 	var v = is_textarea ? el.value : el.innerHTML;
 	return new Template(v)
