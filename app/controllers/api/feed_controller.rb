@@ -1,13 +1,11 @@
 class Api::FeedController < ApplicationController
-  before_filter :login_required
-  #verify_nothing :session => :member
-  #verify_nothing :method => :post, :except => [:discover, :subscribed]
-  #verify_json :params => :url, :only => :discover
-  #verify_json :params => :feedlink, :only => :subscribe
-  #verify_json :params => :subscribe_id, :only => [:unsubscribe, :update, :move]
-  #verify_json :params => [:subscribe_id, :rate], :only => :set_rate
-  #verify_json :params => [:subscribe_id, :ignore], :only => :set_notify
-  #verify_json :params => [:subscribe_id, :public], :only => :set_public
+  before_filter   :login_required_api
+  params_required :url         , only: :discover
+  params_required :subscribe_id, only: :subscribe
+  params_required :subscribe_id, only: [:unsubscribe, :update, :move]
+  params_required [ :subscribe_id, :rate   ], only: :set_rate
+  params_required [ :subscribe_id, :ignore ], only: :set_notify
+  params_required [ :subscribe_id, :public ], only: :set_public
   skip_before_filter :verify_authenticity_token
 
   def discover
@@ -72,9 +70,7 @@ class Api::FeedController < ApplicationController
   end
 
   def unsubscribe
-    unless sub = self.get_subscription
-      return render_json_status(false)
-    end
+    sub = self.get_subscription
     sub.destroy
     render_json_status(true)
   end
@@ -107,9 +103,7 @@ class Api::FeedController < ApplicationController
   end
 
   def update
-    unless sub = self.get_subscription
-      return render_json_status(false)
-    end
+    sub = self.get_subscription
     updated = false
     if params[:rate] =~ /^[0-5]$/
       sub.rate = params[:rate].to_i
@@ -154,9 +148,7 @@ class Api::FeedController < ApplicationController
   end
 
   def set_rate
-    unless sub = get_subscription
-      return render_json_status(false)
-    end
+    sub = get_subscription
     if (rate = params[:rate]) =~ /^[0-5]$/
       sub.update_attribute(:rate, rate.to_i)
     end
@@ -164,7 +156,8 @@ class Api::FeedController < ApplicationController
   end
 
   def set_notify
-    if (sub_id = params[:subscribe_id]).blank? or (ignore = params[:ignore]) !~ /^[01]$/
+    sub_id = params[:subscribe_id]
+    if (ignore = params[:ignore]) !~ /^[01]$/
       return render_json_status(false)
     end
     ignore = ignore.to_i != 0
@@ -177,7 +170,8 @@ class Api::FeedController < ApplicationController
   end
 
   def set_public
-    if (sub_id = params[:subscribe_id]).blank? or (is_public = params[:public]) !~ /^[01]$/
+    sub_id = params[:subscribe_id]
+    if (is_public = params[:public]) !~ /^[01]$/
       return render_json_status(false)
     end
     is_public = is_public.to_i != 0

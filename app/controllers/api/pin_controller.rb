@@ -1,8 +1,7 @@
 class Api::PinController < ApplicationController
-  before_filter :login_required
-  #verify_nothing :method => :post
-  #verify_json :params => [:link, :title], :only => :add
-  #verify_json :params => :link, :only => :remove
+  before_filter :login_required_api
+  params_required [:link, :title], only: :add
+  params_required :link, only: :remove
   skip_before_filter :verify_authenticity_token
 
   def all

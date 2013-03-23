@@ -1,8 +1,6 @@
 require "yaml"
 class Api::ConfigController < ApplicationController
-  #verify_nothing :session => :member
-  #verify_nothing :method => :post, :only => :put
-  before_filter :login_required
+  before_filter :login_required_api
   skip_before_filter :verify_authenticity_token
 
   def getter
