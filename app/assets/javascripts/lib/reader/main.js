@@ -2,26 +2,23 @@ window.onload   = init;
 window.onresize = function(){LDR.invoke_hook('WINDOW_RESIZE')};
 
 var app = LDR.Application.getInstance();
-// var State = new LDR.StateClass;
 
-// API
-LDR.API.StickyQuery = { ApiKey: ApiKey };
-function getApiKey(){
-    var ck = new Cookie().parse();
-    for(var key in ck){
-        if(/_sid/.test(key)){
-            return ck[key]
-        }
-    }
-};
+// API Key
+(function(){
+	LDR.API.StickyQuery = { ApiKey: ApiKey };
+	function getApiKey(){
+	    var ck = new Cookie().parse();
+	    for(var key in ck){
+	        if(/_sid/.test(key)){
+	            return ck[key]
+	        }
+	    }
+	};
+	if(/^\[/.test(ApiKey)){
+	    LDR.API.StickyQuery = { ApiKey: getApiKey() };
+	}
+}).call(LDR);
 
-
-if(/^\[/.test(ApiKey)){
-    LDR.API.StickyQuery = { ApiKey: getApiKey() };
-}
-
-//TODO move to local var
-var FlatMenu = LDR.FlatMenu;
 
 /*
  browser
@@ -31,18 +28,10 @@ var browser = new BrowserDetect;
 
 /*
  Global
-*/
-var folder = null;
-var feedlink2id = {};
-// 記事を読み込む順番
-var Ordered = {};
 
-var TT = {
-	config : {
-		base_url  : 'http://' + location.host,
-		image_base: 'http://' + location.host
-	}
-}
+*/
+// 記事を読み込む順番
+
 function typecast_config(obj){
 	each(obj, function(value,key){
 		if(!LDR.TypeofConfig[key]) return;
@@ -66,107 +55,6 @@ function typecast_config(obj){
 	return obj;
 }
 
-// formをAjax化する
-function ajaxize(element, callback){
-	element = _$(element);
-	var method = element.method;
-	var action = element.getAttribute("action");
-	// ひとつの場合は完了時処理
-	if(isFunction(callback)){
-		var before = True;
-		var after  = callback
-	} else {
-		var before = callback.before || True;
-		var after  = callback.after  || Function.empty;
-	}
-	var onsubmit = function(e){
-		if(e) Event.stop(e);
-		var request = Form.toJson(element);
-		if(before(request)){
-			var api = new LDR.API(action);
-			api.onload = function(response){
-				after(response,request);
-			}
-			api.post(request);
-		}
-	};
-	addEvent(element, "submit", onsubmit);
-	element.submit = onsubmit;
-}
-
-function show_all_mouseover(){
-	app.state.help_show = true;
-	app.state.help_snap = this;
-	var tmpl = I18n.t('show_all_help_message_tmpl');
-	app.state.help_message = tmpl.fill({state: app.config.show_all ? 'disabled' : 'enabled' });
-	update("help_window");
-}
-function show_all_mouseout(){
-	app.state.help_show = false;
-	update("help_window");
-}
-
-/*
- Ajax and Ahah
-*/
-function ajax(url, onload){
-	x= new _XMLHttpRequest;
-	x.onload = function(){
-		var res = ajax.filter(x.responseText)
-		onload(res)
-	}
-	x.open("GET",url,true);
-	x.send("");
-}
-ajax.filter = new Pipe;
-if(browser.isKHTML){
-	ajax.filter.add(function(t){
-		var esc = escape(t);
-		return(esc.indexOf("%u") < 0 && esc.indexOf("%") > -1) ? decodeURIComponent(esc) : t
-	})
-}
-function ahah(url,el,onload){
-	var uniq = new Date - 0;
-	onload = onload || Function.empty;
-	ajax(url+"?"+uniq,function(txt){
-		el = _$(el);
-		txt = ahah.filter(txt);
-		el.innerHTML = txt;
-		ahah.global_callback(el);
-		onload(txt);
-	})
-}
-ahah.filter = new Pipe;
-ahah.filter.add(function(txt){
-	return txt.replace(/\[%(.*?)%\]/g, function($0,$1){
-		try{
-			eval("var str = TT."+$1);
-			return str
-		}catch(e){return ""}
-	})
-});
-ahah.global_callback = new Pipe;
-ahah.global_callback.add(function(el){
-	fix_linktarget(el);
-	return el;
-})
-
-function Pipe(label){
-	var q = [];
-	Pipe["_" + label] = q;
-	var f = function(arg){
-		var result = arg;
-		foreach(q,function(v,i){
-			result = v(result)
-		})
-		return result;
-	};
-	f.add = function(task){q.push(task)}
-	return f;
-}
-Pipe.get = function(label){
-	return Pipe["_" + label];
-};
 
 var TabManager = {};
 
@@ -197,107 +85,23 @@ function TabClick(e){
 	update(base);
 }
 
-ClickEvent = new Trigger("click");
-function setup_event(){
-	// Subscribe_idに対応するイベント
-	ClickEvent.add('[subscribe_id]', function(){
-		var action = get_action(this);
-		var sid = this.getAttribute("subscribe_id");
-		switch(action){
-			case "load" : get_unread(sid);break;
-			case "set_rate" : var rate = this.getAttribute("rate");set_rate(sid,rate);break;
-		}
-	});
-	ClickEvent.add('[rel^="Control:"]', function(){
-		var rel = this.getAttribute("rel");
-		var action = rel.replace("Control:","");
-		eval("Control."+action);
-	});
-	ClickEvent.add('[rel="subscribe"]', function(e){
-		Event.stop(e);
-		var el = this;
-		var feedlink = this.href;
-		feed_subscribe(feedlink,function(res){
-			el.setAttribute("rel","unsubscribe");
-			el.className = "unsub_button";
-			if(el.innerHTML == I18n.t('Add')){
-				el.innerHTML = I18n.t('Unsubscribe');
-			}
-			feedlink2id[feedlink] = res.subscribe_id;
-		});
-	});
-	ClickEvent.add('[rel="unsubscribe"]', function(e){
-		Event.stop(e);
-		var el = this;
-		var feedlink = this.href;
-		var sid = feedlink2id[feedlink];
-		feed_unsubscribe(sid,function(res){
-			el.setAttribute("rel","subscribe");
-			el.className = "sub_button";
-			if(el.innerHTML == I18n.t('Unsubscribe')){
-				el.innerHTML = I18n.t('Add');
-			}
-		});
-	});
-	ClickEvent.add('[rel="discover"]', function(e){
-		Event.stop(e);
-		var el = this;
-		var url = this.href;
-		var fm = _$("discover_form");
-		fm.url.value = url;
-		fm.submit();
-		Control.show_subscribe_form();
-	});
-
-	ClickEvent.add('a[href~="/subscribe/"]', function(e){
-		if(browser.isKHTML) return;
-		var subscribe_base = "http://" + location.host + "/subscribe/";
-		var url = this.href;
-		if(url != subscribe_base && url.indexOf(subscribe_base) == 0){
-			Event.stop(e);
-			var el = this;
-			url = url.replace(subscribe_base,"");
-			var fm = _$("discover_form");
-			fm.url.value = url;
-			fm.submit();
-			Control.show_subscribe_form();
-			return false;
-		}
-	});
-
-	ClickEvent.add('[rel^="tab:"]', TabClick);
-	ClickEvent.add(True, FlatMenu.hide);
-	ClickEvent.add(True, function(){ app.state.LastUserAction = new Date });
-	ClickEvent.add('[rel^="sort:"]', function(e){
-		var el = this;
-		var rel = el.getAttribute("rel");
-		var sort_mode  = rel.slice(5);
-		MI.sort(sort_mode);
-	});
-	ClickEvent.apply();
-}
-
-
 var Keybind;
 function IME_off(msg){
-	if(!browser.isFirefox || !browser.isWin) return;
-	var s = $N("span");
-	s.innerHTML = '<input type="password" id="ime_off" style="visibility:hidden">';
-	document.body.appendChild(s);
-	setTimeout(function(){
-		var el = _$("ime_off");
-		if(el){
-			el.focus();
-			document.body.removeChild(s);
-			Keybind.lastInvoke = null;
-			if(msg)
-				message("IMEをオフにしました");
-		}
-	}._try(),10);
+    if(!browser.isFirefox || !browser.isWin) return;
+    var s = $N("span");
+    s.innerHTML = '<input type="password" id="ime_off" style="visibility:hidden">';
+    document.body.appendChild(s);
+    setTimeout(function(){
+        var el = _$("ime_off");
+        if(el){
+            el.focus();
+            document.body.removeChild(s);
+            Keybind.lastInvoke = null;
+            if(msg)
+                message("IMEをオフにしました");
+        }
+    }._try(),10);
 }
-
-
-
 
 function getStyle(element, style){
 	element = _$(element);
@@ -333,353 +137,7 @@ function message(str){
 	_$("message").innerHTML = I18n.t(str) || str;
 }
 
-/* 購読停止 */
-function unsubscribe(sid,callback){
-	var api = new LDR.API("/api/feed/unsubscribe");
-	callback = callback || Function.empty;
-	var info = subs_item(sid);
-	var tmpl = I18n.t('unsubscribe_confirm');  // 'Are you sure to remove [[title]] from your subscription?'
-	var tmpl2 = I18n.t('ubsubscribe_confirm2'); // 'Are you sure to unsubscribe this feed?'
-	confirm( info ? tmpl.fill(info) : tmpl2) && api.post(
-		{subscribe_id:sid},function(res){
-			message(I18n.t('feed deleted'));
-			callback(res);
-		}
-	);
-}
-
-function touch(id, state){
-	if(app.config.touch_when == state){
-		touch_all(id)
-	}
-}
-
-/* 既読化 */
-function touch_all(id){
-	if(!id) return;
-	var api = new LDR.API("/api/touch_all");
-	var el = _$("subs_item_"+id);
-	var info = subs_item(id);
-	if(el && info){
-		el.innerHTML = info.title;
-		switchClass(el, "rs-read");
-	}
-	if(info.unread_count == 0){
-		return false;
-	} else {
-		var unread = info.unread_count;
-		subs.model.unread_count_cache -= unread;
-		subs.model.unread_feeds_count_cache -= 1;
-		info.unread_count = 0;
-		api.post({subscribe_id : id}, function(){
-			message("Marked as read");
-			update("total_unread_count");
-		});
-	}
-}
-
-/* レートの設定インターフェース */
-function set_rate(id,rate){
-	var ap = "/api/feed/set_rate";
-	var rate_api = new LDR.API(ap);
-	rate_api.onload = function(res){
-		subs_item(id).rate = rate;
-		message("set_rate_complete");
-	}
-	rate_api.onerror = function(){};
-	rate_api.post({
-		subscribe_id : id,
-		rate : rate
-	});
-}
-function create_folder(name){
-	if(!name){
-		name = prompt(I18n.t('Folder Name'),"");
-		if(!name) return;
-	}
-	var api = new LDR.API("/api/folder/create");
-	api.post({name:name},function(res){
-		message('create_folder_complete');
-		// clear cache
-		folder = null;
-		Control.move_to(name)
-	});
-	return name;
-}
-
-
-function default_error(){}
-
-
-
-
-function toggle_pin(item_id){
-	var pin_button = _$("pin_" + item_id);
-	var item = _$("item_" + item_id);
-	var a = item.getElementsByTagName("a");
-	if(!a.length) return;
-	var title = a[0].innerHTML;
-	var url   = a[0].href;
-	if(pin.has(url)){
-		pin.remove(url);
-		pin_button && removeClass(pin_button, "pin_active");
-		removeClass(item, "pinned");
-	} else {
-		// feed info
-		var info = subs_item(app.state.now_reading);
-		pin.add(url,title,info);
-		pin_button && addClass(pin_button, "pin_active");
-		addClass(item, "pinned");
-	}
-}
-
-function close_item(item_id){
-	DOM.remove(_$("item_" + item_id));
-}
-
-/* Config */
-/*
- Pins
-*/
-var Pin = Class.create();
-Pin.extend({
-	initialize: function(){
-		this.pins = [];
-		this.hash = {};
-	},
-	has: function(url){
-		return this.hash[url] ? true : false;
-	},
-	add: function(url,title,info){
-		if(this.has(url)) return;
-		this.hash[url] = true;
-		var data = {
-			title : title,
-			url   : url
-		};
-		if(info){
-			data.icon = info.icon
-		}
-		this.pins.unshift(data);
-		if(this.pins.length > 100){
-			var p = this.pins.pop();
-			this.has[p.url] = false;
-		}
-		this.update_view();
-	},
-	remove: function(url){
-		if(!this.has(url)) return;
-		this.hash[url] = false;
-		this.pins = this.pins.select(function(v){
-			return v.url != url
-		})
-		this.update_view();
-	},
-	shift: function(){
-		var p = this.pins.shift();
-		if(p){
-			this.hash[p.url] = false;
-			return p;
-		}
-	},
-	update_view: function(){
-		_$("pin_button").style.width = "29px";
-		_$("pin_count").innerHTML = this.pins.length;
-	},
-	write_list: function(){
-		if(!this.pins.length) return;
-		var buf = this.pins.map(function(p){
-			return '<li><a href="[[url]]">[[title]]</a></li>'.fill(p)
-		}).join("");
-		var w = window.open();
-		w.document.write([
-			"<style>",
-			"*{font-size:12px;line-height:150%}",
-			"</style><ul>",
-			buf,"</ul>"
-		].join(""));
-		w.document.close();
-	},
-	open: function(url){
-		var can_popup = (window.open(url.unescapeHTML())) ? true : false;
-		if(can_popup){
-			this.remove(url)
-		} else {
-			message('cannot_popup')
-		}
-	},
-	open_group: function(){
-		if(!this.pins.length) return;
-		var queue = new LDR.Queue();
-		var can_popup = false;
-		var self = this;
-		var count = 0;
-		var max_pin = app.config.max_pin;
-		if(!isNumber(max_pin)) max_pin = LDR.DefaultConfig.max_pin;
-		foreach(this.pins, function(p){
-			if(max_pin > count){
-				queue.push(function(){
-					can_popup = (window.open(p.url.unescapeHTML())) ? true : false;
-				});
-			}
-			count++;
-		});
-		queue.interval = 100;
-		queue.push(function(){
-			if(can_popup){
-				(max_pin).times(function(){
-					var p = self.shift();
-					p && new LDR.API("/api/pin/remove").post({
-						link:p.url.unescapeHTML()
-					});
-				})
-				self.update_view();
-			} else {
-				message('cannot_popup')
-			}
-		})
-		queue.exec();
-	},
-	clear: function(){
-		this.pins = [];
-		this.hash = {};
-		this.update_view();
-	}
-});
-var Pinsaver = Class.create();
-Pinsaver.extend({
-	add: function(url,title){
-		if(!app.config.use_pinsaver) return;
-		var api = new LDR.API("/api/pin/add");
-		api.post({
-			link : url.unescapeHTML(),
-			title: title.unescapeHTML()
-		})
-	},
-	remove: function(url){
-		if(!app.config.use_pinsaver) return;
-		var api = new LDR.API("/api/pin/remove");
-		api.post({
-			link:url.unescapeHTML()
-		});
-	},
-	clear: function(){
-		var api = new LDR.API("/api/pin/clear");
-		api.post({});
-	}
-})
-Pin = Class.merge(Pin, Pinsaver);
-var pin = new Pin;
-
-
-// スクロール位置から現在フォーカスが当たっているアイテムを取得
-function get_active_item(detail){
-	// return 1;
-	var sc = _$("right_container").scrollTop;
-	var divs = _$("right_body").getElementsByTagName("h2");
-	// for Opera9 beta
-	var top_offset = _$("right_body").offsetTop;
-
-	var len = divs.length;
-	if(!len) return;
-	var offsets = [];
-	for(var i=0;i<len;i++){
-		offsets.push(divs[i].offsetTop - top_offset);
-	}
-	/*
-	var diffs, min, offset;
-	if(len == 1){
-		offset = 0
-	} else {
-		diffs  = offsets.map(function(v){return Math.abs(sc - v)});
-		min    = Math.min.apply(null, diffs);
-		offset = diffs.indexOf(min);
-	}
-	*/
-
-	var screen = [sc, sc + _$("right_container").offsetHeight];
-	var pairs = offsets.map(function(v,i,self){
-		if(self[i+1]){
-			return [v, self[i+1]];
-		} else {
-			return [v, _$("right_body").offsetHeight]
-		}
-	});
-	var full_contain = [];
-	var intersections = pairs.map(function(pair,i){
-		if(pair[1] < screen[0]) return 0;
-		if(pair[0] > screen[1]) return 0;
-		var top = Math.max(screen[0], pair[0]);
-		var bottom = Math.min(screen[1], pair[1]);
-		if(top == pair[0] && bottom == pair[1]){
-			full_contain.push(i)
-		}
-		return bottom - top;
-	});
-	if(len == 1){
-		offset = 0;
-	} else {
-		if(full_contain.length > 0){
-			offset = full_contain.shift();
-		} else {
-			var max_intersection = Math.max.apply(null, intersections);
-			offset = max_intersection == 0 ? len - 1 : intersections.indexOf(max_intersection);
-		}
-	}
-
-	if(detail){
-		var element = divs[offset];
-		var link    = element.getElementsByTagName("a")[0];
-		var item_id = element.id.replace("head_", "");
-		if(!link) return false;
-		var info = {
-			offset : offset+1,
-			item_id : item_id,
-			element : element
-		};
-		Object.extend(info, get_item_info(item_id));
-		return info;
-	} else {
-		return offset;
-	}
-}
-
-// 現在読んでいるフィードを取得
-function get_active_feed(){
-	if(app.state.last_feed){
-		return app.state.last_feed;
-	} else {
-		return false;
-	}
-}
-
 app.state.last_items = {};
-// id指定で記事の情報を取得
-function get_item_info(id){
-	return app.state.last_items["_"+id];
-}
-
-/*
-function format_keybind(){
-	var help = [];
-	var kbd = function(str){
-		var list = str.split("|");
-		return list.map(function(v){
-			if(/\w/.test(v) && v == v.toUpperCase()){
-				v = "shift+" + v.toLowerCase();
-			}
-			v = v.replace("+down","+↓");
-			v = v.replace("+up","+↑");
-			return v.aroundTag("kbd");
-		}).join(" or ");
-	};
-	each(KeyHelp, function(value,key){
-		var kb = LDR.KeyConfig[key];
-		help.push("<tr><th>" + value + "</th><td>" + kbd(kb) + "</td></tr>");
-	});
-	return "<table>" + help.join("") + "</table>";
-}
-*/
 
 function format_keybind(){
 	var help = [];
@@ -729,7 +187,6 @@ function format_keybind(){
 }
 
 
-
 function check_wait(){
 	if(app.config.use_wait != 1) return false;
 	var st = check_wait.state;
@@ -748,696 +205,12 @@ function check_wait(){
 		}
 	}
 }
+
 check_wait.state = {};
-
-/*
- ボタンから呼び出される操作など
-*/
-var Control = {
-	pin: function(){
-		var item = get_active_item(true);
-		if(!item) return;
-		toggle_pin(item.item_id);
-	},
-	open_pin: function(){
-		pin.open_group()
-	},
-	clear_pin: function(){
-		pin.clear();
-	},
-	read_pin: function(url){
-		pin.open(url);
-	},
-	toggle_menu: function(event){
-		if(app.state.show_menu){
-			Control.hide_menu.call(this,event);
-		} else {
-			Control.show_menu.call(this,event);
-		}
-	},
-	hide_menu: function(){
-		app.state.show_menu = false;
-	},
-	show_menu: function(){
-		app.state.show_menu = true;
-		Event.cancelNext("click");
-		var menu = FlatMenu.create_on(this);
-		// menu.setStyle({ width : "300px" });
-		menu.onhide = function(){ app.state.show_menu = false };
-		menu.show();
-		var sep = '<div style="height:0px;border-top:1px dotted #ccc;font-size:0px;"></div>';
-		var menus = LDR.VARS.MenuItems;
-		var tmpl = Template.get("menu_item").compile();
-		var write_menu = function(){
-			menu.clear();
-			foreach(menus,function(v,i){
-				v == '-----'
-					? menu.add(sep)
-					: menu.add(tmpl(v));
-			});
-			menu.update();
-		};
-		write_menu();
-		return menu;
-	},
-	pin_click: function(e){
-		if(e.shiftKey){
-			pin.write_list();
-			return
-		}
-		pin.open_group();
-		return
-	},
-	pin_mouseout: function(){
-		app.state.pin_timer = function(){
-			FlatMenu.hide();
-		}.later(1000)();
-	},
-	pin_list: function(){
-		pin.write_list();
-	},
-	pin_hover: function(e){
-		function stophide(){
-			if(app.state.pin_timer){ app.state.pin_timer.cancel() }
-		}
-		stophide();
-		if(!pin.pins.length){
-			return;
-		}
-		var menu = FlatMenu.create_on(this);
-		menu.setStyle({
-			width : "300px"
-		});
-		menu.setEvent({
-			mouseover: stophide,
-			mouseout : Control.pin_mouseout
-		});
-		menu.show();
-		var tmpl = Template.get("pin_item").compile();
-		var write_menu = function(){
-			menu.clear();
-			// 開く件数
-			var open_num = app.config.max_pin;
-			// containerの高さにあわせて調整
-			var ch = _$("right_container").offsetHeight;
-			var view_num = Math.floor((ch-92) / 24);
-			menu.add([
-				'<span class="button flat_menu pin_list"',
-				' rel="Control:pin_list();FlatMenu.hide()">',
-				I18n.t('List view'), ' (', pin.pins.length, I18n.t(' items'), ')</span>'
-			].join(""));
-			foreach(pin.pins,function(v,i){
-				if(i > view_num){
-					return;
-				}
-				var item = tmpl({
-					title : v.title,
-					link  : v.url,
-					target : (i < open_num) ? "pin-target" : "",
-					icon  : v.icon || 'http://image.reader.livedoor.com/img/icon/default.gif'
-				});
-				menu.add(item);
-			});
-			menu.add([
-				'<span class="button flat_menu dust_box"',
-				' rel="Control:clear_pin();FlatMenu.hide()">',
-				I18n.t('Clear'), '</span>'
-			].join(""));
-			menu.update();
-		};
-		write_menu();
-		return menu;
-	},
-	reverse: function(){
-		app.config.set("reverse_mode", !app.config.reverse_mode);
-		message(
-			(app.config.reverse_mode)
-			 ? 'Show older items first'
-			 : 'Show newer items first'
-		);
-		rewrite_feed();
-	},
-	compact: function(){
-		var o = get_active_item();
-		toggleClass("right_body", "compact");
-		if(contain(_$("right_body").className, "compact")){
-			message("expanded items / press c to collapse")
-		} else {
-			message("collapsed items / press c to expand")
-		}
-		Control.scroll_to_offset(o);
-	},
-	close_and_next_item: function(id,e){
-		if(e) Event.stop(e);
-		addClass("item_"+id, "item_read");
-		var h = _$("item_"+id).offsetHeight;
-		Control.add_scroll_padding();
-		_$("right_container").scrollTop += h + 2;
-	},
-	view_original: function(){
-		var item = get_active_item(true);
-		if(!item) return;
-		window.open(item.link.unescapeHTML()) || message('cannot_popup');
-	},
-	create_folder: function(){
-		var name = create_folder();
-	},
-	move_to: function(folder){
-		subs_item(app.state.now_reading).folder = folder;
-		update("folder_label");
-		move_to(app.state.now_reading,folder,[
-			message.bindArgs(
-				(folder ? 'Moved to ' + folder : 'Moved to Uncategolized')
-			),
-			FlatMenu.hide
-		].asCallback());
-	},
-	toggle_keyhelp: function(){
-		(!app.state.keyhelp_visible) ?
-			 Control.show_keyhelp.call(_$("keyhelp_button")) :
-			 Control.hide_keyhelp()
-
-	},
-	show_keyhelp: function(){
-		Element.show("keyhelp");
-		update("keybind_table");
-		app.state.keyhelp_visible = true;
-	},
-	hide_keyhelp: function(){
-		Element.hide("keyhelp");
-		app.state.keyhelp_visible = false;
-	},
-	toggle_more_keyhelp: function(){
-		var el = this;
-		if(!app.state.keyhelp_more){
-			Control.show_more_keyhelp();
-		} else {
-			Control.hide_more_keyhelp();
-		}
-	},
-	show_more_keyhelp: function(){
-		app.state.keyhelp_more = true;
-		Control.show_keyhelp();
-	},
-	hide_more_keyhelp: function(){
-		app.state.keyhelp_more = false;
-		Control.show_keyhelp();
-	},
-	open_keyhelp: function(){
-		var old_state = app.state.keyhelp_more;
-		app.state.keyhelp_more = true;
-		var w = window.open("","keyhelp","width=580,height=400");
-		w.document.write([
-			"<style>",
-			"*{font-size:12px;font-weight:normal;line-height:150%}",
-			"tr,td{vertical-align:top}",
-			"kbd{border:1px solid #888;padding:2px}",
-			"div{display:none}",
-			"</style>",
-			format_keybind(),
-			'<p class="notice">',
-			'※ショートカットキーが使えない場合は日本語入力を無効にしてみてください。<br>',
-			'※ブラウザや環境によってはいくつかのショートカットキーが使えない場合があります。',
-			'</p>'
-		].join(""));
-		w.document.close();
-		app.state.keyhelp_more = old_state;
-	},
-	focus_findbox : function(){
-		_$("finder").focus();
-	},
-	blur_findbox : function(){
-		var f = _$("finder");
-		f.value = "";
-		f.blur();
-	},
-	show_subscribe_form: function(){
-		Element.show("subscribe_window");
-		centering("subscribe_window",0,40);
-		show_overlay();
-		setTimeout(function(){
-			try{
-				TabClick.call(_$("tab_add_feed"));
-				_$("discover_url").focus();
-				_$("discover_url").select();
-			} catch(e){
-			}
-		},10);
-	},
-	hide_subscribe_form: function(){
-		Element.hide("subscribe_window");
-		DOM.remove("overlay");
-	},
-	unsubscribe: function(){
-		if(app.state.now_reading){
-			unsubscribe(app.state.now_reading);
-		}
-	},
-	show_folder: function(){
-		Event.cancelNext("click");
-		var menu = FlatMenu.create_on(this, "right_container");
-		menu.show();
-		var write_menu = function(){
-			menu.clear();
-			var tmpl = Template.get("folder_item").compile();
-			menu.add([
-				'<span class="button create_folder"',
-				' rel="Control:create_folder();FlatMenu.hide()">',
-				I18n.t('Create New Folder'), '</span>'
-			].join(""));
-			menu.add(tmpl({
-				folder_name : I18n.t('Uncategolized'),
-				move_to : ""
-			}));
-			foreach(folder.names,function(v){
-				var checked = subs_item(app.state.now_reading).folder == v ? "checked" : "";
-				var item = tmpl({folder_name : (""+v).ry(8,"..."),  move_to : v, checked : checked});
-				menu.add(item);
-			});
-			menu.add([
-				'<span class="button dust_box"',
-				' rel="Control:unsubscribe();FlatMenu.hide()">',
-				I18n.t('Unsubscribe'), '</span>'
-			].join(""));
-			menu.update();
-		};
-		if(folder){
-			write_menu();
-		} else {
-			menu.add(I18n.t('Loading'));
-			get_folders(write_menu);
-		}
-		return menu;
-	},
-	show_viewmode: function(){
-		Event.cancelNext("click");
-		var menu = FlatMenu.create_on(this);
-		var tmpl = Template.get("viewmode_item").compile();
-		var modes  = LDR.VARS.ViewModes;
-		foreach(modes,function(v,i){
-			var item = tmpl({
-				label : I18n.t(v),
-				mode  : v,
-				checked : app.config.view_mode == v ? "checked" : ""
-			});
-			menu.add(item);
-		});
-		menu.show();
-		return menu;
-	},
-	show_sortmode: function(){
-		Event.cancelNext("click");
-		var menu = FlatMenu.create_on(this);
-		var tmpl = Template.get("sortmode_item").compile();
-		var modes  = [
-			"modified_on",
-			"modified_on:reverse",
-			"unread_count",
-			"unread_count:reverse",
-			"title:reverse",
-			"rate",
-			"subscribers_count",
-			"subscribers_count:reverse"
-		];
-		foreach(modes,function(v,i){
-			var item = tmpl({
-				label : I18n.t(v),
-				mode  : v,
-				checked : app.config.sort_mode == v ? "checked" : ""
-			});
-			menu.add(item);
-		});
-		menu.show();
-		return menu;
-	},
-	get_foldernames: function(){
-		return subs.list.folder_names;
-	},
-	feed_next: function(){
-		Control.feed_page(1)
-	},
-	feed_prev: function(){
-		Control.feed_page(-1)
-	},
-	feed_page: function(num){
-		// 過去記事取得
-		var sid = app.state.now_reading;
-		if(!sid) return;
-		var limit;
-		var c = app.config.items_per_page;
-		if(!c){
-			limit = 20;
-		} else if(c > 200) {
-			limit = 200;
-		} else {
-			limit = c;
-		}
-		if(num == 1){
-			if(!app.state.has_next) return;
-			app.state.viewrange.start = app.state.viewrange.end;
-		} else if(num == -1){
-			if(app.state.viewrange.start == 0) return;
-			app.state.viewrange.end = app.state.viewrange.start;
-			app.state.viewrange.start = Math.max(0,app.state.viewrange.start - limit);
-			limit = app.state.viewrange.end - app.state.viewrange.start;
-		}
-		var api = new LDR.API("/api/all");
-		api.onload = function(json){
-			print_feed(json);
-			// リクエストよりも件数が少ない場合
-			if(json.items.length < limit){
-				app.state.has_next = false;
-			} else {
-				app.state.has_next = true;
-			}
-			update("feed_next","feed_prev");
-		};
-		api.post({
-			subscribe_id : sid,
-			offset: app.state.viewrange.start,
-			limit : limit
-		});
-	},
-	get_past: function(){
-	},
-	scroll_top: function(){
-		var target = _$("right_container");
-		target.scrollTop = 0;
-	},
-	prefetch: function(){
-		var next_group = get_next_group();
-		if(!next_group) return;
-		next_group.forEach(function(next_id,i){
-			if(get_unread.cache.has(next_id)){
-				// message("prefetched")
-			} else {
-				prefetch(next_id,i)
-			}
-		})
-	},
-	update_scrollcount: function(num){
+app.pin = new Pin;
 
 
-	},
-	add_scroll_padding:function(){
-		var container = _$("right_container");
-		setStyle("scroll_padding",{height:container.offsetHeight+"px"});
-	},
-	del_scroll_padding:function(){
-		setStyle("scroll_padding",{height:"0px"})
-	},
-	scroll_to_px: function(top){
-		var container = _$("right_container");
-		// for opera9 beta
-		var top_offset = _$("right_body").offsetTop;
-		container.scrollTop = top - top_offset;
-	},
-	scroll_to_zero: function(){
-		var container = _$("right_container");
-		container.scrollTop = 0;
-	},
-	scroll_to_offset: function(o){
-		var divs = _$("right_body").getElementsByTagName("h2");
-		var item = divs[o] || null;
-		if (!item){
-			return
-		} else {
-			var scroll_to = item.offsetTop;
-		}
-		Control.scroll_to_px(scroll_to);
-	},
-	next_item_offset: function(){
-		var container = _$("right_container");
-		var sc = container.scrollTop;
-		var top_offset = _$("right_body").offsetTop;
-		var divs = _$("right_body").getElementsByTagName("h2");
-		var active = (sc == 0) ? -1 : get_active_item();
-		if(active != null && active != -1 && divs[active].offsetTop - top_offset > sc){
-			return active;
-		}
-		var can_scroll = divs[active + 1] || null;
-		return (can_scroll) ? active + 1 : null;
-	},
-	prev_item_offset: function(){
-		var container = _$("right_container");
-		var sc = container.scrollTop;
-		var top_offset = _$("right_body").offsetTop;
-		var divs = _$("right_body").getElementsByTagName("h2");
-		var active = get_active_item();
-		if(!active || active == 0){
-			return null;
-		} else if(divs[active].offsetTop-top_offset < sc){
-			return active;
-		} else {
-			return active - 1;
-		}
-	},
-	scroll_next_item: function(){
-		if (check_wait()) return;
-		var next_offset = Control.next_item_offset();
-		if (next_offset == null){
-			writing_complete() && message('this is the last item');
-			return;
-		}
-		Control.add_scroll_padding();
-		Control.scroll_to_offset(next_offset);
-	},
-	scroll_prev_item: function(){
-		if(check_wait()) return;
-		var prev_offset = Control.prev_item_offset();
-		if(prev_offset == null){
-			Control.scroll_to_zero();
-		} else {
-			Control.scroll_to_offset(prev_offset)
-		}
-	},
-	// smooth scroll
-	scroll_next_item_smooth: function(){
-	},
-	// smooth scroll only long item
-	scroll_next_item_auto: function(){
-	},
-	go_next: function(){
-		var container = _$("right_container");
-		var old = container.scrollTop;
-		Control.scroll_next_item();
-		if(old == container.scrollTop){
-			if(app.state.go_next_flag){
-				Control.read_next_subs();
-				app.state.go_next_flag = false;
-			} else {
-				app.state.go_next_flag = true;
-			}
-		}
-	},
-	go_prev: function(){
-		var container = _$("right_container");
-		var old = container.scrollTop;
-		Control.scroll_prev_item();
-		if(old == container.scrollTop) Control.read_prev_subs();
-	},
-	read: function(sid, todo){
-		// 全件表示で未読0件のフィードを表示
-		if(app.config.show_all == true){
-			if(subs_item(sid).unread_count == 0){
-				get_first(sid, todo);
-			} else {
-				get_unread(sid, todo);
-			}
-		} else {
-			get_unread(sid, todo);
-		}
-	},
-	read_next_item: function(){},
-	read_head_subs: function(){
-		if(app.state.requested) return;
-		var head = get_head();
-		if(head){
-			app.state.requested = true;
-			touch(app.state.now_reading, "onclose");
-			Control.read(head);
-			// get_unread(head)
-		}
-	},
-	read_end_subs: function(){
-		if(app.state.requested) return;
-		var end = get_end();
-		if(end){
-			app.state.requested = true;
-			touch(app.state.now_reading, "onclose");
-			Control.read(end);
-			// get_unread(end)
-		}
-	},
-	read_next_subs: function(){
-		if(app.state.requested) return;
-		var next = get_next();
-		if(next){
-			app.state.requested = true;
-			touch(app.state.now_reading, "onclose");
-			Control.read(next, Control.prefetch);
-			// get_unread(next, Control.prefetch)
-		} else {
-			if(app.state.return_to_head){
-				app.state.return_to_head = false;
-				Control.read_head_subs();
-			} else {
-				message(I18n.t('End of feeds.  Press s to return to the top.'));
-				app.state.return_to_head = true;
-			}
-		}
-	},
-	read_prev_subs: function(){
-		if(app.state.requested) return;
-		var prev = get_prev();
-		if(prev){
-			app.state.requested = true;
-			touch(app.state.now_reading, "onclose");
-			Control.read(prev)
-			// get_unread(prev)
-		}
-	},
-	reload_subs: function(){
-		subs.update(true);
-		// cacheをクリア
-		get_unread.cache.clear();
-	},
-	/* 次に読むフィードを判別 */
-	get_next: function(){
-		var now_id = app.state.now_reading;
-		next_id ;
-	},
-	change_view: function(view){
-		app.config.set("view_mode", view);
-		subs.update();
-	},
-	change_sort: function(sort){
-		app.config.set("sort_mode", sort);
-		subs.sort();
-		subs.update();
-	},
-	toggle_leftpane: function(){
-		(!app.state.show_left) ? Control.show_leftpane() : Control.hide_leftpane();
-	},
-	show_leftpane: function(){
-		app.state.leftpane_width = LDR.VARS.LeftpaneWidth;
-		app.state.show_left = true;
-		fit_screen();
-		DOM.hide("right_top_navi");
-		update("myfeed_tab");
-	},
-	hide_leftpane: function(){
-		app.state.leftpane_width = 0;
-		app.state.show_left = false;
-		fit_screen();
-		DOM.show("right_top_navi");
-		update("myfeed_tab");
-	},
-	toggle_fullscreen: function(){
-		var fs = [];
-		var elements = ["header","menu","control","footer"];
-		fs[0] = ["header","menu","control","footer"];
-		fs[1] = ["menu","control"];
-		fs[2] = [];
-		if(!app.state.fullscreen){
-			app.state.fullscreen = 1;
-		} else if(app.state.fullscreen == fs.length-1){
-			app.state.fullscreen = 0;
-		} else {
-			app.state.fullscreen++
-		}
-		Element.hide(elements);
-		Element.show(fs[app.state.fullscreen]);
-		fit_screen()
-	},
-	font: function(num){
-		var to;
-		var old = app.config.current_font;
-		if(num == 0){to = 14} else { to = old + num }
-		app.config.set("current_font", to);
-	},
-	load_config: function(){},
-	save_config: function(){},
-	toggle_show_all: function(){
-		app.config.set("show_all", !app.config.show_all);
-		update("show_all_button");
-		Control.reload_subs()
-	},
-	scroll_next_page:function(){
-		if(check_wait()) return;
-		Control.scroll_page(1)
-	},
-	scroll_prev_page:function(){
-		if(check_wait()) return;
-		Control.scroll_page(-1)
-	},
-	scroll_page: function(num){
-		var h = _$("right_container").offsetHeight - 40;
-		var c =
-			(app.config.scroll_type == "page") ? h:
-			(app.config.scroll_type == "half") ? h / 2 :
-			(app.config.scroll_px || 100);
-		_$("right_container").scrollTop += c * num;
-	},
-	scroll_page_or_subs: function(num){
-		var before = _$("right_container").scrollTop;
-		_$("right_container").scrollTop += num;
-		var after  = _$("right_container").scrollTop;
-		if(before == after && writing_complete()){
-			num > 0 ? Control.read_next_subs() : Control.read_prev_subs();
-		}
-	},
-	mark_all_read: function(){
-		var list = Ordered.list;
-		if(!list) return;
-		var no_feeds = I18n.t('There is no item to mark as read');
-		if(list.length == 0){
-			alert(no_feeds);
-			return;
-		}
-		var post_list = list.filter(function(id){
-			var info = subs_item(id);
-			if(!info) return false;
-			return (info.unread_count > 0) ? true : false;
-		});
-		if(post_list.length == 0){
-			alert(no_feeds);
-			return;
-		}
-		var tmpl = I18n.t('mark_all_read_tmpl');
-		var c = confirm(tmpl.fill({
-			count: post_list.length
-		}));
-		if (!c) return;
-		post_list.forEach(function(id){
-			var info = subs_item(id);
-			var el = _$("subs_item_"+id);
-			if(el){
-				el.innerHTML = info.title;
-				switchClass(el, "rs-read");
-			}
-			var unread = info.unread_count;
-			subs.model.unread_count_cache -= unread;
-			subs.model.unread_feeds_count_cache -= 1;
-			info.unread_count = 0;
-		});
-		var postdata = post_list.join(",");
-		var api = new LDR.API("/api/touch_all");
-		api.post({subscribe_id : postdata}, function(){
-			message("Marked as read");
-			update("total_unread_count");
-		});
-	}
-};
-
-function show_overlay(){
-	var ol = $N("div",{id:"overlay"});
-	document.body.appendChild(ol);
-}
-function hide_overlay(){
-	DOM.remove("overlay");
-}
-
+//prefetch
 function prefetch(sid,count){
 	var max_prefetch = LDR.VARS.MaxPrefetch;
 	get_unread.cache.set(sid, "prefetch");
@@ -1493,36 +266,29 @@ function get_next_group(){
 }
 
 
-function scroll_hilight(){
-	var target = false;
-	var timer;
-	var count = 0;
-	function update_hilight(){
-		// message(++count);
-		var item = get_active_item(1);
-		if(item){
-			if (target){
-				removeClass(target, "hilight");
-			}
-			target = _$("item_count_" + item.offset);
-			addClass(target, "hilight");
+//scroll_hilight event register
+var target = false;
+var timer;
+var count = 0;
+function update_hilight(){
+	// message(++count);
+	var item = get_active_item(1);
+	if(item){
+		if (target){
+			removeClass(target, "hilight");
 		}
+		target = _$("item_count_" + item.offset);
+		addClass(target, "hilight");
 	}
-	Event.observe(_$('right_container'), 'scroll', function(){
-		if(app.config.use_scroll_hilight){
-			clearTimeout(timer);
-			timer = setTimeout(update_hilight,100);
-		}
-	});
 }
-scroll_hilight();
+Event.observe(_$('right_container'), 'scroll', function(){
+	if(app.config.use_scroll_hilight){
+		clearTimeout(timer);
+		timer = setTimeout(update_hilight,100);
+	}
+});
 
-function is_last(){
-	var list = Ordered.list;
-	if(!list) return true;
-	var last_id = list[list.length-1];
-	return (app.state.now_reading == last_id)
-}
+
 function writing_complete(){
 	if(app.state.writer && app.state.writer.complete == false){
 		return false;
@@ -1612,34 +378,9 @@ var SortmodeToggle = Class.merge(ToggleBase, ShowSortmode);
 SortmodeToggle = new SortmodeToggle;
 
 
-
-
 // 未読の記事のキャッシュ
 var UnreadCache = new Cache({max : 30});
 
-// 先頭の未読
-function get_head(){
-	var list = Ordered.list;
-	if(!list) return;
-	var i = list.indexOfA(function(sid){
-		var item = subs_item(sid);
-		return (item.unread_count && app.state.now_reading != item.subscribe_id);
-	});
-	if(i == -1){return list[0]}
-	return list[i] || list[0];
-}
-// 最後の未読
-function get_end(){
-	var list = Ordered.list;
-	if(!list) return;
-	list = list.concat().reverse();
-	var i = list.indexOfA(function(sid){
-		var item = subs_item(sid);
-		return (item.unread_count && app.state.now_reading != item.subscribe_id);
-	});
-	if(i == -1){return list[0]}
-	return list[i] || list[0];
-}
 // 次のアイテム
 function get_next(){
 	var sid = app.state.now_reading;
@@ -1664,151 +405,6 @@ function get_prev(){
 	var prev = list[offset-1];
 	return prev;
 }
-
-var HTML = {};
-HTML.IMG = function(o){
-	return '<img src="'+o.src+'">';
-}
-// Folderを登録する。
-FolderList = {};
-var TreeView = Class.create();
-TreeView.lazy = false;
-TreeView.icon_plus = [
-	HTML.IMG({src:"/img/icon/m.gif"}),
-	HTML.IMG({src:"/img/icon/p.gif"})
-];
-TreeView.icon_open = [
-	HTML.IMG({src:"/img/icon/m.gif"}) + HTML.IMG({src:"/img/icon/open.gif"}),
-	HTML.IMG({src:"/img/icon/p.gif"}) + HTML.IMG({src:"/img/icon/close.gif"})
-];
-TreeView.count = 0;
-TreeView.get_control = function(id){
-	return TreeView.instance[id]
-}
-TreeView.instance = {};
-TreeView.destroy = function(){
-	for(var i=0;i<TreeView.count;i++){
-		TreeView.instance["treeview_" + i] = null;
-	}
-};
-TreeView.extend({
-	initialize: function(name,value,config){
-		var tv = TreeView;
-		tv.count++;
-		tv.instance["treeview_" + tv.count ] = this;
-		var self = this;
-		// var Folder = this.constructor;
-		var Folder = TreeView;
-		this.icon_folder = Folder["icon_open"];
-		if(config){
-			if(config.icon_type){
-				this.icon_folder = Folder["icon_"+config.icon_type]
-			}
-		}
-		this.state = 0;
-		this.printed = 0;
-		this.generator = value.isFunction ? value: function(){return value};
-		this.label_text = name;
-
-		this.element = $N("div",{
-				"id"    : "treeview_" + tv.count,
-				"class" : "folder_root"
-			},[
-			this.label = $N("span"),
-			this.child = $N("div",{style:"display:none"})
-		]);
-		this.set_status(name);
-		this.label.onclick = this._onclick(tv.count);
-		// function(){self.toggle()};
-		/*this.element.className = "folder_root";*/
-		if(!Folder.lazy){
-			this.print( this.generator() );
-			this.printed = 1;
-		}
-	},
-	_onclick: function(id){
-		return function(){ TreeView.instance["treeview_" + id].toggle() }
-	},
-	set_status: function(text){
-		this.label.innerHTML = (
-				(this.state) ? this.icon_folder[0] : this.icon_folder[1]
-			) + text;
-	},
-	print: function(text){
-		this.child.innerHTML = text;
-	},
-	update: function(){
-		this.set_status(this.label_text);
-	},
-	open: function(){
-		this.state = 1;
-		/* Lazy */
-		if(!this.printed){
-			this.print( this.generator() );
-			this.printed = 1;
-		}
-		DOM.show(this.child);
-		this.update();
-	},
-	close: function(){
-		this.state = 0;
-		DOM.hide(this.child);
-		this.update();
-	},
-	toggle: function(){
-		this.state ? this.close() : this.open();
-	}
-});
-/*
-  TreeItem
-*/
-function TreeItem(data){
-	this.item = clone(data);
-	if(this.item.unread_count == 0){
-		this.item.classname = "rs-read"
-	} else if(this.item.cached){
-		this.item.classname = "ps-prefetched"
-	} else {
-		this.item.classname = " ";
-	}
-}
-TreeItem.prototype.toString = function(){
-	var item = this.item;
-	return TreeItem.formatter(item)
-}
-TreeItem.cache = new Cache;
-TreeItem.formatter = Template.get("subscribe_item").compile();
-
-
-function HTMLView(element){
-	this.element = element;
-}
-HTMLView.prototype = {
-	print: function(){
-		this.element.innerHTML = Array.from(arguments).join("")
-	},
-	clear: function(){
-		this.element.innerHTML = "";
-	},
-	append: function(el){
-		this.element.appendChild(el)
-	}
-};
-var ListItem = Class.create().extend({
-	initialize: function(){
-		var self = this;
-		this.onhover = function(e){
-			var el = this;
-			setStyle(el, self.focus_style);
-			addClass(el, self.focus_class);
-		};
-		this.onunhover = function(e){
-			var el = this;
-			setStyle(el, self.normal_style);
-			removeClass(el, self.focus_class);
-		}
-	}
-});
 
 /*
   MenuItem共通
@@ -1836,31 +432,6 @@ var SubsItem = new (Class.base(ListItem).extend({
 }));
 
 
-/* フィードの追加 */
-function feed_discover(url){
-	var api = new LDR.API("/api/feed/discover");
-	api.post({url:url}, print_discover);
-}
-function feed_subscribe(feedlink,callback){
-	var api = new LDR.API("/api/feed/subscribe");
-	callback = callback || Function.empty;
-	api.post({feedlink:feedlink},function(res){
-		message("Subscription completed");
-		callback(res);
-		subs.update(true);
-		var api = new LDR.API("/api/feed/fetch_favicon");
-		api.post({feedlink: feedlink});
-	})
-}
-function feed_unsubscribe(sid, callback){
-	var api = new LDR.API("/api/feed/unsubscribe");
-	callback = callback || Function.empty;
-	api.post({subscribe_id:sid},function(res){
-		message("購読停止しました");
-		callback(res);
-		subs.update(true);
-	});
-}
 
 /*
 
@@ -1898,368 +469,7 @@ function alert_once(v){
 	alert_once.alerted = 1;
 }
 
-
-/*************************************************
-   購読リストの整形。Subsの絞込みや、整形
- *************************************************/
-Subscribe = {};
-// Template
-Subscribe.Template = {
-	item   : Template.get("subscribe_item"),
-	folder : Template.get("subscribe_folder")
-};
-
-/*
- 絞り込んだリスト
-*/
-Subscribe.Collection = Class.create().extend({
-	initialize: function(list){ this.list = list },
-	isCollection : true,
-	get_list : function(){return this.list},
-	get_unread_count: function(){
-		return this.list.sum_of("unread_count")
-	}
-});
-// 複数のデータをロードしてもアイテムのデータを共通化する
-Subscribe.Items = function(id, data){
-	if(!data){
-		return Subscribe.Items["_"+id]
-	} else {
-		return Subscribe.Items["_"+id] = data;
-	}
-}
-var subs_item = Subscribe.Items;
-
-Subscribe.Model = Class.create().extend({
-	initialize: function(){
-		this.loaded = false;
-		return this;
-	},
-	id2subs : null,
-	limited : null,
-	folder_count  : null,
-	folder_unread : null,
-	folder_names  : null,
-	load : function(list){
-		this.load_start();
-		this.load_partial_data(list);
-		this.load_data(list);
-	},
-	load_data: function(list){
-		this.loaded = true;
-		this.list = list;
-		this.generate_cache();
-	},
-	load_start: function(){
-		this.id2subs = {};
-		this.folder_count = {};
-		this.folder_names = [];
-		this.rate2subs = {};
-		this.rate_names = [5,4,3,2,1,0];
-		this.max_subs = 0;
-		this.min_subs = Number.POSITIVE_INFINITY;
-		this.unread_count_cache = 0;
-		this.unread_feeds_count_cache = 0;
-	},
-	load_partial_data: function(list){
-		this._generate_cache(list);
-	},
-	get_list: function(){
-		if(app.config.use_limit_subs && app.config.limit_subs){
-			return this.list.slice(0, app.config.limit_subs)
-		} else {
-			return this.list
-		}
-	},
-	generate_cache: function(){
-		this.folder_names = keys(this.folder_count);
-		this.make_subscribers_names();
-		return;
-	},
-	// partial
-	_generate_cache: function(list){
-		function push(obj,key,value){
-			if(obj[key]){
-				obj[key].push(value)
-			} else {
-				obj[key] = [value]
-			}
-		}
-		var self = this;
-		foreach(list, function(v){
-			subs_item(v.subscribe_id, v);
-			self.id2subs[v.subscribe_id] = v;
-			push(self.rate2subs, v.rate, v);
-			var t = self.folder_count[v.folder];
-			self.folder_count[v.folder] = t ? t + 1 : 1;
-			self.max_subs = Math.max(self.max_subs, v.subscribers_count);
-			self.min_subs = Math.min(self.min_subs, v.subscribers_count);
-			if(v.unread_count){
-				self.unread_feeds_count_cache += 1;
-			}
-		});
-		this.unread_count_cache += list.sum_of("unread_count");
-		//alert_once(this.unread_feeds_count_cache);
-	},
-	make_domain_names: function(){
-		function get_domain(url){
-			var start = url.indexOf('//') + 2;
-			var end   = url.indexOf('/', start);
-			if(end == -1) end = url.length;
-			return url.slice(start,end);
-		}
-		var domains = {};
-		var domain_count = {};
-		var domain_names = {};
-		var domain2subs = {};
-		foreach(this.list, function(v){
-			var d = v.raw_domain;
-			var c = d.split(".");
-			var l = c.length - 1;
-			for(var i=0;i<l;i++){
-				var tmp = c.slice(i).join(".");
-				if(domain_count[tmp] > 1 || i == l-1){
-					v.domain = tmp;
-					domain_names[tmp] = domain_names[tmp] ? domain_names[tmp]+1 : 1;
-					push(domain2subs,tmp,v);
-					return;
-				}
-			}
-		});
-		foreach(this.list, function(v){
-			if(v.feedlink){
-				var d = get_domain(v.feedlink);
-				v.raw_domain = d;
-				var c = d.split(".");
-				c.length.times(function(i){
-					if(i == 1) return;
-					var v = c.slice(-i).join(".");
-					domain_count[v] = domain_count[v] ? domain_count[v]+1 : 1;
-				})
-			}
-		});
-		this.domain_names = keys(domain_names);
-		this.domain_count = domain_names;
-		this.domain2subs  = domain2subs;
-	},
-	make_subscribers_names: function(){
-		var len = this.list.length;
-		var split = 6;
-		var limit = this.list.length / split;
-		var subs_counts = this.list.pluck("subscribers_count");
-		subs_counts.sort(function(a,b){
-			return(
-				a == b ?  0 :
-				a >  b ?  1 : -1
-			)
-		});
-		//alert(subs_counts);
-		var res = [];
-		var pos = 0;
-		var begin = this.min_subs;
-		subs_counts.forEach(function(v){
-			if(pos > limit){
-				var end = Math.max(begin+1,v);
-				res.push(begin + "-" + end);
-				begin = end + 1;
-				pos = 0;
-			}
-			pos++;
-		});
-		res.push(begin + "-" + Math.max(begin+1, this.max_subs) );
-		this.subscribers_names = res.reverse();
-		return res;
-	},
-	// 任意フィルタ
-	filter: function(callback){
-		var filtered = this.list.filter(callback);
-		return new Subscribe.Collection(filtered)
-	},
-	get_folder_names: function(){
-		if(this.folder_names) return this.folder_names;
-	},
-	get_rate_names: function(){
-		if(this.rate_names) return this.rate_names;
-	},
-	get_subscribers_names: function(){
-		if(this.subscribers_names){
-			// 多い順で保存されている。
-			if(app.config.sort_mode == "subscribers_count:reverse"){
-				return this.subscribers_names.concat().reverse();
-			} else {
-				return this.subscribers_names;
-			}
-		}
-	},
-	get_domain_names: function(){
-		if(this.domain_names) return this.domain_names;
-	},
-	get_by_id: function(id){
-		return this.id2subs[id]
-	},
-	get_by_folder: function(name){
-		var filtered = this.get_list().filter_by("folder",name)
-		return new Subscribe.Collection(filtered)
-	},
-	get_by_rate: function(num){
-		var filtered = this.get_list().filter_by("rate",num);
-		// filtered = this.rate2subs[num] || [];
-		return new Subscribe.Collection(filtered)
-	},
-	get_by_subscribers_count: function(min,max){
-		var filtered = this.get_list().filter(function(item){
-			var c = item.subscribers_count;
-			return (c >= min && c <= max);
-		});
-		return new Subscribe.Collection(filtered)
-	},
-	get_by_domain: function(domain){
-		var filtered = this.domain2subs[domain] || [];
-		return new Subscribe.Collection(filtered)
-	},
-	get_unread_feeds: function(){
-		return this.filter(function(item){return item.unread_count > 0}).list;
-	},
-	get_unread_feeds_count: function(){
-		if(this.unread_feeds_count_cache){
-			return this.unread_feeds_count_cache;
-		} else {
-			return 0;
-			return this.unread_feeds_count_cache = this.get_unread_feeds().length;
-		}
-	},
-	get_unread_count: function(){
-		if(this.unread_count_cache){
-			return this.unread_count_cache
-		} else {
-			return this.unread_count_cache = this.list.sum_of("unread_count");
-		}
-	}
-});
-
-Subscribe.Formatter = {
-	item: function(v){ return new TreeItem(v) },
-	flat: function(model){
-		return model.get_list().map(SF.item).join("");
-	},
-	folder: function(model){
-		var folder_names = model.get_folder_names();
-		var folders = folder_names.map(function(v){
-			var filtered = model.get_by_folder(v);
-			var param = {
-				name : v,
-				unread_count : filtered.get_unread_count()
-			};
-			var folder = new TreeView(
-				ST.folder.fill(param),
-				SF.flat.curry(filtered)
-			);
-			folder.param = param;
-			return folder;
-		});
-		var sep = folders.partition(function(v){return v.param.name == ""});
-		var root   = sep[0];
-		var folder = sep[1];
-		if(root[0]) root[0].open();
-		return $DF(
-			root.pluck("child").toDF(),
-			folder.pluck("element").toDF()
-		)
-	},
-	rate: function(model){
-		var rate_names = model.get_rate_names();
-		var rates = rate_names.map(function(v){
-			var filtered = model.get_by_rate(v);
-			var hosi = HTML.IMG({src:Rate.image_path + v + ".gif"});
-			var param = {
-				name : hosi,
-				unread_count : filtered.get_unread_count(),
-				feed_count : filtered.list.length
-			};
-			var folder = new TreeView(
-				ST.folder.fill(param),
-				SF.flat.curry(filtered),
-				{ icon_type : "plus" }
-			);
-			folder.param = param;
-			return folder;
-		});
-		if(app.config.show_all){
-			return rates.pluck("element").toDF()
-		} else {
-			return rates.filter(
-				function(v){ return v.param.feed_count > 0 }
-			).pluck("element").toDF();
-		}
-	},
-	subscribers: function(model){
-		var names = model.get_subscribers_names();
-		var subscribers = names.map(function(v){
-			var tmp = v.split("-");
-			var max = Math.max(tmp[0],tmp[1]);
-			var min = Math.min(tmp[0],tmp[1]);
-			var filtered = model.get_by_subscribers_count(min,max);
-			var param = {
-				name : min + " - " + max + " " + I18n.t('users'),
-				unread_count : filtered.get_unread_count()
-			};
-			var folder = new TreeView(
-				ST.folder.fill(param),
-				SF.flat.curry(filtered)
-			);
-			folder.param = param;
-			return folder;
-		});
-		if(app.config.show_all){
-			return subscribers.pluck("element").toDF()
-		} else {
-			return subscribers.filter(
-				function(v){ return v.param.unread_count > 0 }
-			).pluck("element").toDF();
-		}
-	},
-	domain: function(model){
-		var folder_names = model.get_domain_names();
-		var root_items = {list:[]};
-		var folders = [];
-		folder_names.forEach(function(v){
-			if(model.domain_count[v] < 2){
-				var filtered = model.get_by_domain(v);
-				filtered.list.forEach(function(v){
-					root_items.list.push(v);
-				});
-				return;
-			}
-			var filtered = model.get_by_domain(v);
-			var img = filtered.list.pluck("icon").mode();
-			var favicon  = HTML.IMG({src:img});
-			var param = {
-				name :  favicon +" "+ v,
-				unread_count : filtered.get_unread_count()
-			};
-			var folder = new TreeView(
-				ST.folder.fill(param),
-				SF.flat.curry(filtered),
-				{ icon_type : "plus" }
-			);
-			folder.param = param;
-			folders.push(folder);
-		});
-		var param = {
-			name : " *"
-		};
-		var root = new TreeView(
-			ST.folder.fill(param),
-			SF.flat.curry(root_items),
-			{ icon_type : "plus" }
-		);
-		return $DF(
-			root.element,
-			folders.pluck("element").toDF()
-		)
-	}
-};
-
+//**
 LDR.VARS.USE_PARTIAL_LOAD = true;
 Subscribe.View = Class.create("view");
 Subscribe.Controller = Class.create("controller").extend({
@@ -2278,6 +488,7 @@ Subscribe.Controller = Class.create("controller").extend({
 			function(list){
 				self.loaded = true;
 				app.state.subs_reloading = false;
+				console.log(self,self.model);
 				self.model.load(list);
 				self.sort();
 				self.update();
@@ -2523,71 +734,8 @@ style_updater("right_container", function(){
 }._try());
 
 
-function fit_screen(){
-	var leftpane_width = app.state.leftpane_width;
-	if(app.state.fullscreen) return fit_fullscreen();
-	var body_h = document.body.offsetHeight;
-	var top_padding    = _$("container").offsetTop;
-	var bottom_padding = _$("footer").offsetHeight - 20;
-	if(browser.isMac && browser.isFirefox){
-		bottom_padding += 20;
-	}
-	var ch = body_h - top_padding - bottom_padding - 4;
-	app.state.container_height = ch;
-	style_update(/container/);
-}
-
-function fit_fullscreen(){
-	var body_h = document.body.offsetHeight;
-	var top_padding = _$("container").offsetTop;
-	app.state.container_height = body_h - top_padding + 16;
-	style_update(/container/);
-}
-
-function has_attr(id){
-	return function(target){
-		return this.getAttribute(id)
-	}
-}
-function get_attr(id){
-	return function(target){
-		target = target || this;
-		return target.getAttribute(id)
-	}
-}
-
 var has_subscribe_id = has_attr("subscribe_id");
 
-
-Channel = {};
-
-var finder;
-function Finder(id){
-	this.input = _$(id);
-	this.enable = true;
-	this.callback = [];
-	this.input.style.color = "#444";
-	var self = this;
-	var old = "";
-	setInterval(function(){
-		var q = self.input.value;
-		if(old != q){
-			old = q;
-			self.callback.forEach(function(c){c(q)});
-		}
-	}, 600);
-}
-Finder.prototype = {
-	add_callback: function(callback){
-		this.callback.push(callback)
-	},
-	clear: function(){
-		this.input.value = ""
-	},
-	focus: function(){
-		this.input.focus();
-	}
-};
 
 // input要素にキーバインドを効かせる。
 // printableな場合は実行しない
@@ -2607,7 +755,6 @@ function find_from(key){
 	}
 }
 
-
 var show_tips = function(){
 	show_tips.count ++;
 	if(show_tips.count > 10){
@@ -2619,7 +766,6 @@ var show_tips = function(){
 show_tips.icon = "/img/icon/rest3.gif";
 show_tips.text = 'なんかようか？';
 show_tips.count = 0;
-
 
 var LoadEffect = {
 	ICON_PATH : "/img/icon/",
@@ -2653,6 +799,66 @@ var LoadEffect = {
 /*
  初期化処理
 */
+
+function init_manage(){
+	if(app.state.guest_mode){
+		message('この機能は使えません');
+		return;
+	}
+	switchClass("right_container","mode-manage");
+	ahah("/contents/manage","right_body",function(){
+		get_folders(function(){
+			update("manage_item");
+			update("manage_folder");
+		});
+	});
+}
+
+function init_config(){
+// var State = new LDR.StateClass;
+	ahah("/contents/config", "right_body", function(){
+		switchClass("right_container", "mode-config");
+		Control.scroll_top();
+		Form.fill("config_form", app.config);
+		ajaxize("config_form",{
+			before: function(){return true},
+			after: function(res,req){
+				message("Your settings have been saved");
+				typecast_config(req);
+				Object.extend(app.config, req);
+			}
+		});
+		TabClick.call(_$("tab_config_basic"));
+		LDR.invoke_hook('AFTER_INIT_CONFIG');
+	});
+}
+
+function init_guide(){
+	ahah("/contents/guide", "right_body", function(){
+		switchClass("right_container", "mode-guide");
+		Control.scroll_top();
+		LDR.invoke_hook('AFTER_INIT_GUIDE');
+	});
+}
+
+
+var default_right_init = init_guide;
+
+function load_content(){
+	var q = location.href;
+	var o = q.indexOf("#")+1;
+	if(!o){
+		default_right_init();
+		return
+	}
+	var param = q.slice(o);
+	if(window["init_" + param]){
+		window["init_" + param]()
+	} else {
+		default_right_init()
+	}
+}
+
 function init(){
 	app.load({}, function(){
 		LDR.setup_hook();
@@ -2680,9 +886,9 @@ function init(){
 			view  : new Subscribe.View("subs_body")
 		})
 
-		finder = new Finder("finder");
-		finder.clear();
-		finder.add_callback(function(q){
+		app.finder = new Finder("finder");
+		app.finder.clear();
+		app.finder.add_callback(function(q){
 			if(!q){
 				return subs.find("");
 			}
@@ -2793,18 +999,6 @@ function set_focus(id){
 }
 
 
-function get_folders(callback){
-	var api = new LDR.API("/api/folders");
-	api.post({},function(json){
-		folder = json;
-		folder.id2name = {};
-		for(var key in folder.name2id){
-			folder.id2name[folder.name2id[key]] = key;
-		}
-		callback();
-	})
-};
-
 function QueryCSS(){}
 QueryCSS.findParent = function(rule,element){
 	elememt = _$(element);
@@ -2816,35 +1010,6 @@ QueryCSS.findParent = function(rule,element){
 		if(rule.call(current)) return current;
 	}
 	return false;
-}
-/*
- 先頭の記事を読み込む
-*/
-function get_first(id,callback){
-	app.state.viewrange.start = 0;
-	app.state.has_next = true;
-	if(get_unread.cache.has(id)){
-		var cached_data = get_unread.cache.get(id);
-		// 読み込み中
-		if(cached_data == "prefetch"){
-			setTimeout(arguments.callee.curry(id,callback), 10);
-			return
-		}
-		print_feed.next(callback)(cached_data);
-		set_focus(id);
-		return;
-	} else {
-		var api = new LDR.API("/api/all");
-		set_focus(id)
-		api.post({
-			 subscribe_id : id,
-			 offset : 0,
-			 limit  : 1
-		}, function(data){
-			get_unread.cache.set(id,data);
-			print_feed.next(callback)(data);
-		});
-	}
 }
 /*
  未読の記事を読み込む
@@ -2902,108 +1067,8 @@ function get_unread(id,callback){
 	}
 	get_unread.cache.has(id) ? has_cache() : no_cache();
 }
+
 get_unread.cache = new Cache({max:50});
-
-function move_to(sid,to,callback){
-	var api = new LDR.API("/api/feed/move");
-	api.post({
-		subscribe_id : sid,
-		to : to
-	},callback)
-}
-
-
-
-var Util = {
-	image:{},
-	style:{}
-};
-Util.image.maxsize = function(w,h){
-	var ow = this.width;
-	var oh = this.height;
-	var rw = ow;
-	var rh = oh;
-	if(ow > w){
-		rw = w;
-		rh = oh * (w / ow);
-	}
-	if(rh > h){
-		rw = rw * (h / rh);
-		rh = h;
-	};
-	this.width = rw;
-	this.height = rh;
-};
-Util.style.visible = function(el){
-	setStyle(el,{visibility:"visible"})
-}
-function swap_channel_image(el,src){
-	el.onload = null;
-	var img = new Image();
-	var swap = function(){
-		Util.image.maxsize.call(img,200,50);
-		el.width  = img.width;
-		el.height = img.height;
-		el.src = src;
-	};
-	img.src = src;
-	if(img.complete){
-		swap()
-	} else {
-		img.onload = swap;
-	}
-}
-
-function get_domain(url){
-	var m = (url+'/').match(get_domain.reg);
-	return m ? m[1] : "";
-}
-get_domain.reg = /https?:\/\/([^\/]*?)\//;
-
-
-var ItemFormatter = Class.create();
-ItemFormatter.TMPL = Template.get("inbox_items");
-ItemFormatter.extend({
-	initialize: function(){
-		this.tmpl = new Template(ItemFormatter.TMPL);
-		var filters = {
-			created_on  : Filter.created_on,
-			modified_on : Filter.modified_on,
-			author      : Filter.author,
-			enclosure   : Filter.enclosure,
-			category    : Filter.category
-		};
-		this.tmpl.add_filters(filters);
-	},
-	compile: function(){
-		return this.tmpl.compile();
-	},
-	reset_count: function(){
-		this.item_count = 0;
-	}
-});
-var FeedFormatter = Class.create();
-FeedFormatter.TMPL = Template.get("inbox_feed");
-FeedFormatter.TMPL_ADS = Template.get("inbox_adfeeds");
-FeedFormatter.extend({
-	initialize: function(opt){
-		if(opt && opt.ads){
-			this.tmpl = new Template(FeedFormatter.TMPL_ADS);
-		} else {
-			this.tmpl = new Template(FeedFormatter.TMPL);
-		}
-		var feed_filter = {
-			image : FF.channel.image,
-			folder: function(v){
-				return v ? v.ry(8,"...") : I18n.t('Uncategolized')
-			}
-		};
-		this.tmpl.add_filters(feed_filter);
-	},
-	compile: function(){
-		return this.tmpl.compile()
-	}
-});
 
 var LDRWidgets = Class.create();
 LDRWidgets.extend({
@@ -3040,130 +1105,6 @@ LDRWidgets.extend({
 var entry_widgets = new LDRWidgets;
 var channel_widgets = new LDRWidgets;
 
-function print_feed(feed){
-	LDR.invoke_hook('BEFORE_PRINTFEED', feed);
-	var subscribe_id = feed.subscribe_id;
-
-	app.state.last_feed = feed;
-	app.state.last_items = {};
-	app.state.requested = false;
-	app.state.now_reading = subscribe_id;
-
-	var Now = (new Date - 0)/1000;
-	var output = _$(print_feed.target);
-	var channel = feed.channel;
-	var items = feed.items;
-	if(app.config.reverse_mode){
-		items = items.concat().reverse();
-	}
-	if(app.config.max_view){
-		if(app.config.max_view < items.length)
-		items = items.slice(0, Math.max(1,app.config.max_view));
-	}
-	var item_formatter = new ItemFormatter().compile();
-	var ads_expire = null;
-	if(feed.ad){
-		var feed_formatter = new FeedFormatter({ads:1}).compile();
-		ads_expire = Math.max(1, Math.ceil((feed.ad.expires_on - Now) / (24 * 60 * 60)));
-	} else {
-		var feed_formatter = new FeedFormatter().compile();
-	}
-	var item_count = 0;
-	var item_f = function(v){
-		item_count++;
-		app.state.last_items["_"+v.id] = v;
-		var widgets = entry_widgets.process(feed, v);
-		return item_formatter(v,{
-			relative_date : (v.created_on) ? (Now-v.created_on).toRelativeDate() : I18n.t('Unknown date'),
-			item_count    : item_count,
-			widgets       : widgets,
-			pin_active    : pin.has(v.link) ? "pin_active" : "",
-			pinned        : pin.has(v.link) ? "pinned" : "",
-			loop_context  : [
-				(item_count == 1) ? "first" : "",
-				(item_count %  2) ? "odd" : "even",
-				(item_count == size) ? "last" : "",
-				(item_count != 1 && item_count != size) ? "inner" : ""
-			].join(" ")
-		});
-
-	};
-
-	var subscribe_info = subs_item(subscribe_id);
-	var size = items.length;
-	app.state.viewrange.end = app.state.viewrange.start + size;
-
-	var first_write_num = LDR.VARS.PrintFeedFirstNum;
-	var widgets = channel_widgets.process(feed, items);
-	output.innerHTML = feed_formatter(
-		feed, channel, subscribe_info, {
-			ads_expire : ads_expire,
-			widgets: widgets,
-			items : function(){
-				return items.slice(0, first_write_num).map(item_f).join("")
-			}
-		}
-	);
-	fix_linktarget();
-
-	app.state.writer && app.state.writer.cancel();
-	app.state.writer2 && app.state.writer2.cancel();
-	function DIV(text){
-		var div = document.createElement("div");
-		div.innerHTML = text;
-		fix_linktarget(div);
-		return div;
-	}
-
-	// 遅延描画
-	function push_item(){
-		var num    = LDR.VARS.PrintFeedNum;
-		var delay  = LDR.VARS.PrintFeedDelay;
-		var delay2 = LDR.VARS.PrintFeedDelay2;
-
-		var writer = function(){
-			var remain_items = items.slice(writed,writed + num).map(item_f).join("");
-			writed += num
-			if(more.className){
-				more.className = "hide";
-				more.innerHTML = "";
-			}
-			app.state.writer2 = (function(){
-				more.appendChild(DIV(remain_items))
-				more.className = "";
-			}).later(10)();
-			if(writed < size){
-				app.state.writer = writer.later(delay2)();
-			}
-		};
-		app.state.writer = writer.later(delay)();
-	}
-	if(items.length > first_write_num){
-		var more = $N("div",{"class":"more"});
-		more.innerHTML = "描画中";
-		output.appendChild(more);
-		var writed = first_write_num;
-		push_item();
-	}
-
-	Control.scroll_top();
-	Control.del_scroll_padding();
-	touch(app.state.now_reading, "onload");
-	print_feed.target = "right_body";
-	LDR.invoke_hook('AFTER_PRINTFEED', feed);
-}
-
-
-
-function rewrite_feed(){
-	if(app.state.last_feed){
-		print_feed(app.state.last_feed);
-	}
-}
-
-print_feed.target = "right_body";
-var base_target = "_blank";
-
 function fix_linktarget(el){
 	el = el || _$(print_feed.target);
 	foreach(el.getElementsByTagName("a"),
@@ -3177,23 +1118,6 @@ var get_action = get_attr("_action");
 var Actions = {
 	load: function(){}
 };
-var Callbacks = {};
-
-var Element = {
-	show: function(el){
-		if(el) el.style.display = "block"
-	}.forEachArgs(_$),
-	hide: function(el){
-		if(el) el.style.display = "none"
-	}.forEachArgs(_$),
-	toggle: function(el){
-		el = _$(el);
-		el.style.display = (el.style.display != "block") ? "block" : "none";
-	},
-	childOf: function(){},
-	getStyle : getStyle
-};
-
 
 /* 中止処理 */
 window.stop = window.stop || function(){
@@ -3208,61 +1132,4 @@ function check_xmlhttp(){
 	}
 }
 check_xmlhttp();
-
-function init_manage(){
-	if(app.state.guest_mode){
-		message('この機能は使えません');
-		return;
-	}
-	switchClass("right_container","mode-manage");
-	ahah("/contents/manage","right_body",function(){
-		get_folders(function(){
-			update("manage_item");
-			update("manage_folder");
-		});
-	});
-}
-
-function init_config(){
-	ahah("/contents/config", "right_body", function(){
-		switchClass("right_container", "mode-config");
-		Control.scroll_top();
-		Form.fill("config_form", app.config);
-		ajaxize("config_form",{
-			before: function(){return true},
-			after: function(res,req){
-				message("Your settings have been saved");
-				typecast_config(req);
-				Object.extend(app.config, req);
-			}
-		});
-		TabClick.call(_$("tab_config_basic"));
-		LDR.invoke_hook('AFTER_INIT_CONFIG');
-	});
-}
-function init_guide(){
-	ahah("/contents/guide", "right_body", function(){
-		switchClass("right_container", "mode-guide");
-		Control.scroll_top();
-		LDR.invoke_hook('AFTER_INIT_GUIDE');
-	});
-}
-
-
-var default_right_init = init_guide;
-
-function load_content(){
-	var q = location.href;
-	var o = q.indexOf("#")+1;
-	if(!o){
-		default_right_init();
-		return
-	}
-	var param = q.slice(o);
-	if(window["init_" + param]){
-		window["init_" + param]()
-	} else {
-		default_right_init()
-	}
-}
 

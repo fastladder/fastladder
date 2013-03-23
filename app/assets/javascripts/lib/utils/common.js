@@ -10,6 +10,66 @@ I18n.missingTranslation = function(scope) {
 	return scope;
 };
 
+function has_attr(id){
+	return function(target){
+		return this.getAttribute(id)
+	}
+}
+function get_attr(id){
+	return function(target){
+		target = target || this;
+		return target.getAttribute(id)
+	}
+}
+
+
+var Util = {
+	image:{},
+	style:{}
+};
+Util.image.maxsize = function(w,h){
+	var ow = this.width;
+	var oh = this.height;
+	var rw = ow;
+	var rh = oh;
+	if(ow > w){
+		rw = w;
+		rh = oh * (w / ow);
+	}
+	if(rh > h){
+		rw = rw * (h / rh);
+		rh = h;
+	};
+	this.width = rw;
+	this.height = rh;
+};
+Util.style.visible = function(el){
+	setStyle(el,{visibility:"visible"})
+}
+function swap_channel_image(el,src){
+	el.onload = null;
+	var img = new Image();
+	var swap = function(){
+		Util.image.maxsize.call(img,200,50);
+		el.width  = img.width;
+		el.height = img.height;
+		el.src = src;
+	};
+	img.src = src;
+	if(img.complete){
+		swap()
+	} else {
+		img.onload = swap;
+	}
+}
+
+function get_domain(url){
+	var m = (url+'/').match(get_domain.reg);
+	return m ? m[1] : "";
+}
+get_domain.reg = /https?:\/\/([^\/]*?)\//;
+
+
 /*
  良く使う関数
 */
@@ -73,7 +133,6 @@ function reserveName(name){
 function True(){return true}
 function False(){return false}
 
-//
 function BrowserDetect(){
 	var ua = navigator.userAgent;
 	if(ua.indexOf( "KHTML" ) > -1) this.isKHTML = true;
@@ -88,7 +147,6 @@ function BrowserDetect(){
 		this.isIE = true;
 	}
 }
-
 
 
 Array.from = function(array) {
@@ -1505,4 +1563,18 @@ function MakeUpdater(label){
 }
 MakeUpdater();
 
+var Element = {
+	show: function(el){
+		if(el) el.style.display = "block"
+	}.forEachArgs(_$),
+	hide: function(el){
+		if(el) el.style.display = "none"
+	}.forEachArgs(_$),
+	toggle: function(el){
+		el = _$(el);
+		el.style.display = (el.style.display != "block") ? "block" : "none";
+	},
+	childOf: function(){},
+	getStyle : getStyle
+};
 
