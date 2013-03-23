@@ -5,27 +5,31 @@ class Api::PinController < ApplicationController
   #verify_json :params => :link, :only => :remove
   skip_before_filter :verify_authenticity_token
 
+  module ErrorCode
+    NOT_FOUND = 2
+  end
+
   def all
-    render :json => @member.pins.to_json
+    render json: current_member.pins.to_json
   end
 
   def add
     link = params[:link]
     title = params[:title]
-    @member.pins.create(:link => link, :title => title)
+    current_member.pins.create(link: link, title: title)
     render_json_status(true)
   end
 
   def remove
-    unless pin = @member.pins.find_by_link(params[:link])
-      return render_json_status(false, 2)
+    unless pin = current_member.pins.find_by_link(params[:link])
+      return render_json_status(false, ErrorCode::NOT_FOUND)
     end
     pin.destroy
     render_json_status(true)
   end
 
   def clear
-    Pin.delete_all(:member_id => @member.id)
+    current_member.pins.destroy_all
     render_json_status(true)
   end
 end
