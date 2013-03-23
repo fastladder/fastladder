@@ -3,13 +3,13 @@
  - 特定のElementがCSSruleにマッチするかどうかを判別する
  based on Behaviour.js / BSD Licensed.
 */
-/* That revolting regular expression explained 
+/* That revolting regular expression explained
 /^(\w+)\[(\w+)([=~\|\^\$\*]?)=?"?([^\]"]*)"?\]$/
   \---/  \---/\-------------/    \-------/
     |      |         |               |
     |      |         |           The value
     |      |    ~,|,^,$,* or =
-    |   Attribute 
+    |   Attribute
    Tag
 */
 function cssTester(rule){
@@ -51,7 +51,7 @@ function queryCSS(el,rule){
 		var rules = [];
 		token = token.replace(/^\s+(.*?)\s+$/,"$1");
 		// class or id selector
-		var sep = 
+		var sep =
 			token.indexOf('#') > -1 ? '#' :
 			token.indexOf('.') > -1 ? '.' : null;
 		if(sep){

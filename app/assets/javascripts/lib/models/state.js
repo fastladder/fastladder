@@ -2,7 +2,15 @@
  State
 */
 (function(){
+
     //rename after
+    function is_last(){
+        var list = Ordered.list;
+        if(!list) return true;
+        var last_id = list[list.length-1];
+        return (app.state.now_reading == last_id)
+    }
+
     LDR.StateClass = (function(){
         function StateClass(){
             this.requested = false;
@@ -58,4 +66,3 @@
         return StateClass;
     })();
 }).call(LDR);
-
