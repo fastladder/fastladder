@@ -135,7 +135,7 @@ Template.prototype = {
 Template.get = function(id){
 	var el = _$(id);
 	//TODO refactor later
-	return new Template('test');
+	if(!el) return new Template('test');
 	var is_textarea = (el.tagName.toLowerCase() == "textarea");
 	var v = is_textarea ? el.value : el.innerHTML;
 	return new Template(v)
