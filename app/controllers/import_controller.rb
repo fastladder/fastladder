@@ -15,22 +15,20 @@ class ImportController < ApplicationController
     rescue
       nil
     end
-    if @opml.is_a? Opml
-      @opml.outlines.map(&:flatten).each do |outlines|
-        folder_name = (first = outlines.first).outlines.present? ? first.attributes["title"] || first.attributes["text"] : ""
-        @folders[folder_name] += outlines.select {|outline| outline.attributes["xml_url"].present? }.map do |outline|
-          attributes = outline.attributes.dup
-          feedlink = attributes["xml_url"]
-          feed = Feed.find_by_feedlink(feedlink)
-          item = {}
-          item[:title] = attributes["title"] or attributes["text"] or feedlink
-          item[:link] = attributes["url"] or feedlink
-          item[:feedlink] = feedlink
-          item[:subscribed] = feed.present? ? current_member.subscribed(feed) : false
-          item
-        end
+    @opml.outlines.map(&:flatten).each do |outlines|
+      folder_name = (first = outlines.first).outlines.present? ? first.attributes["title"] || first.attributes["text"] : ""
+      @folders[folder_name] += outlines.select {|outline| outline.attributes["xml_url"].present? }.map do |outline|
+        attributes = outline.attributes.dup
+        feedlink = attributes["xml_url"]
+        feed = Feed.find_by_feedlink(feedlink)
+        item = {}
+        item[:title] = attributes["title"] or attributes["text"] or feedlink
+        item[:link] = attributes["url"] or feedlink
+        item[:feedlink] = feedlink
+        item[:subscribed] = feed.present? ? current_member.subscribed(feed) : false
+        item
       end
-    end
+    end if @opml.is_a? Opml
   end
 
   def finish
