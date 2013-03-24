@@ -29,11 +29,11 @@ Fastladder::Application.routes.draw do
 
   get 'share', :to => 'share#index', :as => 'share'
 
-  match 'import/finish' => 'import#finish'
-  post 'import/fetch' => 'import#fetch'
-  match 'import' => 'import#index'
-  get 'import/*url' => 'import#fetch'
-  get 'export/opml', :to => 'export#opml', :as => 'export'
+  get 'import', to: 'import#index'
+  post 'import', to: 'import#fetch'
+  get 'import/*url', to: 'import#fetch', format: false
+  post 'import/finish', to: 'import#finish'
+  get 'export/opml', to: 'export#opml', as: 'export'
 
   get 'account', :to => 'account#index', :as => 'account_index'
   get 'account/:action', :to => 'account', :as => 'account'

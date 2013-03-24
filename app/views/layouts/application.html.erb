@@ -10,8 +10,6 @@
 	<% end -%>
 </head>
 <body class="<%= params[:controller] %>">
-<script type="text/javascript">var ApiKey = "<%= session[:session_id] %>";</script>
-<%= javascript_include_tag 'application' %>
 <div id="container">
 <div class="navi">
 <h1 class="logo"><%= link_to "Fastladder", root_path %></h1>
@@ -34,7 +32,9 @@
 	<p style="color: #e81a37"><%= flash[:alert] %></p>
 </div>
 <% end -%>
-<%= yield %>
+<%= yield -%>
 </div>
+<script type="text/javascript">var ApiKey = "<%= session[:session_id] %>";</script>
+<%= javascript_include_tag "application" %>
 </body>
 </html>
