@@ -40,9 +40,9 @@ function s_toggle(mode,tab){
 <%= f.hidden_field :api_key, name: "ApiKey", value: session[:session_id] %>
 <div id="registerbox" style="width:auto;margin:0 10px">
 	<div id="import_tab" class="tabs" style="text-align:left;padding-left:15px;">
-		<div class="tab tab-active" onclick="s_toggle('all',this)">All<span class="num">(<%= @folders.values.flatten.length %>)</span></div>
-		<div class="tab" onclick="s_toggle('not_subscribed',this)">Without Subscribed feed<span class="num">(<%= @folders.values.flatten.reject {|item| item[:subscribed] }.length %>)</span></div>
-		<div class="tab" onclick="s_toggle('subscribed',this)">Subscribed<span class="num">(<%= @folders.values.flatten.select {|item| item[:subscribed] }.length %>)</span></div>
+		<div class="tab tab-active" onclick="s_toggle('all',this)">All<span class="num">(<%= all_count = (all_items = @folders.values.flatten).length %>)</span></div>
+		<div class="tab" onclick="s_toggle('not_subscribed',this)">Without Subscribed feed<span class="num">(<%= unsubscribe_count = all_items.reject {|item| item[:subscribed] }.length %>)</span></div>
+		<div class="tab" onclick="s_toggle('subscribed',this)">Subscribed<span class="num">(<%= all_count - unsubscribe_count %>)</span></div>
 	</div>
 
 	<div class="importbox">
