@@ -7,6 +7,7 @@ config/initializers/secret_token.rb
 db/schema.rb
 lib/*.dylib
 db/*.sqlite3
+/public/assets
 coverage
 .ruby-version
 .rbenv-gemsets

@@ -1,0 +1,151 @@
+/*
+ *= require common
+ *= require style
+ *= require_self
+ */
+
+html{
+	height : 100%;
+	margin  : 0px;
+	padding : 0px;
+	overflow : hidden;
+}
+body{
+	margin : 0;
+	padding : 0;
+	font-family:Arial, Helvetica, sans-serif;
+	width : 100%;
+	height : 100%;
+	overflow : hidden;
+}
+#help_window{
+	background : #fff;
+	border : 2px solid #4889fd;
+	padding : 10px;
+	font-size : 12px;
+}
+.item_read *{
+	color : gray !important;
+}
+
+.menu-focus{
+	background-color : #b6bdd2;
+}
+#right_bottom{
+}
+
+#guide_button{
+	height : 20px;
+	position : relative;
+	border-top : 2px solid #fff;
+	border-bottom : 2px solid #a5c5ff;
+	background-image:url('/img/icon/compus.gif');
+	padding-left : 28px;
+	white-space : nowrap;
+	width : 40px;
+}
+#guide_button .bottom{
+	position : absolute;
+	left : 25px;
+	bottom : 1px;
+	line-height : 20px;
+	padding-top : 4px;
+	white-space : pre;
+}
+
+.item{
+	margin : 0 10px 0 10px;
+	z-index : 1;
+	border-bottom : 2px solid #a5c5ff;
+}
+.pin_active {
+	border: 1px solid #000;
+	border-color: #808080 #ffffff #ffffff #808080;
+	background : #e8e8e8;
+}
+.clip_active {
+	border: 1px solid #000;
+	border-color: #808080 #ffffff #ffffff #808080;
+	background : #e8e8e8;
+}
+.pin_item {
+	overflow : hidden;
+	height : 15px;
+	width : 276px;
+	white-space : nowrap;
+}
+
+.pinned {
+	/*border-left : 3px solid #F44;*/
+}
+.pinned .padding{
+	background : #fff0f0 !important;
+	border: 2px solid #fff0f0;
+}
+.padding{
+	margin : 2px 0;
+	border: 2px solid #fff;
+}
+
+.hilight {
+	border: 2px solid #cee1ff !important;
+	background: #ffffe0;
+	/*background : #ffffcc !important;*/
+}
+#message{
+	/*font-family : monospace;*/
+}
+#control .tri_icon{
+	margin-left: 4px;
+	background-image : url('/img/icon/tri_d.gif');
+	background-position : 0 50%;
+	background-repeat : no-repeat;
+}
+.feed_navi{
+	text-align : right;
+	height  : 26px;
+	padding : 0;
+	font-size : 12px;
+	line-height : 22px;
+	vertical-align : middle;
+	color : #042e9a;
+}
+.feed_navi span{
+	cursor : pointer;
+}
+.feed_navi .disable{
+	display : none;
+}
+/* clip */
+table.compact{
+	margin : 0;
+	padding : 0;
+	width : 90%;
+}
+table.compact th{
+	text-align : right;
+	padding-right : 10px;
+}
+table.compact td{
+}
+table.compact input, table.compact textarea{
+	width : 99%;
+}
+#config_form optgroup{
+	font-style : normal;
+}
+#config_form fieldset{
+	border : none;
+}
+#config_form dt{
+	font-weight : bold;
+}
+#config_form dd{
+	padding : 0 0 0 0;
+	margin : 3px 0 3px 10px;
+}
+#config_form li{
+	margin : 0;
+	padding : 0;
+	line-height : 100%;
+}

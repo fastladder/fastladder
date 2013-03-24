@@ -4,7 +4,7 @@
 	<title>Fastladder <%= @title or [params[:controller].capitalize, (params[:action] if params[:action] != "index")].compact.join(": ") %></title>
 	<meta http-equiv="Content-Script-Type" content="text/javascript" />
 	<meta http-equiv="Content-Style-Type" content="text/css" />
-	<link href="/css/main.css" rel="stylesheet" type="text/css" />
+	<%= stylesheet_link_tag "application" %>
 	<% if content_for? :extract_header -%>
 	<%= yield :extract_header %>
 	<% end -%>
