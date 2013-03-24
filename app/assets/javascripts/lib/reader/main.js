@@ -381,6 +381,29 @@ SortmodeToggle = new SortmodeToggle;
 // 未読の記事のキャッシュ
 var UnreadCache = new Cache({max : 30});
 
+// 先頭の未読
+function get_head(){
+	var list = Ordered.list;
+	if(!list) return;
+	var i = list.indexOfA(function(sid){
+		var item = subs_item(sid);
+		return (item.unread_count && app.state.now_reading != item.subscribe_id);
+	});
+	if(i == -1){return list[0]}
+	return list[i] || list[0];
+}
+// 最後の未読
+function get_end(){
+	var list = Ordered.list;
+	if(!list) return;
+	list = list.concat().reverse();
+	var i = list.indexOfA(function(sid){
+		var item = subs_item(sid);
+		return (item.unread_count && app.state.now_reading != item.subscribe_id);
+	});
+	if(i == -1){return list[0]}
+	return list[i] || list[0];
+}
 // 次のアイテム
 function get_next(){
 	var sid = app.state.now_reading;
@@ -1010,6 +1033,35 @@ QueryCSS.findParent = function(rule,element){
 		if(rule.call(current)) return current;
 	}
 	return false;
+}
+/*
+ 先頭の記事を読み込む
+*/
+function get_first(id,callback){
+	app.state.viewrange.start = 0;
+	app.state.has_next = true;
+	if(get_unread.cache.has(id)){
+		var cached_data = get_unread.cache.get(id);
+		// 読み込み中
+		if(cached_data == "prefetch"){
+			setTimeout(arguments.callee.curry(id,callback), 10);
+			return
+		}
+		print_feed.next(callback)(cached_data);
+		set_focus(id);
+		return;
+	} else {
+		var api = new LDR.API("/api/all");
+		set_focus(id)
+		api.post({
+			 subscribe_id : id,
+			 offset : 0,
+			 limit  : 1
+		}, function(data){
+			get_unread.cache.set(id,data);
+			print_feed.next(callback)(data);
+		});
+	}
 }
 /*
  未読の記事を読み込む
