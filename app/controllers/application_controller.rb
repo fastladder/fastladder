@@ -18,17 +18,16 @@ class ApplicationController < ActionController::Base
     redirect_to login_path unless logged_in?
   end
 
+  def login_required_api
+    nothing unless logged_in?
+  end
+
+  def nothing
+    render(nothing: true)
+  end
+
   def logged_in?
     current_member.present?
-  end
-
-  def self.verify_json(options = {})
-    verify options.merge(:render => { :json => json_status(false) })
-  end
-
-  NOTHING = { :nothing => true }
-  def self.verify_nothing(options = {})
-    verify options.merge(:render => NOTHING)
   end
 
   def json_status(success, option = nil)
@@ -58,5 +57,17 @@ class ApplicationController < ActionController::Base
 
   def current_member
     @member ||= Member.where(id: session[:member_id]).first
+  end
+
+  def self.params_required(params, options = {})
+    params = [ params ].flatten
+    before_filter(options) do|controller|
+      params.each do|param|
+        if controller.params[param].blank?
+          render json: json_status(false)
+          return false
+        end
+      end
+    end
   end
 end

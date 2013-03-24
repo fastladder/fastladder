@@ -1,17 +1,13 @@
 class Api::FolderController < ApplicationController
-  before_filter :login_required
-  #verify_nothing :method => :post
-  verify_json :params => :name, :only => :create
-  verify_json :params => [:name, :folder_id], :only => :update
-  verify_json :params => :folder_id, :only => :delete
+  before_filter :login_required_api
+  # we need not check folder_id, because it checked by each method
+  params_required :name, :only => [ :create, :update ]
   skip_before_filter :verify_authenticity_token
 
   ERR_ALREADY_EXISTS = 10
 
   def create
-    if (name = params[:name]).blank?
-      return render_json_status(false)
-    end
+    name = params[:name]
     Folder.transaction do
       if @member.folders.find_by_name(name)
         return render_json_status(false, ERR_ALREADY_EXISTS)
@@ -34,9 +30,7 @@ class Api::FolderController < ApplicationController
     unless folder = get_folder
       return render_json_status(false)
     end
-    if (name = params[:name]).blank?
-      return render_json_status(false)
-    end
+    name = params[:name]
     folder.update_attribute(:name, name)
     render_json_status(true)
   end

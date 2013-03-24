@@ -1,5 +1,4 @@
 class ReaderController < ApplicationController
-  #verify :session => :member, :redirect_to => "/login"
   before_filter :login_required
 
   def welcome

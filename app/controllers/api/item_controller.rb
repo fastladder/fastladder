@@ -1,5 +1,5 @@
 class Api::ItemController < ApplicationController
-  verify_nothing :session => :member
+  before_filter :login_required_api
 
   def mark_unread
     render_json_status(true)

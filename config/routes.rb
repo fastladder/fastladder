@@ -1,8 +1,31 @@
 Fastladder::Application.routes.draw do
-  match 'api/config/load' => 'api/config#getter'
-  match 'api/config/save' => 'api/config#setter'
+  # --------------------------------------------------------------------------------
+  # api/*
+  # --------------------------------------------------------------------------------
+  namespace 'api' do
+    match 'pin/:action' => 'pin', via: :post
 
-  match 'api/:action' => 'api'
+    match 'feed/discover'   => 'feed#discover', via: :get
+    match 'feed/subscribed' => 'feed#subscribed', via: :get
+    match 'feed/:action'    => 'feed', via: :post
+
+    match 'folder/:action' => 'folder', via: :post
+
+    match 'config/load' => 'config#getter', via: [:post, :get]
+    match 'config/save' => 'config#setter', via: [:post]
+  end
+
+  %w(all unread touch_all touch item_count unread_count crawl).each do|name|
+      match "api/#{name}" => "api\##{name}", via: :get
+  end
+  post 'api/:action' => 'api'
+
+  # other API call routes to blank page
+  match 'api/*_' => 'application#nothing'
+
+  # --------------------------------------------------------------------------------
+  # other pages 
+  # --------------------------------------------------------------------------------
   get 'subscribe', :to => 'subscribe#index'
   get 'subscribe/*url', :to => 'subscribe#confirm', :as => :subscribe, :format => false
   post 'subscribe/*url', :to => 'subscribe#subscribe', :format => false
@@ -23,10 +46,6 @@ Fastladder::Application.routes.draw do
   match 'reader' => 'reader#index'
   match 'contents/guide' => 'contents#guide'
   match 'contents/config' => 'contents#configure'
-  match 'api/pin/:action' => 'api/pin'
-  match 'api/feed/:action' => 'api/feed'
-  match 'api/folder/:action' => 'api/folder'
-
   get 'share', :to => 'share#index', :as => 'share'
 
   match 'import/finish' => 'import#finish'
@@ -43,5 +62,4 @@ Fastladder::Application.routes.draw do
   get 'utility/bookmarklet' => "utility/bookmarklet#index"
 
   match ':controller(/:action(/:id))(.:format)'
-
 end

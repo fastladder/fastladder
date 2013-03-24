@@ -1,7 +1,5 @@
 class SubscribeController < ApplicationController
   before_filter :login_required
-  # verify_json :params => :feedlink, :only => :subscribe
-  # Ffeed = Struct.new('Candidates', :link, :feedlink, :title, :subscribers_count, :subscribe_id)
 
   def index
     if params[:url].present?

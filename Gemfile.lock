@@ -22,14 +22,6 @@ GIT
       nokogiri (~> 1.5.3)
       sax-machine (~> 0.2.0.rc1)
 
-GIT
-  remote: git://github.com/sikachu/verification.git
-  revision: 5bb2ffc2c057a7c6a5a403ebb3f4a6369eac75ed
-  specs:
-    verification (1.0.3)
-      actionpack (>= 3.0.0, < 5.0)
-      activesupport (>= 3.0.0, < 5.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -286,5 +278,4 @@ DEPENDENCIES
   sinon-rails
   sqlite3
   uglifier (>= 1.0.3)
-  verification!
   webmock
