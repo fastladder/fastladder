@@ -5,7 +5,7 @@ xml.opml :version => '1.0' do
     xml.ownerName @target_member.username
   end
   xml.body do
-    xml.outline title: 'Subscritions' do
+    xml.outline title: 'Subscriptions' do
       xml.outline title: @username do
         @target_member.public_subs.map do |sub|
           feed = sub.feed
