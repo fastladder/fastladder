@@ -22,8 +22,8 @@ class ImportController < ApplicationController
         feedlink = attributes["xml_url"]
         feed = Feed.find_by_feedlink(feedlink)
         item = {}
-        item[:title] = attributes["title"] or attributes["text"] or feedlink
-        item[:link] = attributes["url"] or feedlink
+        item[:title] = attributes["title"] || attributes["text"] || feedlink
+        item[:link] = attributes["url"] || attributes["html_url"] || feedlink
         item[:feedlink] = feedlink
         item[:subscribed] = feed.present? ? current_member.subscribed(feed) : false
         item
