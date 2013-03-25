@@ -1,6 +1,6 @@
 <% if @target_member.public -%>
 <% content_for :extract_header do -%>
-<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="<%= user_path(@target_member.username, :format => "rss") %>" />
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="<%= user_path(@target_member.username, format: "rss") %>" />
 <% end -%>
 <% end -%>
 <div id="content" class="page_user">
@@ -25,8 +25,8 @@
 		<ul class="link_rss">
 			<li><%= link_to "Read public subscriptions", "#recent_subscribed" %></li>
 			<li>
-				<%= link_to "import subscription list", import_path(:url => user_url(@target_member.username, :format => "opml")) %>
-				<%= link_to image_tag("/img/icon/opml.gif", :alt => "", :border => "0"), user_path(@target_member.username, :format => "opml") %>
+				<%= link_to "import subscription list", import_path(url: user_url(@target_member.username, format: "opml")) %>
+				<%= link_to image_tag("/img/icon/opml.gif", alt: "", border: "0"), user_path(@target_member.username, format: "opml") %>
 			</li>
 		</ul>
 		<% end -%>
@@ -37,16 +37,16 @@
 		<h3>Recent Subscriptions</h3>
 		<p>
 			<%= @target_member.username %>'s recent public subscriptions.
-			<%= subscribe_button(user_url(@target_member.username, :format => "rss")) %>
+			<%= subscribe_button(user_url(@target_member.username, format: "rss")) %>
 		</p>
 		<ul class="recent_feeds">
 		<% @subscriptions.map {|subs| [subs, subs.feed] }.each_with_index do |(subs, feed), i| %>
 			<li class="<%= i % 2 == 0 ? 'odd' : 'even' %>">
-				<%= link_to feed.title, feed.link, :class => "title", :style => "background-image: url('/icon/#{feed.id}');" %>
+				<%= link_to feed.title, feed.link, class: "title", style: "background-image: url('/icon/#{feed.id}');" %>
 				<div class="description"><%= feed.description %></div>
 				<ul class="info">
 					<li class="date"><%= subs.created_on  %></li>
-					<li><%= link_to disp_users(feed.subscribers_count), about_path(:url => feed.feedlink) %></li>
+					<li><%= link_to disp_users(feed.subscribers_count), about_path(url: feed.feedlink) %></li>
 					<li><%= subscribe_button(feed.feedlink) %></li>
 				</ul>
 				<div style="clear:left"></div>

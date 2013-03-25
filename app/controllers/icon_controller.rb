@@ -10,6 +10,6 @@ class IconController < ApplicationController
         image = f.binmode.read
       end
     end
-    send_data image, :filename => "favicon", :type => "image/png", :disposition => "inline"
+    send_data image, filename: "favicon", type: "image/png", disposition: "inline"
   end
 end

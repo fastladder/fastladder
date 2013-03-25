@@ -4,7 +4,7 @@ class Api::ConfigController < ApplicationController
   skip_before_filter :verify_authenticity_token
 
   def getter
-    render :json => (@member.config_dump || {}).to_json
+    render json: (@member.config_dump || {}).to_json
   end
 
   def setter
@@ -21,6 +21,6 @@ class Api::ConfigController < ApplicationController
       @member.config_dump = config
     end
     @member.save
-    render :json => config.to_json
+    render json: config.to_json
   end
 end

@@ -71,14 +71,14 @@ module Fastladder
     def crawl(feed)
       response = nil
       result = {
-        :message => '',
-        :error => false,
-        :response_code => nil,
+        message: '',
+        error: false,
+        response_code: nil,
       }
       REDIRECT_LIMIT.times do
         begin
           @logger.info "fetch: #{feed.feedlink}"
-          response = Fastladder::fetch(feed.feedlink, :modified_on => feed.modified_on)
+          response = Fastladder::fetch(feed.feedlink, modified_on: feed.modified_on)
         end
         @logger.info "HTTP status: [#{response.code}] #{feed.feedlink}"
         case response
@@ -124,9 +124,9 @@ module Fastladder
     private
     def update(feed, source)
       result = {
-        :new_items => 0,
-        :updated_items => 0,
-        :error => nil
+        new_items: 0,
+        updated_items: 0,
+        error: nil
       }
       unless parsed = Feedzirra::Feed.parse(source.body)
         result[:error] = 'Cannot parse feed'
@@ -135,17 +135,17 @@ module Fastladder
       @logger.info "parsed: [#{parsed.entries.size} items] #{feed.feedlink}"
       items = parsed.entries.map { |item|
         Item.new({
-          :feed_id => feed.id,
-          :link => item.url || "",
-          :title => item.title || "",
-          :body => item.content || item.summary,
-          :author => item.author,
-          :category => item.categories.first,
-          :enclosure => nil,
-          :enclosure_type => nil,
-          :digest => item_digest(item),
-          :stored_on => Time.now,
-          :modified_on => item.published ? item.published.to_datetime : nil,
+          feed_id: feed.id,
+          link: item.url || "",
+          title: item.title || "",
+          body: item.content || item.summary,
+          author: item.author,
+          category: item.categories.first,
+          enclosure: nil,
+          enclosure_type: nil,
+          digest: item_digest(item),
+          stored_on: Time.now,
+          modified_on: item.published ? item.published.to_datetime : nil,
         })
       }
 

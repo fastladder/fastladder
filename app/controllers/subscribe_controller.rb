@@ -25,20 +25,20 @@ class SubscribeController < ApplicationController
     end
     if feeds.empty?
       flash[:notice] = "please check URL"
-      return (redirect_to :action => "index")
+      return (redirect_to action: "index")
     end
     @feeds = feeds
-    render :action => "confirm"
+    render action: "confirm"
   end
 
   def subscribe
     unless params[:check_for_subscribe]
       flash[:notice] = "please check for subscribe"
-      return (redirect_to :action => "confirm", :url => params[:url])
+      return (redirect_to action: "confirm", url: params[:url])
     end
     options = {
-      :public => params[:public],
-      :rate => params[:rate].to_i
+      public: params[:public],
+      rate: params[:rate].to_i
     }
     unless (folder_id = params[:folder_id].to_i) > 0
       folder_id = nil
@@ -47,7 +47,7 @@ class SubscribeController < ApplicationController
     params[:check_for_subscribe].each do |feedlink|
       @member.subscribe_feed(feedlink, options)
     end
-    # render :json => params.to_json
-    redirect_to :controller => "reader"
+    # render json: params.to_json
+    redirect_to controller: "reader"
   end
 end

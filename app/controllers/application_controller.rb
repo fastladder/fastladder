@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   helper_method :current_member, :logged_in?
 
   def self.json_status(success, option = nil)
-    result = { :isSuccess => success, :ErrorCode => success ? 0 : 1 }
+    result = { isSuccess: success, ErrorCode: success ? 0 : 1 }
     case option
     when Integer
       result[:ErrorCode] = option
@@ -35,7 +35,7 @@ class ApplicationController < ActionController::Base
   end
 
   def render_json_status(success, option = nil)
-    render :json => json_status(success, option)
+    render json: json_status(success, option)
   end
 
   # extract URL from request_path(e.g. /about/http://example.com)
@@ -47,7 +47,7 @@ class ApplicationController < ActionController::Base
     end
     unless url.present?
       # params[name] is http:/example.com because of squeeze("/")
-      path = url_for(name => ".", :only_path => true)
+      path = url_for(name => ".", only_path: true)
       url = request.original_fullpath.slice(path.size-1..-1)
     end
     url
