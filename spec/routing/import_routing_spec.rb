@@ -7,7 +7,7 @@ describe 'routing to import' do
   end
 
   it 'routes import#finish' do
-    expect(get('/import/finish')).
+    expect(post('/import/finish')).
       to route_to(controller: 'import', action: 'finish')
   end
 end

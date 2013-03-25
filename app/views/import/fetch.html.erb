@@ -1,0 +1,134 @@
+<div id="content">
+<script type="text/javascript">
+function get_target(button){
+	var id = button.id.replace("button_","");
+	return _$("ul_" + id);
+}
+
+function selectfolder(event){
+	Event.stop(event);
+	var ul = get_target(this);
+	if(!ul) return;
+	var ck = ul.getElementsByTagName("input");
+	var len = ck.length;
+	for(var i=0;i<len;i++) ck[i].checked = true;
+}
+
+function unselectfolder(event){
+	Event.stop(event);
+	var ul = get_target(this);
+	if(!ul) return;
+	var ck = ul.getElementsByTagName("input");
+	var len = ck.length;
+	for(var i=0;i<len;i++) ck[i].checked = false;
+}
+
+function s_toggle(mode,tab){
+	switchClass("registerbox", "show-"+mode);
+	var tabs = _$("import_tab");
+	foreach(tabs.getElementsByTagName("div"),function(el){
+		el == tab ? addClass(tab,"tab-active") : removeClass(el, "tab-active")
+	})
+}
+</script>
+<div style="padding:5px 15px 0;text-align:left;">
+	<h2 class="px18 guidesubttl" style="border:none">Subscription list</h2>
+</div>
+
+<% if @opml.present? -%>
+<%= form_for :import, url: import_finish_path do |f| %>
+<%= f.hidden_field :api_key, name: "ApiKey", value: session[:session_id] %>
+<div id="registerbox" style="width:auto;margin:0 10px">
+	<div id="import_tab" class="tabs" style="text-align:left;padding-left:15px;">
+		<div class="tab tab-active" onclick="s_toggle('all',this)">All<span class="num">(<%= all_count = (all_items = @folders.values.flatten).length %>)</span></div>
+		<div class="tab" onclick="s_toggle('not_subscribed',this)">Without Subscribed feed<span class="num">(<%= unsubscribe_count = all_items.reject {|item| item[:subscribed] }.length %>)</span></div>
+		<div class="tab" onclick="s_toggle('subscribed',this)">Subscribed<span class="num">(<%= all_count - unsubscribe_count %>)</span></div>
+	</div>
+
+	<div class="importbox">
+<% @folders.each_with_index do |(folder_name, items), i| %>
+	<h3 class="px18 importttl">
+		<%= folder_name.present? ? folder_name : "Uncategolized" %>
+		<span style="font-size:12px;color:#05308c;font-weight:normal;padding-left:10px;">
+			<span class="button" onclick="selectfolder.call(this,event)" id="button_<%= i %>">Select All</span>
+			&nbsp;|&nbsp;
+			<span class="button" onclick="unselectfolder.call(this,event)" id="button_<%= i %>">None</span>
+		</span>
+	</h3>
+
+	<ul id="ul_<%= i %>">
+	<% items.select {|item| item[:feedlink].present? }.each_with_index do |item, i| -%>
+		<li class="<%= "not_" unless item[:subscribed]-%>subscribed">
+		<% if item[:subscribed] -%>
+			<%= link_to item[:title], item[:link] %>
+			<span style="color: #f00;">[Subscribed]</span>
+		<% else -%>
+			<%= f.hidden_field :titles, name: "titles[#{i}]", value: item[:title] %>
+			<%= f.hidden_field :links, name: "links[#{i}]", value: item[:link] %>
+			<%= f.hidden_field :feedlinks, name: "feedlinks[#{i}]", value: "#{folder_name}:#{item[:feedlink]}" %>
+			<%= f.check_box :check_for_subscribe, name: "check_for_subscribes[#{i}]", checked: true %>
+			<%= link_to item[:title], item[:link] %>
+		<% end -%>
+		</li>
+	<% end -%>
+	</ul>
+<% end -%>
+</div>
+
+<div style="width:100px;margin:15px auto 0;padding-bottom:5px;">
+	<%= f.submit " Import " %>
+</div>
+<% end -%>
+<% else -%>
+	<p>invalid OPML</p>
+<% end -%>
+</div>
+
+<% content_for :extract_header do -%>
+<style type="text/css">
+.button{
+	cursor : pointer;
+}
+.subscribed a:link{
+	color : #888;
+	text-decoration : none;
+}
+.subscribed a:visited{
+	color : #888;
+	text-decoration : none;
+}
+/* show-subscribed */
+.show-subscribed .subscribed{ display:block }
+.show-subscribed .not_subscribed{ display:none }
+
+
+/* show-not_subscribed */
+.show-not_subscribed .subscribed{ display:none }
+.show-not_subscribed .not_subscribed{ display:block }
+
+.tabs{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size : 13px;
+	height : 22px;
+}
+.tabs .tab{
+	float : left;
+	height : 14px;
+	padding : 4px 6px;
+	margin-right : 6px;
+	color : white;
+	background : #2d5ea1;
+	font-weight : bold;
+	cursor : pointer;
+}
+.tabs .tab-active{
+	background : #4889fd !important;
+}
+.tabs .num{
+	font-family : monospace;
+}
+.importbox{
+	border : 1px solid #4a89fb;
+}
+</style>
+<% end -%>
