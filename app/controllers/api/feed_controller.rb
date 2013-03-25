@@ -15,10 +15,10 @@ class Api::FeedController < ApplicationController
       feedlink = (url + feedlink).to_s
       if feed = Feed.find_by_feedlink(feedlink)
         result = {
-          :subscribers_count => feed.subscribers_count,
-          :feedlink => feed.feedlink,
-          :link => feed.link,
-          :title => feed.title,
+          subscribers_count: feed.subscribers_count,
+          feedlink: feed.feedlink,
+          link: feed.link,
+          title: feed.title,
         }
         if sub = @member.subscriptions.find_by_feed_id(feed.id)
           result[:subscribe_id] = sub.id
@@ -31,22 +31,22 @@ class Api::FeedController < ApplicationController
           next
         end
         feeds << {
-          :subscribers_count => 0,
-          :feedlink => feedlink.html_escape,
-          :link => (feed.url || feedlink).html_escape,
-          :title => (feed.title || feed.url|| "").utf8_roundtrip.html_escape,
+          subscribers_count: 0,
+          feedlink: feedlink.html_escape,
+          link: (feed.url || feedlink).html_escape,
+          title: (feed.title || feed.url|| "").utf8_roundtrip.html_escape,
         }
       end
     end
-    render :json => feeds.to_json
+    render json: feeds.to_json
   end
 
   def subscribe
     feedlink = params[:feedlink]
     options = {
-      :folder_id => 0,
-      :rate => 0,
-      :public => @member.default_public,
+      folder_id: 0,
+      rate: 0,
+      public: @member.default_public,
     }
     if params[:folder_id]
       folder_id = params[:folder_id].to_i
@@ -66,7 +66,7 @@ class Api::FeedController < ApplicationController
     unless sub = subscribe_feed(feedlink, options)
       return render_json_status(false)
     end
-    render_json_status(true, :subscribe_id => sub.id)
+    render_json_status(true, subscribe_id: sub.id)
   end
 
   def unsubscribe
@@ -91,15 +91,15 @@ class Api::FeedController < ApplicationController
       return render_json_status(false)
     end
     result = {
-      :ApiKey => session[:session_id],
-      :subscribe_id => sub.id,
-      :folder_id => sub.folder_id || 0,
-      :rate => sub.rate,
-      :public => sub.public ? 1 : 0,
-      :ignore_notify => sub.ignore_notify ? 1 : 0,
-      :created_on => sub.created_on.to_time.to_i,
+      ApiKey: session[:session_id],
+      subscribe_id: sub.id,
+      folder_id: sub.folder_id || 0,
+      rate: sub.rate,
+      public: sub.public ? 1 : 0,
+      ignore_notify: sub.ignore_notify ? 1 : 0,
+      created_on: sub.created_on.to_time.to_i,
     }
-    render :json => result.to_json
+    render json: result.to_json
   end
 
   def update

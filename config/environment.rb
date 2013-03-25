@@ -11,11 +11,11 @@ Mime::Type.register 'text/x-opml', :opml
 
 Fastladder::Initializer.run do |config|
   #config.proxy = {
-  #  :scheme => 'http',
-  #  :host => 'proxy.example.com',
-  #  :port => 8080,
-  #  :user => nil,
-  #  :password => nil
+  #  scheme: 'http',
+  #  host: 'proxy.example.com',
+  #  port: 8080,
+  #  user: nil,
+  #  password: nil
   #}
   #config.proxy_except_hosts = [ /localhost/ ]
   #config.open_timeout = 60

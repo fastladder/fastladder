@@ -1,7 +1,7 @@
 class Api::FolderController < ApplicationController
   before_filter :login_required_api
   # we need not check folder_id, because it checked by each method
-  params_required :name, :only => [ :create, :update ]
+  params_required :name, only: [ :create, :update ]
   skip_before_filter :verify_authenticity_token
 
   ERR_ALREADY_EXISTS = 10
@@ -12,7 +12,7 @@ class Api::FolderController < ApplicationController
       if @member.folders.find_by_name(name)
         return render_json_status(false, ERR_ALREADY_EXISTS)
       end
-      @member.folders.create(:name => name)
+      @member.folders.create(name: name)
     end
     render_json_status(true)
   end

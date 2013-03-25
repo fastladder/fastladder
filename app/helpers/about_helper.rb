@@ -4,6 +4,6 @@ module AboutHelper
   end
 
   def rate_image(num)
-    image_tag "/img/rate/#{num}.gif", :alt => num
+    image_tag "/img/rate/#{num}.gif", alt: num
   end
 end

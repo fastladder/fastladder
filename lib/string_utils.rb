@@ -50,8 +50,8 @@ class String
   def scrub_html
     # str = self.delete([0xe280a8].pack("U*")).scrub
     str = self
-    str = helper_sanitize str, :tags => Settings.allow_tags, :attributes => Settings.allow_attributes
-    # , :attributes => %w(id class style)
+    str = helper_sanitize str, tags: Settings.allow_tags, attributes: Settings.allow_attributes
+    # , attributes: %w(id class style)
     str
   end
 

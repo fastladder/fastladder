@@ -26,11 +26,11 @@ Fastladder::Application.routes.draw do
   # --------------------------------------------------------------------------------
   # other pages 
   # --------------------------------------------------------------------------------
-  get 'subscribe', :to => 'subscribe#index'
-  get 'subscribe/*url', :to => 'subscribe#confirm', :as => :subscribe, :format => false
-  post 'subscribe/*url', :to => 'subscribe#subscribe', :format => false
+  get 'subscribe', to: 'subscribe#index'
+  get 'subscribe/*url', to: 'subscribe#confirm', as: :subscribe, format: false
+  post 'subscribe/*url', to: 'subscribe#subscribe', format: false
   match 'about/*url' => 'about#index', as: :about, format: false
-  match 'user/:login_name' => 'user#index', :as => 'user'
+  match 'user/:login_name' => 'user#index', as: 'user'
   match 'icon/*feed' => 'icon#get'
   match 'favicon/*feed' => 'icon#get'
 
@@ -46,7 +46,7 @@ Fastladder::Application.routes.draw do
   match 'reader' => 'reader#index'
   match 'contents/guide' => 'contents#guide'
   match 'contents/config' => 'contents#configure'
-  get 'share', :to => 'share#index', :as => 'share'
+  get 'share', to: 'share#index', as: 'share'
 
   get 'import', to: 'import#index'
   post 'import', to: 'import#fetch'
@@ -54,8 +54,8 @@ Fastladder::Application.routes.draw do
   post 'import/finish', to: 'import#finish'
   get 'export/opml', to: 'export#opml', as: 'export'
 
-  get 'account', :to => 'account#index', :as => 'account_index'
-  get 'account/:action', :to => 'account', :as => 'account'
+  get 'account', to: 'account#index', as: 'account_index'
+  get 'account/:action', to: 'account', as: 'account'
 
   match 'rpc/:action' => 'rpc'
 

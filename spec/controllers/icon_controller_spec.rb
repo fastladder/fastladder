@@ -6,7 +6,7 @@ describe IconController do
   end
 
   let(:image_header) {
-    { :filename => 'favicon', :type => 'image/png', :disposition => 'inline'}
+    { filename: 'favicon', type: 'image/png', disposition: 'inline'}
   }
 
   describe 'GET /' do

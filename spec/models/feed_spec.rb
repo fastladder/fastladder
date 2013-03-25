@@ -74,7 +74,7 @@ describe Feed do
     let(:favicon_url) { Addressable::URI.parse("http://icon.example.com/favicon.gif").normalize }
 
     it "favicon url detection from feed.link" do
-      feed = FactoryGirl.create(:feed, :link => "http://example.com/")
+      feed = FactoryGirl.create(:feed, link: "http://example.com/")
       stub_request(:get, feed.link).to_return(
         body: <<-HTML
           <html>
