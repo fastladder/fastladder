@@ -81,14 +81,14 @@
                 if(!pins || !pins.length){ return }
                 pins.forEach(function(v){
                     // 新しいのが上
-                    pin.pins.unshift({
+                    app.pin.pins.unshift({
                         url  : v.link,
                         title: v.title,
                         created_on: v.created_on
                     });
-                    pin.hash[v.link] = true;
+                    app.pin.hash[v.link] = true;
                 });
-                pin.update_view();
+                app.pin.update_view();
             });
         });
         // update paging
