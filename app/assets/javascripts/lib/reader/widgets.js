@@ -27,12 +27,12 @@ function setup_widgets(){
 		var info = subs_item(subscribe_id);
 		var size = items.length;
 		var range,range_text;
-		if(State.viewrange.start == 0){
+		if(app.state.viewrange.start == 0){
 			range_text = "新着";
 			range = ""
 		} else {
 			range_text = "過去";
-			range = (State.viewrange.start + 1) + "-" + State.viewrange.end;
+			range = (app.state.viewrange.start + 1) + "-" + app.state.viewrange.end;
 		}
 		return	[
 			'<span style="background:url(\'',info.icon,'\') no-repeat 0 0;padding-left:22px">',

@@ -28,7 +28,7 @@ function setup_widgets(){
 		var size = items.length;
 		var range,range_text;
 		var et = (size > 1) ? 'items' : 'item';
-		if(State.viewrange.start == 0){
+		if(app.state.viewrange.start == 0){
 			range_text = "Updated";
 			range = ""
 			return	[
@@ -38,7 +38,7 @@ function setup_widgets(){
 			].join("");
 		} else {
 			range_text = "Archived";
-			range = (State.viewrange.start + 1) + "-" + State.viewrange.end;
+			range = (app.state.viewrange.start + 1) + "-" + app.state.viewrange.end;
 			return	[
 				'<span style="background:url(\'',info.icon,'\') no-repeat 0 0;padding-left:22px">',
 				,range_text,': ',
