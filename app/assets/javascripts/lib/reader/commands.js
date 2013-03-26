@@ -64,7 +64,7 @@ function toggle_pin(item_id){
     var a = item.getElementsByTagName("a");
     if(!a.length) return;
     var title = a[0].innerHTML;
-    var url   = a[0].href;
+    var url   = a[0].href.escapeHTML();
     if(app.pin.has(url)){
         app.pin.remove(url);
         pin_button && removeClass(pin_button, "pin_active");
