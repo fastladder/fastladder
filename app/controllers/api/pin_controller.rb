@@ -9,7 +9,7 @@ class Api::PinController < ApplicationController
   end
 
   def all
-    render json: current_member.pins.to_json
+    render json: current_member.pins
   end
 
   def add
