@@ -10,6 +10,20 @@ describe Api::PinController do
     { 'isSuccess' => false, 'ErrorCode' => 1 }.to_json
   end
 
+  describe 'POST /all' do
+    it 'renders json' do
+      3.times.each { FactoryGirl.create(:pin, member: @member) }
+      post :all, {}, { member_id: @member.id }
+      expect(response.body).to be_json
+    end
+
+    it 'renders purified link' do
+      FactoryGirl.create(:pin, member: @member, link: 'http://www.example.com/get?x=1&y=2')
+      post :all, {}, { member_id: @member.id }
+      expect(JSON.parse(response.body).last['link']).to include('&amp;')
+    end
+  end
+
   describe 'POST /add' do
     it 'renders json' do
       post :add, { link: 'http://la.ma.la/blog/diary_200810292006.htm', title: '近況' }, { member_id: @member.id }

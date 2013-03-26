@@ -19,12 +19,12 @@ class Pin < ActiveRecord::Base
 
   after_create :destroy_over_limit_pins
 
-  def to_json(options = {})
+  def as_json(options = {})
     result = {}
     result[:link] = self.link.purify_uri
     result[:title] = self.title.purify_html
     result[:created_on] = self.created_on.to_time.to_i
-    result.to_json
+    result
   end
 
   # older pins are collectioned

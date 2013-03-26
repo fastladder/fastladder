@@ -26,6 +26,14 @@ describe ApiController do
       expect(JSON.parse(response.body)["items"][0]).to include("id" => @items[1].id)
       expect(JSON.parse(response.body)["items"][1]).to include("id" => @items[0].id)
     end
+
+    it 'renders purified link' do
+      feed = FactoryGirl.create :feed
+      item = FactoryGirl.create :item, feed: feed, link: 'http://www.example.com/get?x=1&y=2'
+      subscription = FactoryGirl.create :subscription, feed: feed, member: @member
+      get :all, { subscribe_id: subscription.id }, { member_id: @member.id }
+      expect(JSON.parse(response.body)['items'].first['link']).to include('&amp;')
+    end
   end
 
   describe 'POST /touch_all' do

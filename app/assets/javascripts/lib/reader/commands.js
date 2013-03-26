@@ -64,7 +64,7 @@ function toggle_pin(item_id){
     var a = item.getElementsByTagName("a");
     if(!a.length) return;
     var title = a[0].innerHTML;
-    var url   = a[0].href;
+    var url   = a[0].href.escapeHTML();
     if(app.pin.has(url)){
         app.pin.remove(url);
         pin_button && removeClass(pin_button, "pin_active");
@@ -358,7 +358,7 @@ var Control = {
         app.pin.clear();
     },
     read_pin: function(url){
-        app.pin.open(url);
+        app.pin.open(url.escapeHTML());
     },
     toggle_menu: function(event){
         if(app.state.show_menu){
