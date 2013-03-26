@@ -358,7 +358,7 @@ var Control = {
         app.pin.clear();
     },
     read_pin: function(url){
-        app.pin.open(url);
+        app.pin.open(url.escapeHTML());
     },
     toggle_menu: function(event){
         if(app.state.show_menu){
