@@ -4,6 +4,6 @@ class ExportController < ApplicationController
   def opml
     @opml = []
     @sites = []
-    render :xml => @member.export('opml')
+    render xml: @member.export('opml')
   end
 end

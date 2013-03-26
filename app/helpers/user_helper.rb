@@ -7,7 +7,7 @@ module UserHelper
           <button class="subs_edit" rel="edit:#{subs.id}" onkeydown="subs_edit.call(this,event)" onmousedown="subs_edit.call(this,event)" onclick="return false">edit</button>
         EOS
       else
-        link_to "add", subscribe_path(:url => feedlink), :class => "subscribe"
+        link_to "add", subscribe_path(url: feedlink), class: "subscribe"
       end
     end
   end

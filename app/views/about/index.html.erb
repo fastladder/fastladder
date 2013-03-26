@@ -33,10 +33,10 @@
 	<ul class="feedlist">
 		<% @feeds.uniq {|feed| feed.feedlink }.each do |feed, i| -%>
 		<li class="list<% if i == 0 -%> list-first<% end %>">
-			<%= link_to feed.title, about_path(:url => feed.feedlink) %>
+			<%= link_to feed.title, about_path(url: feed.feedlink) %>
 			<span class="subscriber_count"> (<%= disp_users(feed.subscribers_count) %>)</span>
 			<br>
-			<%= link_to feed.feedlink, about_path(:url => feed.feedlink), :class => "feedlink" %>
+			<%= link_to feed.feedlink, about_path(url: feed.feedlink), class: "feedlink" %>
 		</li>
 		<% end -%>
 	</ul>

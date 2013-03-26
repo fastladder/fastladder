@@ -28,13 +28,13 @@ class Member < ActiveRecord::Base
   has_many :pins
 
   validates_presence_of :username
-  validates_presence_of :password, :if => :password_required?
-  validates_presence_of :password_confirmation, :if => :password_required?
-  validates_length_of :password, :within => 4..40, :if => :password_required?
-  validates_confirmation_of :password, :if => :password_required?
-  validates_length_of :username, :within => 3..40
-  validates_uniqueness_of :username, :case_sensitive => false
-  validates_uniqueness_of :auth_key, :allow_nil => true
+  validates_presence_of :password, if: :password_required?
+  validates_presence_of :password_confirmation, if: :password_required?
+  validates_length_of :password, within: 4..40, if: :password_required?
+  validates_confirmation_of :password, if: :password_required?
+  validates_length_of :username, within: 3..40
+  validates_uniqueness_of :username, case_sensitive: false
+  validates_uniqueness_of :auth_key, allow_nil: true
   before_save :encrypt_password
 
   # prevents a user from submitting a crafted form that bypasses activation
@@ -102,10 +102,10 @@ class Member < ActiveRecord::Base
     unless feed = Feed.find_by_feedlink(feedlink)
       if options[:quick]
         feed = Feed.create({
-          :feedlink => feedlink,
-          :link => feedlink,
-          :title => options[:title],
-          :description => ""
+          feedlink: feedlink,
+          link: feedlink,
+          title: options[:title],
+          description: ""
         })
         feed.create_crawl_status
       else
@@ -121,8 +121,8 @@ class Member < ActiveRecord::Base
     end
 
     sub = self.subscriptions.create({
-      :feed_id => feed.id,
-      :has_unread => true,
+      feed_id: feed.id,
+      has_unread: true,
     }.merge(options))
     sub
   end
@@ -168,10 +168,10 @@ class Member < ActiveRecord::Base
       subs.each do |sub|
         feed = sub.feed
         item = {
-          :folder => (sub.folder ? sub.folder.name : "").utf8_roundtrip.html_escape,
-          :link => feed.link.html_escape,
-          :feedlink => feed.feedlink.html_escape,
-          :title => feed.title.utf8_roundtrip.html_escape,
+          folder: (sub.folder ? sub.folder.name : "").utf8_roundtrip.html_escape,
+          link: feed.link.html_escape,
+          feedlink: feed.feedlink.html_escape,
+          title: feed.title.utf8_roundtrip.html_escape,
         }
         folder_name = item[:folder]
         folders[folder_name] ||= []
@@ -180,14 +180,14 @@ class Member < ActiveRecord::Base
 
       opml = SimpleOPML.new
       folders.each do |key, items|
-        outline = key === "" ? opml : (opml << SimpleOPML::Outline.new(:text => key)).last
+        outline = key === "" ? opml : (opml << SimpleOPML::Outline.new(text: key)).last
         items.each do |item|
           attributes = {
-            :title => item[:title],
-            :html_url => item[:link],
-            :text => item[:title],
-            :type => "rss",
-            :xml_url => item[:feedlink]
+            title: item[:title],
+            html_url: item[:link],
+            text: item[:title],
+            type: "rss",
+            xml_url: item[:feedlink]
           }
           outline << SimpleOPML::Outline.new(attributes)
         end

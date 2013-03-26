@@ -4,12 +4,12 @@
   = form_tag session_path do
     %dl
       %dt
-        %label{:for => "username"} Username
+        %label{for: "username"} Username
       %dd= text_field_tag "username"
       %dt
-        %label{:for => "password"} Password
+        %label{for: "password"} Password
       %dd= password_field_tag "password"
     .submit= submit_tag "Sign In"
   .section
     = link_to "Create new account", "/signup"
-  %div{:style => "clear: both"}
+  %div{style: "clear: both"}

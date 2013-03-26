@@ -4,7 +4,7 @@
 	<div class="feed_info">
 	<div class="channel">
 		<h3 style="background-image:url('<%= feed.icon %>')">
-			<%= link_to feed.title, feed.link, :id => "feed-title" %>
+			<%= link_to feed.title, feed.link, id: "feed-title" %>
 		</h3>
 		<div class="description"><%= feed.description %></div>
 	</div>
@@ -13,7 +13,7 @@
 			<%= link_to feed.feedlink, feed.feedlink %>
 			<span class="subscribe_button">
 			<% if current_member.blank? -%>
-			<%= link_to "subscribe this feed", subscribe_path(:url => feed.feedlink), :class => "subscribe_link" %>
+			<%= link_to "subscribe this feed", subscribe_path(url: feed.feedlink), class: "subscribe_link" %>
 			<% elsif current_member.subscribed(feed) -%>
 			<span class="subscribed">[subscribed]</span>
 			<button class="subs_edit" rel="edit:<%= feed.id %>" onkeydown="subs_edit.call(this,event)" onmousedown="subs_edit.call(this,event)" onclick="return false">edit</button>

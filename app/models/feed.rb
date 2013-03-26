@@ -26,8 +26,8 @@ class Feed < ActiveRecord::Base
   has_one :favicon
   has_many :items
   has_many :subscriptions
-  #has_many :members, :through => :subscriptions
-  #has_many :folders, :through => :subscriptions
+  #has_many :members, through: :subscriptions
+  #has_many :folders, through: :subscriptions
 
   before_save :except_fragment_identifier
 
@@ -102,7 +102,7 @@ class Feed < ActiveRecord::Base
   end
 
   def fetch_favicon!
-    self.favicon ||= Favicon.new(:feed => self)
+    self.favicon ||= Favicon.new(feed: self)
     favicon_list.each do |uri|
       next unless response = open(uri.to_s) rescue nil # ensure timeout
       next if response.status.last.to_i >= 400
