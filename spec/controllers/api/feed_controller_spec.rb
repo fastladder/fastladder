@@ -33,7 +33,7 @@ describe Api::FeedController do
 
   describe 'POST /subscribe' do
     it 'renders json' do
-      post :subscribe, { feedlink: @feed.feedlink, subscribe_id: @subscription.id }, { member_id: @member.id }
+      post :subscribe, { feedlink: @feed.feedlink }, { member_id: @member.id }
       expect(response.body).to be_json
     end
 
