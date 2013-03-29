@@ -1,7 +1,7 @@
 class Api::FeedController < ApplicationController
   before_filter   :login_required_api
   params_required :url         , only: :discover
-  params_required :subscribe_id, only: :subscribe
+  params_required :feedlink, only: :subscribe
   params_required :subscribe_id, only: [:unsubscribe, :update, :move]
   params_required [ :subscribe_id, :rate   ], only: :set_rate
   params_required [ :subscribe_id, :ignore ], only: :set_notify
