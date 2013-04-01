@@ -33,38 +33,47 @@ module Fastladder
     end
 
     def run
-      interval = 0
+      @interval = 0
       finish = false
       until finish
-        begin
-          @logger.info "sleep: #{interval}s"
-          sleep interval
-          if feed = CrawlStatus.fetch_crawlable_feed
-            interval = 0
-            result = crawl(feed)
-            if result[:error]
-              @logger.info "error: #{result[:message]}"
-            else
-              crawl_status = feed.crawl_status
-              crawl_status.http_status = result[:response_code]
-              @logger.info "success: #{result[:message]}"
-            end
-          else
-            interval = interval > 60 ? 60 : interval + 1
-          end
-        rescue TimeoutError
-          @logger.error "Time out: #{$!}"
-        rescue Interrupt
-          @logger.warn "\n=> #{$!.message} trapped. Terminating..."
-          finish = true
-        rescue Exception
-          @logger.error %!Crawler error: #{$!.message}\n#{$!.backtrace.join("\n")}!
-        ensure
-          if crawl_status
-            crawl_status.status = CRAWL_OK
-            crawl_status.save
-          end
+        finish = run_loop
+      end
+    end
+
+    def run_loop()
+      begin
+        run_body
+      rescue TimeoutError
+        @logger.error "Time out: #{$!}"
+      rescue Interrupt
+        @logger.warn "\n=> #{$!.message} trapped. Terminating..."
+        return true
+      rescue Exception
+        @logger.error %!Crawler error: #{$!.message}\n#{$!.backtrace.join("\n")}!
+      ensure
+        if @crawl_status
+          @crawl_status.status = CRAWL_OK
+          @crawl_status.save
         end
+      end
+      false
+    end
+
+    def run_body()
+      @logger.info "sleep: #{@interval}s"
+      sleep @interval
+      if feed = CrawlStatus.fetch_crawlable_feed
+        @interval = 0
+        result = crawl(feed)
+        if result[:error]
+          @logger.info "error: #{result[:message]}"
+        else
+          @crawl_status = feed.crawl_status
+          @crawl_status.http_status = result[:response_code]
+          @logger.info "success: #{result[:message]}"
+        end
+      else
+        @interval = @interval > 60 ? 60 : @interval + 1
       end
     end
 
