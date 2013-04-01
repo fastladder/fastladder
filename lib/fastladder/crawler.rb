@@ -40,43 +40,6 @@ module Fastladder
       end
     end
 
-    def run_loop()
-      begin
-        run_body
-      rescue TimeoutError
-        @logger.error "Time out: #{$!}"
-      rescue Interrupt
-        @logger.warn "\n=> #{$!.message} trapped. Terminating..."
-        return true
-      rescue Exception
-        @logger.error %!Crawler error: #{$!.message}\n#{$!.backtrace.join("\n")}!
-      ensure
-        if @crawl_status
-          @crawl_status.status = CRAWL_OK
-          @crawl_status.save
-        end
-      end
-      false
-    end
-
-    def run_body()
-      @logger.info "sleep: #{@interval}s"
-      sleep @interval
-      if feed = CrawlStatus.fetch_crawlable_feed
-        @interval = 0
-        result = crawl(feed)
-        if result[:error]
-          @logger.info "error: #{result[:message]}"
-        else
-          @crawl_status = feed.crawl_status
-          @crawl_status.http_status = result[:response_code]
-          @logger.info "success: #{result[:message]}"
-        end
-      else
-        @interval = @interval > 60 ? 60 : @interval + 1
-      end
-    end
-
     def crawl(feed)
       response = nil
       result = {
@@ -131,6 +94,43 @@ module Fastladder
     end
 
     private
+    def run_loop()
+      begin
+        run_body
+      rescue TimeoutError
+        @logger.error "Time out: #{$!}"
+      rescue Interrupt
+        @logger.warn "\n=> #{$!.message} trapped. Terminating..."
+        return true
+      rescue Exception
+        @logger.error %!Crawler error: #{$!.message}\n#{$!.backtrace.join("\n")}!
+      ensure
+        if @crawl_status
+          @crawl_status.status = CRAWL_OK
+          @crawl_status.save
+        end
+      end
+      false
+    end
+
+    def run_body()
+      @logger.info "sleep: #{@interval}s"
+      sleep @interval
+      if feed = CrawlStatus.fetch_crawlable_feed
+        @interval = 0
+        result = crawl(feed)
+        if result[:error]
+          @logger.info "error: #{result[:message]}"
+        else
+          @crawl_status = feed.crawl_status
+          @crawl_status.http_status = result[:response_code]
+          @logger.info "success: #{result[:message]}"
+        end
+      else
+        @interval = @interval > 60 ? 60 : @interval + 1
+      end
+    end
+
     def update(feed, source)
       result = {
         new_items: 0,
@@ -158,18 +158,37 @@ module Fastladder
         })
       }
 
-      if items.size > ITEMS_LIMIT
-        @logger.info "too large feed: #{feed.feedlink}(#{feed.items.size})"
-        items = items[0, ITEMS_LIMIT]
-      end
+      items = cut_off(items)
+      items = reject_duplicated(feed, items)
+      delete_old_items_if_new_items_are_many(items.size)
+      update_or_insert_items_to_feed(feed, items, result)
+      update_unread_status(feed, result)
+      update_feed_infomation(feed, parsed)
+      feed.save
 
-      items = items.reject { |item| feed.items.exists?(["link = ? and digest = ?", item.link, item.digest]) }
+      feed.fetch_favicon!
+      GC.start
 
-      if items.size > ITEMS_LIMIT / 2
-        @logger.info "delete all items: #{feed.feedlink}"
-        Items.delete_all(["feed_id = ?", feed.id])
-      end
+      result
+    end
 
+    def cut_off(items)
+      return items unless items.size > ITEMS_LIMIT
+      @logger.info "too large feed: #{feed.feedlink}(#{feed.items.size})"
+      items[0, ITEMS_LIMIT]
+    end
+
+    def reject_duplicated(feed, items)
+      items.reject { |item| feed.items.exists?(["link = ? and digest = ?", item.link, item.digest]) }
+    end
+
+    def delete_old_items_if_new_items_are_many(new_items_size)
+      return unless new_items_size > ITEMS_LIMIT / 2
+      @logger.info "delete all items: #{feed.feedlink}"
+      Items.delete_all(["feed_id = ?", feed.id])
+    end
+
+    def update_or_insert_items_to_feed(feed, items, result)
       items.reverse_each do |item|
         if old_item = feed.items.find_by_link(item.link)
           old_item.increment(:version)
@@ -186,19 +205,22 @@ module Fastladder
           result[:new_items] += 1
         end
       end
+    end
 
-      if result[:updated_items] + result[:new_items] > 0
-        modified_on = Time.now
-        if last_item = feed.items.recent.first
-          modified_on = last_item.created_on
-        elsif last_modified = sourece["last-modified"]
-          @logger.info source['last-modified']
-          modified_on = Time.rfc2822(last_modified)
-        end
-        feed.modified_on = modified_on
-        Subscription.update_all(["has_unread = ?", true], ["feed_id = ?", feed.id])
+    def update_unread_status(feed, result)
+      return unless result[:updated_items] + result[:new_items] > 0
+      modified_on = Time.now
+      if last_item = feed.items.recent.first
+        modified_on = last_item.created_on
+      elsif last_modified = sourece["last-modified"]
+        @logger.info source['last-modified']
+        modified_on = Time.rfc2822(last_modified)
       end
+      feed.modified_on = modified_on
+      Subscription.update_all(["has_unread = ?", true], ["feed_id = ?", feed.id])
+    end
 
+    def update_feed_infomation(feed, parsed)
       [
         [:title, parsed.title],
         [:link, parsed.url],
@@ -206,12 +228,6 @@ module Fastladder
       ].each do |column, value|
         feed.__send__("#{column}=", value) if feed.__send__(column) != value
       end
-      feed.save
-
-      feed.fetch_favicon!
-      GC.start
-
-      result
     end
 
     def item_digest(item)
