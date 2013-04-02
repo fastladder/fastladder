@@ -23,7 +23,7 @@ class CrawlStatus < ActiveRecord::Base
   scope :expired, ->(ttl){ where("crawled_on IS NULL OR crawled_on < ?", ttl.ago) }
 
   def self.fetch_crawlable_feed(options = {})
-    CrawlStatus.update_all("status = #{Fastladder::Crawler::CRAWL_OK}", ['crawled_on < ?', 24.hours.ago])
+    CrawlStatus.update_all("status = #{Fastladder::Crawler::CRAWL_OK}", ['crawled_on < ?', 30.minutes.ago])
     feed = nil
     CrawlStatus.transaction do
       if feed = Feed.crawlable.order("crawl_statuses.crawled_on").first
