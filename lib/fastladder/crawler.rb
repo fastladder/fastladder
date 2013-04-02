@@ -196,9 +196,8 @@ module Fastladder
             old_item.stored_on = item.stored_on
             result[:updated_items] += 1
           end
-          %w(title body author category enclosure enclosure_type digest stored_on modified_on).each do |col|
-            old_item.send("#{col}=", item.send(col))
-          end
+          update_columns = [:title, :body, :author, :category, :enclosure, :enclosure_type, :digest, :stored_on, :modified_on]
+          old_item.attributes = item.attributes.select{ |column, value| update_columns.include? column }
           old_item.save
         else
           feed.items << item
@@ -221,13 +220,9 @@ module Fastladder
     end
 
     def update_feed_infomation(feed, parsed)
-      [
-        [:title, parsed.title],
-        [:link, parsed.url],
-        [:description, parsed.description || ""],
-      ].each do |column, value|
-        feed.__send__("#{column}=", value) if feed.__send__(column) != value
-      end
+      feed.title = parsed.title
+      feed.link = parsed.url
+      feed.description = parsed.description || ""
     end
 
     def item_digest(item)
