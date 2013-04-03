@@ -94,7 +94,7 @@ module Fastladder
     begin
       p link.to_s
       return open(link.to_s).read
-    rescue Net::ProtocolError, Timeout::Error, OpenSSL::OpenSSLError
+    rescue Exception
     end
     nil
   end

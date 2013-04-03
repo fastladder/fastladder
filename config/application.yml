@@ -1,5 +1,5 @@
 defaults: &defaults
-  max_unread_count: 10
+  max_unread_count: 200
   default_favicon: <%= "#{Rails.root}/public/img/icon/default.png" %>
   subscribe_limit: 5000
   save_pin_limit: 100
