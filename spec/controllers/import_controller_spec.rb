@@ -20,10 +20,10 @@ describe ImportController do
       it "assigns item" do
         post :fetch, { url: 'http://example.com' }, { member_id: @member.id }
         item = assigns[:folders]["Subscriptions"][0]
-        expect(item).to include("title" => "Recent Commits to fastladder:master")
-        expect(item).to include("link" => "https://github.com/fastladder/fastladder/commits/master")
-        expect(item).to include("feedlink" => "https://github.com/fastladder/fastladder/commits/master.atom")
-        expect(item).to include("subscribed" => false)
+        expect(item).to include(title: "Recent Commits to fastladder:master")
+        expect(item).to include(link: "https://github.com/fastladder/fastladder/commits/master")
+        expect(item).to include(feedlink: "https://github.com/fastladder/fastladder/commits/master.atom")
+        expect(item).to include(subscribed: false)
       end
     end
   end
