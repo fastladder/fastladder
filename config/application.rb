@@ -27,5 +27,10 @@ module Fastladder
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
+
+    # i18n-js 2.1.2 raise error
+    # > Cannot precompile i18n-js translations unless environment is initialized.
+    # > Please set config.assets.initialize_on_precompile to true.
+    config.assets.initialize_on_precompile = true
   end
 end
