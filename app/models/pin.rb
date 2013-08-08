@@ -13,8 +13,6 @@
 class Pin < ActiveRecord::Base
   belongs_to :member
 
-  attr_accessible :link, :title
-
   scope :past, ->(num){ order("created_on").limit(num) }
 
   after_create :destroy_over_limit_pins
