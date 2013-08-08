@@ -7,5 +7,5 @@ Fastladder::Application.load_tasks
 
 desc 'Setup files for development'
 task 'setup' do
-  %x{echo "Fastladder::Application.config.secret_token = '`bundle exec rake secret`'" > config/initializers/secret_token.rb}
+  %x{echo "Fastladder::Application.config.secret_key_base = '`bundle exec rake secret`'" > config/initializers/secret_token.rb}
 end
