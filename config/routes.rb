@@ -26,7 +26,7 @@ Fastladder::Application.routes.draw do
   # --------------------------------------------------------------------------------
   # other pages 
   # --------------------------------------------------------------------------------
-  get 'subscribe', to: 'subscribe#index'
+  get 'subscribe', to: 'subscribe#index', as: :subscribe_index
   get 'subscribe/*url', to: 'subscribe#confirm', as: :subscribe, format: false
   post 'subscribe/*url', to: 'subscribe#subscribe', format: false
   match 'about/*url' => 'about#index', as: :about, format: false, via: [:post, :get]

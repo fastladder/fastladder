@@ -39,7 +39,7 @@ class ImportController < ApplicationController
     check_for_subscribes.select {|key, value| value == "1" }.keys.map do |i|
       title, feedlink = titles[i], feedlinks[i]
       folder_name, feedlink = feedlink.split(":", 2)
-      folder = Folder.find_or_create_by_member_id_and_name(current_member.id, folder_name)
+      folder = Folder.find_or_create_by(member_id: current_member.id, name: folder_name)
       @member.subscribe_feed(feedlink, options.merge(folder_id: folder.id, title: title))
     end
     redirect_to reader_path

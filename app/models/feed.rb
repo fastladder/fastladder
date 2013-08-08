@@ -21,7 +21,6 @@ require "open-uri"
 require "tempfile"
 
 class Feed < ActiveRecord::Base
-  attr_accessible :feedlink, :link, :title, :description
   has_one :crawl_status
   has_one :favicon
   has_many :items
