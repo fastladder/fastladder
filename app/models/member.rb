@@ -37,10 +37,6 @@ class Member < ActiveRecord::Base
   validates_uniqueness_of :auth_key, allow_nil: true
   before_save :encrypt_password
 
-  # prevents a user from submitting a crafted form that bypasses activation
-  # anything else you want your user to change should be added here.
-  attr_accessible :username, :password, :password_confirmation
-
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(username, password)
     u = find_by_username(username) # need to get the salt

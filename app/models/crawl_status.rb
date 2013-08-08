@@ -17,7 +17,6 @@
 
 class CrawlStatus < ActiveRecord::Base
   belongs_to :feed
-  attr_accessible :status, :crawled_on
 
   scope :status_ok, ->{ where(status: Fastladder::Crawler::CRAWL_OK) }
   scope :expired, ->(ttl){ where("crawled_on IS NULL OR crawled_on < ?", ttl.ago) }

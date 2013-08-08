@@ -54,7 +54,7 @@ class ApiController < ApplicationController
     timestamps = params[:timestamp].split(/\s*, \s*/).map { |t| t.to_i }
     params[:subscribe_id].split(/\s*,\s*/).each_with_index do |id, i|
       if sub = Subscription.find(id) and sub.member_id == @member.id and timestamps[i]
-        sub.update_attributes(has_unread: false, viewed_on: Time.new(timestamps[i] + 1))
+        sub.update_attributes(has_unread: false, viewed_on: Time.at(timestamps[i] + 1))
       end
     end
     render_json_status(true)
