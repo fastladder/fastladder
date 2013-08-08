@@ -94,7 +94,7 @@ describe ApiController do
   
   describe 'GET /item_count' do
     it 'renders json' do
-      get :item_count, { since: @item.stored_on }, { member_id: @member.id }
+      get :item_count, { since: @item.stored_on - 1.second }, { member_id: @member.id }
       expect(response.body.to_i).to eq(1)
     end
     
