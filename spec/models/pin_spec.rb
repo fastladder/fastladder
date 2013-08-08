@@ -32,14 +32,14 @@ describe Pin do
       it "nop" do
         @pin = FactoryGirl.build(:pin, member: @member, link: "link_2")
         @pin.destroy_over_limit_pins
-        expect { @old_pin.reload }.not_to raise_error ActiveRecord::RecordNotFound # be_destroyed
+        expect { @old_pin.reload }.not_to raise_error # be_destroyed
       end
     end
     context "over limit" do
       it "older pin is destroyed" do
         @pin = FactoryGirl.create(:pin, member: @member, link: "link_2") # run after_create
         expect { @old_pin.reload }.to raise_error ActiveRecord::RecordNotFound # be_destroyed
-        expect { @pin.reload }.not_to raise_error ActiveRecord::RecordNotFound # not be_destroyed
+        expect { @pin.reload }.not_to raise_error # not be_destroyed
       end
     end
   end
