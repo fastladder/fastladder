@@ -66,4 +66,9 @@ describe Item do
       it { expect(Item.recent(1, 1)).to eq([@item_3]) }
     end
   end
+
+  describe '#title' do
+    subject { FactoryGirl.create(:item_without_title).title }
+    it { should_not eq(nil) }
+  end
 end

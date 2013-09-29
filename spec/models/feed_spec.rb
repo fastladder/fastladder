@@ -129,4 +129,9 @@ describe Feed do
     }
     it { expect(@feed.avg_rate).to eq(4) }
   end
+
+  describe "#description" do
+    subject { FactoryGirl.create(:feed_without_description).description }
+    it { should_not eq(nil) }
+  end
 end
