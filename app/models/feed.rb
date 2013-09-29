@@ -5,8 +5,8 @@
 #  id                :integer          not null, primary key
 #  feedlink          :string(255)      not null
 #  link              :string(255)      not null
-#  title             :text             default(""), not null
-#  description       :text             default(""), not null
+#  title             :text             not null
+#  description       :text             not null
 #  subscribers_count :integer          default(0), not null
 #  image             :string(255)
 #  icon              :string(255)
