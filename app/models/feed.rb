@@ -28,7 +28,7 @@ class Feed < ActiveRecord::Base
   #has_many :members, through: :subscriptions
   #has_many :folders, through: :subscriptions
 
-  before_save :except_fragment_identifier
+  before_save :except_fragment_identifier, :default_values
 
   scope :has_subscriptions, ->{ where("subscribers_count > 0") }
   scope :crawlable, ->{
@@ -164,5 +164,9 @@ class Feed < ActiveRecord::Base
     rescue
       feedlink
     end
+  end
+
+  def default_values
+    self.description = ""
   end
 end
