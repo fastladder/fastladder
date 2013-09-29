@@ -19,4 +19,8 @@ FactoryGirl.define do
   factory :feed_without_description, parent: :feed do
     description nil
   end
+
+  factory :feed_without_title, parent: :feed do
+    title nil
+  end
 end

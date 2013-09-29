@@ -167,6 +167,7 @@ class Feed < ActiveRecord::Base
   end
 
   def default_values
+    self.title = ""
     self.description = ""
   end
 end

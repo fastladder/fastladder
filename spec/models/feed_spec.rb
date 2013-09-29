@@ -134,4 +134,9 @@ describe Feed do
     subject { FactoryGirl.create(:feed_without_description).description }
     it { should_not eq(nil) }
   end
+
+  describe "#title" do
+    subject { FactoryGirl.create(:feed_without_title).title }
+    it { should_not eq(nil) }
+  end
 end
