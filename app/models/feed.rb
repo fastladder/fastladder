@@ -32,7 +32,11 @@ class Feed < ActiveRecord::Base
 
   scope :has_subscriptions, ->{ where("subscribers_count > 0") }
   scope :crawlable, ->{
-    includes(:crawl_status).has_subscriptions.merge(CrawlStatus.status_ok).merge(CrawlStatus.expired(Settings.crawl_interval.minutes))
+    includes(:crawl_status).
+      joins(:crawl_status).
+      has_subscriptions.
+      merge(CrawlStatus.status_ok).
+      merge(CrawlStatus.expired(Settings.crawl_interval.minutes))
   }
 
   def self.initialize_from_uri(uri)
