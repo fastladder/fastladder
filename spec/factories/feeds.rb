@@ -15,4 +15,12 @@ FactoryGirl.define do
     crawl_status { FactoryGirl.create(:crawl_status, status: Fastladder::Crawler::CRAWL_OK) }
     subscribers_count 1
   end
+
+  factory :feed_without_description, parent: :feed do
+    description nil
+  end
+
+  factory :feed_without_title, parent: :feed do
+    title nil
+  end
 end

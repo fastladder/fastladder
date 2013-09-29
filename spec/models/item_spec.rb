@@ -5,7 +5,7 @@
 #  id             :integer          not null, primary key
 #  feed_id        :integer          default(0), not null
 #  link           :string(255)      default(""), not null
-#  title          :text             default(""), not null
+#  title          :text             not null
 #  body           :text
 #  author         :string(255)
 #  category       :string(255)
@@ -65,5 +65,10 @@ describe Item do
     context "with limit, offset" do
       it { expect(Item.recent(1, 1)).to eq([@item_3]) }
     end
+  end
+
+  describe '#title' do
+    subject { FactoryGirl.create(:item_without_title).title }
+    it { should_not eq(nil) }
   end
 end

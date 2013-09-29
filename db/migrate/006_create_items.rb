@@ -3,7 +3,7 @@ class CreateItems < ActiveRecord::Migration
     create_table :items do |t|
       t.integer :feed_id, default: 0, null: false
       t.string :link, default: "", null: false
-      t.text :title, default: "", null: false
+      t.text :title, null: false
       t.text :body
       t.string :author
       t.string :category

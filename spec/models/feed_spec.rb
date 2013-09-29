@@ -5,8 +5,8 @@
 #  id                :integer          not null, primary key
 #  feedlink          :string(255)      not null
 #  link              :string(255)      not null
-#  title             :text             default(""), not null
-#  description       :text             default(""), not null
+#  title             :text             not null
+#  description       :text             not null
 #  subscribers_count :integer          default(0), not null
 #  image             :string(255)
 #  icon              :string(255)
@@ -128,5 +128,15 @@ describe Feed do
       FactoryGirl.create(:subscription, feed: @feed, member_id: 3, rate: 3)
     }
     it { expect(@feed.avg_rate).to eq(4) }
+  end
+
+  describe "#description" do
+    subject { FactoryGirl.create(:feed_without_description).description }
+    it { should_not eq(nil) }
+  end
+
+  describe "#title" do
+    subject { FactoryGirl.create(:feed_without_title).title }
+    it { should_not eq(nil) }
   end
 end
