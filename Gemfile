@@ -70,6 +70,7 @@ group :test, :development do
   gem 'konacha'
   gem 'poltergeist'
   gem 'sinon-rails'
+  gem 'thin'
 end
 
 # Use ActiveModel has_secure_password
