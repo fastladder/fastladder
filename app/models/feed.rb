@@ -5,8 +5,8 @@
 #  id                :integer          not null, primary key
 #  feedlink          :string(255)      not null
 #  link              :string(255)      not null
-#  title             :text             default(""), not null
-#  description       :text             default(""), not null
+#  title             :text             not null
+#  description       :text             not null
 #  subscribers_count :integer          default(0), not null
 #  image             :string(255)
 #  icon              :string(255)
@@ -28,7 +28,7 @@ class Feed < ActiveRecord::Base
   #has_many :members, through: :subscriptions
   #has_many :folders, through: :subscriptions
 
-  before_save :except_fragment_identifier
+  before_save :except_fragment_identifier, :default_values
 
   scope :has_subscriptions, ->{ where("subscribers_count > 0") }
   scope :crawlable, ->{
@@ -164,5 +164,10 @@ class Feed < ActiveRecord::Base
     rescue
       feedlink
     end
+  end
+
+  def default_values
+    self.title = ""
+    self.description = ""
   end
 end

@@ -19,4 +19,8 @@ FactoryGirl.define do
     created_on  { Time.now }
     updated_on  { Time.now }
   end
+
+  factory :item_without_title, parent: :item do
+    title nil
+  end
 end

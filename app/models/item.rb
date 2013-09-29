@@ -5,7 +5,7 @@
 #  id             :integer          not null, primary key
 #  feed_id        :integer          default(0), not null
 #  link           :string(255)      default(""), not null
-#  title          :text             default(""), not null
+#  title          :text             not null
 #  body           :text
 #  author         :string(255)
 #  category       :string(255)
@@ -24,10 +24,14 @@ require "string_utils"
 class Item < ActiveRecord::Base
   belongs_to :feed
 
-  before_save :create_digest, :fill_datetime
+  before_save :create_digest, :fill_datetime, :default_values
 
   scope :stored_since, ->(viewed_on){ viewed_on ? where("stored_on >= ?", viewed_on) : scoped }
   scope :recent, ->(limit = nil, offset = nil){ order("created_on DESC, id DESC").limit(limit).offset(offset) }
+
+  def default_values
+    self.title = ""
+  end
 
   def fill_datetime
     self.stored_on = Time.now unless self.stored_on

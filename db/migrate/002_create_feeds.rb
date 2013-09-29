@@ -4,7 +4,7 @@ class CreateFeeds < ActiveRecord::Migration
       t.string :feedlink, null: false
       t.string :link, null: false
       t.text :title, null: false
-      t.text :description, default: "", null: false
+      t.text :description, null: false
       t.integer :subscribers_count, default: 0, null: false
       t.string :image
       t.string :icon
