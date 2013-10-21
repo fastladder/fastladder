@@ -41,7 +41,7 @@ describe ApiController do
       post :touch_all, { subscribe_id: @subscription.id }, { member_id: @member.id }
       expect(response.body).to be_json
     end
-    
+
     it 'reders error' do
       post :touch_all, {}, { member_id: @member.id }
       expect(response.body).to be_json_error
@@ -53,7 +53,7 @@ describe ApiController do
       post :touch, { timestamp: Time.now.to_i, subscribe_id: @subscription.id }, { member_id: @member.id }
       expect(response.body).to be_json
     end
-    
+
     it 'renders error' do
       post :touch, {}, { member_id: @member.id }
       expect(response.body).to be_json
@@ -68,7 +68,9 @@ describe ApiController do
     }
 
     before do
-      stub_request(:get, %r[http://feeds.feedburner.com/mala/blog/]).with(:headers => headers).to_return(:status => 200, :body => '', :headers => {} )
+      stub_request(:get, %r[http://feeds.feedburner.com/mala/blog/]).with { |request|
+        request.headers = headers
+      }.to_return(status: 200, body: '', headers: {})
     end
 
     it 'renders json' do
@@ -101,32 +103,32 @@ describe ApiController do
       expect(response.body).to be_json
     end
   end
-  
+
   describe 'GET /item_count' do
     it 'renders json' do
       get :item_count, { since: @item.stored_on - 1.second }, { member_id: @member.id }
       expect(response.body.to_i).to eq(1)
     end
-    
+
     it 'renders error' do
       get :item_count, {}, { member_id: @member.id }
       expect(response.body).to be_json_error
     end
   end
-  
+
   describe 'GET /unread_count' do
     it 'renders json' do
       get :unread_count, { since: @item.stored_on }, { member_id: @member.id }
       expect(response.body.to_i).to eq(0)
     end
-    
-    it 'renders error' do 
+
+    it 'renders error' do
       get :unread_count, {}, { member_id: @member.id }
       expect(response.body).to be_json_error
     end
   end
-  
-  
+
+
   context 'not logged in' do
     it 'renders blank' do
       get :subs, {}, {}
@@ -134,4 +136,3 @@ describe ApiController do
     end
   end
 end
-
