@@ -61,6 +61,16 @@ describe ApiController do
   end
 
   describe 'POST /crawl' do
+    let(:headers) {
+      { 'Accept' => 'text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5',
+        'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Fastladder FeedFetcher/0.0.3 (http://fastladder.org/)'
+      }
+    }
+
+    before do
+      stub_request(:get, %r[http://feeds.feedburner.com/mala/blog/]).with(:headers => headers).to_return(:status => 200, :body => '', :headers => {} )
+    end
+
     it 'renders json' do
       post :crawl, { subscribe_id: @subscription.id }, { member_id: @member.id }
       expect(response.body).to be_json
