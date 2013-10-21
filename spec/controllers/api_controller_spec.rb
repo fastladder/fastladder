@@ -41,7 +41,7 @@ describe ApiController do
       post :touch_all, { subscribe_id: @subscription.id }, { member_id: @member.id }
       expect(response.body).to be_json
     end
-    
+
     it 'reders error' do
       post :touch_all, {}, { member_id: @member.id }
       expect(response.body).to be_json_error
@@ -53,7 +53,7 @@ describe ApiController do
       post :touch, { timestamp: Time.now.to_i, subscribe_id: @subscription.id }, { member_id: @member.id }
       expect(response.body).to be_json
     end
-    
+
     it 'renders error' do
       post :touch, {}, { member_id: @member.id }
       expect(response.body).to be_json
@@ -61,6 +61,18 @@ describe ApiController do
   end
 
   describe 'POST /crawl' do
+    let(:headers) {
+      { 'Accept' => 'text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5',
+        'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Fastladder FeedFetcher/0.0.3 (http://fastladder.org/)'
+      }
+    }
+
+    before do
+      stub_request(:get, %r[http://feeds.feedburner.com/mala/blog/]).with { |request|
+        request.headers = headers
+      }.to_return(status: 200, body: '', headers: {})
+    end
+
     it 'renders json' do
       post :crawl, { subscribe_id: @subscription.id }, { member_id: @member.id }
       expect(response.body).to be_json
@@ -91,32 +103,32 @@ describe ApiController do
       expect(response.body).to be_json
     end
   end
-  
+
   describe 'GET /item_count' do
     it 'renders json' do
       get :item_count, { since: @item.stored_on - 1.second }, { member_id: @member.id }
       expect(response.body.to_i).to eq(1)
     end
-    
+
     it 'renders error' do
       get :item_count, {}, { member_id: @member.id }
       expect(response.body).to be_json_error
     end
   end
-  
+
   describe 'GET /unread_count' do
     it 'renders json' do
       get :unread_count, { since: @item.stored_on }, { member_id: @member.id }
       expect(response.body.to_i).to eq(0)
     end
-    
-    it 'renders error' do 
+
+    it 'renders error' do
       get :unread_count, {}, { member_id: @member.id }
       expect(response.body).to be_json_error
     end
   end
-  
-  
+
+
   context 'not logged in' do
     it 'renders blank' do
       get :subs, {}, {}
@@ -124,4 +136,3 @@ describe ApiController do
     end
   end
 end
-
