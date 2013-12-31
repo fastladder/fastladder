@@ -14,7 +14,7 @@ GIT
 
 GIT
   remote: git://github.com/pauldix/feedzirra.git
-  revision: 55c2b8ae2586e3a9b2659d7561b6ef2e6b605345
+  revision: e614278a8f00d7092c5ba9e1757ec460f782234f
   specs:
     feedzirra (0.6.0)
       curb (~> 0.8.1)
@@ -154,7 +154,7 @@ GEM
       coderay (~> 1.0)
       method_source (~> 0.8)
       slop (~> 3.4)
-    pry-doc (0.4.6)
+    pry-doc (0.5.1)
       pry (>= 0.9)
       yard (>= 0.8)
     pry-rails (0.3.2)
@@ -186,8 +186,9 @@ GEM
     rspec-expectations (2.14.4)
       diff-lcs (>= 1.1.3, < 2.0)
     rspec-mocks (2.14.4)
-    rspec-rails (2.14.0)
+    rspec-rails (2.14.1)
       actionpack (>= 3.0)
+      activemodel (>= 3.0)
       activesupport (>= 3.0)
       railties (>= 3.0)
       rspec-core (~> 2.14.0)
@@ -253,7 +254,7 @@ GEM
       addressable (>= 2.2.7)
       crack (>= 0.3.2)
     webrobots (0.1.1)
-    websocket-driver (0.3.1)
+    websocket-driver (0.3.2)
     xpath (2.0.0)
       nokogiri (~> 1.3)
     yard (0.8.7.3)
