@@ -30,7 +30,7 @@ class Item < ActiveRecord::Base
   scope :recent, ->(limit = nil, offset = nil){ order("created_on DESC, id DESC").limit(limit).offset(offset) }
 
   def default_values
-    self.title = ""
+    self.title ||= ""
   end
 
   def fill_datetime
