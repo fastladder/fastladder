@@ -13,7 +13,7 @@ describe SessionsController do
     context "when member doesn't exist" do
       it do
         get 'new'
-        response.should redirect_to sign_up_path
+        expect(response).to redirect_to sign_up_path
       end
     end
 
@@ -22,7 +22,7 @@ describe SessionsController do
 
       it do
         get 'new'
-        response.should be_success
+        expect(response).to be_success
       end
     end
   end
@@ -32,15 +32,15 @@ describe SessionsController do
       it "should redirect to root path" do
         post :create, { username: member.username, password: member.password }
         expect(response).to redirect_to root_path
-        flash[:notice].should_not be_nil
+        expect(flash[:notice]).not_to be_nil
       end
     end
 
     context "when authenticate failed" do
       it "should re-render new page" do
         post :create, { username: "bogus_username", password: "bogus_password" }
-        response.should render_template("new")
-        flash[:alert].should_not be_nil
+        expect(response).to render_template("new")
+        expect(flash[:alert]).not_to be_nil
       end
     end
   end
@@ -62,7 +62,7 @@ describe SessionsController do
     it "should redirect to root path" do
       get 'destroy'
       expect(response).to redirect_to root_path
-      flash[:notice].should_not be_nil
+      expect(flash[:notice]).not_to be_nil
     end
   end
 end

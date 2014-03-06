@@ -11,8 +11,8 @@ describe IconController do
 
   describe 'GET /' do
     it "should send favicon" do
-      Feed.should_receive(:find_by_feedlink).with(@feed.link) { @feed }
-      controller.should_receive(:send_data).with(anything, image_header) {
+      expect(Feed).to receive(:find_by_feedlink).with(@feed.link) { @feed }
+      expect(controller).to receive(:send_data).with(anything, image_header) {
         @controller.render nothing: true
       }
       get :get, feed: @feed.link

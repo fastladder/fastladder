@@ -8,16 +8,16 @@ describe AboutController do
   describe 'GET /' do
     context 'exists url' do
       before do
-        Feed.stub(:find_by_feedlink) { @feed }
+        allow(Feed).to receive(:find_by_feedlink) { @feed }
         get :index, url: @feed.link
       end
 
       it 'assign feed' do
-        assigns[:feed].should == @feed
+        expect(assigns[:feed]).to eq(@feed)
       end
 
       it 'assing feed' do
-        assigns[:is_feedlink].should == true
+        expect(assigns[:is_feedlink]).to eq(true)
       end
     end
 
@@ -27,7 +27,7 @@ describe AboutController do
       end
 
       it 'return 404' do
-        response.status.should == 404
+        expect(response.status).to eq(404)
       end
     end
   end

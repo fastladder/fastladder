@@ -22,7 +22,7 @@ describe Subscription do
   describe 'creation' do
     it 'update subscribers count' do
       feed = mock_model(Feed)
-      feed.should_receive(:update_subscribers_count)
+      expect(feed).to receive(:update_subscribers_count)
 
       subscription = Subscription.new
       subscription.feed = feed
@@ -37,7 +37,7 @@ describe Subscription do
       subscription.public = nil
       subscription.save
 
-      subscription.public.should == false
+      expect(subscription.public).to eq(false)
     end
   end
 
@@ -48,7 +48,7 @@ describe Subscription do
       subscription.feed = feed
       subscription.save
 
-      feed.should_receive(:update_subscribers_count)
+      expect(feed).to receive(:update_subscribers_count)
       subscription.destroy
     end
   end

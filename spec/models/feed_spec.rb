@@ -20,10 +20,26 @@ describe Feed do
   describe ".initialize_from_uri" do
     include_context(:use_stub_feed)
     subject { Feed.initialize_from_uri("https://github.com/fastladder/fastladder/commits/master.atom") }
-    its(:title) { should == "Recent Commits to fastladder:master" }
-    its(:feedlink) { should == "https://github.com/fastladder/fastladder/commits/master.atom" }
-    its(:link) { should == "https://github.com/fastladder/fastladder/commits/master" }
-    its(:description) { should == "" }
+
+    describe '#title' do
+      subject { super().title }
+      it { should == "Recent Commits to fastladder:master" }
+    end
+
+    describe '#feedlink' do
+      subject { super().feedlink }
+      it { should == "https://github.com/fastladder/fastladder/commits/master.atom" }
+    end
+
+    describe '#link' do
+      subject { super().link }
+      it { should == "https://github.com/fastladder/fastladder/commits/master" }
+    end
+
+    describe '#description' do
+      subject { super().description }
+      it { should == "" }
+    end
   end
 
   describe ".create_from_uri" do
@@ -42,7 +58,11 @@ describe Feed do
 
   describe "except fragment identifier" do
     subject { FactoryGirl.create(:feed, feedlink: "http://example.com/rss#_=_") }
-    its(:feedlink) { should == "http://example.com/rss" }
+
+    describe '#feedlink' do
+      subject { super().feedlink }
+      it { should == "http://example.com/rss" }
+    end
   end
 
   describe "fetch favicon" do
@@ -52,20 +72,20 @@ describe Feed do
     it "favicon.ico store as PNG" do
       stub_request(:any, /.*/).to_return(content_type: 'image/vnd.microsoft.icon', body: favicon)
       feed.fetch_favicon!
-      feed.favicon.image.start_with?("\x89PNG\r\n".force_encoding('ascii-8bit')).should be_true
+      expect(feed.favicon.image.start_with?("\x89PNG\r\n".force_encoding('ascii-8bit'))).to be_true
     end
 
     it "if favicon url is *.gif and returning vnd.microsoft.icon" do
       stub_request(:any, /.*/).to_return(body: favicon, headers: {"Content-Type" => 'image/vnd.microsoft.icon'})
-      feed.stub(:favicon_list).and_return([Addressable::URI.parse("http://example.com/favicon?file=favicon.gif")])
+      allow(feed).to receive(:favicon_list).and_return([Addressable::URI.parse("http://example.com/favicon?file=favicon.gif")])
       feed.fetch_favicon!
-      feed.favicon.image.start_with?("\x89PNG\r\n".force_encoding('ascii-8bit')).should be_true
+      expect(feed.favicon.image.start_with?("\x89PNG\r\n".force_encoding('ascii-8bit'))).to be_true
     end
 
     it 'logs errors and does `next` when favicon.ico is not valid data' do
       stub_request(:any, /.*/).to_return(body: "invalid image data")
-      MiniMagick::Image.should_receive(:open).at_least(:once).and_raise(MiniMagick::Error)
-      Rails.logger.should_receive(:error).at_least(:once)
+      expect(MiniMagick::Image).to receive(:open).at_least(:once).and_raise(MiniMagick::Error)
+      expect(Rails.logger).to receive(:error).at_least(:once)
       feed.fetch_favicon!
     end
   end
@@ -86,7 +106,7 @@ describe Feed do
         HTML
       )
       stub_request(:get, feed.feedlink).to_return(body: "")
-      feed.favicon_list.should include(favicon_url)
+      expect(feed.favicon_list).to include(favicon_url)
     end
   end
 

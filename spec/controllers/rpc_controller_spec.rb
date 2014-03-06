@@ -6,7 +6,7 @@ describe RpcController do
 
   before do
     member.set_auth_key
-    Member.any_instance.stub(:subscribe_feed).and_return(FactoryGirl.create(:subscription))
+    allow_any_instance_of(Member).to receive(:subscribe_feed).and_return(FactoryGirl.create(:subscription))
   end
 
   describe 'POST /update_feed' do

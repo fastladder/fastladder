@@ -17,14 +17,14 @@ describe Pin do
   describe ".after_create" do
     it "destroy_over_limit_pins called" do
       pin = FactoryGirl.build(:pin)
-      pin.should_receive(:destroy_over_limit_pins)
+      expect(pin).to receive(:destroy_over_limit_pins)
       pin.save
     end
   end
 
   describe "#destroy_over_limit_pins" do
     before {
-      Settings.stub(:save_pin_limit).and_return(1)
+      allow(Settings).to receive(:save_pin_limit).and_return(1)
       @member = FactoryGirl.create(:member, password: 'mala', password_confirmation: 'mala')
       @old_pin = FactoryGirl.create(:pin, member: @member, link: "link_1")
     }

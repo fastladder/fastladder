@@ -1,6 +1,6 @@
 shared_context :use_stub_feed do
   before {
-    Fastladder.stub(:simple_fetch).and_return(read_stub_file("github.atom"))
+    allow(Fastladder).to receive(:simple_fetch).and_return(read_stub_file("github.atom"))
   }
 
   private
