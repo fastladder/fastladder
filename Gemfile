@@ -9,7 +9,7 @@ gem 'mysql2'
 gem 'haml'
 
 # current release version has no `feed.description` method. this is why :git used
-gem 'feedzirra', github: 'pauldix/feedzirra'
+gem 'feedjira'
 gem 'opml', github: 'fastladder/opml'
 gem 'feed_searcher', '>= 0.0.6'
 gem 'nokogiri'

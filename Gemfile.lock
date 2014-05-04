@@ -12,15 +12,6 @@ GIT
     i18n-js (2.1.2)
       i18n
 
-GIT
-  remote: git://github.com/pauldix/feedzirra.git
-  revision: 18832a89e2860488b3380d87583c354924d43743
-  specs:
-    feedzirra (0.7.1)
-      curb (~> 0.8.1)
-      loofah (~> 1.2.1)
-      sax-machine (~> 0.2.1)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -96,6 +87,10 @@ GEM
     feed_searcher (0.0.6)
       mechanize (>= 1.0.0)
       nokogiri
+    feedjira (1.2.0)
+      curb (~> 0.8.1)
+      loofah (~> 1.2.1)
+      sax-machine (~> 0.2.1)
     haml (4.0.5)
       tilt
     hike (1.2.3)
@@ -270,7 +265,7 @@ DEPENDENCIES
   coveralls
   factory_girl_rails
   feed_searcher (>= 0.0.6)
-  feedzirra!
+  feedjira
   haml
   i18n-js!
   jbuilder (~> 1.2)
