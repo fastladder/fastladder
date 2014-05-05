@@ -137,7 +137,7 @@ module Fastladder
         updated_items: 0,
         error: nil
       }
-      unless parsed = Feedzirra::Feed.parse(source.body)
+      unless parsed = Feedjira::Feed.parse(source.body)
         result[:error] = 'Cannot parse feed'
         return result
       end
