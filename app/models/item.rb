@@ -23,14 +23,17 @@ require "string_utils"
 
 class Item < ActiveRecord::Base
   belongs_to :feed
+  validates :guid, presence: true, uniqueness: { scope: :feed_id }
 
-  before_save :create_digest, :fill_datetime, :default_values
+  before_validation :default_values
+  before_save :create_digest, :fill_datetime
 
   scope :stored_since, ->(viewed_on){ viewed_on ? where("stored_on >= ?", viewed_on) : all }
   scope :recent, ->(limit = nil, offset = nil){ order("created_on DESC, id DESC").limit(limit).offset(offset) }
 
   def default_values
     self.title ||= ""
+    self.guid ||= self.link
   end
 
   def fill_datetime
