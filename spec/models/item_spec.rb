@@ -71,4 +71,11 @@ describe Item do
     subject { FactoryGirl.create(:item_without_title).title }
     it { should_not eq(nil) }
   end
+
+  describe '#guid' do
+    let(:item) { FactoryGirl.create(:item_without_guid) }
+    it 'defaults to #link' do
+      expect(item.guid).to eq(item.link)
+    end
+  end
 end

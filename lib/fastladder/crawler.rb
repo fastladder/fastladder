@@ -146,6 +146,7 @@ module Fastladder
         Item.new({
           feed_id: feed.id,
           link: item.url || "",
+          guid: item.id,
           title: item.title || "",
           body: item.content || item.summary,
           author: item.author,
@@ -179,7 +180,7 @@ module Fastladder
     end
 
     def reject_duplicated(feed, items)
-      items.reject { |item| feed.items.exists?(["link = ? and digest = ?", item.link, item.digest]) }
+      items.reject { |item| feed.items.exists?(["guid = ? and digest = ?", item.id, item.digest]) }
     end
 
     def delete_old_items_if_new_items_are_many(new_items_size)
@@ -190,13 +191,13 @@ module Fastladder
 
     def update_or_insert_items_to_feed(feed, items, result)
       items.reverse_each do |item|
-        if old_item = feed.items.find_by_link(item.link)
+        if old_item = feed.items.find_by_guid(item.guid)
           old_item.increment(:version)
           unless almost_same(old_item.title, item.title) and almost_same((old_item.body || "").html2text, (item.body || "").html2text)
             old_item.stored_on = item.stored_on
             result[:updated_items] += 1
           end
-          update_columns = [:title, :body, :author, :category, :enclosure, :enclosure_type, :digest, :stored_on, :modified_on]
+          update_columns = [:link, :title, :body, :author, :category, :enclosure, :enclosure_type, :digest, :stored_on, :modified_on]
           old_item.attributes = item.attributes.select{ |column, value| update_columns.include? column }
           old_item.save
         else

@@ -59,5 +59,17 @@ describe RpcController do
         }.by(1)
       end
     end
+
+    context 'without guid' do
+      let(:params) { FactoryGirl.attributes_for(:item_without_guid) }
+
+      it 'creates a new item with guid == link' do
+        expect {
+          post :update_feed, params.merge(api_key: member.auth_key)
+        }.to change {
+          Item.find_by_guid(params[:link]).nil?
+        }.from(true).to(false)
+      end
+    end
   end
 end
