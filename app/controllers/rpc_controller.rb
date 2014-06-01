@@ -56,16 +56,16 @@ class RpcController < ApplicationController
     else
       sub = member.subscribe_feed options[:feedlink]
     end
-    item = nil
-    if options[:guid]
-      item = Item.find_or_create_by_guid_and_feed_id(options[:guid], sub.feed.id) do |item|
-        item.link = options[:link]
+    item =
+      if options[:guid]
+        Item.find_or_create_by_guid_and_feed_id(options[:guid], sub.feed.id) do |item|
+          item.link = options[:link]
+        end
+      else
+        Item.find_or_create_by_link_and_feed_id(options[:link], sub.feed.id) do |item|
+          item.guid = item.link
+        end
       end
-    else
-      item = Item.find_or_create_by_link_and_feed_id(options[:link], sub.feed.id) do |item|
-        item.guid = item.link
-      end
-    end
     item.title = options[:title]
     item.body = options[:body]
     item.author = options[:author]
