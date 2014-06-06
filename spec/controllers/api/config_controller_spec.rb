@@ -49,7 +49,7 @@ describe Api::ConfigController do
           post :setter, { use_wait: 42 }, {}
         }.to_not change {
           Member.where(id: member.id).first.config_dump['use_wait']
-        }.from(0).to(42)
+        }
       end
     end
   end
