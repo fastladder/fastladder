@@ -176,6 +176,10 @@ GEM
       json (~> 1.4)
     rest-client (1.6.7)
       mime-types (>= 1.16)
+    rspec-activemodel-mocks (1.0.1)
+      activemodel (>= 3.0)
+      activesupport (>= 3.0)
+      rspec-mocks (>= 2.99, < 4.0)
     rspec-core (3.0.0)
       rspec-support (~> 3.0.0)
     rspec-expectations (3.0.0)
@@ -284,6 +288,7 @@ DEPENDENCIES
   pry-rails
   quiet_assets
   rails (= 4.0.4)
+  rspec-activemodel-mocks
   rspec-rails
   sass-rails (~> 4.0.0)
   sdoc
