@@ -19,7 +19,7 @@ describe ApiController do
     end
     it 'limit works' do
       get :all, { subscribe_id: @subscription.id, limit: 2 }, { member_id: @member.id }
-      expect(JSON.parse(response.body)["items"]).to have(2).items
+      expect(JSON.parse(response.body)["items"].size).to eq(2)
     end
     it 'offset works' do
       get :all, { subscribe_id: @subscription.id, offset: 1 }, { member_id: @member.id }

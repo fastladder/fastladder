@@ -59,7 +59,7 @@ describe Member do
       @sub_3 = FactoryGirl.create(:subscription, member: @member, feed: FactoryGirl.create(:feed), created_on: 2.day.ago)
       @sub_4 = FactoryGirl.create(:subscription, member: @member, feed: FactoryGirl.create(:feed), created_on: 4.day.ago)
     }
-    it { expect(@member.recent_subs(3)).to have(3).subscriptions }
+    it { expect(@member.recent_subs(3).size).to eq(3) }
     it { expect(@member.recent_subs(3)).to eq([@sub_1, @sub_3, @sub_2]) }
   end
 end
