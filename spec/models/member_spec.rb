@@ -27,7 +27,7 @@ describe Member do
     end
 
     context 'password is incorrect' do
-      it { expect(Member.authenticate('bulkneets', 'ssig33')).to be_false }
+      it { expect(Member.authenticate('bulkneets', 'ssig33')).to be_nil }
     end
   end
 

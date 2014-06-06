@@ -72,14 +72,14 @@ describe Feed do
     it "favicon.ico store as PNG" do
       stub_request(:any, /.*/).to_return(content_type: 'image/vnd.microsoft.icon', body: favicon)
       feed.fetch_favicon!
-      expect(feed.favicon.image.start_with?("\x89PNG\r\n".force_encoding('ascii-8bit'))).to be_true
+      expect(feed.favicon.image.start_with?("\x89PNG\r\n".force_encoding('ascii-8bit'))).to eq(true)
     end
 
     it "if favicon url is *.gif and returning vnd.microsoft.icon" do
       stub_request(:any, /.*/).to_return(body: favicon, headers: {"Content-Type" => 'image/vnd.microsoft.icon'})
       allow(feed).to receive(:favicon_list).and_return([Addressable::URI.parse("http://example.com/favicon?file=favicon.gif")])
       feed.fetch_favicon!
-      expect(feed.favicon.image.start_with?("\x89PNG\r\n".force_encoding('ascii-8bit'))).to be_true
+      expect(feed.favicon.image.start_with?("\x89PNG\r\n".force_encoding('ascii-8bit'))).to eq(true)
     end
 
     it 'logs errors and does `next` when favicon.ico is not valid data' do
