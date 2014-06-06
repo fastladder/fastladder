@@ -186,7 +186,7 @@ module Fastladder
     def delete_old_items_if_new_items_are_many(new_items_size)
       return unless new_items_size > ITEMS_LIMIT / 2
       @logger.info "delete all items: #{feed.feedlink}"
-      Items.delete_all(["feed_id = ?", feed.id])
+      Items.where(feed_id: feed.id).delete_all
     end
 
     def update_or_insert_items_to_feed(feed, items, result)
@@ -217,7 +217,7 @@ module Fastladder
         modified_on = Time.rfc2822(last_modified)
       end
       feed.modified_on = modified_on
-      Subscription.update_all(["has_unread = ?", true], ["feed_id = ?", feed.id])
+      Subscription.where(feed_id: feed.id).update_all(has_unread: true)
     end
 
     def update_feed_infomation(feed, parsed)
