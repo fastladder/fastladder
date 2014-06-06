@@ -1,5 +1,5 @@
 class ReaderController < ApplicationController
-  before_filter :login_required
+  before_action :login_required
 
   def welcome
     redirect_to action: :index, trailing_slash: true

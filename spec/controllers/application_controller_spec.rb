@@ -5,7 +5,7 @@ describe ApplicationController do
 
   describe '#login_required' do
     controller do
-      before_filter :login_required
+      before_action :login_required
 
       def index
         render nothing: true
@@ -29,7 +29,7 @@ describe ApplicationController do
 
   describe '#current_member' do
     controller do
-      before_filter :current_member
+      before_action :current_member
 
       def index
         render nothing: true

@@ -63,7 +63,7 @@ class ApplicationController < ActionController::Base
 
   def self.params_required(params, options = {})
     params = [ params ].flatten
-    before_filter(options) do|controller|
+    before_action(options) do|controller|
       params.each do|param|
         if controller.params[param].blank?
           render json: json_status(false)

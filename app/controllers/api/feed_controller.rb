@@ -1,12 +1,12 @@
 class Api::FeedController < ApplicationController
-  before_filter   :login_required_api
+  before_action   :login_required_api
   params_required :url         , only: :discover
   params_required :feedlink, only: :subscribe
   params_required :subscribe_id, only: [:unsubscribe, :update, :move]
   params_required [ :subscribe_id, :rate   ], only: :set_rate
   params_required [ :subscribe_id, :ignore ], only: :set_notify
   params_required [ :subscribe_id, :public ], only: :set_public
-  skip_before_filter :verify_authenticity_token
+  skip_before_action :verify_authenticity_token
 
   def discover
     feeds = []

@@ -1,7 +1,7 @@
 require "yaml"
 class Api::ConfigController < ApplicationController
-  before_filter :login_required_api
-  skip_before_filter :verify_authenticity_token
+  before_action :login_required_api
+  skip_before_action :verify_authenticity_token
 
   def getter
     render json: (@member.config_dump || {}).to_json

@@ -1,6 +1,6 @@
 class RpcController < ApplicationController
-  skip_before_filter :verify_authenticity_token
-  before_filter :auth
+  skip_before_action :verify_authenticity_token
+  before_action :auth
   def update_feed
     options = params.dup
     if options[:json]

@@ -1,8 +1,8 @@
 class Api::PinController < ApplicationController
-  before_filter :login_required_api
+  before_action :login_required_api
   params_required [:link, :title], only: :add
   params_required :link, only: :remove
-  skip_before_filter :verify_authenticity_token
+  skip_before_action :verify_authenticity_token
 
   module ErrorCode
     NOT_FOUND = 2

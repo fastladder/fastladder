@@ -1,5 +1,5 @@
 class ShareController < ApplicationController
-  before_filter :login_required
+  before_action :login_required
 
   def index
 
