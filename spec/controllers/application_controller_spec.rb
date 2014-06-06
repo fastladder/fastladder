@@ -39,14 +39,14 @@ describe ApplicationController do
     context 'Member exists' do
       it 'assigns @member' do
         get :index, { }, { member_id: member.id }
-        expect(assigns(:member)).to be_true
+        expect(assigns(:member)).to_not be_nil
       end
     end
 
     context 'Member not exists' do
       it 'not assigns @member' do
         get :index, { }, { }
-        expect(assigns(:member)).to be_false
+        expect(assigns(:member)).to be_nil
       end
     end
   end

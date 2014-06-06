@@ -54,6 +54,7 @@ end
 
 group :development, :test do
   gem 'rspec-rails'
+  gem 'rspec-activemodel-mocks'
   gem 'capybara'
   gem 'launchy'
   gem 'factory_girl_rails'
