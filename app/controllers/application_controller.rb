@@ -67,7 +67,7 @@ class ApplicationController < ActionController::Base
       params.each do|param|
         if controller.params[param].blank?
           render json: json_status(false)
-          return false
+          break false
         end
       end
     end
