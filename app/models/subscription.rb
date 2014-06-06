@@ -23,7 +23,7 @@ class Subscription < ActiveRecord::Base
   after_create  :update_subscribers_count
   after_destroy :update_subscribers_count
 
-  scope :public, ->{ where(public: true) }
+  scope :open, ->{ where(public: true) }
   scope :has_unread, ->{ where(has_unread: true) }
   scope :recent, ->(num){ order("created_on DESC").limit(num) }
 

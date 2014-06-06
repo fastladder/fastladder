@@ -138,11 +138,11 @@ class Member < ActiveRecord::Base
   end
 
   def public_subscribe_count
-    self.subscriptions.public.count
+    self.subscriptions.open.count
   end
 
   def public_subs
-    self.subscriptions.public
+    self.subscriptions.open
   end
 
   def recent_subs(num)
