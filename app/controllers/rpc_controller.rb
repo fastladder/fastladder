@@ -58,11 +58,11 @@ class RpcController < ApplicationController
     end
     item =
       if options[:guid]
-        Item.find_or_create_by_guid_and_feed_id(options[:guid], sub.feed.id) do |item|
+        Item.find_or_create_by(guid: options[:guid], feed_id: sub.feed.id) do |item|
           item.link = options[:link]
         end
       else
-        Item.find_or_create_by_link_and_feed_id(options[:link], sub.feed.id) do |item|
+        Item.find_or_create_by(link: options[:link], feed_id: sub.feed.id) do |item|
           item.guid = item.link
         end
       end
