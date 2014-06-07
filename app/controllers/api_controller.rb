@@ -1,11 +1,11 @@
 require "string_utils"
 class ApiController < ApplicationController
-  before_filter :login_required_api
+  before_action :login_required_api
   params_required :subscribe_id, only: :touch_all
   params_required [:timestamp, :subscribe_id], only: :touch
   params_required :since, only: [:item_count, :unread_count]
-  before_filter :find_sub, only: [:all, :unread]
-  skip_before_filter :verify_authenticity_token
+  before_action :find_sub, only: [:all, :unread]
+  skip_before_action :verify_authenticity_token
 
   def all
     if params[:limit].blank?

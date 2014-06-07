@@ -2,7 +2,7 @@
 require File.expand_path('../application', __FILE__)
 
 # Initialize the Rails application.
-Fastladder::Application.initialize!
+Rails.application.initialize!
 
 require 'fastladder'
 require 'string_utils'

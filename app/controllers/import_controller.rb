@@ -1,5 +1,5 @@
 class ImportController < ApplicationController
-  before_filter :login_required
+  before_action :login_required
 
   def fetch
     @folders = Hash.new do |hash, key|
