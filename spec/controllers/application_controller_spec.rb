@@ -13,9 +13,22 @@ describe ApplicationController do
     end
 
     context 'Member exists' do
-      it 'renders 200' do
-        get :index, { }, { member_id: member.id }
-        expect(response).to be_success
+      context 'session[:member_id] is given' do
+        it 'renders 200' do
+          get :index, { }, { member_id: member.id }
+          expect(response).to be_success
+        end
+      end
+
+      context 'params[:auth_key] is given' do
+        before do
+          member.set_auth_key
+        end
+
+        it 'renders 200' do
+          get :index, { auth_key: member.auth_key }
+          expect(response).to be_success
+        end
       end
     end
 
