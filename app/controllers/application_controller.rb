@@ -58,7 +58,15 @@ class ApplicationController < ActionController::Base
   private
 
   def current_member
-    @member ||= Member.where(id: session[:member_id]).first
+    @member ||= find_current_member_by_session || find_current_member_by_auth_key
+  end
+
+  def find_current_member_by_session
+    session[:member_id] && Member.find_by(id: session[:member_id])
+  end
+
+  def find_current_member_by_auth_key
+    params[:auth_key].presence && Member.find_by(auth_key: params[:auth_key])
   end
 
   def self.params_required(params, options = {})
