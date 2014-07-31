@@ -3,8 +3,10 @@ class Api::ConfigController < ApplicationController
   before_action :login_required_api
   skip_before_action :verify_authenticity_token
 
+  APP_CONFIG = Settings.to_h.slice('save_pin_limit')
+
   def getter
-    render json: (@member.config_dump || {}).to_json
+    render json: (@member.config_dump || {}).merge(APP_CONFIG).to_json
   end
 
   def setter

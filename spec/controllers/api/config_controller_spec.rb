@@ -10,7 +10,7 @@ describe Api::ConfigController do
     describe '.getter' do
       it 'renders json' do
         get :getter, {}, { member_id: member.id }
-        expect(ActiveSupport::JSON.decode(response.body)).to include('use_wait' => '0')
+        expect(ActiveSupport::JSON.decode(response.body)).to include('use_wait' => '0', 'save_pin_limit' => Settings.save_pin_limit)
       end
     end
 

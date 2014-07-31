@@ -21,7 +21,7 @@ Pin.extend({
             data.icon = info.icon
         }
         this.pins.unshift(data);
-        if(this.pins.length > 100){
+        if(this.pins.length > app.config.save_pin_limit){
             var p = this.pins.pop();
             this.has[p.url] = false;
         }
