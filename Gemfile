@@ -4,8 +4,17 @@ source 'https://rubygems.org'
 gem 'rails', '4.1.6'
 
 # Use mysql as the database for Active Record
-gem 'sqlite3'
-gem 'mysql2'
+group :test, :development do
+  gem 'sqlite3'
+  gem 'mysql2'
+end
+
+group :production do
+  gem 'unicorn'
+  gem 'pg'
+  gem 'rails_12factor'
+end
+
 gem 'haml'
 
 # current release version has no `feed.description` method. this is why :git used
