@@ -270,7 +270,7 @@ Subscribe.Formatter = {
         var rate_names = model.get_rate_names();
         var rates = rate_names.map(function(v){
             var filtered = model.get_by_rate(v);
-            var hosi = HTML.IMG({src:Rate.image_path + v + ".gif"});
+            var hosi = HTML.IMG({src:LDR.Rate.image_path + v + ".gif"});
             var param = {
                 name : hosi,
                 unread_count : filtered.get_unread_count(),
