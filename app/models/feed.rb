@@ -40,7 +40,7 @@ class Feed < ActiveRecord::Base
   }
 
   def description
-    CGI.escapeHTML self[:description]
+    CGI.escapeHTML self[:description].to_s
   end
 
   def self.initialize_from_uri(uri)
