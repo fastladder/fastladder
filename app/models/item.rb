@@ -44,7 +44,7 @@ class Item < ActiveRecord::Base
     str = "#{self.title}#{self.body}"
     str.gsub!(%r{<br clear="all"\s*/>\s*<a href="http://rss\.rssad\.jp/(.*?)</a>\s*<br\s*/>}im, "")
     str = str.gsub(/\s+/, "")
-    digest = Digest::SHA1.hexdigest(str)
+    digest = Digest::SHA1.hexdigest([self.feed.feedlink, self.link, str].join)
     self.digest = digest
   end
 

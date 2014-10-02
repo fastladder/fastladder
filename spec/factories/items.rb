@@ -6,6 +6,7 @@ FactoryGirl.define do
   sequence(:item_guid_seq) {|n| "guid#{n}" }
 
   factory :item do
+    feed
     link { FactoryGirl.generate(:item_link_seq) }
     title '最速インターフェース研究会 :: 近況'
     body '観光目的で7ヶ月ほど京都旅行に行っていた。<br>祇園祭楽しかったですね。'
