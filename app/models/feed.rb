@@ -39,6 +39,10 @@ class Feed < ActiveRecord::Base
       merge(CrawlStatus.expired(Settings.crawl_interval.minutes))
   }
 
+  def description
+    CGI.escapeHTML self[:description]
+  end
+
   def self.initialize_from_uri(uri)
     feed_dom = Feedjira::Feed.parse(Fastladder.simple_fetch(uri))
     return nil unless feed_dom
