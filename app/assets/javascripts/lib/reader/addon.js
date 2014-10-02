@@ -152,7 +152,7 @@ function toggle_clip(id){
 		}, callback);
 	}
 	function set_ratepad(n){
-		_$("clip_rate_"+id).src = Rate.image_path_p + n + ".gif";
+		_$("clip_rate_"+id).src = LDR.Rate.image_path_p + n + ".gif";
 	}
 	if(hasClass(body, "clip_mode")){
 		var form = _$("clip_form_"+id);
@@ -349,7 +349,7 @@ register_command("q|quit",function(){
 		var sid = app.state.now_reading;
 		var rate = v - 0;
 		set_rate(sid, rate);
-		_$("rate_img").src = Rate.image_path_p + rate + ".gif";
+		_$("rate_img").src = LDR.Rate.image_path_p + rate + ".gif";
 	})
 });
 // change mode
