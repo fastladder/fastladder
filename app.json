@@ -13,7 +13,7 @@
       "generator": "secret"
     },
     "TZ": {
-      "descriptions": "Set TimeZone. (e.g Asia/Tokyo)",
+      "description": "Set TimeZone. (e.g Asia/Tokyo)",
       "value": "UTC",
       "required": "false"
     }
