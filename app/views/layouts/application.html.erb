@@ -13,7 +13,7 @@
 <div id="container">
 <div class="navi">
 <h1 class="logo"><%= link_to "Fastladder", root_path %></h1>
-<% if current_member.present? -%>
+<% if current_member.present? and not current_member.errors -%>
 <ul>
 	<li>Wellcome <%= link_to current_member.username, user_path(current_member.username) %></li>
 	<li><%= link_to "My Feeds", reader_path %></li>
