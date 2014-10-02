@@ -14,3 +14,25 @@ $ bundle install
 $ bundle exec rake db:create db:migrate
 $ bundle exec rake setup # Setup files for development
 ```
+
+## Run
+
+Run fastladder web process
+
+```
+$ bundle exec rails server
+```
+
+Run fastladder crawler process
+
+```
+$ bundle exec ruby script/crawler
+```
+
+You can run web and crawler processes by [foreman](https://github.com/ddollar/foreman).
+
+```
+$ foreman start         # run web and crawler processes
+$ foreman start web     # run web process
+$ foreman start crawler # run crawler process
+```
