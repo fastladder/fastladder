@@ -42,6 +42,9 @@ class Feed < ActiveRecord::Base
   def description
     CGI.escapeHTML self[:description].to_s
   end
+  def description= str
+    self[:description] = str.to_s
+  end
 
   def self.initialize_from_uri(uri)
     feed_dom = Feedjira::Feed.parse(Fastladder.simple_fetch(uri))
