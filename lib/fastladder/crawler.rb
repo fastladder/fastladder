@@ -161,7 +161,7 @@ module Fastladder
 
       items = cut_off(items)
       items = reject_duplicated(feed, items)
-      delete_old_items_if_new_items_are_many(items.size)
+      delete_old_items_if_new_items_are_many(feed, items.size)
       update_or_insert_items_to_feed(feed, items, result)
       update_unread_status(feed, result)
       update_feed_infomation(feed, parsed)
@@ -183,10 +183,10 @@ module Fastladder
       items.reject { |item| feed.items.exists?(["guid = ? and digest = ?", item.id, item.digest]) }
     end
 
-    def delete_old_items_if_new_items_are_many(new_items_size)
+    def delete_old_items_if_new_items_are_many(feed, new_items_size)
       return unless new_items_size > ITEMS_LIMIT / 2
       @logger.info "delete all items: #{feed.feedlink}"
-      Items.where(feed_id: feed.id).delete_all
+      feed.items.delete_all(:delete_all)
     end
 
     def update_or_insert_items_to_feed(feed, items, result)
