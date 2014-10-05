@@ -23,9 +23,9 @@ class Member < ActiveRecord::Base
   attr_accessor :password
   serialize :config_dump
 
-  has_many :folders
-  has_many :subscriptions
-  has_many :pins
+  has_many :folders, dependent: :delete_all
+  has_many :subscriptions, dependent: :destroy
+  has_many :pins, dependent: :delete_all
 
   validates_presence_of :username
   validates_presence_of :password, if: :password_required?

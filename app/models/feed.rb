@@ -21,10 +21,10 @@ require "open-uri"
 require "tempfile"
 
 class Feed < ActiveRecord::Base
-  has_one :crawl_status
-  has_one :favicon
-  has_many :items
-  has_many :subscriptions
+  has_one :crawl_status, dependent: :destroy
+  has_one :favicon, dependent: :destroy
+  has_many :items, dependent: :delete_all
+  has_many :subscriptions, dependent: :destroy
   #has_many :members, through: :subscriptions
   #has_many :folders, through: :subscriptions
 
