@@ -197,7 +197,7 @@ module Fastladder
             old_item.stored_on = item.stored_on
             result[:updated_items] += 1
           end
-          update_columns = [:link, :title, :body, :author, :category, :enclosure, :enclosure_type, :digest, :stored_on, :modified_on]
+          update_columns = %w(link title body author category enclosure enclosure_type digest modified_on)
           old_item.attributes = item.attributes.select{ |column, value| update_columns.include? column }
           old_item.save
         else
