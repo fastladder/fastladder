@@ -46,12 +46,12 @@ module Fastladder
     end
 
     def proxy_except_hosts=(patterns)
-      petterns.reject! { |p| !p.kind_of?(Regexp) }
-      Fastladder.const_set(:HTTP_PROXY_EXCEPT_HOSTS, petterns)
+      patterns.reject! { |p| !p.kind_of?(Regexp) }
+      Fastladder.const_set(:HTTP_PROXY_EXCEPT_HOSTS, patterns)
     end
 
     def open_timeout=(seconds); Fastladder.const_set(:HTTP_OPEN_TIMEOUT, seconds); end
-    def read_timeout=(seconds); Fastladder.const_ste(:HTTP_READ_TIMEOUT, seconds); end
+    def read_timeout=(seconds); Fastladder.const_set(:HTTP_READ_TIMEOUT, seconds); end
     def crawler_user_agent=(name); Fastladder.const_set(:CRAWLER_USER_AGENT, name); end
   end
 
