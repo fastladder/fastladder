@@ -29,4 +29,8 @@ FactoryGirl.define do
   factory :item_without_guid, parent: :item do
     guid nil
   end
+
+  factory :item_has_fixed_guid, parent: :item do
+    guid "guid"
+  end
 end
