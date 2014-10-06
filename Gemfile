@@ -37,6 +37,10 @@ else
   gem 'pg'
 end
 
+group :test, :development do
+  gem 'sqlite3'
+end
+
 group :production do
   gem 'unicorn'
   gem 'rails_12factor'
