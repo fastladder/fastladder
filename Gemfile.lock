@@ -140,14 +140,12 @@ GEM
     mini_portile (0.6.0)
     minitest (5.4.2)
     multi_json (1.10.1)
-    mysql2 (0.3.16)
     net-http-digest_auth (1.4)
     net-http-persistent (2.9.4)
     netrc (0.7.7)
     nokogiri (1.6.3.1)
       mini_portile (= 0.6.0)
     ntlm-http (0.1.1)
-    pg (0.17.1)
     poltergeist (1.5.1)
       capybara (~> 2.1)
       cliver (~> 0.3.1)
@@ -300,10 +298,8 @@ DEPENDENCIES
   konacha
   launchy
   mini_magick
-  mysql2
   nokogiri
   opml!
-  pg
   poltergeist
   pry-doc
   pry-rails
