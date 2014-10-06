@@ -1,4 +1,11 @@
 GIT
+  remote: git://github.com/eventmachine/eventmachine.git
+  revision: 4d53154a9ea420cdc65bf8985b9156ad4c3730c9
+  ref: 4d53154a9e
+  specs:
+    eventmachine (1.0.3)
+
+GIT
   remote: git://github.com/fastladder/opml.git
   revision: 8d37f6924ff82983e4de0e02422a53b9b20a1864
   specs:
@@ -78,7 +85,6 @@ GEM
     domain_name (0.5.21)
       unf (>= 0.0.5, < 1.0.0)
     erubis (2.7.0)
-    eventmachine (1.0.3)
     execjs (2.2.1)
     factory_girl (4.4.0)
       activesupport (>= 3.0.0)
@@ -283,6 +289,7 @@ DEPENDENCIES
   capybara
   coffee-rails (~> 4.0.0)
   coveralls
+  eventmachine!
   factory_girl_rails
   feed_searcher (>= 0.0.6)
   feedjira

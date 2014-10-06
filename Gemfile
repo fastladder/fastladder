@@ -81,6 +81,7 @@ group :test, :development do
   gem 'poltergeist'
   gem 'sinon-rails'
   gem 'thin'
+  gem 'eventmachine', github: 'eventmachine/eventmachine', ref: '4d53154a9e' # v1.0.3 cannot compile on ruby 2.2.0
 end
 
 # Use ActiveModel has_secure_password
