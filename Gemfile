@@ -3,11 +3,38 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.6'
 
-gem 'mysql2', group: :mysql
-gem 'pg', group: :postgres
+# Include database gems for the adapters found in the database
+# configuration file or DATABASE_URL
+require 'erb'
+require 'uri'
+require 'yaml'
 
-group :test, :development do
-  gem 'sqlite3'
+database_file = File.join(File.dirname(__FILE__), "config/database.yml")
+adapters = []
+
+if File.exist?(database_file)
+  database_config = YAML::load(ERB.new(IO.read(database_file)).result)
+  adapters += database_config.values.map {|conf| conf['adapter']}.compact.uniq
+end
+
+if database_url = ENV['DATABASE_URL']
+  adapters << URI.parse(database_url).scheme
+end
+
+if adapters.any?
+  adapters.each do |adapter|
+    case adapter
+    when 'mysql2'     ; gem 'mysql2'
+    when 'mysql'      ; gem 'mysql'
+    when /postgresql/ ; gem 'pg'
+    when /sqlite3/    ; gem 'sqlite3'
+    else
+      warn("Unknown database adapter `#{adapter}` found in config/database.yml, use Gemfile.local to load your own database gems")
+    end
+  end
+else
+  warn("No adapter found in config/database.yml or DATABASE_URL, please configure it first -- fallback to pg")
+  gem 'pg'
 end
 
 group :production do
@@ -83,15 +110,3 @@ group :test, :development do
   gem 'thin'
   gem 'eventmachine', github: 'eventmachine/eventmachine', ref: '4d53154a9e' # v1.0.3 cannot compile on ruby 2.2.0
 end
-
-# Use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'
-
-# Use unicorn as the app server
-# gem 'unicorn'
-
-# Use Capistrano for deployment
-# gem 'capistrano', group: :development
-
-# Use debugger
-# gem 'debugger', group: [:development, :test]

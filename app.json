@@ -12,7 +12,6 @@
     "SECRET_KEY_BASE": {
       "generator": "secret"
     },
-    "BUNDLE_WITHOUT": "development test mysql",
     "TZ": {
       "description": "Set TimeZone. (e.g Asia/Tokyo)",
       "value": "UTC",
