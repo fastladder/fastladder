@@ -146,6 +146,7 @@ GEM
     nokogiri (1.6.3.1)
       mini_portile (= 0.6.0)
     ntlm-http (0.1.1)
+    pg (0.17.1)
     poltergeist (1.5.1)
       capybara (~> 2.1)
       cliver (~> 0.3.1)
@@ -243,7 +244,6 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (~> 2.8)
-    sqlite3 (1.3.9)
     subexec (0.2.3)
     term-ansicolor (1.3.0)
       tins (~> 1.0)
@@ -300,6 +300,7 @@ DEPENDENCIES
   mini_magick
   nokogiri
   opml!
+  pg
   poltergeist
   pry-doc
   pry-rails
@@ -314,7 +315,6 @@ DEPENDENCIES
   simplecov
   simplecov-rcov
   sinon-rails
-  sqlite3
   thin
   turbolinks
   uglifier (>= 1.3.0)
