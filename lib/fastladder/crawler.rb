@@ -180,7 +180,7 @@ module Fastladder
     end
 
     def reject_duplicated(feed, items)
-      items.reject { |item| feed.items.exists?(["guid = ? and digest = ?", item.id, item.digest]) }
+      items.uniq { |item| item.guid }.reject { |item| feed.items.exists?(["guid = ? and digest = ?", item.id, item.digest]) }
     end
 
     def delete_old_items_if_new_items_are_many(new_items_size)
