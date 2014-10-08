@@ -10,8 +10,19 @@ The open-source Fastladder, so called OpenFL, is an RSS reader to be installed o
 ```
 $ git clone git://github.com/fastladder/fastladder.git
 $ cd fastladder
-$ bundle install
+
+# For SQLite
 $ cp config/database.yml.sqlite3 config/database.yml
+$ bundle install
+
+# For MySQL
+$ cp config/database.yml.mysql config/database.yml
+$ bundle install
+
+# For PostgreSQL
+$ cp config/database.yml.postgresql config/database.yml
+$ bundle install
+
 $ bundle exec rake db:create db:migrate
 $ bundle exec rake setup # Setup files for development
 ```
