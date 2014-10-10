@@ -11,3 +11,4 @@ public/assets
 coverage
 .ruby-version
 .rbenv-gemsets
+.DS_Store
