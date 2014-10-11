@@ -63,7 +63,7 @@ describe ApiController do
   describe 'POST /crawl' do
     let(:headers) {
       { 'Accept' => 'text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5',
-        'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Fastladder FeedFetcher/0.0.3 (http://fastladder.org/)'
+        'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent' => 'Fastladder FeedFetcher/0.0.3 (http://fastladder.org/)'
       }
     }
 
@@ -127,7 +127,6 @@ describe ApiController do
       expect(response.body).to be_json_error
     end
   end
-
 
   context 'not logged in' do
     it 'renders blank' do

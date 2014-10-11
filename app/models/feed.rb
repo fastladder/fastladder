@@ -15,8 +15,8 @@
 #  updated_on        :datetime         not null
 #
 
-#require "string_utils"
-#require "fastladder/crawler"
+# require "string_utils"
+# require "fastladder/crawler"
 require "open-uri"
 require "tempfile"
 
@@ -25,8 +25,8 @@ class Feed < ActiveRecord::Base
   has_one :favicon
   has_many :items
   has_many :subscriptions
-  #has_many :members, through: :subscriptions
-  #has_many :folders, through: :subscriptions
+  # has_many :members, through: :subscriptions
+  # has_many :folders, through: :subscriptions
 
   before_save :except_fragment_identifier, :default_values
 
@@ -42,7 +42,8 @@ class Feed < ActiveRecord::Base
   def description
     CGI.escapeHTML self[:description].to_s
   end
-  def description= str
+
+  def description=(str)
     self[:description] = str.to_s
   end
 

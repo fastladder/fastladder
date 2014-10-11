@@ -25,7 +25,7 @@ class Api::FeedController < ApplicationController
         end
         feeds << result
       else
-        html = Fastladder::simple_fetch(feedlink)
+        html = Fastladder.simple_fetch(feedlink)
         logger.debug html
         unless feed = Feedjira::Feed.parse(html)
           next
@@ -34,7 +34,7 @@ class Api::FeedController < ApplicationController
           subscribers_count: 0,
           feedlink: feedlink.html_escape,
           link: (feed.url || feedlink).html_escape,
-          title: (feed.title || feed.url|| "").utf8_roundtrip.html_escape,
+          title: (feed.title || feed.url || "").utf8_roundtrip.html_escape,
         }
       end
     end
@@ -198,7 +198,8 @@ class Api::FeedController < ApplicationController
     render_json_status(true)
   end
 
-protected
+  protected
+
   def subscribe_feed(feedlink, options)
     @member.subscribe_feed(feedlink, options)
   end

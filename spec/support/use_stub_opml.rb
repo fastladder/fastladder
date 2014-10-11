@@ -4,6 +4,7 @@ shared_context :use_stub_opml do
   }
 
   private
+
   def read_stub_file(filename)
     stub_root_dir = File.expand_path(File.dirname(__FILE__) + "/../../spec/stubs")
     open("#{stub_root_dir}/#{filename}").read

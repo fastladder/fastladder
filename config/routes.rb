@@ -16,7 +16,7 @@ Rails.application.routes.draw do
   end
 
   %w(all unread touch_all touch item_count unread_count crawl).each do|name|
-      match "api/#{name}" => "api\##{name}", via: :get
+    match "api/#{name}" => "api\##{name}", via: :get
   end
   post 'api/:action' => 'api'
 
@@ -24,7 +24,7 @@ Rails.application.routes.draw do
   match 'api/*_' => 'application#nothing', via: [:post, :get]
 
   # --------------------------------------------------------------------------------
-  # other pages 
+  # other pages
   # --------------------------------------------------------------------------------
   get 'subscribe', to: 'subscribe#index', as: :subscribe_index
   get 'subscribe/*url', to: 'subscribe#confirm', as: :subscribe, format: false

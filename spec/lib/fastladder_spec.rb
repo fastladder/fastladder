@@ -20,7 +20,7 @@ describe :fastladder do
         fastladder.read_timeout = 200
         expect(Fastladder::HTTP_READ_TIMEOUT).to eq(200)
       end
-      
+
       it 'changing CRAWLER_USER_AGENT' do
         fastladder.crawler_user_agent = "YetAnother FeedFetcher/0.0.3 (http://example.com/)"
         expect(Fastladder::CRAWLER_USER_AGENT).to eq("YetAnother FeedFetcher/0.0.3 (http://example.com/)")

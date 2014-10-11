@@ -1,5 +1,5 @@
 class AboutController < ApplicationController
- def index
+  def index
     url = url_from_path(:url) unless params[:url].blank?
     @feed = Feed.find_by_feedlink(url) unless url.blank?
     unless @feed.nil?

@@ -35,7 +35,8 @@ class Api::FolderController < ApplicationController
     render_json_status(true)
   end
 
-protected
+  protected
+
   def get_folder
     if (folder_id = params[:folder_id].to_i) > 0
       return @member.folders.find_by_id(folder_id)
