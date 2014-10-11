@@ -1,6 +1,4 @@
 source 'https://rubygems.org'
-
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.6'
 
 # Include database gems for the adapters found in the database
@@ -37,76 +35,52 @@ else
   gem 'pg'
 end
 
-group :production do
-  gem 'unicorn'
-  gem 'rails_12factor'
-end
-
-gem 'haml'
-
-# current release version has no `feed.description` method. this is why :git used
-gem 'feedjira'
-gem 'opml', github: 'fastladder/opml'
+gem 'addressable', require: 'addressable/uri'
+gem 'coffee-rails', '~> 4.0.0'
 gem 'feed_searcher', '>= 0.0.6'
+gem 'feedjira'
+gem 'haml'
+gem 'i18n-js', github: 'fnando/i18n-js'
+gem 'jbuilder', '~> 2.0'
+gem 'jquery-rails'
+gem 'mini_magick'
 gem 'nokogiri'
-gem "mini_magick"
-gem "addressable", require: "addressable/uri"
-gem "settingslogic"
-
-# Use SCSS for stylesheets
+gem 'opml', github: 'fastladder/opml'
 gem 'sass-rails', '~> 4.0.0'
-
-# Use Uglifier as compressor for JavaScript assets
+gem 'settingslogic'
+gem 'turbolinks'
 gem 'uglifier', '>= 1.3.0'
 
-# Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 4.0.0'
-
-# See https://github.com/sstephenson/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
-
-gem 'i18n-js', github: 'fnando/i18n-js'
-
-# Use jquery as the JavaScript library
-gem 'jquery-rails'
-
-# Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-gem 'turbolinks'
-
-# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.0'
-
-group :doc do
-  # bundle exec rake doc:rails generates the API under doc/api.
-  gem 'sdoc', require: false
-end
-
 group :development do
-  gem 'pry-rails'
-  gem 'pry-doc'
   gem 'annotate'
+  gem 'pry-doc'
+  gem 'pry-rails'
   gem 'quiet_assets'
 end
 
-group :development, :test do
-  gem 'rspec-rails'
-  gem 'rspec-activemodel-mocks'
+group :test do
   gem 'capybara'
+  gem 'coveralls', require: false
+  gem 'eventmachine', github: 'eventmachine/eventmachine', ref: '4d53154a9e' # v1.0.3 cannot compile on ruby 2.2.0
+  gem 'factory_girl_rails', group: :development
+  gem 'konacha', group: :development
   gem 'launchy'
-  gem 'factory_girl_rails'
+  gem 'poltergeist'
+  gem 'rspec-activemodel-mocks'
+  gem 'rspec-rails', group: :development
   gem 'simplecov'
   gem 'simplecov-rcov'
-  gem 'coveralls', require: false
-end
-
-group :test do
+  gem 'sinon-rails'
+  gem 'thin'
   gem 'webmock'
 end
 
-group :test, :development do
-  gem 'konacha'
-  gem 'poltergeist'
-  gem 'sinon-rails'
-  gem 'thin'
-  gem 'eventmachine', github: 'eventmachine/eventmachine', ref: '4d53154a9e' # v1.0.3 cannot compile on ruby 2.2.0
+group :production do
+  gem 'rails_12factor'
+  gem 'unicorn'
 end
+
+group :doc do
+  gem 'sdoc', require: false
+end
+
