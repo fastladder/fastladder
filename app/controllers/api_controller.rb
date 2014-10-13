@@ -160,7 +160,8 @@ class ApiController < ApplicationController
     # return render_json_status(success ? true : false)
   end
 
-protected
+  protected
+
   def find_sub
     @id = (params[:subscribe_id] || params[:id] || 0).to_i
     unless @sub = @member.subscriptions.includes(:feed).find_by_id(@id)

@@ -5,7 +5,7 @@ Konacha.configure do |config|
 
   Capybara.server do |app, port|
     require 'rack/handler/thin'
-    Rack::Handler::Thin.run(app, :Port => port)
+    Rack::Handler::Thin.run(app, Port: port)
   end
 end if defined?(Konacha)
 

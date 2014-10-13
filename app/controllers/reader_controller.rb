@@ -6,6 +6,6 @@ class ReaderController < ApplicationController
   end
 
   def index
-    render layout:false
+    render layout: false
   end
 end

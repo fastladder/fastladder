@@ -155,7 +155,7 @@ class Member < ActiveRecord::Base
   end
 
   # export OPML or JSON
-  def export format
+  def export(format)
     case format
     when 'opml'
       folders = {}
@@ -194,7 +194,8 @@ class Member < ActiveRecord::Base
     end
   end
 
-protected
+  protected
+
   # before filter
   def encrypt_password
     return if password.blank?

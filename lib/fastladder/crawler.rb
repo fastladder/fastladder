@@ -50,7 +50,7 @@ module Fastladder
       REDIRECT_LIMIT.times do
         begin
           @logger.info "fetch: #{feed.feedlink}"
-          response = Fastladder::fetch(feed.feedlink, modified_on: feed.modified_on)
+          response = Fastladder.fetch(feed.feedlink, modified_on: feed.modified_on)
         end
         @logger.info "HTTP status: [#{response.code}] #{feed.feedlink}"
         case response
@@ -64,19 +64,17 @@ module Fastladder
           result[:message] = "Error: #{response.code} #{response.message}"
           result[:error] = true
           break
-=begin
-        when Net::HTTPUnauthorized
-          ...
-          break
-        when Net::HTTPMovedPermanently
-          if crawl_status.http_status == 301  # Moved Permanently
-            if crawl_status.response_changed_on < 1.week.ago
-              feed.feedlink = feedlink
-              modified_on = nil
-            end
-          end
-          break
-=end
+        # when Net::HTTPUnauthorized
+        #   ...
+        #   break
+        # when Net::HTTPMovedPermanently
+        #   if crawl_status.http_status == 301  # Moved Permanently
+        #     if crawl_status.response_changed_on < 1.week.ago
+        #       feed.feedlink = feedlink
+        #       modified_on = nil
+        #     end
+        #   end
+        #   break
         when Net::HTTPRedirection
           @logger.info "Redirect: #{feed.feedlink} => #{response["location"]}"
           feed.feedlink = URI.join(feed.feedlink, response["location"])
@@ -94,7 +92,8 @@ module Fastladder
     end
 
     private
-    def run_loop()
+
+    def run_loop
       begin
         run_body
       rescue TimeoutError
@@ -113,7 +112,7 @@ module Fastladder
       false
     end
 
-    def run_body()
+    def run_body
       @logger.info "sleep: #{@interval}s"
       sleep @interval
       if feed = CrawlStatus.fetch_crawlable_feed

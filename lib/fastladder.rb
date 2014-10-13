@@ -59,11 +59,11 @@ module Fastladder
     uri = link.kind_of?(URI) ? link : URI.parse(link)
 
     http_class = Net::HTTP
-    #if proxy = uri.find_proxy || Fastladder::HTTP_PROXY
-    #  unless Fastladder::HTTP_PROXY_EXCEPT_HOSTS.any? { |pettern| uri.host =~ pettern }
-    #    http_class = Net::HTTP.Proxy(proxy.host, proxy.port, proxy.user, proxy.password)
-    #  end
-    #end
+    # if proxy = uri.find_proxy || Fastladder::HTTP_PROXY
+    #   unless Fastladder::HTTP_PROXY_EXCEPT_HOSTS.any? { |pettern| uri.host =~ pettern }
+    #     http_class = Net::HTTP.Proxy(proxy.host, proxy.port, proxy.user, proxy.password)
+    #   end
+    # end
     http = http_class.new(uri.host, uri.port)
     http.open_timeout = options[:open_timeout] || Fastladder::HTTP_OPEN_TIMEOUT
     http.read_timeout = options[:read_timeout] || Fastladder::HTTP_READ_TIMEOUT

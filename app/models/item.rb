@@ -48,7 +48,6 @@ class Item < ActiveRecord::Base
     self.digest = digest
   end
 
-
   def as_json(options = {})
     result = {}
     result[:created_on] = self.created_on ? self.created_on.to_time.to_i : 0
