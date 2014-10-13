@@ -53,8 +53,8 @@ gem 'uglifier', '>= 1.3.0'
 
 group :development do
   gem 'annotate'
-  gem 'pry-doc'
   gem 'pry-rails'
+  gem 'pry-doc'
   gem 'quiet_assets'
 end
 
