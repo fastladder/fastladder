@@ -70,7 +70,7 @@ describe Feed do
     let(:favicon) { open(File.expand_path(File.join(File.dirname(__FILE__), '..', 'fixtures', 'favicon.ico'))).read }
 
     it "favicon.ico store as PNG" do
-      stub_request(:any, /.*/).to_return(content_type: 'image/vnd.microsoft.icon', body: favicon)
+      stub_request(:any, /.*/).to_return(headers: { 'Content-Type' => 'image/vnd.microsoft.icon' }, body: favicon)
       feed.fetch_favicon!
       expect(feed.favicon.image.start_with?("\x89PNG\r\n".force_encoding('ascii-8bit'))).to eq(true)
     end
