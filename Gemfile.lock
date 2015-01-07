@@ -14,7 +14,7 @@ GIT
 
 GIT
   remote: git://github.com/fnando/i18n-js.git
-  revision: 04b1072c9f942c1b152b29daf0e33aa30537d16e
+  revision: d84d2533f4b0c75acc37b8abceafa10eab657b84
   specs:
     i18n-js (3.0.0.rc8)
       i18n (~> 0.6)
@@ -71,7 +71,7 @@ GEM
       xpath (~> 2.0)
     cliver (0.3.2)
     coderay (1.1.0)
-    coffee-rails (4.0.1)
+    coffee-rails (4.1.0)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.0)
     coffee-script (2.3.0)
@@ -303,7 +303,7 @@ DEPENDENCIES
   addressable
   annotate
   capybara
-  coffee-rails (~> 4.0.0)
+  coffee-rails (~> 4.1.0)
   coveralls
   eventmachine!
   factory_girl_rails
