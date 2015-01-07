@@ -48,7 +48,6 @@ gem 'nokogiri'
 gem 'opml', github: 'fastladder/opml'
 gem 'sass-rails', '~> 4.0.0'
 gem 'settingslogic'
-gem 'turbolinks'
 gem 'uglifier', '>= 1.3.0'
 
 group :development do
