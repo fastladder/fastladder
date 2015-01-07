@@ -232,12 +232,13 @@ GEM
       rspec-support (~> 3.1.0)
     rspec-support (3.1.2)
     safe_yaml (1.0.4)
-    sass (3.2.19)
-    sass-rails (4.0.5)
+    sass (3.4.9)
+    sass-rails (5.0.1)
       railties (>= 4.0.0, < 5.0)
-      sass (~> 3.2.2)
-      sprockets (~> 2.8, < 3.0)
-      sprockets-rails (~> 2.0)
+      sass (~> 3.1)
+      sprockets (>= 2.8, < 4.0)
+      sprockets-rails (>= 2.0, < 4.0)
+      tilt (~> 1.1)
     sax-machine (1.2.0)
     sdoc (0.4.1)
       json (~> 1.7, >= 1.7.7)
@@ -326,7 +327,7 @@ DEPENDENCIES
   rails_12factor
   rspec-activemodel-mocks
   rspec-rails
-  sass-rails (~> 4.0.0)
+  sass-rails (~> 5.0.0)
   sdoc
   settingslogic
   simplecov
