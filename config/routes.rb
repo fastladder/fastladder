@@ -55,7 +55,7 @@ Rails.application.routes.draw do
   get 'export/opml', to: 'export#opml', as: 'export'
 
   get 'account', to: 'account#index', as: 'account_index'
-  get 'account/:action', to: 'account', as: 'account'
+  get 'account/:action', controller: 'account', as: 'account'
 
   match 'rpc/:action' => 'rpc', via: [:post, :get]
 
