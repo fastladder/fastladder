@@ -61,12 +61,12 @@ group :test do
   gem 'capybara'
   gem 'coveralls', require: false
   gem 'eventmachine', github: 'eventmachine/eventmachine', ref: '4d53154a9e' # v1.0.3 cannot compile on ruby 2.2.0
-  gem 'factory_girl_rails', group: :development
-  gem 'konacha', group: :development
+  gem 'factory_girl_rails'
+  gem 'konacha'
   gem 'launchy'
   gem 'poltergeist'
   gem 'rspec-activemodel-mocks'
-  gem 'rspec-rails', group: :development
+  gem 'rspec-rails'
   gem 'simplecov'
   gem 'simplecov-rcov'
   gem 'sinon-rails'
