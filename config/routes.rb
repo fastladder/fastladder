@@ -29,10 +29,10 @@ Rails.application.routes.draw do
   get 'subscribe', to: 'subscribe#index', as: :subscribe_index
   get 'subscribe/*url', to: 'subscribe#confirm', as: :subscribe, format: false
   post 'subscribe/*url', to: 'subscribe#subscribe', format: false
-  match 'about/*url' => 'about#index', as: :about, format: false, via: [:post, :get]
-  match 'user/:login_name' => 'user#index', as: 'user', via: [:post, :get]
-  match 'icon/*feed' => 'icon#get', via: [:post, :get]
-  match 'favicon/*feed' => 'icon#get', via: [:post, :get]
+  get 'about/*url' => 'about#index', as: :about, format: false
+  get 'user/:login_name' => 'user#index', as: 'user'
+  get 'icon/*feed' => 'icon#get'
+  get 'favicon/*feed' => 'icon#get'
 
   resource :members, only: :create
   get 'signup' => 'members#new', as: :sign_up
@@ -43,9 +43,9 @@ Rails.application.routes.draw do
 
   root to: 'reader#welcome'
 
-  match 'reader' => 'reader#index', via: [:post, :get]
-  match 'contents/guide' => 'contents#guide', via: [:post, :get]
-  match 'contents/config' => 'contents#configure', via: [:post, :get]
+  get 'reader' => 'reader#index'
+  get 'contents/guide' => 'contents#guide'
+  get 'contents/config' => 'contents#configure'
   get 'share', to: 'share#index', as: 'share'
 
   get 'import', to: 'import#index'
