@@ -3,20 +3,20 @@ Rails.application.routes.draw do
   # api/*
   # --------------------------------------------------------------------------------
   namespace 'api' do
-    match 'pin/:action' => 'pin', via: :post
+    post 'pin/:action' => 'pin'
 
-    match 'feed/discover'   => 'feed#discover', via: :get
-    match 'feed/subscribed' => 'feed#subscribed', via: :get
-    match 'feed/:action'    => 'feed', via: :post
+    get 'feed/discover'    => 'feed#discover'
+    get 'feed/subscribed'  => 'feed#subscribed'
+    post 'feed/:action'    => 'feed'
 
-    match 'folder/:action' => 'folder', via: :post
+    post 'folder/:action' => 'folder'
 
     match 'config/load' => 'config#getter', via: [:post, :get]
-    match 'config/save' => 'config#setter', via: [:post]
+    post  'config/save' => 'config#setter'
   end
 
   %w(all unread touch_all touch item_count unread_count crawl).each do|name|
-    match "api/#{name}" => "api\##{name}", via: :get
+    get "api/#{name}" => "api\##{name}"
   end
   post 'api/:action' => 'api'
 
