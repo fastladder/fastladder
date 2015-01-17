@@ -2,23 +2,48 @@ Rails.application.routes.draw do
   # --------------------------------------------------------------------------------
   # api/*
   # --------------------------------------------------------------------------------
-  namespace 'api' do
-    post 'pin/:action' => 'pin'
+  namespace :api do
+    namespace :pin do
+      post :all
+      post :add
+      post :remove
+      post :clear
+    end
 
-    get 'feed/discover'    => 'feed#discover'
-    get 'feed/subscribed'  => 'feed#subscribed'
-    post 'feed/:action'    => 'feed'
+    namespace :feed do
+      match :discover, via: [:get, :post]
+      post :subscribe
+      post :unsubscribe
+      match :subscribed, via: [:get, :post]
+      post :update
+      post :move
+      post :set_rate
+      post :set_notify
+      post :set_public
+      post :add_tags
+      post :remove_tags
+      post :fetch_favicon
+    end
 
-    post 'folder/:action' => 'folder'
+    namespace :folder do
+      post :create
+      post :delete
+      post :update
+    end
 
-    match 'config/load' => 'config#getter', via: [:post, :get]
-    post  'config/save' => 'config#setter'
+    namespace :config do
+      match :load, action: :getter, via: [:post, :get]
+      post  :save, action: :setter
+    end
+
+    %w(all unread touch_all touch item_count unread_count crawl).each do |name|
+      match name, via: [:get, :post]
+    end
+
+    %w[subs lite_subs error_subs folders].each do |name|
+      post name
+    end
   end
-
-  %w(all unread touch_all touch item_count unread_count crawl).each do|name|
-    get "api/#{name}" => "api\##{name}"
-  end
-  post 'api/:action' => 'api'
 
   # other API call routes to blank page
   match 'api/*_' => 'application#nothing', via: [:post, :get]
