@@ -115,6 +115,4 @@ Rails.application.routes.draw do
       get '', action: :index
     end
   end
-
-  match ':controller(/:action(/:id))(.:format)', via: [:post, :get]
 end
