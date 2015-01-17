@@ -94,11 +94,8 @@ module Fastladder
   end
 
   def simple_fetch(link, options = {})
-    begin
-      p link.to_s
-      return open(link.to_s).read
-    rescue Exception
-    end
+    open(link.to_s).read
+  rescue Exception
     nil
   end
 
