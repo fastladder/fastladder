@@ -101,8 +101,10 @@ Rails.application.routes.draw do
 
   namespace :account do
     get '', action: :index, as: :index
+    %w[apikey backup password share].each do |name|
+      get name
+    end
   end
-  get 'account/:action', controller: 'account', as: 'account'
 
   namespace :rpc do
     %w[update_feed check_digest update_feeds export].each do |name|
