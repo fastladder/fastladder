@@ -15,7 +15,6 @@
 #  updated_on        :datetime         not null
 #
 
-# require "string_utils"
 # require "fastladder/crawler"
 require "open-uri"
 require "tempfile"

@@ -1,4 +1,3 @@
-require "string_utils"
 class ApiController < ApplicationController
   before_action :login_required_api
   params_required :subscribe_id, only: :touch_all
