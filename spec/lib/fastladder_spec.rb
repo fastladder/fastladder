@@ -1,31 +1,25 @@
 require 'spec_helper'
 
-describe :fastladder do
+describe Fastladder do
+  let(:fastladder) { described_class }
 
-  describe 'Fastladder::Initializer' do
-    context 'constants' do
-      let(:fastladder) {Fastladder::Initializer.new }
-
-      it 'changing HTTP_PROXY_EXCEPT_HOSTS' do
-        fastladder.proxy_except_hosts = [/foo/, :bar, "buz"]
-        expect(Fastladder::HTTP_PROXY_EXCEPT_HOSTS).to eq([/foo/])
-      end
-
-      it 'changing HTTP_OPEN_TIMEOUT' do
-        fastladder.open_timeout = 100
-        expect(Fastladder::HTTP_OPEN_TIMEOUT).to eq(100)
-      end
-
-      it 'changing HTTP_READ_TIMEOUT' do
-        fastladder.read_timeout = 200
-        expect(Fastladder::HTTP_READ_TIMEOUT).to eq(200)
-      end
-
-      it 'changing CRAWLER_USER_AGENT' do
-        fastladder.crawler_user_agent = "YetAnother FeedFetcher/0.0.3 (http://example.com/)"
-        expect(Fastladder::CRAWLER_USER_AGENT).to eq("YetAnother FeedFetcher/0.0.3 (http://example.com/)")
-      end
-    end
+  it 'changes http_proxy_except_hosts' do
+    fastladder.proxy_except_hosts = [/foo/, :bar, "buz"]
+    expect(Fastladder.http_proxy_except_hosts).to eq([/foo/])
   end
 
+  it 'changes http_open_timeout' do
+    fastladder.open_timeout = 100
+    expect(Fastladder.http_open_timeout).to eq(100)
+  end
+
+  it 'changes http_read_timeout' do
+    fastladder.read_timeout = 200
+    expect(Fastladder.http_read_timeout).to eq(200)
+  end
+
+  it 'changes crawler_user_agent' do
+    fastladder.crawler_user_agent = "YetAnother FeedFetcher/0.0.3 (http://example.com/)"
+    expect(Fastladder.crawler_user_agent).to eq("YetAnother FeedFetcher/0.0.3 (http://example.com/)")
+  end
 end

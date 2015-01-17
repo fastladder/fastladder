@@ -9,7 +9,7 @@ require 'string_utils'
 
 Mime::Type.register 'text/x-opml', :opml
 
-Fastladder::Initializer.run do |config|
+Fastladder.configure do |config|
   # config.proxy = {
   #   scheme: 'http',
   #   host: 'proxy.example.com',
