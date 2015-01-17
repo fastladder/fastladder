@@ -51,40 +51,70 @@ Rails.application.routes.draw do
   # --------------------------------------------------------------------------------
   # other pages
   # --------------------------------------------------------------------------------
-  get 'subscribe', to: 'subscribe#index', as: :subscribe_index
-  get 'subscribe/*url', to: 'subscribe#confirm', as: :subscribe, format: false
-  post 'subscribe/*url', to: 'subscribe#subscribe', format: false
-  get 'about/*url' => 'about#index', as: :about, format: false
-  get 'user/:login_name' => 'user#index', as: 'user'
-  get 'icon/*feed' => 'icon#get'
-  get 'favicon/*feed' => 'icon#get'
+  namespace :subscribe do
+    get '', action: :index, as: :index
+    get '*url', action: :confirm, format: false
+    post '*url', action: :subscribe, format: false, as: nil
+  end
+
+  namespace :about do
+    get '*url', action: :index, format: false
+  end
+
+  namespace :user do
+    get ':login_name', action: :index
+  end
+
+  namespace :icon do
+    get '*feed', action: :get
+  end
+  get 'favicon/*feed', to: 'icon#get'
 
   resource :members, only: :create
-  get 'signup' => 'members#new', as: :sign_up
+  get 'signup', to: 'members#new', as: :sign_up
 
   resource :session, only: :create
-  get 'login'  => 'sessions#new',     as: :login
-  get 'logout' => 'sessions#destroy', as: :logout
+  get 'login', to: 'sessions#new',     as: :login
+  get 'logout', to: 'sessions#destroy', as: :logout
 
   root to: 'reader#welcome'
 
-  get 'reader' => 'reader#index'
-  get 'contents/guide' => 'contents#guide'
-  get 'contents/config' => 'contents#configure'
+  get 'reader', to: 'reader#index'
+
+  namespace :contents do
+    get :guide
+    get :config, action: :configure
+  end
+
   get 'share', to: 'share#index', as: 'share'
 
-  get 'import', to: 'import#index'
-  post 'import', to: 'import#fetch'
-  get 'import/*url', to: 'import#fetch', format: false
-  post 'import/finish', to: 'import#finish'
-  get 'export/opml', to: 'export#opml', as: 'export'
+  namespace :import do
+    get '', action: :index
+    post '', action: :fetch
+    get '*url', action: :fetch, format: false
+    post :finish
+  end
 
-  get 'account', to: 'account#index', as: 'account_index'
+  namespace :export do
+    get :opml, as: ''
+  end
+
+  namespace :account do
+    get '', action: :index, as: :index
+  end
   get 'account/:action', controller: 'account', as: 'account'
 
-  match 'rpc/:action' => 'rpc', via: [:post, :get]
+  namespace :rpc do
+    %w[update_feed check_digest update_feeds export].each do |name|
+      match name, via: [:post, :get]
+    end
+  end
 
-  get 'utility/bookmarklet' => "utility/bookmarklet#index"
+  namespace :utility do
+    namespace :bookmarklet do
+      get '', action: :index
+    end
+  end
 
   match ':controller(/:action(/:id))(.:format)', via: [:post, :get]
 end
