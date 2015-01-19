@@ -50,6 +50,10 @@ gem 'sass-rails', '~> 5.0.0'
 gem 'settingslogic'
 gem 'uglifier', '>= 1.3.0'
 
+group :development, :test do
+  gem 'pry-byebug'
+end
+
 group :development do
   gem 'annotate'
   gem 'pry-rails'
