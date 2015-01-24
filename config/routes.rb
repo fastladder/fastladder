@@ -103,6 +103,7 @@ Rails.application.routes.draw do
     %w[apikey backup password share].each do |name|
       get name
     end
+    post 'apikey'
   end
 
   namespace :rpc do
