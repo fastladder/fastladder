@@ -14,7 +14,7 @@
 		<% @feeds.uniq {|feed| feed.feedlink }.each_with_index do |feed, i| -%>
 		<li class="list<% if i == 0 %> list-first<% end %>">
 			<% if (subs = feed[:subscribe_id]).present? -%>
-			<%= link_to feed.title, feed.link, class: "subscribe_list", style: "background-image:url('/icon/#{feed.id}')" %>
+			<%= link_to feed.title, feed.link, class: "subscribe_list", style: "background-image:url('/favicon/#{feed.id}')" %>
 			<span class="subscriber_count"><%= users_link(feed) %></span>
 			<span class="subscribed">[subscribed]</span>
 			<button class="subs_edit" rel="edit:<%= subs %>" onkeydown="subs_edit.call(this,event)" onmousedown="subs_edit.call(this,event)" onclick="return false">Edit</button>
@@ -24,7 +24,7 @@
 			<% else -%>
 			<input type="checkbox" name="check_for_subscribe[]" value="<%=h feed.feedlink %>"<% if @feeds.size == 1 || i == 0 %> checked<% end %>>
 			<input type="hidden" name="feedlink" value="<%=h feed.feedlink %>" />
-			<%= link_to feed.title, feed.link, class: "subscribe_list", style: "background-image:url('/icon/#{feed.id}')" %>
+			<%= link_to feed.title, feed.link, class: "subscribe_list", style: "background-image:url('/favicon/#{feed.id}')" %>
 			<span class="subscriber_count"><%= users_link(feed) %></span><br />
 			<%= link_to feed.feedlink, feed.feedlink, class: "feedlink" %>
 			<% end -%>

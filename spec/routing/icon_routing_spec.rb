@@ -5,10 +5,5 @@ describe 'routing to icon' do
     expect(get('/favicon/http://example.com/')).
       to route_to(controller: 'icon', action: 'get', feed: 'http://example.com/')
   end
-
-  it 'routes icon#get' do
-    expect(get('/icon/http://example.com/')).
-      to route_to(controller: 'icon', action: 'get', feed: 'http://example.com/')
-  end
 end
 

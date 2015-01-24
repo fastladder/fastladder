@@ -90,7 +90,7 @@ class ApiController < ApplicationController
         link: feed.link.html_escape,
         feedlink: feed.feedlink.html_escape,
         title: feed.title.utf8_roundtrip.html_escape,
-        icon: feed.favicon.blank? ? "/img/icon/default.png" : "/icon/#{feed.id}",
+        icon: feed.favicon.blank? ? "/img/icon/default.png" : "/favicon/#{feed.id}",
         modified_on: modified_on ? modified_on.to_time.to_i : 0,
         subscribers_count: feed.subscribers_count,
       }
@@ -118,7 +118,7 @@ class ApiController < ApplicationController
         link: feed.link.html_escape,
         feedlink: feed.feedlink.html_escape,
         title: feed.title.utf8_roundtrip.html_escape,
-        icon: feed.favicon.blank? ? "/img/icon/default.png" : "/icon/#{feed.id}",
+        icon: feed.favicon.blank? ? "/img/icon/default.png" : "/favicon/#{feed.id}",
         modified_on: modified_on ? modified_on.to_time.to_i : 0,
         subscribers_count: feed.subscribers_count,
       }

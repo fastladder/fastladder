@@ -68,7 +68,7 @@ class Feed < ActiveRecord::Base
 
   def icon
     if self.favicon
-      "/icon/#{self.id}"
+      "/favicon/#{self.id}"
     else
       "/img/icon/default.png"
     end
