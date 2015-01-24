@@ -83,6 +83,7 @@ Rails.application.routes.draw do
   namespace :contents do
     get :guide
     get :config, action: :configure
+    get :manage
   end
 
   get 'share', to: 'share#index', as: 'share'
