@@ -65,7 +65,9 @@ Rails.application.routes.draw do
     get ':login_name', action: :index
   end
 
-  get '/favicon/*feed', to: 'icon#get'
+  namespace :favicon do
+    get '*feed', action: :get
+  end
 
   resource :members, only: :create
   get 'signup', to: 'members#new', as: :sign_up

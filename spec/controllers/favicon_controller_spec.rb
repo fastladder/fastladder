@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe IconController do
+describe FaviconController do
   before do
     @feed = FactoryGirl.create(:feed)
   end

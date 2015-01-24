@@ -3,7 +3,7 @@
 <div class="feedinfo">
 	<div class="feed_info">
 	<div class="channel">
-		<h3 style="background-image:url('<%= feed.icon %>')">
+		<h3 style="background-image:url('<%= favicon_path(feed.id) %>')">
 			<%= link_to feed.title, feed.link, id: "feed-title" %>
 		</h3>
 		<div class="description"><%= feed.description %></div>
