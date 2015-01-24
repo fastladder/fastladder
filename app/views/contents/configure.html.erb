@@ -1,6 +1,6 @@
 <div id="config" style="padding:0 10px;width:95%">
 <h2 style="margin-top:0">Fastladder Settings</h2>
-<%= form_for :save, url: url_for(controller: "api/config", action: "save"), html: {id: "config_form", style: "clear: both; width: 100%; display: block;", onreset: "Form.fill(this, app.config); return false;"} do |f| %>
+<%= form_for :save, url: api_config_save_path, html: {id: "config_form", style: "clear: both; width: 100%; display: block;", onreset: "Form.fill(this, app.config); return false;"} do |f| %>
 <div class="tabs">
 	<div id="tab_config_basic" class="tab tab-active" rel="tab:config_form&gt;config_basic">General</div>
 	<div id="tab_config_view" class="tab" rel="tab:config_form&gt;config_view">Display</div>
