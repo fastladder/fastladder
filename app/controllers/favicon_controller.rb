@@ -1,4 +1,4 @@
-class IconController < ApplicationController
+class FaviconController < ApplicationController
   def get
     image = nil
     feed_id = url_from_path(:feed)

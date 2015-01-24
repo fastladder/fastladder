@@ -66,14 +66,6 @@ class Feed < ActiveRecord::Base
     feed
   end
 
-  def icon
-    if self.favicon
-      "/icon/#{self.id}"
-    else
-      "/img/icon/default.png"
-    end
-  end
-
   def to_json(options = {})
     result = {}
     %w(title description).each do |s|

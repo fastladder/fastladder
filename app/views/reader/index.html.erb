@@ -225,7 +225,7 @@
 	<div style="float:right" id="" class="[[ subscribed ]]">
 		<a href="[[feedlink]]" rel="subscribe" class="sub_button">Add</a><br>
 	</div>
-	<img src="/favicon/[[feedlink]]" width="16" height="16"> <a href="[[link]]">[[title]]</a>
+	<img src="<%= Addressable::URI.unescape(favicon_path('[[feedlink]]')) %>" width="16" height="16"> <a href="[[link]]">[[title]]</a>
 	&nbsp;|&nbsp;&nbsp;<b style="color:#717578">[[subscribers_count]]</b><span style="color:#717578"> [[users]]</span>
 	<br>
 	<small><a href="[[feedlink]]" class="feedlink">[[feedlink]]</a></small>
@@ -237,7 +237,7 @@
 	<div style="float:right" id="" class="[[ subscribed ]]">
 		<a href="[[feedlink]]" rel="unsubscribe" class="unsub_button">Unsubscribe</a><br>
 	</div>
-	<img src="/favicon/[[feedlink]]" width="16" height="16"> <a href="[[link]]">[[title]]</a>
+	<img src="<%= Addressable::URI.unescape(favicon_path('[[feedlink]]')) %>" width="16" height="16"> <a href="[[link]]">[[title]]</a>
 	&nbsp;|&nbsp;&nbsp;<b style="color:#717578">[[subscribers_count]]</b><span style="color:#717578"> [[users]]</span>
 	&nbsp;<span style="color:red">[Subscribed]</span><br>
 	<small><a href="[[feedlink]]" class="feedlink">[[feedlink]]</a></small>
