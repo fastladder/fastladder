@@ -1,6 +1,9 @@
 class ImportController < ApplicationController
   before_action :login_required
 
+  def index
+  end
+
   def fetch
     @folders = Hash.new do |hash, key|
       hash[key] = []
