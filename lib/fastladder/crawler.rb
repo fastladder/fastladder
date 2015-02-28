@@ -190,7 +190,7 @@ module Fastladder
 
     def update_or_insert_items_to_feed(feed, items, result)
       items.reverse_each do |item|
-        if old_item = feed.items.find_by_guid(item.guid)
+        if old_item = feed.items.find_by(guid: item.guid)
           old_item.increment(:version)
           unless almost_same(old_item.title, item.title) and almost_same((old_item.body || "").html2text, (item.body || "").html2text)
             old_item.stored_on = item.stored_on
