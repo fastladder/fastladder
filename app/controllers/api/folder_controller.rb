@@ -9,7 +9,7 @@ class Api::FolderController < ApplicationController
   def create
     name = params[:name]
     Folder.transaction do
-      if @member.folders.find_by_name(name)
+      if @member.folders.find_by(name: name)
         return render_json_status(false, ERR_ALREADY_EXISTS)
       end
       @member.folders.create(name: name)
@@ -39,7 +39,7 @@ class Api::FolderController < ApplicationController
 
   def get_folder
     if (folder_id = params[:folder_id].to_i) > 0
-      return @member.folders.find_by_id(folder_id)
+      return @member.folders.find_by(id: folder_id)
     end
     return nil
   end

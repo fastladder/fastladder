@@ -8,7 +8,7 @@ describe AboutController do
   describe 'GET /' do
     context 'exists url' do
       before do
-        allow(Feed).to receive(:find_by_feedlink) { @feed }
+        allow(Feed).to receive(:find_by).with(feedlink: @feed.link) { @feed }
         get :index, url: @feed.link
       end
 

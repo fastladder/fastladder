@@ -67,7 +67,7 @@ describe RpcController do
         expect {
           post :update_feed, params.merge(api_key: member.auth_key)
         }.to change {
-          Item.find_by_guid(params[:link]).nil?
+          Item.find_by(guid: params[:link]).nil?
         }.from(true).to(false)
       end
     end
