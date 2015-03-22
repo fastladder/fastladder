@@ -147,7 +147,7 @@ module Fastladder
           link: item.url || "",
           guid: item.id,
           title: item.title || "",
-          body: item.content || item.summary,
+          body: fixup_relative_links(feed, item.content || item.summary),
           author: item.author,
           category: item.categories.first,
           enclosure: nil,
@@ -170,6 +170,19 @@ module Fastladder
       GC.start
 
       result
+    end
+
+    def fixup_relative_links(feed, body)
+      doc = Nokogiri::HTML.fragment(body)
+      links = doc.css('a[href]')
+      if links.empty?
+        body
+      else
+        links.each do |link|
+          link['href'] = Addressable::URI.join(feed.feedlink, link['href']).normalize.to_s
+        end
+        doc.to_html
+      end
     end
 
     def cut_off(items)
