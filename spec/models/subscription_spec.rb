@@ -21,7 +21,7 @@ require 'spec_helper'
 describe Subscription do
   describe 'creation' do
     it 'update subscribers count' do
-      feed = mock_model(Feed)
+      feed = stub_model(Feed)
       expect(feed).to receive(:update_subscribers_count)
 
       subscription = Subscription.new
