@@ -53,8 +53,8 @@ class Item < ActiveRecord::Base
     result[:id] = self.id
     result[:enclosure_type] = self.enclosure_type if self.enclosure_type
     result[:enclosure] = (self.enclosure || "").purify_uri if self.enclosure
-    %w(title author category).each do |s|
-      result[s.to_sym] = (self.send(s) || "").purify_html
+    %i(title author category).each do |s|
+      result[s] = (self.send(s) || "").purify_html
     end
     result[:link] = (self.link || "").purify_uri
     result[:body] = (self.body || "").scrub_html

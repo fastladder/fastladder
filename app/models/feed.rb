@@ -68,11 +68,11 @@ class Feed < ActiveRecord::Base
 
   def to_json(options = {})
     result = {}
-    %w(title description).each do |s|
-      result[s.to_sym] = (self.send(s) || "").purify_html
+    %i(title description).each do |s|
+      result[s] = (self.send(s) || "").purify_html
     end
-    %w(feedlink link image).each do |s|
-      result[s.to_sym] = (self.send(s) || "").purify_uri
+    %i(feedlink link image).each do |s|
+      result[s] = (self.send(s) || "").purify_uri
     end
 
     result[:expires] = 0
