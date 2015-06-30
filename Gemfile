@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-gem 'rails', '4.2.1'
+gem 'rails', '4.2.3'
 
 # Include database gems for the adapters found in the database
 # configuration file or DATABASE_URL
