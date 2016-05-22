@@ -66,6 +66,8 @@ describe Feed do
   end
 
   describe "fetch favicon" do
+    include_context(:use_stub_feed)
+
     let(:feed) { FactoryGirl.create(:feed) }
     let(:favicon) { open(File.expand_path(File.join(File.dirname(__FILE__), '..', 'fixtures', 'favicon.ico'))).read }
 
