@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-gem 'rails', '4.2.3'
+gem 'rails', '4.2.6'
 
 # Include database gems for the adapters found in the database
 # configuration file or DATABASE_URL
@@ -50,6 +50,10 @@ gem 'opml', github: 'fastladder/opml'
 gem 'sass-rails', '~> 5.0.0'
 gem 'settingslogic'
 gem 'uglifier', '>= 1.3.0'
+
+if ENV['NEW_RELIC_LICENSE_KEY']
+  gem 'newrelic_rpm'
+end
 
 group :development, :test do
   gem 'pry-byebug'
