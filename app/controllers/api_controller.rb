@@ -154,7 +154,7 @@ class ApiController < ApplicationController
         success = sub.feed.crawl
       end
     end
-    render text: {a: (success ? true : false) }.to_json
+    render json: {a: (success ? true : false) }.to_json
     # render_json_status(success ? true : false)
     # return render_json_status(success ? true : false)
   end
