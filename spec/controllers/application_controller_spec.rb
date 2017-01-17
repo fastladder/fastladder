@@ -8,7 +8,7 @@ describe ApplicationController do
       before_action :login_required
 
       def index
-        render nothing: true
+        head 200
       end
     end
 
@@ -45,7 +45,7 @@ describe ApplicationController do
       before_action :current_member
 
       def index
-        render nothing: true
+        head 200
       end
     end
 
