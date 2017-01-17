@@ -23,4 +23,4 @@ before_script:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
 
-script: 'RAILS_ENV=test bundle exec rake db:drop db:create db:migrate spec konacha:run && RAILS_ENV=production bundle exec rake assets:precompile '
+script: 'RAILS_ENV=test bundle exec rake db:drop db:create db:migrate spec && RAILS_ENV=production bundle exec rake assets:precompile '

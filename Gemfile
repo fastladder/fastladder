@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-gem 'rails', '4.2.6'
+gem 'rails', '5.0.1'
 
 # Include database gems for the adapters found in the database
 # configuration file or DATABASE_URL
@@ -46,7 +46,8 @@ gem 'jbuilder', '~> 2.0'
 gem 'jquery-rails'
 gem 'mini_magick'
 gem 'nokogiri'
-gem 'opml', git: 'https://github.com/fastladder/opml'
+# FIXME: merge rails50 branch into master
+gem 'opml', git: 'https://github.com/eagletmt/opml', branch: 'rails50'
 gem 'sass-rails', '~> 5.0.0'
 gem 'settingslogic'
 gem 'uglifier', '>= 1.3.0'
@@ -63,14 +64,14 @@ group :development do
   gem 'annotate'
   gem 'pry-rails'
   gem 'pry-doc'
-  gem 'quiet_assets'
 end
 
 group :test do
   gem 'capybara'
   gem 'coveralls', require: false
   gem 'factory_girl_rails'
-  gem 'konacha'
+  # FIXME: konacha doesn't support Rails 5.0 https://github.com/jfirebaugh/konacha/issues/230
+  #gem 'konacha'
   gem 'launchy'
   gem 'poltergeist'
   gem 'rspec-activemodel-mocks'
@@ -80,6 +81,7 @@ group :test do
   gem 'sinon-rails'
   gem 'puma'
   gem 'webmock'
+  gem 'rails-controller-testing'
 end
 
 group :production do
