@@ -15,7 +15,7 @@ describe FaviconController do
       expect(controller).to receive(:send_data).with(anything, image_header) {
         @controller.head 200
       }
-      get :get, feed: @feed.link
+      get :get, params: { feed: @feed.link }
     end
   end
 end

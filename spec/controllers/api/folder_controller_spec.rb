@@ -10,50 +10,50 @@ describe Api::FolderController do
   describe 'POST /create' do
     it 'creates new folder' do
       expect {
-        post :create, { name: '便利情報' }, { member_id: @member.id }
+        post :create, params: { name: '便利情報' }, session: { member_id: @member.id }
       }.to change {
         Folder.count
       }.by(1)
     end
 
     it 'renders json' do
-      post :create, { name: '便利情報' }, { member_id: @member.id }
+      post :create, params: { name: '便利情報' }, session: { member_id: @member.id }
       expect(response.body).to be_json
     end
 
     it 'renders error' do
-      post :create, { }, { member_id: @member.id }
+      post :create, session: { member_id: @member.id }
       expect(response.body).to be_json_error
     end
   end
 
   describe 'POST /delete' do
     it 'renders json' do
-      post :delete, { folder_id: @folder.id }, { member_id: @member.id }
+      post :delete, params: { folder_id: @folder.id }, session: { member_id: @member.id }
       expect(response.body).to be_json
     end
 
     it 'renders error' do
-      post :delete, { }, { member_id: @member.id }
+      post :delete, session: { member_id: @member.id }
       expect(response.body).to be_json_error
     end
   end
 
   describe 'POST /update' do
     it 'renders json' do
-      post :update, { folder_id: @folder.id, name: 'Life Hack' }, { member_id: @member.id }
+      post :update, params: { folder_id: @folder.id, name: 'Life Hack' }, session: { member_id: @member.id }
       expect(response.body).to be_json
     end
 
     it 'renders error' do
-      post :update, { }, { member_id: @member.id }
+      post :update, session: { member_id: @member.id }
       expect(response.body).to be_json_error
     end
   end
 
   context 'not logged in' do
     it 'renders blank' do
-      post :update, { }, { }
+      post :update
       expect(response.body).to be_blank
     end
   end

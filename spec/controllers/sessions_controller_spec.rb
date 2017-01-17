@@ -30,7 +30,7 @@ describe SessionsController do
   describe "POST 'create'" do
     context "when authenticate successfully" do
       it "should redirect to root path" do
-        post :create, { username: member.username, password: member.password }
+        post :create, params: { username: member.username, password: member.password }
         expect(response).to redirect_to root_path
         expect(flash[:notice]).not_to be_nil
       end
@@ -38,7 +38,7 @@ describe SessionsController do
 
     context "when authenticate failed" do
       it "should re-render new page" do
-        post :create, { username: "bogus_username", password: "bogus_password" }
+        post :create, params: { username: "bogus_username", password: "bogus_password" }
         expect(response).to render_template("new")
         expect(flash[:alert]).not_to be_nil
       end
