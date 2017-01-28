@@ -24,3 +24,7 @@ before_script:
   - "sh -e /etc/init.d/xvfb start"
 
 script: 'RAILS_ENV=test bundle exec rake db:drop db:create db:migrate spec konacha:run && RAILS_ENV=production bundle exec rake assets:precompile '
+
+notifications:
+  webhooks:
+    - https://idobata.io/hook/travis_ci/aee405c2-e767-414c-a53d-2ccdf8cdfb0e
