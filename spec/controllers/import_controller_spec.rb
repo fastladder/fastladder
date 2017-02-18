@@ -8,17 +8,17 @@ describe ImportController do
   describe 'POST /import' do
     it "fetch url" do
       expect(Fastladder).to receive(:simple_fetch).with('http://example.com') { '<opml/>' }
-      post :fetch, { url: 'http://example.com' }, { member_id: @member.id }
+      post :fetch, params: { url: 'http://example.com' }, session: { member_id: @member.id }
     end
 
     context "assigns" do
       include_context(:use_stub_opml)
       it "assigns folder" do
-        post :fetch, { url: 'http://example.com' }, { member_id: @member.id }
+        post :fetch, params: { url: 'http://example.com' }, session: { member_id: @member.id }
         expect(assigns[:folders].keys).to include("Subscriptions")
       end
       it "assigns item" do
-        post :fetch, { url: 'http://example.com' }, { member_id: @member.id }
+        post :fetch, params: { url: 'http://example.com' }, session: { member_id: @member.id }
         item = assigns[:folders]["Subscriptions"][0]
         expect(item).to include(title: "Recent Commits to fastladder:master")
         expect(item).to include(link: "https://github.com/fastladder/fastladder/commits/master")

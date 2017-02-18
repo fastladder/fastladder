@@ -15,7 +15,7 @@ describe ApplicationController do
     context 'Member exists' do
       context 'session[:member_id] is given' do
         it 'renders 200' do
-          get :index, { }, { member_id: member.id }
+          get :index, session: { member_id: member.id }
           expect(response).to be_success
         end
       end
@@ -26,7 +26,7 @@ describe ApplicationController do
         end
 
         it 'renders 200' do
-          get :index, { auth_key: member.auth_key }
+          get :index, params: { auth_key: member.auth_key }
           expect(response).to be_success
         end
       end
@@ -34,7 +34,7 @@ describe ApplicationController do
 
     context 'Member not exists' do
       it 'redirects to login_path' do
-        get :index, { }, { }
+        get :index
         expect(response).to redirect_to(login_path)
       end
     end
@@ -51,14 +51,14 @@ describe ApplicationController do
 
     context 'Member exists' do
       it 'assigns @member' do
-        get :index, { }, { member_id: member.id }
+        get :index, session: { member_id: member.id }
         expect(assigns(:member)).to_not be_nil
       end
     end
 
     context 'Member not exists' do
       it 'not assigns @member' do
-        get :index, { }, { }
+        get :index
         expect(assigns(:member)).to be_nil
       end
     end

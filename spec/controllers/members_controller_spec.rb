@@ -27,14 +27,14 @@ describe MembersController do
   describe 'POST /create'do
     it 'creates new member' do
       expect {
-        post :create, valid_params, valid_sessions
+        post :create, params: valid_params, session: valid_sessions
       }.to change {
         Member.count
       }.by(1)
     end
 
     it 'redirects to /' do
-      post :create, valid_params, valid_sessions
+      post :create, params: valid_params, session: valid_sessions
       expect(response).to redirect_to('/')
     end
   end

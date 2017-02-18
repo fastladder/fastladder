@@ -9,7 +9,7 @@ describe AboutController do
     context 'exists url' do
       before do
         allow(Feed).to receive(:find_by).with(feedlink: @feed.link) { @feed }
-        get :index, url: @feed.link
+        get :index, params: { url: @feed.link }
       end
 
       it 'assign feed' do
@@ -23,7 +23,7 @@ describe AboutController do
 
     context 'non-exists url' do
       before do
-        get :index, url: 'http://example.com/unknown'
+        get :index, params: { url: 'http://example.com/unknown' }
       end
 
       it 'return 404' do
