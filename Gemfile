@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-gem 'rails', '4.2.6'
+gem 'rails', '4.2.9'
 
 # Include database gems for the adapters found in the database
 # configuration file or DATABASE_URL
@@ -90,4 +90,3 @@ end
 group :doc do
   gem 'sdoc', require: false
 end
-
