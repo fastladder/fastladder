@@ -3,7 +3,7 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-Fastladder::Application.load_tasks
+Rails.application.load_tasks
 
 desc 'Setup files for development'
 task 'setup' do
