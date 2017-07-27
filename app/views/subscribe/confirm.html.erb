@@ -13,7 +13,7 @@
 	<ul id="feed_candidates">
 		<% @feeds.uniq {|feed| feed.feedlink }.each_with_index do |feed, i| -%>
 		<li class="list<% if i == 0 %> list-first<% end %>">
-			<% if (subs = feed[:subscribe_id]).present? -%>
+			<% if (subs = feed.subscribe_id).present? -%>
 			<%= link_to feed.title, feed.link, class: "subscribe_list", style: "background-image:url('#{favicon_path(feed.id)}')" %>
 			<span class="subscriber_count"><%= users_link(feed) %></span>
 			<span class="subscribed">[subscribed]</span>
