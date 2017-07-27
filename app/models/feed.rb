@@ -29,6 +29,8 @@ class Feed < ActiveRecord::Base
 
   before_save :except_fragment_identifier, :default_values
 
+  attr_accessor :subscribe_id
+
   scope :has_subscriptions, ->{ where("subscribers_count > 0") }
   scope :crawlable, ->{
     includes(:crawl_status).

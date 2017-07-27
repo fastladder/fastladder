@@ -14,7 +14,7 @@ class SubscribeController < ApplicationController
     FeedSearcher.search(@url).each do |feedlink|
       if feed = Feed.find_by(feedlink: feedlink)
         if sub = current_member.subscribed(feed)
-          feed[:subscribe_id] = sub.id
+          feed.subscribe_id = sub.id
         end
         feeds << feed
         next
