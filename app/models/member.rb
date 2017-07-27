@@ -39,7 +39,7 @@ class Member < ActiveRecord::Base
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(username, password)
-    u = find_by_username(username) # need to get the salt
+    u = find_by(username: username) # need to get the salt
     u && u.authenticated?(password) ? u : nil
   end
 
@@ -95,7 +95,7 @@ class Member < ActiveRecord::Base
       return nil
     end
 
-    unless feed = Feed.find_by_feedlink(feedlink)
+    unless feed = Feed.find_by(feedlink: feedlink)
       if options[:quick]
         feed = Feed.create({
           feedlink: feedlink,
@@ -112,7 +112,7 @@ class Member < ActiveRecord::Base
     options.delete(:quick)
     options.delete(:title)
 
-    if sub = self.subscriptions.find_by_feed_id(feed.id)
+    if sub = self.subscriptions.find_by(feed_id: feed.id)
       return sub
     end
 
@@ -124,11 +124,11 @@ class Member < ActiveRecord::Base
   end
 
   def subscribed(feed)
-    self.subscriptions.find_by_feed_id(feed.id)
+    self.subscriptions.find_by(feed_id: feed.id)
   end
 
   def check_subscribed(feedlink)
-    if feed = Feed.find_by_feedlink(feedlink)
+    if feed = Feed.find_by(feedlink: feedlink)
       return self.subscribed(feed)
     end
   end
@@ -155,7 +155,7 @@ class Member < ActiveRecord::Base
   end
 
   # export OPML or JSON
-  def export format
+  def export(format)
     case format
     when 'opml'
       folders = {}
@@ -194,7 +194,8 @@ class Member < ActiveRecord::Base
     end
   end
 
-protected
+  protected
+
   # before filter
   def encrypt_password
     return if password.blank?

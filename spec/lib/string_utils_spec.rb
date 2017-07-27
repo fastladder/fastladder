@@ -28,17 +28,17 @@ describe :string_utils do
       end
 
       it 'attribute' do
-        expect('<i style="">foo'.scrub_html).to eq('<i>foo')
+        expect('<i style="">foo</i>'.scrub_html).to eq('<i>foo</i>')
       end
     end
 
     context 'safe element' do
       it 'tag' do
-        expect('<br />'.scrub_html).to eq('<br />')
+        expect('<br/>'.scrub_html).to eq('<br>')
       end
 
       it 'attribute' do
-        expect('<img src="foo.png" />'.scrub_html).to eq('<img src="foo.png" />')
+        expect('<img src="foo.png">'.scrub_html).to eq('<img src="foo.png">')
       end
 
     end

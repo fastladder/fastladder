@@ -2,64 +2,120 @@ Rails.application.routes.draw do
   # --------------------------------------------------------------------------------
   # api/*
   # --------------------------------------------------------------------------------
-  namespace 'api' do
-    match 'pin/:action' => 'pin', via: :post
+  namespace :api do
+    namespace :pin do
+      post :all
+      post :add
+      post :remove
+      post :clear
+    end
 
-    match 'feed/discover'   => 'feed#discover', via: :get
-    match 'feed/subscribed' => 'feed#subscribed', via: :get
-    match 'feed/:action'    => 'feed', via: :post
+    namespace :feed do
+      match :discover, via: [:get, :post]
+      post :subscribe
+      post :unsubscribe
+      match :subscribed, via: [:get, :post]
+      post :update
+      post :move
+      post :set_rate
+      post :set_notify
+      post :set_public
+      post :add_tags
+      post :remove_tags
+      post :fetch_favicon
+    end
 
-    match 'folder/:action' => 'folder', via: :post
+    namespace :folder do
+      post :create
+      post :delete
+      post :update
+    end
 
-    match 'config/load' => 'config#getter', via: [:post, :get]
-    match 'config/save' => 'config#setter', via: [:post]
+    namespace :config do
+      match :load, action: :getter, via: [:post, :get]
+      post  :save, action: :setter
+    end
+
+    %w(all unread touch_all touch item_count unread_count crawl).each do |name|
+      match name, via: [:get, :post]
+    end
+
+    %w[subs lite_subs error_subs folders].each do |name|
+      post name
+    end
   end
-
-  %w(all unread touch_all touch item_count unread_count crawl).each do|name|
-      match "api/#{name}" => "api\##{name}", via: :get
-  end
-  post 'api/:action' => 'api'
 
   # other API call routes to blank page
   match 'api/*_' => 'application#nothing', via: [:post, :get]
 
   # --------------------------------------------------------------------------------
-  # other pages 
+  # other pages
   # --------------------------------------------------------------------------------
-  get 'subscribe', to: 'subscribe#index', as: :subscribe_index
-  get 'subscribe/*url', to: 'subscribe#confirm', as: :subscribe, format: false
-  post 'subscribe/*url', to: 'subscribe#subscribe', format: false
-  match 'about/*url' => 'about#index', as: :about, format: false, via: [:post, :get]
-  match 'user/:login_name' => 'user#index', as: 'user', via: [:post, :get]
-  match 'icon/*feed' => 'icon#get', via: [:post, :get]
-  match 'favicon/*feed' => 'icon#get', via: [:post, :get]
+  namespace :subscribe do
+    get '', action: :index, as: :index
+    get '*url', action: :confirm, format: false
+    post '*url', action: :subscribe, format: false, as: nil
+  end
+
+  namespace :about do
+    get '*url', action: :index, format: false
+  end
+
+  namespace :user do
+    get ':login_name', action: :index
+  end
+
+  namespace :favicon do
+    get '*feed', action: :get
+  end
 
   resource :members, only: :create
-  get 'signup' => 'members#new', as: :sign_up
+  get 'signup', to: 'members#new', as: :sign_up
 
   resource :session, only: :create
-  get 'login'  => 'sessions#new',     as: :login
-  get 'logout' => 'sessions#destroy', as: :logout
+  get 'login', to: 'sessions#new',     as: :login
+  get 'logout', to: 'sessions#destroy', as: :logout
 
   root to: 'reader#welcome'
 
-  match 'reader' => 'reader#index', via: [:post, :get]
-  match 'contents/guide' => 'contents#guide', via: [:post, :get]
-  match 'contents/config' => 'contents#configure', via: [:post, :get]
+  get 'reader', to: 'reader#index'
+
+  namespace :contents do
+    get :guide
+    get :config, action: :configure
+    get :manage
+  end
+
   get 'share', to: 'share#index', as: 'share'
 
-  get 'import', to: 'import#index'
-  post 'import', to: 'import#fetch'
-  get 'import/*url', to: 'import#fetch', format: false
-  post 'import/finish', to: 'import#finish'
-  get 'export/opml', to: 'export#opml', as: 'export'
+  namespace :import do
+    get '', action: :index
+    post '', action: :fetch
+    get '*url', action: :fetch, format: false
+    post :finish
+  end
 
-  get 'account', to: 'account#index', as: 'account_index'
-  get 'account/:action', to: 'account', as: 'account'
+  namespace :export do
+    get :opml, as: ''
+  end
 
-  match 'rpc/:action' => 'rpc', via: [:post, :get]
+  namespace :account do
+    get '', action: :index, as: :index
+    %w[apikey backup password share].each do |name|
+      get name
+    end
+    post 'apikey'
+  end
 
-  get 'utility/bookmarklet' => "utility/bookmarklet#index"
+  namespace :rpc do
+    %w[update_feed check_digest update_feeds export].each do |name|
+      match name, via: [:post, :get]
+    end
+  end
 
-  match ':controller(/:action(/:id))(.:format)', via: [:post, :get]
+  namespace :utility do
+    namespace :bookmarklet do
+      get '', action: :index
+    end
+  end
 end

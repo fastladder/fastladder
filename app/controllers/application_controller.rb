@@ -25,7 +25,7 @@ class ApplicationController < ActionController::Base
   end
 
   def nothing
-    render(nothing: true)
+    head 200
   end
 
   def logged_in?

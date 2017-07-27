@@ -1,6 +1,9 @@
 class ImportController < ApplicationController
   before_action :login_required
 
+  def index
+  end
+
   def fetch
     @folders = Hash.new do |hash, key|
       hash[key] = []
@@ -20,7 +23,7 @@ class ImportController < ApplicationController
       @folders[folder_name] += outlines.select {|outline| outline.attributes["xml_url"].present? }.map do |outline|
         attributes = outline.attributes.dup
         feedlink = attributes["xml_url"]
-        feed = Feed.find_by_feedlink(feedlink)
+        feed = Feed.find_by(feedlink: feedlink)
         item = {}
         item[:title] = attributes["title"] || attributes["text"] || feedlink
         item[:link] = attributes["url"] || attributes["html_url"] || feedlink

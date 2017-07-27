@@ -42,7 +42,7 @@
 		<ul class="recent_feeds">
 		<% @subscriptions.map {|subs| [subs, subs.feed] }.each_with_index do |(subs, feed), i| %>
 			<li class="<%= i % 2 == 0 ? 'odd' : 'even' %>">
-				<%= link_to feed.title, feed.link, class: "title", style: "background-image: url('/icon/#{feed.id}');" %>
+				<%= link_to feed.title, feed.link, class: "title", style: "background-image: url('#{favicon_path(feed.id)}');" %>
 				<div class="description"><%= feed.description %></div>
 				<ul class="info">
 					<li class="date"><%= subs.created_on  %></li>
