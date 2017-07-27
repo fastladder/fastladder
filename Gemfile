@@ -35,12 +35,6 @@ else
   gem 'pg'
 end
 
-group :production do
-  gem 'unicorn'
-  gem 'pg'
-  gem 'rails_12factor'
-end
-
 gem 'addressable', require: 'addressable/uri'
 gem 'coffee-rails', '~> 4.1.0'
 gem 'feed_searcher', '>= 0.0.6'
