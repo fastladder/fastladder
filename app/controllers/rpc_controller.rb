@@ -66,6 +66,7 @@ class RpcController < ApplicationController
           item.guid = item.link
         end
       end
+    sub.update!(has_unread: true)
     item.title = options[:title]
     item.body = options[:body]
     item.author = options[:author]
