@@ -45,13 +45,13 @@ ReaderSubscribe.extend({
 	},
 	subscribe: function(option, callback){
 		var api = new LDR.API("/api/feed/subscribe");
-		var param = {};
-		api.post({
-			feedlink  : option.feedlink,
-			folder_id : option.folder_id,
-			rate      : option.rate,
-			"public"  : option["public"]
-		}, callback);
+		var param = {
+			feedlink	: option.feedlink,
+			rate			: option.rate,
+			"public"	: option["public"]
+		};
+		if(option.folder_id != "0" && option.folder_id != 0){ param.folder_id = option.folder_id; }
+		api.post(param, callback);
 	},
 	get_backurl: function(){
 		var base = ReaderSubscribe.get_baseurl();

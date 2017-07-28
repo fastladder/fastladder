@@ -20,7 +20,7 @@ class Api::PinController < ApplicationController
   end
 
   def remove
-    unless pin = current_member.pins.find_by_link(params[:link])
+    unless pin = current_member.pins.find_by(link: params[:link])
       return render_json_status(false, ErrorCode::NOT_FOUND)
     end
     pin.destroy

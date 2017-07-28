@@ -1,4 +1,3 @@
-require "string_utils"
 class ApiController < ApplicationController
   before_action :login_required_api
   params_required :subscribe_id, only: :touch_all
@@ -43,7 +42,7 @@ class ApiController < ApplicationController
 
   def touch_all
     params[:subscribe_id].split(/\s*,\s*/).each do |id|
-      if sub = @member.subscriptions.find_by_id(id)
+      if sub = @member.subscriptions.find_by(id: id)
         sub.update_attributes(has_unread: false, viewed_on: DateTime.now)
       end
     end
@@ -91,7 +90,7 @@ class ApiController < ApplicationController
         link: feed.link.html_escape,
         feedlink: feed.feedlink.html_escape,
         title: feed.title.utf8_roundtrip.html_escape,
-        icon: feed.favicon.blank? ? "/img/icon/default.png" : "/icon/#{feed.id}",
+        icon: feed.favicon.blank? ? "/img/icon/default.png" : favicon_path(feed.id),
         modified_on: modified_on ? modified_on.to_time.to_i : 0,
         subscribers_count: feed.subscribers_count,
       }
@@ -119,7 +118,7 @@ class ApiController < ApplicationController
         link: feed.link.html_escape,
         feedlink: feed.feedlink.html_escape,
         title: feed.title.utf8_roundtrip.html_escape,
-        icon: feed.favicon.blank? ? "/img/icon/default.png" : "/icon/#{feed.id}",
+        icon: feed.favicon.blank? ? "/img/icon/default.png" : favicon_path(feed.id),
         modified_on: modified_on ? modified_on.to_time.to_i : 0,
         subscribers_count: feed.subscribers_count,
       }
@@ -155,15 +154,16 @@ class ApiController < ApplicationController
         success = sub.feed.crawl
       end
     end
-    render text: {a: (success ? true : false) }.to_json
+    render json: {a: (success ? true : false) }.to_json
     # render_json_status(success ? true : false)
     # return render_json_status(success ? true : false)
   end
 
-protected
+  protected
+
   def find_sub
     @id = (params[:subscribe_id] || params[:id] || 0).to_i
-    unless @sub = @member.subscriptions.includes(:feed).find_by_id(@id)
+    unless @sub = @member.subscriptions.includes(:feed).find_by(id: @id)
       render NOTHING
       return false
     end

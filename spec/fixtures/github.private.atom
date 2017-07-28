@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xml:lang="en-US">
+  <id>tag:github.com,2008:/eagletmt.private</id>
+  <link type="text/html" rel="alternate" href="https://github.com/eagletmt"/>
+  <link type="application/atom+xml" rel="self" href="https://github.com/eagletmt.private.atom"/>
+  <title>Private Feed for eagletmt</title>
+  <updated>2015-03-22T03:59:57Z</updated>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/2666926662</id>
+    <published>2015-03-22T02:11:07Z</published>
+    <updated>2015-03-22T02:11:07Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/bundler/bundler/compare/7ee024100d...408cc9ab68"/>
+    <title type="html">indirect pushed to 1-9-stable at bundler/bundler</title>
+    <author>
+      <name>indirect</name>
+      <email>andre@arko.net</email>
+      <uri>https://github.com/indirect</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars0.githubusercontent.com/u/78?v=3&amp;s=30"/>
+    <content type="html">&lt;!-- push --&gt;
+&lt;span class=&quot;mega-octicon octicon-git-commit&quot;&gt;&lt;/span&gt;
+
+&lt;div class=&quot;time&quot;&gt;
+  &lt;time datetime=&quot;2015-03-22T02:11:07Z&quot; is=&quot;relative-time&quot;&gt;Mar 22, 2015&lt;/time&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;title&quot;&gt;
+  &lt;a href=&quot;https://github.com/indirect&quot; data-ga-click=&quot;News feed, event click, Event click type:PushEvent target:actor&quot;&gt;indirect&lt;/a&gt; &lt;span&gt;pushed&lt;/span&gt; to &lt;a href=&quot;/bundler/bundler/tree/1-9-stable&quot; data-ga-click=&quot;News feed, event click, Event click type:PushEvent target:branch&quot;&gt;1-9-stable&lt;/a&gt; at &lt;a href=&quot;https://github.com/bundler/bundler&quot; data-ga-click=&quot;News feed, event click, Event click type:PushEvent target:repo&quot;&gt;bundler/bundler&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;details&quot;&gt;
+  &lt;a href=&quot;https://github.com/indirect&quot;&gt;&lt;img alt=&quot;@indirect&quot; class=&quot;gravatar&quot; data-user=&quot;78&quot; height=&quot;30&quot; src=&quot;https://avatars1.githubusercontent.com/u/78?v=3&amp;amp;s=60&quot; width=&quot;30&quot; /&gt;&lt;/a&gt;
+
+    &lt;div class=&quot;commits &quot;&gt;
+      &lt;ul&gt;
+        &lt;li&gt;
+          &lt;span title=&quot;indirect&quot;&gt;
+            &lt;img alt=&quot;@indirect&quot; data-user=&quot;78&quot; height=&quot;16&quot; src=&quot;https://avatars0.githubusercontent.com/u/78?v=3&amp;amp;s=32&quot; width=&quot;16&quot; /&gt;
+          &lt;/span&gt;
+          &lt;code&gt;&lt;a href=&quot;/bundler/bundler/commit/408cc9ab68e824c476abd9783df17978e5ef47f4&quot; data-ga-click=&quot;News feed, event click, Event click type:PushEvent target:sha&quot;&gt;408cc9a&lt;/a&gt;&lt;/code&gt;
+          &lt;div class=&quot;message&quot;&gt;
+            &lt;blockquote&gt;
+              Merge pull request #3493 from bundler/seg-fix-thor-vendoring
+            &lt;/blockquote&gt;
+          &lt;/div&gt;
+        &lt;/li&gt;
+        &lt;li&gt;
+          &lt;span title=&quot;segiddins&quot;&gt;
+            &lt;img alt=&quot;@segiddins&quot; data-user=&quot;1946610&quot; height=&quot;16&quot; src=&quot;https://avatars0.githubusercontent.com/u/1946610?v=3&amp;amp;s=32&quot; width=&quot;16&quot; /&gt;
+          &lt;/span&gt;
+          &lt;code&gt;&lt;a href=&quot;/bundler/bundler/commit/aef35ac138168738323b0f90a2b2d5cd9cf9a379&quot; data-ga-click=&quot;News feed, event click, Event click type:PushEvent target:sha&quot;&gt;aef35ac&lt;/a&gt;&lt;/code&gt;
+          &lt;div class=&quot;message&quot;&gt;
+            &lt;blockquote&gt;
+              [Vendor] Dont change the load path to require vendored gems
+            &lt;/blockquote&gt;
+          &lt;/div&gt;
+        &lt;/li&gt;
+        &lt;li class=&quot;more&quot;&gt;&lt;a href=&quot;https://github.com/bundler/bundler/compare/7ee024100d...408cc9ab68&quot; data-ga-click=&quot;News feed, event click, Event click type:PushEvent target:comparison&quot;&gt;View comparison for these 2 commits &amp;raquo;&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+</feed>

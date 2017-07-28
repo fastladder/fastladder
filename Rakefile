@@ -3,9 +3,16 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-Fastladder::Application.load_tasks
+Rails.application.load_tasks
 
 desc 'Setup files for development'
 task 'setup' do
-  %x{echo "Fastladder::Application.config.secret_key_base = '`bundle exec rake secret`'" > config/initializers/secret_token.rb}
+  File.write("config/secrets.yml", <<-YAML.strip_heredoc)
+    development:
+      secret_key_base: #{`bundle exec rake secret`}
+    test:
+      secret_key_base: #{`bundle exec rake secret`}
+    production:
+      secret_key_base: <%= ENV["SECRET_KEY_BASE"] %>
+  YAML
 end

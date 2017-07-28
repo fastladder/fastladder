@@ -26,7 +26,7 @@ describe UserController do
       get :index, login_name: member.username
       expect(response).to be_success
       expect(response).to render_template('index')
-      expect(response.content_type).to be_equal rss_mime_type
+      expect(response.content_type).to eq(rss_mime_type)
     end
 
     it 'renders opml' do
@@ -34,7 +34,7 @@ describe UserController do
       get :index, login_name: member.username
       expect(response).to be_success
       expect(response).to render_template('index')
-      expect(response.content_type).to be_equal opml_mime_type
+      expect(response.content_type).to eq(opml_mime_type)
     end
   end
 end

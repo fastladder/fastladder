@@ -177,18 +177,22 @@
 			<% end -%>
 			<div id="discover_items"></div>
 			<div style="float:left" class="discover_help">
-				<a href="/subscribe/"><img src="/img/icon/new_window.gif" border="none"></a>
+				<%= link_to(subscribe_index_path) do %>
+					<img src="/img/icon/new_window.gif" border="none">
+				<% end -%>
 			</div>
 		</div>
 		<div id="import_feed" style="display:none">
-			<%= form_tag '/import/index', multipart: true, target: '_blank' do %>
+			<%= form_tag import_path, multipart: true, target: '_blank' do %>
 				<b>file</b> : <input type="file" name="opml" style="width:230px"> <input type="submit" value=" Upload " style="width:90px">
 			<% end -%>
-			<%= form_tag '/import/fetch', multipart: true, target: '_blank' do %>
+			<%= form_tag import_path, multipart: true, target: '_blank' do %>
 				<b>OPML URL</b> : <input type="text" name="url" value="http://" style="width:280px"> <input type="submit" value=" Import from URL " style="width:90px">
 			<% end -%>
 			<div style="float:left" class="discover_help">
-				<a href="/import/"><img src="/img/icon/new_window.gif" border="none"></a>
+				<%= link_to(import_path) do %>
+					<img src="/img/icon/new_window.gif" border="none">
+				<% end -%>
 			</div>
 		</div>
 		<div class="close">
@@ -225,7 +229,7 @@
 	<div style="float:right" id="" class="[[ subscribed ]]">
 		<a href="[[feedlink]]" rel="subscribe" class="sub_button">Add</a><br>
 	</div>
-	<img src="/favicon/[[feedlink]]" width="16" height="16"> <a href="[[link]]">[[title]]</a>
+	<img src="<%= Addressable::URI.unescape(favicon_path('[[feedlink]]')) %>" width="16" height="16"> <a href="[[link]]">[[title]]</a>
 	&nbsp;|&nbsp;&nbsp;<b style="color:#717578">[[subscribers_count]]</b><span style="color:#717578"> [[users]]</span>
 	<br>
 	<small><a href="[[feedlink]]" class="feedlink">[[feedlink]]</a></small>
@@ -237,7 +241,7 @@
 	<div style="float:right" id="" class="[[ subscribed ]]">
 		<a href="[[feedlink]]" rel="unsubscribe" class="unsub_button">Unsubscribe</a><br>
 	</div>
-	<img src="/favicon/[[feedlink]]" width="16" height="16"> <a href="[[link]]">[[title]]</a>
+	<img src="<%= Addressable::URI.unescape(favicon_path('[[feedlink]]')) %>" width="16" height="16"> <a href="[[link]]">[[title]]</a>
 	&nbsp;|&nbsp;&nbsp;<b style="color:#717578">[[subscribers_count]]</b><span style="color:#717578"> [[users]]</span>
 	&nbsp;<span style="color:red">[Subscribed]</span><br>
 	<small><a href="[[feedlink]]" class="feedlink">[[feedlink]]</a></small>
@@ -466,7 +470,7 @@
 <!-- /TEMPLATE -->
 
 <script type="text/javascript">
-var ApiKey = "<%= session[:sessionid]  %>";
+var ApiKey = "<%= session[:session_id]  %>";
 
 function ads_mouseover(){
 	if(typeof Element == 'object'){

@@ -8,21 +8,23 @@ module Fastladder
   Version = '0.0.3'
   HTTP_ACCEPT = 'text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5'
 
-  class Initializer
-    def self.run(&block)
-      yield self.new
-      Fastladder.const_set(:HTTP_PROXY, nil) unless defined?(Fastladder::HTTP_PROXY)
-      Fastladder.const_set(:HTTP_PROXY_EXCEPT_HOSTS, []) unless defined?(Fastladder::HTTP_PROXY_EXCEPT_HOST)
-      Fastladder.const_set(:HTTP_OPEN_TIMEOUT, 60) unless defined?(Fastladder::HTTP_OPEN_TIMEOUT)
-      Fastladder.const_set(:HTTP_READ_TIMEOUT, 60) unless defined?(Fastladder::HTTP_READ_TIMEOUT)
-      Fastladder.const_set(:CRAWLER_USER_AGENT, "Fastladder FeedFetcher/#{Fastladder::Version} (http://fastladder.org/)") unless defined?(Fastladder::CRAWLER_USER_AGENT)
+  module ClassMethods
+    attr_reader :http_proxy, :http_proxy_except_hosts, :http_open_timeout, :http_read_timeout, :crawler_user_agent
+
+    def configure(&block)
+      @http_proxy ||= nil
+      @http_proxy_except_hosts ||= []
+      @http_open_timeout ||= 60
+      @http_read_timeout ||= 60
+      @crawler_user_agent ||= "Fastladder FeedFetcher/#{Fastladder::Version} (http://fastladder.org/)"
+      block.call(self)
     end
 
     def proxy=(uri = nil)
       return if uri.blank?
       case uri
       when URI
-        Fastladder.const_set(:HTTP_PROXY, uri)
+        @http_proxy = uri
       when Hash
         uri[:scheme] ||= 'http'
         case uri[:scheme]
@@ -33,7 +35,7 @@ module Fastladder
         else
           return
         end
-        Fastladder.const_set(:HTTP_PROXY, klass.build(uri))
+        @http_proxy = klass.build(uri)
       else
         begin
           uri = URI.parse(uri)
@@ -41,32 +43,33 @@ module Fastladder
         rescue URI::InvalidURIError
           uri = nil
         end
-        Fastladder.const_set(:HTTP_PROXY, uri)
+        @http_proxy = uri
       end
     end
 
     def proxy_except_hosts=(patterns)
       patterns.reject! { |p| !p.kind_of?(Regexp) }
-      Fastladder.const_set(:HTTP_PROXY_EXCEPT_HOSTS, patterns)
+      @http_proxy_except_hosts = patterns
     end
 
-    def open_timeout=(seconds); Fastladder.const_set(:HTTP_OPEN_TIMEOUT, seconds); end
-    def read_timeout=(seconds); Fastladder.const_set(:HTTP_READ_TIMEOUT, seconds); end
-    def crawler_user_agent=(name); Fastladder.const_set(:CRAWLER_USER_AGENT, name); end
+    def open_timeout=(seconds); @http_open_timeout = seconds; end
+    def read_timeout=(seconds); @http_read_timeout = seconds; end
+    def crawler_user_agent=(name); @crawler_user_agent = name; end
   end
+  extend ClassMethods
 
   def fetch(link, options = {})
     uri = link.kind_of?(URI) ? link : URI.parse(link)
 
     http_class = Net::HTTP
-    #if proxy = uri.find_proxy || Fastladder::HTTP_PROXY
-    #  unless Fastladder::HTTP_PROXY_EXCEPT_HOSTS.any? { |pettern| uri.host =~ pettern }
-    #    http_class = Net::HTTP.Proxy(proxy.host, proxy.port, proxy.user, proxy.password)
-    #  end
-    #end
+    # if proxy = uri.find_proxy || Fastladder.http_proxy
+    #   unless Fastladder.http_proxy_except_hosts.any? { |pettern| uri.host =~ pettern }
+    #     http_class = Net::HTTP.Proxy(proxy.host, proxy.port, proxy.user, proxy.password)
+    #   end
+    # end
     http = http_class.new(uri.host, uri.port)
-    http.open_timeout = options[:open_timeout] || Fastladder::HTTP_OPEN_TIMEOUT
-    http.read_timeout = options[:read_timeout] || Fastladder::HTTP_READ_TIMEOUT
+    http.open_timeout = options[:open_timeout] || Fastladder.http_open_timeout
+    http.read_timeout = options[:read_timeout] || Fastladder.http_read_timeout
     case uri.scheme
     when "http"
       # nothing to do
@@ -79,7 +82,7 @@ module Fastladder
 
     req = Net::HTTP::Get.new(uri.request_uri)
     req["Accept"] = Fastladder::HTTP_ACCEPT
-    req["User-Agent"] = options[:user_agent] || Fastladder::CRAWLER_USER_AGENT
+    req["User-Agent"] = options[:user_agent] || Fastladder.crawler_user_agent
     req['If-Modified-Since'] = options[:modified_on] if options[:modified_on]
     req.basic_auth(options[:user] || uri.user, options[:password] || user.password) if options[:user] or uri.user
 
@@ -91,11 +94,10 @@ module Fastladder
   end
 
   def simple_fetch(link, options = {})
-    begin
-      p link.to_s
-      return open(link.to_s).read
-    rescue Exception
-    end
+    open(link.to_s,  "User-Agent" => "Fastladder (https://github.com/fastladder/fastladder)").read
+  rescue Exception => e
+    Rails.logger.error(e)
+    Rails.logger.error(e.backtrace)
     nil
   end
 

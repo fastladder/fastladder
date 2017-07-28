@@ -4,8 +4,8 @@ Konacha.configure do |config|
   config.driver   = :poltergeist
 
   Capybara.server do |app, port|
-    require 'rack/handler/thin'
-    Rack::Handler::Thin.run(app, :Port => port)
+    require 'rack/handler/puma'
+    Rack::Handler::Puma.run(app, Port: port)
   end
 end if defined?(Konacha)
 
