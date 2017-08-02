@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/fastladder/opml
-  revision: 4b2d0434b3676f8701e1593f6a74c487bb1f1173
+  revision: e63daafd249816e2f038b4b60d40a12d118f907f
   specs:
     opml (1.0.0)
-      activesupport (>= 3.2.12, < 5.0)
+      activesupport (>= 3.2.12, < 5.1)
 
 GEM
   remote: https://rubygems.org/
