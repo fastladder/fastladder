@@ -118,7 +118,7 @@ GEM
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
     json (2.1.0)
-    kgio (2.10.0)
+    kgio (2.11.0)
     konacha (4.0.0)
       actionpack (>= 4.1, < 5)
       capybara
@@ -206,7 +206,7 @@ GEM
       activesupport (= 4.2.9)
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
-    raindrops (0.16.0)
+    raindrops (0.19.0)
     rake (12.0.0)
     rb-fsevent (0.10.2)
     rb-inotify (0.9.10)
@@ -281,7 +281,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.2)
-    unicorn (5.1.0)
+    unicorn (5.3.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
     webmock (3.0.1)
