@@ -5,7 +5,7 @@ html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
       | Fastladder #{@title or [params[:controller].capitalize, (params[:action] if params[:action] != "index")].compact.join(": ")}
     meta http-equiv="Content-Script-Type" content="text/javascript"
     meta http-equiv="Content-Style-Type" content="text/css"
-    = stylesheet_link_tag "application"
+    = stylesheet_pack_tag "application"
     - if content_for? :extract_header
       = yield :extract_header
   body class=params[:controller]
@@ -29,6 +29,3 @@ html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
           p style="color: #e81a37"
             = flash[:alert]
       = yield
-    javascript:
-      var ApiKey = '#{escape_javascript(session[:session_id])}';
-    = javascript_include_tag "application"

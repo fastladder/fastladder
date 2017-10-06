@@ -36,7 +36,6 @@ else
 end
 
 gem 'addressable', require: 'addressable/uri'
-gem 'coffee-rails', '~> 4.1.0'
 gem 'feed_searcher', '>= 0.0.6'
 gem 'feedjira'
 gem 'haml'
@@ -47,9 +46,8 @@ gem 'jquery-rails'
 gem 'mini_magick'
 gem 'nokogiri'
 gem 'opml', git: 'https://github.com/fastladder/opml'
-gem 'sass-rails', '~> 5.0.0'
 gem 'settingslogic'
-gem 'uglifier', '>= 1.3.0'
+gem 'webpacker'
 
 if ENV['NEW_RELIC_LICENSE_KEY']
   gem 'newrelic_rpm'
@@ -70,14 +68,12 @@ group :test do
   gem 'capybara'
   gem 'coveralls', require: false
   gem 'factory_girl_rails'
-  gem 'konacha'
   gem 'launchy'
   gem 'poltergeist'
   gem 'rspec-activemodel-mocks'
   gem 'rspec-rails'
   gem 'simplecov'
   gem 'simplecov-rcov'
-  gem 'sinon-rails'
   gem 'puma'
   gem 'webmock'
 end

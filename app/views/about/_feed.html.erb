@@ -16,7 +16,7 @@
 			<%= link_to "subscribe this feed", subscribe_path(url: feed.feedlink), class: "subscribe_link" %>
 			<% elsif current_member.subscribed(feed) -%>
 			<span class="subscribed">[subscribed]</span>
-			<button class="subs_edit" rel="edit:<%= feed.id %>" onkeydown="subs_edit.call(this,event)" onmousedown="subs_edit.call(this,event)" onclick="return false">edit</button>
+			<button class="subs_edit" rel="edit:<%= feed.id %>">edit</button>
 			<% end %>
 			</span>
 		</li>

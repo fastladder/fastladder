@@ -13,18 +13,14 @@ $ cd fastladder
 
 # For SQLite
 $ cp config/database.yml.sqlite3 config/database.yml
-$ bundle install
 
 # For MySQL
 $ cp config/database.yml.mysql config/database.yml
-$ bundle install
 
 # For PostgreSQL
 $ cp config/database.yml.postgresql config/database.yml
-$ bundle install
 
-$ bundle exec rake db:create db:migrate
-$ bundle exec rake setup # Setup files for development
+$ ./bin/setup
 ```
 
 ## Run
@@ -32,13 +28,19 @@ $ bundle exec rake setup # Setup files for development
 Run fastladder web process
 
 ```
-$ bundle exec rails server
+$ ./bin/rails server
 ```
 
 Run fastladder crawler process
 
 ```
 $ bundle exec ruby script/crawler
+```
+
+Run fastladder assets builder process
+
+```
+$ yarn start
 ```
 
 You can run web and crawler processes by [foreman](https://github.com/ddollar/foreman).

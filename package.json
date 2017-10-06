@@ -1,0 +1,42 @@
+{
+  "name": "@fastladder/build",
+  "version": "1.0.0.",
+  "description": "Fastladder Open Source [Forked]",
+  "homepage": "http://fastladder.org/",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fastladder/fastladder.git"
+  },
+  "scripts": {
+    "start": "./bin/webpack-dev-server",
+    "build": "./bin/rails assets:precompile",
+    "lint": "eslint .",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@rails/webpacker": "^3.0.2",
+    "flow_js": "^1.0.2",
+    "i18n-js": "^3.0.1",
+    "intl-messageformat": "^2.1.0",
+    "intl-relativeformat": "^2.1.0",
+    "lodash": "^4.17.4",
+    "rails-ujs": "^5.1.4",
+    "url-search-params": "^0.10.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.0.1",
+    "babel-jest": "^21.2.0",
+    "eslint": "^4.8.0",
+    "eslint-config-airbnb-base": "^12.0.2",
+    "eslint-plugin-import": "^2.7.0",
+    "jest": "^21.2.1",
+    "sinon": "^4.0.1",
+    "webpack-dev-server": "^2.9.1"
+  },
+  "engines": {
+    "node": ">=6"
+  },
+  "engineStrict": true,
+  "private": true
+}

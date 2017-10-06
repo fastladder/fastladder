@@ -6,7 +6,7 @@
 	<meta http-equiv="content-script-type" content="text/javascript">
 	<meta http-equiv="X-UA-Compatible" content="IE=8">
 	<title>Fastladder</title>
-	<%= stylesheet_link_tag "reader" %>
+	<%= stylesheet_pack_tag "reader" %>
 	<link rel="shortcut icon" href="/favicon.ico">
 </head>
 <body>
@@ -252,8 +252,6 @@
 <span style="background-image:url('[[icon]]')"
  id="subs_item_[[ subscribe_id ]]"
  class="treeitem [[ classname ]]"
- onmouseover="SubsItem.onhover.call(this,event)"
- onmouseout="SubsItem.onunhover.call(this,event)"
  rel="Control:read('[[ subscribe_id ]]')"
  subscribe_id="[[subscribe_id]]">
  [[ title ]] ([[ unread_count ]])
@@ -488,7 +486,7 @@ function ads_mouseout(){
 	}
 }
 </script>
-<%= javascript_include_tag "reader" %>
+<%= javascript_pack_tag "reader" %>
 
 </body>
 </html>

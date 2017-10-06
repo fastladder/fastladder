@@ -4,6 +4,8 @@ rvm:
   - 2.3.4
   - 2.4.1
   - ruby-head
+node_js:
+  - 6
 
 sudo: false
 
@@ -16,11 +18,17 @@ branches:
     - master
 
 before_install:
-  - 'cp config/database.yml.sqlite3 config/database.yml'
+  - cp config/database.yml.sqlite3 config/database.yml
+
+install:
+  - bundle install --without development production --jobs 3 --retry 3
+  - yarn install
 
 before_script:
-  - 'RAILS_ENV=test bundle exec rake setup'
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
+  - RAILS_ENV=test ./bin/rake fastladder:setup
 
-script: 'RAILS_ENV=test bundle exec rake db:drop db:create db:migrate spec konacha:run && RAILS_ENV=production bundle exec rake assets:precompile '
+script:
+  - yarn lint || echo '' # todo
+  - yarn test
+  - RAILS_ENV=test bundle exec rake db:drop db:create db:migrate assets:precompile spec
+  - RAILS_ENV=production bundle exec rake assets:precompile

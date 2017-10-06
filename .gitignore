@@ -1,4 +1,5 @@
 .bundle
+node_modules
 log
 tmp
 config/secret.txt
@@ -8,6 +9,8 @@ db/schema.rb
 lib/*.dylib
 db/*.sqlite3
 public/assets
+public/packs
+public/packs-test
 coverage
 .ruby-version
 .rbenv-gemsets

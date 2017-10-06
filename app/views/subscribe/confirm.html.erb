@@ -17,8 +17,8 @@
 			<%= link_to feed.title, feed.link, class: "subscribe_list", style: "background-image:url('#{favicon_path(feed.id)}')" %>
 			<span class="subscriber_count"><%= users_link(feed) %></span>
 			<span class="subscribed">[subscribed]</span>
-			<button class="subs_edit" rel="edit:<%= subs %>" onkeydown="subs_edit.call(this,event)" onmousedown="subs_edit.call(this,event)" onclick="return false">Edit</button>
-			<button class="subs_delete" id="sub_<%= subs %>" onclick="subs_delete.call(this,event)">Delete</button>
+			<button class="subs_edit" rel="edit:<%= subs %>">Edit</button>
+			<button class="subs_delete" id="sub_<%= subs %>">Delete</button>
 			<br />
 			<%= link_to feed.feedlink, feed.feedlink, class: "feedlink" %>
 			<% else -%>
@@ -39,7 +39,7 @@
 	<table>
 		<tr><th>Folder</th>
 		<td>
-			<%= select_tag :folder_id, options_for_select([["Leave it uncategorized", 0], ["Create new folder", "-"]].concat(current_member.folders.map {|folder| [folder.name, folder.id] })), onchange: "folder_change.call(this,event)" %>
+			<%= select_tag :folder_id, options_for_select([["Leave it uncategorized", 0], ["Create new folder", "-"]].concat(current_member.folders.map {|folder| [folder.name, folder.id] })), class: "subs_edit_folder" %>
 		</td></tr>
 		<tr><th>Rating</th>
 		<td>
@@ -105,5 +105,5 @@
 </div><!-- /content -->
 
 <script type="text/javascript">var ApiKey = "<%= session[:session_id] %>";</script>
-<%= javascript_include_tag "subscribe" %>
+<%= javascript_pack_tag "subscribe" %>
 <script type="text/javascript">if(typeof init == "function") init();</script>

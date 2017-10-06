@@ -4,7 +4,7 @@
 <table>
 <tr>
 	<th>Folder</th>
-	<td><%= f.select :folder_id, [["Leave it uncategorized", "0"], ["Create new folder", "-"]], {}, id: "subs_edit_folder", name: "folder_id", onchange: "folder_change.call(this,event);" %></td>
+	<td><%= f.select :folder_id, [["Leave it uncategorized", "0"], ["Create new folder", "-"]], {}, class: "subs_edit_folder", id: "subs_edit_folder", name: "folder_id" %></td>
 </tr>
 <tr>
 	<th>Rating</th>
@@ -21,7 +21,7 @@
 </tr>
 </table>
 <div class="buttons">
-	<span class="subs_edit_cancel" onclick="subs_edit.hide();">Close</span>
+	<span class="subs_edit_cancel">Close</span>
 	<%= f.submit "Save" %>
 </div>
 <% end -%>

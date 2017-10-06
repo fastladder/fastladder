@@ -84,6 +84,7 @@ Rails.application.routes.draw do
     get :guide
     get :config, action: :configure
     get :manage
+    get :edit
   end
 
   get 'share', to: 'share#index', as: 'share'

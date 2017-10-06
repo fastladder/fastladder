@@ -1,0 +1,15 @@
+{
+  "root": true,
+  "parser": "babel-eslint",
+  "extends": "airbnb-base",
+  "env": {
+    "browser": true
+  },
+  "rules": {
+    "class-methods-use-this": "off",
+    "indent": ["error", 4],
+    "no-continue": "off",
+    "no-plusplus": "off",
+    "no-underscore-dangle": "off"
+  }
+}

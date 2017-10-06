@@ -1,10 +1,12 @@
+<% content_for :extract_header do %>
 <!--[if IE 7]>
 <style>
-#result{
-	width: 100% !important;
+#result {
+    width: 100% !important;
 }
 </style>
 <![endif]-->
+<% end %>
 
 <div id="content">
 <div class="share">
@@ -74,5 +76,5 @@
 </div>
 
 <script type="text/javascript">var ApiKey = "<%= session[:session_id] %>";</script>
-<%= javascript_include_tag "share" %>
+<%= javascript_pack_tag "share" %>
 
