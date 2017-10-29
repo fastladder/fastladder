@@ -41,7 +41,7 @@ gem 'feed_searcher', '>= 0.0.6'
 gem 'feedjira'
 gem 'haml'
 gem 'slim'
-gem 'i18n-js', git: 'https://github.com/fnando/i18n-js'
+gem 'i18n-js'
 gem 'jbuilder', '~> 2.0'
 gem 'jquery-rails'
 gem 'mini_magick'
@@ -85,8 +85,4 @@ end
 group :production do
   gem 'rails_12factor'
   gem 'unicorn'
-end
-
-group :doc do
-  gem 'sdoc', require: false
 end
