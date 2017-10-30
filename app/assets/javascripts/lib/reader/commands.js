@@ -760,7 +760,7 @@ var Control = {
     },
     next_item_offset: function(){
         var container = _$("right_container");
-        var sc = container.scrollTop;
+        var sc = Math.ceil(container.scrollTop);
         var top_offset = _$("right_body").offsetTop;
         var divs = _$("right_body").getElementsByTagName("h2");
         var active = (sc == 0) ? -1 : get_active_item();
