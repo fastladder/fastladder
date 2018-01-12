@@ -78,4 +78,49 @@ describe Item do
       expect(item.guid).to eq(item.link)
     end
   end
+
+  describe '#digest' do
+    let(:feed) { FactoryGirl.create(:feed) }
+    let(:item) { FactoryGirl.create(:item, feed: feed) }
+
+    context 'if feedlink is different' do
+      let(:feed2) { FactoryGirl.create(:feed) }
+
+      it 'calculates different digest' do
+        expect {
+          item.update_attributes(feed: feed2)
+        }.to change { item.digest }
+      end
+    end
+
+    context 'if link is different' do
+      let(:link) { FactoryGirl.generate(:item_link_seq) }
+
+      it 'calculates different digest' do
+        expect {
+          item.update_attributes(link: link)
+        }.to change { item.digest }
+      end
+    end
+
+    context 'if title is different' do
+      let(:title) { item.title.reverse }
+
+      it 'calculates different digest' do
+        expect {
+          item.update_attributes(title: title)
+        }.to change { item.digest }
+      end
+    end
+
+    context 'if body is different' do
+      let(:body) { item.body.reverse }
+
+      it 'calculates different digest' do
+        expect {
+          item.update_attributes(body: body)
+        }.to change { item.digest }
+      end
+    end
+  end
 end
