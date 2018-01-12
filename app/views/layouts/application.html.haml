@@ -1,0 +1,34 @@
+!!! 1.1
+%html{"xml:lang": "en", xmlns: "http://www.w3.org/1999/xhtml"}
+  %head
+    %title
+      Fastladder #{@title or [params[:controller].capitalize, (params[:action] if params[:action] != "index")].compact.join(": ")}
+    %meta{content: "text/javascript", "http-equiv": "Content-Script-Type"}
+    %meta{content: "text/css", "http-equiv": "Content-Style-Type"}
+    = stylesheet_link_tag "application"
+    - if content_for? :extract_header
+      = yield :extract_header
+  %body{class: params[:controller]}
+    #container
+      .navi
+        %h1.logo= link_to "Fastladder", root_path
+        - if current_member.present? and not current_member.errors
+          %ul
+            %li
+              Wellcome 
+              = link_to current_member.username, user_path(current_member.username)
+            %li= link_to "My Feeds", reader_path
+            %li= link_to "Account", account_index_path
+            %li= link_to "Sign Out", logout_path
+      - if flash[:notice]
+        .notice{style: "text-align:center;background-color:#ff9;padding:0.5em"}
+          %p{style: "color: green"}
+            = flash[:notice]
+      - if flash[:alert]
+        .alert{style: "text-align:center;background-color:#fdf3eb;padding:0.5em"}
+          %p{style: "color: #e81a37"}
+            = flash[:alert]
+      = yield
+    :javascript
+      var ApiKey = '#{escape_javascript(session[:session_id])}';
+    = javascript_include_tag "application"
