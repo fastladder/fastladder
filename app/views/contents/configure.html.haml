@@ -1,0 +1,232 @@
+#config{style: "padding:0 10px;width:95%"}
+  %h2{style: "margin-top:0"} Fastladder Settings
+  = form_for :save, url: api_config_save_path, html: {id: "config_form", style: "clear: both; width: 100%; display: block;", onreset: "Form.fill(this, app.config); return false;"} do |f|
+    .tabs
+      #tab_config_basic.tab.tab-active{rel: "tab:config_form>config_basic"} General
+      #tab_config_view.tab{rel: "tab:config_form>config_view"} Display
+      #tab_config_pin.tab{rel: "tab:config_form>config_pin"} Pin
+      #tab_config_share.tab{rel: "tab:config_form>config_share"} Share
+      #tab_config_detail.tab{rel:"tab:config_form>config_detail"} Detail
+    #config_container{style: "clear:both; text-align: center;"}
+      #config_basic{style: "display:none"}
+        %table
+          %tr
+            %th= link_to "Subscribe to feed", subscribe_path(url: "")
+            %td Click 'Add' icon and enter the feed URL.
+          %tr
+            %th= link_to "Manage subscription list", "#manage", onclick: "init_manage(); return false;"
+            %td Click 'Edit' icon to manage 'My Feeds'.
+          %tr.last
+            %th= link_to "Browser buttons", utility_bookmarklet_path
+            %td Add new feeds to your subscription list with an easy-access browser button.
+
+      #config_view{style: "display:none"}
+        %table
+          %tr
+            %th= f.label :current_font, "Font size"
+            %td
+              = f.text_field :current_font, size: 4, name: "current_font"
+              px
+          %tr
+            %th Sort order
+            %td
+              = f.label :reverse_mode_0 do
+                = f.radio_button :reverse_mode, 0, name: "reverse_mode"
+                New articles first
+              %br
+              = f.label :reverse_mode_1 do
+                = f.radio_button :reverse_mode, 1, name: "reverse_mode"
+                Old articles first
+          %tr
+            %th Number of 'My Feeds' to show
+            %td
+              %p For shorter loading time, set the limit smaller.
+              = f.label :use_limit_subs_1 do
+                = f.radio_button :use_limit_subs, 1, name: "use_limit_subs"
+                Set limit to
+                = f.text_field :limit_subs, value: 100, size: 4, name: "limit_subs"
+                feeds
+              %br
+              = f.label :use_limit_subs_0 do
+                = f.radio_button :use_limit_subs, 0, name: "use_limit_subs"
+                Display all
+          %tr
+            %th Highlight
+            %td
+              Highlight selected article when using keyboard shortcuts.
+              %br
+              = f.label :use_scroll_hilight_1 do
+                = f.radio_button :use_scroll_hilight, 1, name: "use_scroll_hilight"
+                Enable
+              %br
+              = f.label :use_scroll_hilight_0 do
+                = f.radio_button :use_scroll_hilight, 0, name: "use_scroll_hilight"
+                Diable
+              %br
+          %tr
+            %th= f.label :max_view, "Number of new articles per page"
+            %td
+              Number of articles to open when you first click on a feed.
+              %br
+              = f.text_field :max_view, value: 200, name: "max_view", size: 4
+              articles (max: 200)
+          %tr
+            %th= f.label :items_per_page, "Number of old articles per page" 
+            %td
+              Number of articles to open when you click "older".
+              %br
+              = f.text_field :items_per_page, value: 20, name: "items_per_page", size: 4
+              articles (max: 200)
+      #config_detail{style: "display:none"}
+        %table{width: "100%"}
+          %tr
+            %th When to mark a feed as read
+            %td
+              %ul
+                %li
+                  = f.label :touch_when_onload do
+                    = f.radio_button :touch_when, "onload", name: "touch_when"
+                    Immediately after loading.
+                %li
+                  = f.label :touch_when_onclose do
+                    = f.radio_button :touch_when, "onclose", name: "touch_when"
+                    When moving to the next feed.
+                %li
+                  = f.label :touch_when_manual do
+                    = f.radio_button :touch_when, "manual", name: "touch_when"
+                    When marked as read.
+          %tr
+            %th Prefetching
+            %td
+              Set the number of feeds to prefetch
+              %br
+              = f.label :use_prefetch_hack_1 do
+                = f.radio_button :use_prefetch_hack, 1, name: "use_prefetch_hack"
+                = f.text_field :prefetch_num, name: "prefetch_num", size: 2
+                items (max: 5)
+              %br
+              = f.label :use_prefetch_hack_0 do
+                = f.radio_button :use_prefetch_hack, 0, name: "use_prefetch_hack"
+                Use default setting
+          %tr
+            %th Scroll speed
+            %td
+              Scroll speed when using keyboard shortcuts
+              %br
+              = f.label :use_wait_1 do
+                = f.radio_button :use_wait, 1, name: "use_wait"
+                Enable: 
+                = f.text_field :wait, value: 200, name: "wait", size: 6
+                milliseconds
+              %br
+              = f.label :use_wait_0 do
+                = f.radio_button :use_wait, 0, name: "use_wait"
+                Disable
+          %tr
+            %th Scroll control
+            %td
+              Scroll unit (via space key)
+              %br
+              = f.label :scroll_type_page do
+                = f.radio_button :scroll_type, "page", name: "scroll_type"
+                One screen
+              %br
+              = f.label :scroll_type_half do
+                = f.radio_button :scroll_type, "half", name: "scroll_type"
+                Half screen
+              %br
+              = f.label :scroll_type_px do
+                = f.radio_button :scroll_type, "px", name: "scroll_type"
+                Precisely 
+                = f.text_field :scroll_px, value: 100, name: "scroll_px", size: 6
+                px
+          %tr
+            %th Automatic update of 'My Feeds'
+            %td
+              = f.label :use_autoreload_1 do
+                = f.radio_button :use_autoreload, 1, name: "use_autoreload"
+                Enable: Reload every 
+                = f.text_field :autoreload, name: "autoreload", size: 6
+                seconds. (min: 60 secs)
+              %br
+              = f.label :use_autoreload_0 do
+                = f.radio_button :use_autoreload, 0, name: "use_autoreload"
+                Disable
+      #config_pin{style: "display:none"}
+        %table{width: "100%"}
+          %tr
+            %th Pin backup
+            %td
+              Let Fastladder remember your pin state (up to 100 changes).
+              %br
+              = f.label :use_pinsaver_1 do
+                = f.radio_button :use_pinsaver, 1, name: "use_pinsaver"
+                Enable
+              %br
+              = f.label :use_pinsaver_0 do
+                = f.radio_button :use_pinsaver, 0, name: "use_pinsaver"
+                Disable
+          %tr
+            %th= f.label :max_pin, "Open limitation"
+            %td
+              Open 
+              = f.text_field :max_pin, name: "max_pin", size: 4
+              tabs at a time.
+          %tr
+            %th Pop-up window
+            %td
+              To open articles with 'Pin' function, please set your browser to allow pop-ups on "#{reader_url}".
+              %br
+              = link_to "Click on this link to test if pop-ups are enabled(3 new windows will open on success).", "#", onclick: "(3).times(function(){window.open()}); return false;"
+      #config_share{style: "display:none"}
+        %table{width: "100%"}
+          %tr
+            %td{colspan: "2"}
+              %p
+                To share your subscriptions with others, configure 
+                = link_to "Manage Sharing", share_path
+                \.
+          %tr
+            %th Sharing subscriptions
+            %td
+              If you enable sharing, others can read your public subscriptions at "#{user_url(current_member.username)}"
+              - if current_member.public
+                (
+                = link_to "Show public subscriptions", user_path(current_member.username)
+                )
+              %br
+              = f.label :member_public_1 do
+                = f.radio_button :member_public, 1, name: "member_public", checked: current_member.public
+                Enable Sharing
+              %br
+              = f.label :member_public_0 do
+                = f.radio_button :member_public, 0, name: "member_public", checked: !current_member.public
+                Disable Sharing
+          %tr
+            %th Default
+            %td
+              Default setting for new subscriptions
+              %br
+              = f.label :default_public_status_1 do
+                = f.radio_button :default_public_status, 1, name: "default_public_status"
+                Public
+              %br
+              = f.label :default_public_status_0 do
+                = f.radio_button :default_public_status, 0, name: "default_public_status"
+                Private
+      #config_submit
+        %table
+          %tr.submit
+            %td{style: "text-align: center;"}
+              = f.button "Cancel", type: "reset"
+              = f.submit "Save"
+  %h2 Import / Export Subscription List
+  %table.link
+    %tr
+      %th{nowrap: true, style: "padding : 0 10px"}
+        = link_to "Import", import_path
+      %td Import OPML subscription list to Fastladder.
+    %tr
+      %th{nowrap: true, style: "padding : 0 10px"}
+        = link_to "Export", export_path, download: "export.opml"
+      %td Create backup of current subscription list in OPML. Follow the link and select 'Save'.
