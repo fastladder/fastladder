@@ -43,7 +43,7 @@ class ApplicationController < ActionController::Base
   # extract URL from request_path(e.g. /about/http://example.com)
   def url_from_path(name)
     if (url = params[name]).present?
-      if not (parsed_url = URI.parse(url)).is_a? URI::HTTP or parsed_url.host.nil?
+      if not (parsed_url = Addressable::URI.parse(url)).is_a? Addressable::URI or parsed_url.host.nil?
         url = nil
       end
     end
