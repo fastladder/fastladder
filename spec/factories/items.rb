@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-# Read about factories at https://github.com/thoughtbot/factory_girl
+# Read about factories at https://github.com/thoughtbot/factory_bot
 
-FactoryGirl.define do
+FactoryBot.define do
   sequence(:item_link_seq) {|n| "http://la.ma.la/blog/diary_200810292006.htm?n=#{n}" }
   sequence(:item_guid_seq) {|n| "guid#{n}" }
 
   factory :item do
-    link { FactoryGirl.generate(:item_link_seq) }
+    link { FactoryBot.generate(:item_link_seq) }
     title '最速インターフェース研究会 :: 近況'
     body '観光目的で7ヶ月ほど京都旅行に行っていた。<br>祇園祭楽しかったですね。'
     author 'mala'
@@ -15,7 +15,7 @@ FactoryGirl.define do
     enclosure_type nil
     digest nil
     version 1
-    guid { FactoryGirl.generate(:item_guid_seq) }
+    guid { FactoryBot.generate(:item_guid_seq) }
     stored_on   { Time.now }
     modified_on { Time.now }
     created_on  { Time.now }

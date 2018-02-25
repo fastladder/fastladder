@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe Api::ConfigController do
   let(:member) do
-    FactoryGirl.create(:member, password: 'mala', password_confirmation: 'mala', config_dump: { 'use_wait' => '0' })
+    FactoryBot.create(:member, password: 'mala', password_confirmation: 'mala', config_dump: { 'use_wait' => '0' })
   end
 
   context 'logged in' do

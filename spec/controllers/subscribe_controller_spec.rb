@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe SubscribeController do
   before do
-    @member = FactoryGirl.create(:member, password: 'mala', password_confirmation: 'mala')
+    @member = FactoryBot.create(:member, password: 'mala', password_confirmation: 'mala')
   end
 
   describe 'GET /confirm' do

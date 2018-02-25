@@ -2,16 +2,16 @@ require 'spec_helper'
 
 describe ApiController do
   before do
-    @member = FactoryGirl.create(:member, password: 'mala', password_confirmation: 'mala')
-    @feed = FactoryGirl.create(:feed)
-    @item = FactoryGirl.create(:item, feed: @feed)
-    @subscription = FactoryGirl.create(:subscription, feed: @feed, member: @member)
-    @crawl_status = FactoryGirl.create(:crawl_status, feed: @feed)
+    @member = FactoryBot.create(:member, password: 'mala', password_confirmation: 'mala')
+    @feed = FactoryBot.create(:feed)
+    @item = FactoryBot.create(:item, feed: @feed)
+    @subscription = FactoryBot.create(:subscription, feed: @feed, member: @member)
+    @crawl_status = FactoryBot.create(:crawl_status, feed: @feed)
   end
 
   describe 'GET /all' do
     before {
-      @items = Array.new(3) { FactoryGirl.create(:item, feed: @feed) }
+      @items = Array.new(3) { FactoryBot.create(:item, feed: @feed) }
     }
     it 'renders json' do
       get :all, { subscribe_id: @subscription.id }, { member_id: @member.id }
@@ -28,9 +28,9 @@ describe ApiController do
     end
 
     it 'renders purified link' do
-      feed = FactoryGirl.create :feed
-      item = FactoryGirl.create :item, feed: feed, link: 'http://www.example.com/get?x=1&y=2'
-      subscription = FactoryGirl.create :subscription, feed: feed, member: @member
+      feed = FactoryBot.create :feed
+      item = FactoryBot.create :item, feed: feed, link: 'http://www.example.com/get?x=1&y=2'
+      subscription = FactoryBot.create :subscription, feed: feed, member: @member
       get :all, { subscribe_id: subscription.id }, { member_id: @member.id }
       expect(JSON.parse(response.body)['items'].first['link']).to include('&amp;')
     end
@@ -81,7 +81,7 @@ describe ApiController do
 
   describe 'GET /subs' do
     before {
-      @unread_subscription = FactoryGirl.create(:unread_subscription, member: @member)
+      @unread_subscription = FactoryBot.create(:unread_subscription, member: @member)
     }
     context 'default' do
       it "has read and unread subscriptions" do

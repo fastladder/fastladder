@@ -20,7 +20,7 @@ require 'spec_helper'
 
 describe Member do
   describe '.authenticate' do
-    before { @member = FactoryGirl.create(:member, password: 'mala', password_confirmation: 'mala') }
+    before { @member = FactoryBot.create(:member, password: 'mala', password_confirmation: 'mala') }
 
     context 'password is correct' do
       it { expect(Member.authenticate('bulkneets', 'mala')).to be }
@@ -33,19 +33,19 @@ describe Member do
 
   describe "#public_subscribe_count" do
     before {
-      @member = FactoryGirl.create(:member, password: 'mala', password_confirmation: 'mala')
-      FactoryGirl.create(:subscription, member: @member, feed: FactoryGirl.create(:feed), public: true)
-      FactoryGirl.create(:subscription, member: @member, feed: FactoryGirl.create(:feed), public: false)
-      FactoryGirl.create(:subscription, member: @member, feed: FactoryGirl.create(:feed), public: false)
+      @member = FactoryBot.create(:member, password: 'mala', password_confirmation: 'mala')
+      FactoryBot.create(:subscription, member: @member, feed: FactoryBot.create(:feed), public: true)
+      FactoryBot.create(:subscription, member: @member, feed: FactoryBot.create(:feed), public: false)
+      FactoryBot.create(:subscription, member: @member, feed: FactoryBot.create(:feed), public: false)
     }
     it { expect(@member.public_subscribe_count).to eq(1) }
   end
 
   describe "#public_subs" do
     before {
-      @member = FactoryGirl.create(:member, password: 'mala', password_confirmation: 'mala')
-      @public_subscription = FactoryGirl.create(:subscription, member: @member, feed: FactoryGirl.create(:feed), public: true)
-      @non_public_subscription = FactoryGirl.create(:subscription, member: @member, feed: FactoryGirl.create(:feed), public: false)
+      @member = FactoryBot.create(:member, password: 'mala', password_confirmation: 'mala')
+      @public_subscription = FactoryBot.create(:subscription, member: @member, feed: FactoryBot.create(:feed), public: true)
+      @non_public_subscription = FactoryBot.create(:subscription, member: @member, feed: FactoryBot.create(:feed), public: false)
     }
     it { expect(@member.public_subs).to include(@public_subscription) }
     it { expect(@member.public_subs).not_to include(@non_public_subscription) }
@@ -53,11 +53,11 @@ describe Member do
 
   describe "#recent_subs" do
     before {
-      @member = FactoryGirl.create(:member, password: 'mala', password_confirmation: 'mala')
-      @sub_1 = FactoryGirl.create(:subscription, member: @member, feed: FactoryGirl.create(:feed), created_on: 1.day.ago)
-      @sub_2 = FactoryGirl.create(:subscription, member: @member, feed: FactoryGirl.create(:feed), created_on: 3.day.ago)
-      @sub_3 = FactoryGirl.create(:subscription, member: @member, feed: FactoryGirl.create(:feed), created_on: 2.day.ago)
-      @sub_4 = FactoryGirl.create(:subscription, member: @member, feed: FactoryGirl.create(:feed), created_on: 4.day.ago)
+      @member = FactoryBot.create(:member, password: 'mala', password_confirmation: 'mala')
+      @sub_1 = FactoryBot.create(:subscription, member: @member, feed: FactoryBot.create(:feed), created_on: 1.day.ago)
+      @sub_2 = FactoryBot.create(:subscription, member: @member, feed: FactoryBot.create(:feed), created_on: 3.day.ago)
+      @sub_3 = FactoryBot.create(:subscription, member: @member, feed: FactoryBot.create(:feed), created_on: 2.day.ago)
+      @sub_4 = FactoryBot.create(:subscription, member: @member, feed: FactoryBot.create(:feed), created_on: 4.day.ago)
     }
     it { expect(@member.recent_subs(3).size).to eq(3) }
     it { expect(@member.recent_subs(3)).to eq([@sub_1, @sub_3, @sub_2]) }

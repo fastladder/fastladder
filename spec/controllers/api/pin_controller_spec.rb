@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe Api::PinController do
   before do
-    @member = FactoryGirl.create(:member, password: 'mala', password_confirmation: 'mala')
+    @member = FactoryBot.create(:member, password: 'mala', password_confirmation: 'mala')
   end
 
   let(:error) do
@@ -12,13 +12,13 @@ describe Api::PinController do
 
   describe 'POST /all' do
     it 'renders json' do
-      3.times.each { FactoryGirl.create(:pin, member: @member) }
+      3.times.each { FactoryBot.create(:pin, member: @member) }
       post :all, {}, { member_id: @member.id }
       expect(response.body).to be_json
     end
 
     it 'renders purified link' do
-      FactoryGirl.create(:pin, member: @member, link: 'http://www.example.com/get?x=1&y=2')
+      FactoryBot.create(:pin, member: @member, link: 'http://www.example.com/get?x=1&y=2')
       post :all, {}, { member_id: @member.id }
       expect(JSON.parse(response.body).last['link']).to include('&amp;')
     end
@@ -54,7 +54,7 @@ describe Api::PinController do
     end
     context "pin exists" do
       let(:link) { 'http://la.ma.la/blog/diary_200810292006.htm' }
-      before { FactoryGirl.create(:pin, member: @member, link: link) }
+      before { FactoryBot.create(:pin, member: @member, link: link) }
       it 'return success' do
         post :remove, { link: link }, { member_id: @member.id }
         expect(JSON.parse(response.body)).to include("isSuccess" => true)
@@ -63,7 +63,7 @@ describe Api::PinController do
   end
 
   describe 'POST /clear' do
-    before { FactoryGirl.create(:pin, member: @member) }
+    before { FactoryBot.create(:pin, member: @member) }
     it 'renders json' do
       post :clear, {}, { member_id: @member.id }
       expect(response.body).to be_json

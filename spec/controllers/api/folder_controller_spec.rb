@@ -3,8 +3,8 @@ require 'spec_helper'
 
 describe Api::FolderController do
   before do
-    @member = FactoryGirl.create(:member, password: 'mala', password_confirmation: 'mala')
-    @folder = FactoryGirl.create(:folder)
+    @member = FactoryBot.create(:member, password: 'mala', password_confirmation: 'mala')
+    @folder = FactoryBot.create(:folder)
   end
 
   describe 'POST /create' do
