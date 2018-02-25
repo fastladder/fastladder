@@ -10,8 +10,8 @@ class Api::FeedController < ApplicationController
 
   def discover
     feeds = []
-    url = URI.parse(params[:url])
-    FeedSearcher.search(url.to_s).each do |feedlink|
+    url = Addressable::URI.parse(params[:url])
+    FeedSearcher.search(url.normalize.to_s).each do |feedlink|
       feedlink = (url + feedlink).to_s
       if feed = Feed.find_by(feedlink: feedlink)
         result = {
