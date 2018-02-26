@@ -9,9 +9,9 @@ desc 'Setup files for development'
 task 'setup' do
   File.write("config/secrets.yml", <<-YAML.strip_heredoc)
     development:
-      secret_key_base: #{`bundle exec rake secret`}
+      secret_key_base: #{SecureRandom.hex(64)}
     test:
-      secret_key_base: #{`bundle exec rake secret`}
+      secret_key_base: #{SecureRandom.hex(64)}
     production:
       secret_key_base: <%= ENV["SECRET_KEY_BASE"] %>
   YAML
