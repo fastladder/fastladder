@@ -198,7 +198,7 @@ module Fastladder
     def delete_old_items_if_new_items_are_many(feed, new_items_size)
       return unless new_items_size > ITEMS_LIMIT / 2
       @logger.info "delete all items: #{feed.feedlink}"
-      Items.where(feed_id: feed.id).delete_all
+      Item.where(feed_id: feed.id).delete_all
     end
 
     def update_or_insert_items_to_feed(feed, items, result)
