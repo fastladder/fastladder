@@ -68,7 +68,7 @@ end
 group :test do
   gem 'capybara'
   gem 'coveralls', require: false
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
   gem 'konacha'
   gem 'launchy'
   gem 'poltergeist'

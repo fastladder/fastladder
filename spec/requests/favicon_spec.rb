@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'favicon' do
   describe 'GET /favicon/:url' do
-    let!(:feed) { FactoryGirl.create(:feed) }
+    let!(:feed) { FactoryBot.create(:feed) }
 
     it 'returns favicon' do
       expect(Feed).to receive(:find_by).with(feedlink: feed.link).and_call_original

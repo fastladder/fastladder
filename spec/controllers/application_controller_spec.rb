@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe ApplicationController do
-  let(:member) { FactoryGirl.create(:member, password: 'mala', password_confirmation: 'mala') }
+  let(:member) { FactoryBot.create(:member, password: 'mala', password_confirmation: 'mala') }
 
   describe '#login_required' do
     controller do

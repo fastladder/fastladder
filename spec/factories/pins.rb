@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-# Read about factories at https://github.com/thoughtbot/factory_girl
+# Read about factories at https://github.com/thoughtbot/factory_bot
 
-FactoryGirl.define do
+FactoryBot.define do
   sequence(:pin_link_seq) {|n| "http://la.ma.la/blog/diary_200810292006.htm?n=#{n}" }
 
   factory :pin do

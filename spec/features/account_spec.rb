@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 feature 'Set auth key' do
-  let(:member) { FactoryGirl.create(:member, password: 'mala', password_confirmation: 'mala') }
+  let(:member) { FactoryBot.create(:member, password: 'mala', password_confirmation: 'mala') }
 
   before do
     login_as(member)

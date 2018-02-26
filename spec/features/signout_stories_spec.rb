@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "SignoutStories" do
   let(:member) {
-    FactoryGirl.create(:member, password: 'mala', password_confirmation: 'mala')
+    FactoryBot.create(:member, password: 'mala', password_confirmation: 'mala')
   }
 
   context "when sign in as a member" do
