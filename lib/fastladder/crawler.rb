@@ -1,5 +1,4 @@
 require "fastladder"
-require "digest/sha1"
 require "tempfile"
 require "logger"
 begin
@@ -142,20 +141,21 @@ module Fastladder
       end
       @logger.info "parsed: [#{parsed.entries.size} items] #{feed.feedlink}"
       items = parsed.entries.map { |item|
-        Item.new({
-          feed_id: feed.id,
-          link: item.url || "",
-          guid: item.id,
-          title: item.title || "",
-          body: fixup_relative_links(feed, item.content || item.summary),
-          author: item.author,
-          category: item.categories.first,
-          enclosure: nil,
-          enclosure_type: nil,
-          digest: item_digest(item),
-          stored_on: Time.now,
-          modified_on: item.published ? item.published.to_datetime : nil,
-        })
+        new_item = Item.new({
+                             feed_id: feed.id,
+                             link: item.url || "",
+                             guid: item.id,
+                             title: item.title || "",
+                             body: fixup_relative_links(feed, item.content || item.summary),
+                             author: item.author,
+                             category: item.categories.first,
+                             enclosure: nil,
+                             enclosure_type: nil,
+                             stored_on: Time.now,
+                             modified_on: item.published ? item.published.to_datetime : nil,
+                            })
+        new_item.create_digest
+        new_item
       }
 
       items = cut_off(items)
@@ -237,13 +237,6 @@ module Fastladder
       feed.title = parsed.title
       feed.link = parsed.url
       feed.description = parsed.description || ""
-    end
-
-    def item_digest(item)
-      str = "#{item.title}#{item.content}"
-      str = str.gsub(%r{<br clear="all"\s*/>\s*<a href="http://rss\.rssad\.jp/(.*?)</a>\s*<br\s*/>}im, "")
-      str = str.gsub(/\s+/, "")
-      Digest::SHA1.hexdigest(str)
     end
 
     def almost_same(str1, str2)
