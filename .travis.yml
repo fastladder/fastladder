@@ -9,6 +9,7 @@ sudo: false
 
 matrix:
   allow_failures:
+    - rvm: 2.5.0
     - rvm: ruby-head
 
 branches:
@@ -18,7 +19,6 @@ branches:
 before_install:
   - 'cp config/database.yml.sqlite3 config/database.yml'
   - gem install bundler
-
 
 before_script:
   - 'RAILS_ENV=test bundle exec rake setup'
