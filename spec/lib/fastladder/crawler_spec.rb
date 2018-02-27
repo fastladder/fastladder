@@ -47,4 +47,29 @@ describe 'Fastladder::Crawler' do
       expect(doc.css('a[href="http://example.com/bundler/bundler/tree/1-9-stable"]').size).to eq(1)
     end
   end
+
+  describe '#new_items_count' do
+    let(:items) { crawler.send(:build_items, feed, parsed) }
+    let(:parsed) { Feedjira::Feed.parse(source.body) }
+    let(:source) { double('HTTP response', body: atom_body) }
+    let(:atom_body) { File.read(File.expand_path('../../fixtures/github.private.atom', __dir__)) }
+
+    before do
+      feed.feedlink = 'http://example.com/private.atom'
+      feed.save!
+      # Disable favicon fetch
+      allow(feed).to receive(:favicon_list).and_return([])
+    end
+
+    it 'find new item' do
+      expect(crawler.send(:new_items_count, feed, items)).to eq(1)
+    end
+
+    context 'not updated feed since last update feed' do
+      before { crawler.send(:update, feed, source) }
+      it 'not find new item' do
+        expect(crawler.send(:new_items_count, feed, items)).to eq(0)
+      end
+    end
+  end
 end
