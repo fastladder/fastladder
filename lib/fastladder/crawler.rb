@@ -139,6 +139,24 @@ module Fastladder
         result[:error] = 'Cannot parse feed'
         return result
       end
+
+      items = build_items(feed, parsed)
+
+      items = cut_off(items)
+      items = reject_duplicated(feed, items)
+      delete_old_items_if_new_items_are_many(feed, items)
+      update_or_insert_items_to_feed(feed, items, result)
+      update_unread_status(feed, result)
+      update_feed_infomation(feed, parsed)
+      feed.save
+
+      feed.fetch_favicon!
+      GC.start
+
+      result
+    end
+
+    def build_items(feed, parsed)
       @logger.info "parsed: [#{parsed.entries.size} items] #{feed.feedlink}"
       items = parsed.entries.map { |item|
         new_item = Item.new({
@@ -157,19 +175,6 @@ module Fastladder
         new_item.create_digest
         new_item
       }
-
-      items = cut_off(items)
-      items = reject_duplicated(feed, items)
-      delete_old_items_if_new_items_are_many(feed, items)
-      update_or_insert_items_to_feed(feed, items, result)
-      update_unread_status(feed, result)
-      update_feed_infomation(feed, parsed)
-      feed.save
-
-      feed.fetch_favicon!
-      GC.start
-
-      result
     end
 
     def fixup_relative_links(feed, body)
