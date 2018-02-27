@@ -200,9 +200,13 @@ module Fastladder
       items.uniq { |item| item.guid }.reject { |item| feed.items.exists?(["guid = ? and digest = ?", item.guid, item.digest]) }
     end
 
+    def new_items_count(feed, items)
+      items.reject { |item| feed.items.exists?(["link = ? and digest = ?", item.link, item.digest]) }.size
+    end
+
     def delete_old_items_if_new_items_are_many(feed, items)
-      new_items = items.reject { |item| feed.items.exists?(["link = ? and digest = ?", item.link, item.digest]) }
-      return unless new_items.size > ITEMS_LIMIT / 2
+      new_items_size = new_items_count(feed, items)
+      return unless new_items_size > ITEMS_LIMIT / 2
       @logger.info "delete all items: #{feed.feedlink}"
       Item.where(feed_id: feed.id).delete_all
     end
