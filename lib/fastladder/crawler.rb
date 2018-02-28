@@ -148,7 +148,7 @@ module Fastladder
                              title: item.title || "",
                              body: fixup_relative_links(feed, item.content || item.summary),
                              author: item.author,
-                             category: item.try(:categories).try(:first),
+                             category: item.try(:categories).try!(:first),
                              enclosure: nil,
                              enclosure_type: nil,
                              stored_on: Time.now,
