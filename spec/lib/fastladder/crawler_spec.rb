@@ -47,4 +47,16 @@ describe 'Fastladder::Crawler' do
       expect(doc.css('a[href="http://example.com/bundler/bundler/tree/1-9-stable"]').size).to eq(1)
     end
   end
+
+  describe '#cut_off' do
+    context 'when too large feed' do
+      before { feed.items << items }
+
+      let(:items) { FactoryBot.build_list(:item, Fastladder::Crawler::ITEMS_LIMIT + 1) }
+
+      it 'cut off' do
+        expect(crawler.send(:cut_off, feed, items).size).to eq(Fastladder::Crawler::ITEMS_LIMIT)
+      end
+    end
+  end
 end

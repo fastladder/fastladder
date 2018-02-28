@@ -158,7 +158,7 @@ module Fastladder
         new_item
       }
 
-      items = cut_off(items)
+      items = cut_off(feed, items)
       items = reject_duplicated(feed, items)
       delete_old_items_if_new_items_are_many(feed, items)
       update_or_insert_items_to_feed(feed, items, result)
@@ -185,7 +185,7 @@ module Fastladder
       end
     end
 
-    def cut_off(items)
+    def cut_off(feed, items)
       return items unless items.size > ITEMS_LIMIT
       @logger.info "too large feed: #{feed.feedlink}(#{feed.items.size})"
       items[0, ITEMS_LIMIT]
