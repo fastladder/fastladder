@@ -97,7 +97,7 @@ module Fastladder
         run_body
       rescue TimeoutError
         @logger.error "Time out: #{$!}"
-      rescue Interrupt
+      rescue SignalException
         @logger.warn "\n=> #{$!.message} trapped. Terminating..."
         return true
       rescue Exception
