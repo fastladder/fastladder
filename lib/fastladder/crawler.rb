@@ -97,7 +97,7 @@ module Fastladder
         run_body
       rescue TimeoutError
         @logger.error "Time out: #{$!}"
-      rescue Interrupt
+      rescue SignalException
         @logger.warn "\n=> #{$!.message} trapped. Terminating..."
         return true
       rescue Exception
@@ -142,7 +142,7 @@ module Fastladder
 
       items = build_items(feed, parsed)
 
-      items = cut_off(items)
+      items = cut_off(feed, items)
       items = reject_duplicated(feed, items)
       delete_old_items_if_new_items_are_many(feed, items)
       update_or_insert_items_to_feed(feed, items, result)
@@ -158,7 +158,7 @@ module Fastladder
 
     def build_items(feed, parsed)
       @logger.info "parsed: [#{parsed.entries.size} items] #{feed.feedlink}"
-      items = parsed.entries.map { |item|
+      parsed.entries.map { |item|
         new_item = Item.new({
                              feed_id: feed.id,
                              link: item.url || "",
@@ -166,7 +166,7 @@ module Fastladder
                              title: item.title || "",
                              body: fixup_relative_links(feed, item.content || item.summary),
                              author: item.author,
-                             category: item.categories.first,
+                             category: item.try(:categories).try!(:first),
                              enclosure: nil,
                              enclosure_type: nil,
                              stored_on: Time.now,
@@ -184,13 +184,18 @@ module Fastladder
         body
       else
         links.each do |link|
-          link['href'] = Addressable::URI.join(feed.feedlink, link['href']).normalize.to_s
+          begin
+            link['href'] = Addressable::URI.join(feed.feedlink, link['href']).normalize.to_s
+          rescue Addressable::URI::InvalidURIError
+            @logger.info "Invalid URL in link: [#{link['href']}] #{feed.feedlink}"
+            next
+          end
         end
         doc.to_html
       end
     end
 
-    def cut_off(items)
+    def cut_off(feed, items)
       return items unless items.size > ITEMS_LIMIT
       @logger.info "too large feed: #{feed.feedlink}(#{feed.items.size})"
       items[0, ITEMS_LIMIT]

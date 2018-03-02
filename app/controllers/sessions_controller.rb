@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
 
   def create
     member = Member.authenticate(params[:username], params[:password])
-    session[:member_id] = member.try(:id)
+    session[:member_id] = member.try!(:id)
     if logged_in?
       redirect_to root_path, notice: "Signed in successfully"
     else

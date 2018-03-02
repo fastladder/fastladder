@@ -48,6 +48,18 @@ describe 'Fastladder::Crawler' do
     end
   end
 
+  describe '#cut_off' do
+    context 'when too large feed' do
+      before { feed.items << items }
+
+      let(:items) { FactoryBot.build_list(:item, Fastladder::Crawler::ITEMS_LIMIT + 1) }
+
+      it 'cut off' do
+        expect(crawler.send(:cut_off, feed, items).size).to eq(Fastladder::Crawler::ITEMS_LIMIT)
+      end
+    end
+  end
+
   describe '#new_items_count' do
     let(:items) { crawler.send(:build_items, feed, parsed) }
     let(:parsed) { Feedjira::Feed.parse(source.body) }
