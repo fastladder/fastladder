@@ -139,8 +139,26 @@ module Fastladder
         result[:error] = 'Cannot parse feed'
         return result
       end
+
+      items = build_items(feed, parsed)
+
+      items = cut_off(feed, items)
+      items = reject_duplicated(feed, items)
+      delete_old_items_if_new_items_are_many(feed, items)
+      update_or_insert_items_to_feed(feed, items, result)
+      update_unread_status(feed, result)
+      update_feed_infomation(feed, parsed)
+      feed.save
+
+      feed.fetch_favicon!
+      GC.start
+
+      result
+    end
+
+    def build_items(feed, parsed)
       @logger.info "parsed: [#{parsed.entries.size} items] #{feed.feedlink}"
-      items = parsed.entries.map { |item|
+      parsed.entries.map { |item|
         new_item = Item.new({
                              feed_id: feed.id,
                              link: item.url || "",
@@ -157,19 +175,6 @@ module Fastladder
         new_item.create_digest
         new_item
       }
-
-      items = cut_off(feed, items)
-      items = reject_duplicated(feed, items)
-      delete_old_items_if_new_items_are_many(feed, items)
-      update_or_insert_items_to_feed(feed, items, result)
-      update_unread_status(feed, result)
-      update_feed_infomation(feed, parsed)
-      feed.save
-
-      feed.fetch_favicon!
-      GC.start
-
-      result
     end
 
     def fixup_relative_links(feed, body)
@@ -200,9 +205,13 @@ module Fastladder
       items.uniq { |item| item.guid }.reject { |item| feed.items.exists?(["guid = ? and digest = ?", item.guid, item.digest]) }
     end
 
+    def new_items_count(feed, items)
+      items.reject { |item| feed.items.exists?(["link = ? and digest = ?", item.link, item.digest]) }.size
+    end
+
     def delete_old_items_if_new_items_are_many(feed, items)
-      new_items = items.reject { |item| feed.items.exists?(["link = ? and digest = ?", item.link, item.digest]) }
-      return unless new_items.size > ITEMS_LIMIT / 2
+      new_items_size = new_items_count(feed, items)
+      return unless new_items_size > ITEMS_LIMIT / 2
       @logger.info "delete all items: #{feed.feedlink}"
       Item.where(feed_id: feed.id).delete_all
     end
