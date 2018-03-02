@@ -179,7 +179,12 @@ module Fastladder
         body
       else
         links.each do |link|
-          link['href'] = Addressable::URI.join(feed.feedlink, link['href']).normalize.to_s
+          begin
+            link['href'] = Addressable::URI.join(feed.feedlink, link['href']).normalize.to_s
+          rescue Addressable::URI::InvalidURIError
+            @logger.info "Invalid URL in link: [#{link['href']}] #{feed.feedlink}"
+            next
+          end
         end
         doc.to_html
       end
