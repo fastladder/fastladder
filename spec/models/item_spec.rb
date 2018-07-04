@@ -22,7 +22,7 @@
 require 'spec_helper'
 
 describe Item do
-  let(:item) { FactoryGirl.create(:item) }
+  let(:item) { FactoryBot.create(:item) }
 
   describe '.to_json' do
     let(:json) { item.as_json }
@@ -39,8 +39,8 @@ describe Item do
 
   describe '.stored_since' do
     before {
-      @item_1 = FactoryGirl.create(:item, stored_on: 20.hours.ago)
-      @item_2 = FactoryGirl.create(:item, stored_on: 10.hours.ago)
+      @item_1 = FactoryBot.create(:item, stored_on: 20.hours.ago)
+      @item_2 = FactoryBot.create(:item, stored_on: 10.hours.ago)
     }
     context 'with nil' do
       it { expect(Item.stored_since(nil)).to include(@item_1, @item_2) }
@@ -52,9 +52,9 @@ describe Item do
 
   describe '.recent' do
     before {
-      @item_1 = FactoryGirl.create(:item, created_on: 1.hour.ago)
-      @item_2 = FactoryGirl.create(:item, created_on: 3.hour.ago)
-      @item_3 = FactoryGirl.create(:item, created_on: 2.hour.ago)
+      @item_1 = FactoryBot.create(:item, created_on: 1.hour.ago)
+      @item_2 = FactoryBot.create(:item, created_on: 3.hour.ago)
+      @item_3 = FactoryBot.create(:item, created_on: 2.hour.ago)
     }
     context "with nil, nil" do
       it { expect(Item.recent).to eq([@item_1, @item_3, @item_2]) }
@@ -68,12 +68,12 @@ describe Item do
   end
 
   describe '#title' do
-    subject { FactoryGirl.create(:item_without_title).title }
+    subject { FactoryBot.create(:item_without_title).title }
     it { should_not eq(nil) }
   end
 
   describe '#guid' do
-    let(:item) { FactoryGirl.create(:item_without_guid) }
+    let(:item) { FactoryBot.create(:item_without_guid) }
     it 'defaults to #link' do
       expect(item.guid).to eq(item.link)
     end

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe FaviconController do
   before do
-    @feed = FactoryGirl.create(:feed)
+    @feed = FactoryBot.create(:feed)
   end
 
   let(:image_header) {

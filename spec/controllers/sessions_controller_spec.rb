@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe SessionsController do
   let(:member) {
-    FactoryGirl.create(:member, password: 'mala', password_confirmation: 'mala')
+    FactoryBot.create(:member, password: 'mala', password_confirmation: 'mala')
   }
 
   let(:valid_sessions) {

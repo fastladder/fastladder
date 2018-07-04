@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe AboutController do
   before do
-    @feed = FactoryGirl.create(:feed)
+    @feed = FactoryBot.create(:feed)
   end
 
   describe 'GET /' do

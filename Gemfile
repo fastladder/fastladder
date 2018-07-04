@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-gem 'rails', '4.2.9'
+gem 'rails', '4.2.10'
 
 # Include database gems for the adapters found in the database
 # configuration file or DATABASE_URL
@@ -40,7 +40,6 @@ gem 'coffee-rails', '~> 4.1.0'
 gem 'feed_searcher', '>= 0.0.6'
 gem 'feedjira'
 gem 'haml'
-gem 'slim'
 gem 'i18n-js'
 gem 'jbuilder', '~> 2.0'
 gem 'jquery-rails'
@@ -69,7 +68,7 @@ end
 group :test do
   gem 'capybara'
   gem 'coveralls', require: false
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
   gem 'konacha'
   gem 'launchy'
   gem 'poltergeist'
