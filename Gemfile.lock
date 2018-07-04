@@ -15,7 +15,7 @@ GEM
       mail (~> 2.5, >= 2.5.4)
       rails-dom-testing (~> 1.0, >= 1.0.5)
     actionpack (4.2.10)
-      actionview (= 4.2.10)
+      actionview (= 4.2.10)s
       activesupport (= 4.2.10)
       rack (~> 1.6)
       rack-test (~> 0.6.2)
@@ -321,6 +321,7 @@ DEPENDENCIES
   mini_magick
   nokogiri
   opml!
+  pg
   poltergeist
   pry-byebug
   pry-doc
