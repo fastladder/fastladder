@@ -236,14 +236,10 @@ module Fastladder
 
     def update_unread_status(feed, result)
       return unless result[:updated_items] + result[:new_items] > 0
-      modified_on = Time.now
-      if last_item = feed.items.recent.first
-        modified_on = last_item.created_on
-      elsif last_modified = sourece["last-modified"]
-        @logger.info source['last-modified']
-        modified_on = Time.rfc2822(last_modified)
-      end
-      feed.modified_on = modified_on
+
+      last_item = feed.items.recent.first
+      feed.modified_on = last_item.created_on
+
       Subscription.where(feed_id: feed.id).update_all(has_unread: true)
     end
 
