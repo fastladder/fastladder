@@ -11,5 +11,5 @@ jobs:
         with:
           bundler-cache: true
       - run: cp config/database.yml.sqlite3 config/database.yml
-      - run: bundle exec rake db:create db:migrate
+      - run: bundle exec rake db:create db:migrate setup
       - run: bundle exec rake
