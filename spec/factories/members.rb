@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :member do
-    username 'bulkneets'
-    email 'bulkneets@ma.la'
+    username { 'bulkneets' }
+    email { 'bulkneets@ma.la' }
   end
 end
