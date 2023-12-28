@@ -17,14 +17,14 @@ describe UserController do
   describe 'GET /' do
     it 'renders the index template' do
       get :index, params: { login_name: member.username }
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(response).to render_template('index')
     end
 
     it 'renders rss' do
       request.accept = rss_mime_type
       get :index, params: { login_name: member.username }
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(response).to render_template('index')
       expect(response.content_type).to eq(rss_mime_type)
     end
@@ -32,7 +32,7 @@ describe UserController do
     it 'renders opml' do
       request.accept = opml_mime_type
       get :index, params: { login_name: member.username }
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(response).to render_template('index')
       expect(response.content_type).to eq(opml_mime_type)
     end

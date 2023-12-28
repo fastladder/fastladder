@@ -132,7 +132,7 @@ describe Api::FeedController do
 
     it 'renders blank page' do
       post :discover, params: { url: @feed.feedlink }
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 end
