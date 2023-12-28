@@ -23,12 +23,9 @@ gem 'uglifier', '>= 1.3.0'
 
 group :test do
   gem 'capybara'
-  gem 'coveralls', require: false
   gem 'factory_bot_rails'
   gem 'rspec-activemodel-mocks'
   gem 'rspec-rails', '4.1.2'
-  gem 'simplecov'
-  gem 'simplecov-rcov'
   gem 'puma'
   gem 'webmock'
 end
