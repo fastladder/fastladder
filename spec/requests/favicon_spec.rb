@@ -8,7 +8,7 @@ describe 'favicon' do
       expect(Feed).to receive(:find_by).with(feedlink: feed.link).and_call_original
       get "/favicon/#{feed.link}"
       expect(response).to be_ok
-      expect(response.content_type).to eq('image/png')
+      expect(response.media_type).to eq('image/png')
     end
   end
 end
