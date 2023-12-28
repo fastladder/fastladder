@@ -20,7 +20,7 @@
 #
 
 class Item < ActiveRecord::Base
-  belongs_to :feed
+  belongs_to :feed, optional: true
   validates :guid, presence: true, uniqueness: { scope: :feed_id }
 
   before_validation :default_values

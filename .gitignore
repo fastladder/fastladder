@@ -11,3 +11,4 @@ public/assets
 coverage
 .rbenv-gemsets
 .DS_Store
+db/*.sqlite3-*
