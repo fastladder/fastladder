@@ -6,9 +6,6 @@ begin
 rescue LoadError
 end
 
-class Crawler
-end
-
 module Fastladder
   class Crawler
     ITEMS_LIMIT = 500

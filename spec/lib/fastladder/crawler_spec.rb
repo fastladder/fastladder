@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+require 'fastladder/crawler'
+
 describe 'Fastladder::Crawler' do
   let(:crawler) { Fastladder::Crawler.new(Rails.logger) }
   let(:feed) { FactoryBot.create(:feed) }
