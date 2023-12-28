@@ -1,8 +1,6 @@
 source 'https://rubygems.org'
 gem 'rails', '5.0.7.2'
 
-# Include database gems for the adapters found in the database
-# configuration file or DATABASE_URL
 require 'erb'
 require 'uri'
 require 'yaml'
@@ -20,7 +18,6 @@ gem 'jbuilder', '~> 2.0'
 gem 'mini_magick'
 gem 'nokogiri', '< 1.14.0'
 gem 'opml', git: 'https://github.com/fastladder/opml'
-gem 'sass-rails', '~> 5.0.0'
 gem 'settingslogic'
 gem 'uglifier', '>= 1.3.0'
 
