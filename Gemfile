@@ -27,18 +27,17 @@ gem 'settingslogic'
 gem 'uglifier', '>= 1.3.0'
 
 group :development, :test do
-  #gem 'pry-byebug', '< 3.10.0'
+  gem 'pry-byebug'
 end
 
 group :development do
   gem 'annotate'
   gem 'pry-rails'
   gem 'pry-doc'
-  #gem 'quiet_assets'
 end
 
 group :test do
-  #gem 'capybara', '< 3.36.0'
+  gem 'capybara'
   gem 'coveralls', require: false
   gem 'factory_bot_rails'
   #gem 'konacha'
@@ -46,7 +45,7 @@ group :test do
   #gem 'poltergeist'
   gem 'rspec-activemodel-mocks'
   gem 'rspec-rails', '4.1.2'
-  #gem 'simplecov'
+  gem 'simplecov'
   gem 'simplecov-rcov'
   gem 'sinon-rails'
   gem 'puma'
