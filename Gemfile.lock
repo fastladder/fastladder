@@ -280,7 +280,7 @@ PLATFORMS
 
 DEPENDENCIES
   addressable
-  capybara
+  capybara (= 3.36.0)
   factory_bot_rails
   feed_searcher (>= 0.0.6)
   feedjira (< 3.0.0)
