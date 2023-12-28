@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-gem 'rails', '5.2.8.1'
+gem 'rails', '6.0.6.1'
 
 require 'erb'
 require 'uri'
@@ -7,7 +7,7 @@ require 'yaml'
 
 gem 'mysql2'
 gem 'pg'
-gem 'sqlite3', '< 1.4.0'
+gem 'sqlite3', '< 1.7.0'
 
 gem 'addressable', require: 'addressable/uri'
 gem 'feed_searcher', '>= 0.0.6'
@@ -27,7 +27,6 @@ group :test do
   gem 'rspec-activemodel-mocks'
   gem 'rspec-rails', '4.1.2'
   gem 'webmock'
-
 end
 
 gem "rails-controller-testing", "~> 1.0"
