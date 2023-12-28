@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-gem 'rails', '6.1.7.6'
+gem 'rails', '7.0.8'
 
 require 'erb'
 require 'uri'
@@ -25,10 +25,12 @@ group :test do
   gem 'capybara'
   gem 'factory_bot_rails'
   gem 'rspec-activemodel-mocks'
-  gem 'rspec-rails', '4.1.2'
+  gem 'rspec-rails'
   gem 'webmock'
 end
 
 gem "rails-controller-testing", "~> 1.0"
 
 gem "puma", "~> 6.4"
+
+gem "sprockets-rails", "~> 3.4"
