@@ -26,10 +26,6 @@ gem 'sass-rails', '~> 5.0.0'
 gem 'settingslogic'
 gem 'uglifier', '>= 1.3.0'
 
-if ENV['NEW_RELIC_LICENSE_KEY']
-  gem 'newrelic_rpm'
-end
-
 group :development, :test do
   #gem 'pry-byebug', '< 3.10.0'
 end
