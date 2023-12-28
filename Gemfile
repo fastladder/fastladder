@@ -9,7 +9,7 @@ require 'yaml'
 
 gem 'mysql2'
 gem 'pg'
-gem 'sqlite3', '< 1.6.0'
+gem 'sqlite3', '< 1.4.0'
 
 gem 'addressable', require: 'addressable/uri'
 gem 'coffee-rails', '~> 4.1.0'
