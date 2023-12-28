@@ -7,33 +7,9 @@ require 'erb'
 require 'uri'
 require 'yaml'
 
-database_file = File.join(File.dirname(__FILE__), "config/database.yml")
-adapters = []
-
-if File.exist?(database_file)
-  database_config = YAML::load(ERB.new(IO.read(database_file)).result)
-  adapters += database_config.values.map {|conf| conf['adapter']}.compact.uniq
-end
-
-if database_url = ENV['DATABASE_URL']
-  adapters << URI.parse(database_url).scheme
-end
-
-if adapters.any?
-  adapters.each do |adapter|
-    case adapter
-    when 'mysql2'     ; gem 'mysql2'
-    when 'mysql'      ; gem 'mysql'
-    when /postgres/   ; gem 'pg'
-    when /sqlite3/    ; gem 'sqlite3', '< 1.6.0'
-    else
-      warn("Unknown database adapter `#{adapter}` found in config/database.yml, use Gemfile.local to load your own database gems")
-    end
-  end
-else
-  warn("No adapter found in config/database.yml or DATABASE_URL, please configure it first -- fallback to pg")
-  gem 'pg'
-end
+gem 'mysql2'
+gem 'pg'
+gem 'sqlite3', '< 1.6.0'
 
 gem 'addressable', require: 'addressable/uri'
 gem 'coffee-rails', '~> 4.1.0'

@@ -143,6 +143,7 @@ GEM
     mini_mime (1.1.5)
     mini_portile2 (2.8.5)
     minitest (5.20.0)
+    mysql2 (0.5.5)
     net-http-digest_auth (1.4.1)
     net-http-persistent (4.0.2)
       connection_pool (~> 2.2)
@@ -159,6 +160,7 @@ GEM
     nokogiri (1.13.10)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
+    pg (1.5.4)
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -310,8 +312,10 @@ DEPENDENCIES
   jquery-rails
   launchy
   mini_magick
+  mysql2
   nokogiri (< 1.14.0)
   opml!
+  pg
   pry-doc
   pry-rails
   puma
