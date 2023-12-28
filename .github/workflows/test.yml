@@ -1,0 +1,13 @@
+name: Test
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
+        bundler-cache: true
+      - run: cp config/database.yml.sqlite3 config/database.yml
+      - run: bundle rake db:create db:migrate spec
