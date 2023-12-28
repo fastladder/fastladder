@@ -28,12 +28,10 @@ group :test do
   gem 'capybara'
   gem 'coveralls', require: false
   gem 'factory_bot_rails'
-  gem 'launchy'
   gem 'rspec-activemodel-mocks'
   gem 'rspec-rails', '4.1.2'
   gem 'simplecov'
   gem 'simplecov-rcov'
-  gem 'sinon-rails'
   gem 'puma'
   gem 'webmock'
 end
