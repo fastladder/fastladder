@@ -1,4 +1,4 @@
-class CreateSubscriptions < ActiveRecord::Migration
+class CreateSubscriptions < ActiveRecord::Migration[4.2]
   def self.up
     create_table :subscriptions do |t|
       t.integer :member_id, default: 0, null: false
