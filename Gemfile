@@ -32,3 +32,5 @@ end
 gem "rails-controller-testing", "~> 1.0"
 
 gem "puma", "~> 6.4"
+
+gem "sprockets-rails", "~> 3.4"
