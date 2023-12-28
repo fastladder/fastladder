@@ -7,7 +7,7 @@ require 'yaml'
 
 gem 'mysql2'
 gem 'pg'
-gem 'sqlite3', '< 1.4.0'
+gem 'sqlite3', '< 1.7.0'
 
 gem 'addressable', require: 'addressable/uri'
 gem 'feed_searcher', '>= 0.0.6'

@@ -261,7 +261,8 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
-    sqlite3 (1.3.13)
+    sqlite3 (1.6.9)
+      mini_portile2 (~> 2.8.0)
     temple (0.10.3)
     thor (1.3.0)
     thread_safe (0.3.6)
@@ -310,7 +311,7 @@ DEPENDENCIES
   rspec-activemodel-mocks
   rspec-rails (= 4.1.2)
   settingslogic
-  sqlite3 (< 1.4.0)
+  sqlite3 (< 1.7.0)
   uglifier (>= 1.3.0)
   webmock
 
