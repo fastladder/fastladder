@@ -35,3 +35,5 @@ gem "puma", "~> 6.4"
 gem "sprockets-rails", "~> 3.4"
 
 gem "settings_cabinet", "~> 0.1.0"
+
+gem "nkf", "~> 0.1.3"
