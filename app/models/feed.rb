@@ -49,7 +49,7 @@ class Feed < ActiveRecord::Base
   end
 
   def self.initialize_from_uri(uri)
-    feed_dom = Feedjira::Feed.parse(Fastladder.simple_fetch(uri))
+    feed_dom = Feedjira.parse(Fastladder.simple_fetch(uri))
     return nil unless feed_dom
 
     self.new(
