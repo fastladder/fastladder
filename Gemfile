@@ -18,7 +18,6 @@ gem 'jbuilder', '~> 2.0'
 gem 'mini_magick'
 gem 'nokogiri'
 gem 'opml', git: 'https://github.com/ssig33/opml'
-gem 'settingslogic'
 gem 'uglifier', '>= 1.3.0'
 
 group :test do
@@ -34,3 +33,5 @@ gem "rails-controller-testing", "~> 1.0"
 gem "puma", "~> 6.4"
 
 gem "sprockets-rails", "~> 3.4"
+
+gem "settings_cabinet", "~> 0.1.0"
