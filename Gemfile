@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-gem 'rails', '4.2.10'
+gem 'rails', '5.0.7.2'
 
 # Include database gems for the adapters found in the database
 # configuration file or DATABASE_URL
@@ -25,7 +25,7 @@ if adapters.any?
     when 'mysql2'     ; gem 'mysql2'
     when 'mysql'      ; gem 'mysql'
     when /postgres/   ; gem 'pg'
-    when /sqlite3/    ; gem 'sqlite3'
+    when /sqlite3/    ; gem 'sqlite3', '< 1.6.0'
     else
       warn("Unknown database adapter `#{adapter}` found in config/database.yml, use Gemfile.local to load your own database gems")
     end
@@ -38,13 +38,13 @@ end
 gem 'addressable', require: 'addressable/uri'
 gem 'coffee-rails', '~> 4.1.0'
 gem 'feed_searcher', '>= 0.0.6'
-gem 'feedjira'
+gem 'feedjira', '< 3.2.2'
 gem 'haml'
 gem 'i18n-js'
 gem 'jbuilder', '~> 2.0'
 gem 'jquery-rails'
 gem 'mini_magick'
-gem 'nokogiri'
+gem 'nokogiri', '< 1.14.0'
 gem 'opml', git: 'https://github.com/fastladder/opml'
 gem 'sass-rails', '~> 5.0.0'
 gem 'settingslogic'
@@ -55,26 +55,26 @@ if ENV['NEW_RELIC_LICENSE_KEY']
 end
 
 group :development, :test do
-  gem 'pry-byebug'
+  #gem 'pry-byebug', '< 3.10.0'
 end
 
 group :development do
   gem 'annotate'
   gem 'pry-rails'
   gem 'pry-doc'
-  gem 'quiet_assets'
+  #gem 'quiet_assets'
 end
 
 group :test do
-  gem 'capybara'
+  #gem 'capybara', '< 3.36.0'
   gem 'coveralls', require: false
   gem 'factory_bot_rails'
-  gem 'konacha'
+  #gem 'konacha'
   gem 'launchy'
-  gem 'poltergeist'
+  #gem 'poltergeist'
   gem 'rspec-activemodel-mocks'
-  gem 'rspec-rails'
-  gem 'simplecov'
+  gem 'rspec-rails', '4.1.2'
+  #gem 'simplecov'
   gem 'simplecov-rcov'
   gem 'sinon-rails'
   gem 'puma'
