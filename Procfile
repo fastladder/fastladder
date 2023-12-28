@@ -1,2 +1,2 @@
-web: bundle exec unicorn -p $PORT -c ./config/unicorn.rb
+web: ./bin/rails s
 crawler: bundle exec ruby script/crawler

@@ -26,13 +26,10 @@ group :test do
   gem 'factory_bot_rails'
   gem 'rspec-activemodel-mocks'
   gem 'rspec-rails', '4.1.2'
-  gem 'puma'
   gem 'webmock'
-end
 
-group :production do
-  gem 'rails_12factor'
-  gem 'unicorn'
 end
 
 gem "rails-controller-testing", "~> 1.0"
+
+gem "puma", "~> 6.4"
