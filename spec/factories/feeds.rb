@@ -6,21 +6,21 @@ FactoryBot.define do
 
   factory :feed do
     feedlink { FactoryBot.generate(:feed_feedlink_seq) }
-    link 'http://la.ma.la/blog/'
-    title '最速インターフェース研究会'
-    description 'はてな使ったら負けかなと思っている'
+    link { 'http://la.ma.la/blog/' }
+    title { '最速インターフェース研究会' }
+    description { 'はてな使ったら負けかなと思っている' }
   end
 
   factory :crawl_ok_feed, parent: :feed do
     crawl_status { FactoryBot.create(:crawl_status, status: Fastladder::Crawler::CRAWL_OK) }
-    subscribers_count 1
+    subscribers_count { 1 }
   end
 
   factory :feed_without_description, parent: :feed do
-    description nil
+    description { nil }
   end
 
   factory :feed_without_title, parent: :feed do
-    title nil
+    title { nil }
   end
 end

@@ -3,6 +3,6 @@
 
 FactoryBot.define do
   factory :folder do
-    name 'ライフハック'
+    name { 'ライフハック' }
   end
 end

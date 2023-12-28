@@ -6,6 +6,6 @@ FactoryBot.define do
 
   factory :pin do
     link { generate :pin_link_seq }
-    title 'title'
+    title { 'title' }
   end
 end
