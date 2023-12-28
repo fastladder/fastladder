@@ -127,7 +127,6 @@ GEM
       loofah (>= 2.0)
       sax-machine (>= 1.0)
     ffi (1.16.3)
-    glob (0.2.0)
     globalid (1.1.0)
       activesupport (>= 5.0)
     haml (6.3.0)
@@ -139,9 +138,8 @@ GEM
       domain_name (~> 0.5)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
-    i18n-js (4.0.1)
-      glob
-      i18n
+    i18n-js (3.9.2)
+      i18n (>= 0.6.6)
     jbuilder (2.11.5)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
@@ -357,7 +355,7 @@ DEPENDENCIES
   feed_searcher (>= 0.0.6)
   feedjira (< 3.0.0)
   haml
-  i18n-js
+  i18n-js (< 4.0)
   jbuilder (~> 2.0)
   jquery-rails
   launchy
