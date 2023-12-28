@@ -11,7 +11,7 @@ gem 'sqlite3'
 
 gem 'addressable', require: 'addressable/uri'
 gem 'feed_searcher', '>= 0.0.6'
-gem 'feedjira', '< 3.0.0'
+gem 'feedjira'
 gem 'haml'
 gem 'i18n-js', '< 4.0'
 gem 'jbuilder', '~> 2.0'
