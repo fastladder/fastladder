@@ -1,15 +1,4 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
-require 'coveralls'
-Coveralls.wear!
-
-if ENV["COV"]
-  require 'simplecov'
-  require 'simplecov-rcov'
-  SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
-  SimpleCov.start 'rails'
-else
-  STDERR.puts('Run with `COV=1` if you want to generate simplecov coverage reports.')
-end
 
 ENV["RAILS_ENV"] ||= 'test'
 
