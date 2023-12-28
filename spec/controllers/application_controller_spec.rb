@@ -16,7 +16,7 @@ describe ApplicationController do
       context 'session[:member_id] is given' do
         it 'renders 200' do
           get :index, session: { member_id: member.id }
-          expect(response).to be_success
+          expect(response).to be_successful
         end
       end
 
@@ -27,7 +27,7 @@ describe ApplicationController do
 
         it 'renders 200' do
           get :index, params: { auth_key: member.auth_key }
-          expect(response).to be_success
+          expect(response).to be_successful
         end
       end
     end
