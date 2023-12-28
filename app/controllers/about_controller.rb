@@ -10,7 +10,7 @@ class AboutController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html { render file: "#{Rails.root}/public/404", status: :not_found }
+        format.html { render file: "#{Rails.root}/public/404.html", status: :not_found }
         format.json { render json: @feed.to_json } # for backward compatibility
         format.any { head :not_found }
       end
