@@ -18,7 +18,6 @@ gem 'jbuilder', '~> 2.0'
 gem 'mini_magick'
 gem 'nokogiri'
 gem 'opml', git: 'https://github.com/ssig33/opml'
-gem 'uglifier', '>= 1.3.0'
 
 group :test do
   gem 'capybara'
