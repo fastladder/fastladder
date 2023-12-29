@@ -1,0 +1,18 @@
+name: Test
+
+on: push
+
+env:
+  RAILS_ENV: test
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - run: cp config/database.yml.sqlite3 config/database.yml
+      - run: bundle exec rake db:create db:migrate setup
+      - run: bundle exec rspec

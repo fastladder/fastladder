@@ -174,9 +174,9 @@ class Member < ActiveRecord::Base
         folders[folder_name] << item
       end
 
-      opml = SimpleOPML.new
+      opml = SimpleOpml.new
       folders.each do |key, items|
-        outline = key === "" ? opml : (opml << SimpleOPML::Outline.new(text: key)).last
+        outline = key === "" ? opml : (opml << SimpleOpml::Outline.new(text: key)).last
         items.each do |item|
           attributes = {
             title: item[:title],
@@ -185,7 +185,7 @@ class Member < ActiveRecord::Base
             type: "rss",
             xml_url: item[:feedlink]
           }
-          outline << SimpleOPML::Outline.new(attributes)
+          outline << SimpleOpml::Outline.new(attributes)
         end
       end
       return opml.to_xml

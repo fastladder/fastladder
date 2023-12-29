@@ -1,4 +1,4 @@
-class CreateItems < ActiveRecord::Migration
+class CreateItems < ActiveRecord::Migration[4.2]
   def self.up
     create_table :items do |t|
       t.integer :feed_id, default: 0, null: false

@@ -1,4 +1,4 @@
-class CreateFeeds < ActiveRecord::Migration
+class CreateFeeds < ActiveRecord::Migration[4.2]
   def self.up
     create_table :feeds do |t|
       t.string :feedlink, null: false

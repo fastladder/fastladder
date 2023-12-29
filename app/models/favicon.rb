@@ -8,5 +8,5 @@
 #
 
 class Favicon < ActiveRecord::Base
-  belongs_to :feed
+  belongs_to :feed, optional: true
 end

@@ -16,7 +16,7 @@
 #
 
 class CrawlStatus < ActiveRecord::Base
-  belongs_to :feed
+  belongs_to :feed, optional: true
 
   scope :status_ok, ->{ where(status: Fastladder::Crawler::CRAWL_OK) }
   scope :expired, ->(ttl){ where("crawled_on IS NULL OR crawled_on < ?", ttl.ago) }
@@ -26,7 +26,7 @@ class CrawlStatus < ActiveRecord::Base
     feed = nil
     CrawlStatus.transaction do
       if feed = Feed.crawlable.order("crawl_statuses.crawled_on").first
-        feed.crawl_status.update_attributes(status: Fastladder::Crawler::CRAWL_NOW, crawled_on: Time.now)
+        feed.crawl_status.update(status: Fastladder::Crawler::CRAWL_NOW, crawled_on: Time.now)
       end
     end
     feed

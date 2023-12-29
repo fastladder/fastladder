@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-class SimpleOPML
-  class Outline < ::SimpleOPML
+class SimpleOpml
+  class Outline < ::SimpleOpml
     OUTLINE_ATTRIBUTE_KEYS = [:title, :html_url, :text, :type, :xml_url]
 
     def initialize(attributes = {})

@@ -5,7 +5,7 @@ require File.expand_path('../application', __FILE__)
 Rails.application.initialize!
 
 require 'fastladder'
-require 'string_utils'
+require Rails.root.join('lib', 'string')
 
 Mime::Type.register 'text/x-opml', :opml
 

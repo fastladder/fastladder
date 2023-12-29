@@ -9,6 +9,6 @@ lib/*.dylib
 db/*.sqlite3
 public/assets
 coverage
-.ruby-version
 .rbenv-gemsets
 .DS_Store
+db/*.sqlite3-*

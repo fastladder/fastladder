@@ -11,7 +11,7 @@
 #
 
 class Pin < ActiveRecord::Base
-  belongs_to :member
+  belongs_to :member, optional: true
 
   scope :past, ->(num){ order("created_on").limit(num) }
 

@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+require 'fastladder/crawler'
+
 describe 'Fastladder::Crawler' do
   let(:crawler) { Fastladder::Crawler.new(Rails.logger) }
   let(:feed) { FactoryBot.create(:feed) }
@@ -62,7 +64,7 @@ describe 'Fastladder::Crawler' do
 
   describe '#new_items_count' do
     let(:items) { crawler.send(:build_items, feed, parsed) }
-    let(:parsed) { Feedjira::Feed.parse(source.body) }
+    let(:parsed) { Feedjira.parse(source.body) }
     let(:source) { double('HTTP response', body: atom_body) }
     let(:atom_body) { File.read(File.expand_path('../../fixtures/github.private.atom', __dir__)) }
 

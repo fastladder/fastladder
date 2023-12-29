@@ -1,4 +1,4 @@
-class AddItemsIndex < ActiveRecord::Migration
+class AddItemsIndex < ActiveRecord::Migration[4.2]
   def self.up
     add_index :items, [:feed_id, :stored_on, :created_on, :id], name: :items_search_index
   end

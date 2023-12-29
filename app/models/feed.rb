@@ -49,7 +49,7 @@ class Feed < ActiveRecord::Base
   end
 
   def self.initialize_from_uri(uri)
-    feed_dom = Feedjira::Feed.parse(Fastladder.simple_fetch(uri))
+    feed_dom = Feedjira.parse(Fastladder.simple_fetch(uri))
     return nil unless feed_dom
 
     self.new(
@@ -108,7 +108,7 @@ class Feed < ActiveRecord::Base
   def fetch_favicon!
     self.favicon ||= Favicon.new(feed: self)
     favicon_list.each do |uri|
-      next unless response = open(uri.to_s) rescue nil # ensure timeout
+      next unless response = URI.open(uri.to_s) rescue nil # ensure timeout
       next if response.status.last.to_i >= 400
       # MiniMagick will determine the image type from extension of file name
       ext = response.meta["content-type"] == 'image/vnd.microsoft.icon' ? ".ico" : File.basename(uri.to_s)

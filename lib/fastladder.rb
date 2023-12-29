@@ -94,7 +94,7 @@ module Fastladder
   end
 
   def simple_fetch(link, options = {})
-    open(link.to_s,  "User-Agent" => "Fastladder (https://github.com/fastladder/fastladder)").read
+    URI.open(link.to_s,  "User-Agent" => "Fastladder (https://github.com/fastladder/fastladder)").read
   rescue Exception => e
     Rails.logger.error(e)
     Rails.logger.error(e.backtrace)

@@ -19,7 +19,7 @@ describe MembersController do
   describe 'GET /new' do
     it 'renders the new template' do
       get :new
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(response).to render_template('new')
     end
   end
@@ -27,14 +27,14 @@ describe MembersController do
   describe 'POST /create'do
     it 'creates new member' do
       expect {
-        post :create, valid_params, valid_sessions
+        post :create, params: valid_params, session: valid_sessions
       }.to change {
         Member.count
       }.by(1)
     end
 
     it 'redirects to /' do
-      post :create, valid_params, valid_sessions
+      post :create, params: valid_params, session: valid_sessions
       expect(response).to redirect_to('/')
     end
   end
