@@ -11,7 +11,7 @@ FeedFormatter.extend({
         var feed_filter = {
             image : FF.channel.image,
             folder: function(v){
-                return v ? v.ry(8,"...") : I18n.t('Uncategolized')
+                return v ? v.ry(8,"...") : "Uncategolized";
             }
         };
         this.tmpl.add_filters(feed_filter);

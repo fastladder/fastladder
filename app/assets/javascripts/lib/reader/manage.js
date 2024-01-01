@@ -42,9 +42,9 @@ updater("manage_select",function(){
 			removeClass("manage_control", "grayout");
 			app.state.manage_disabled = false;
 		}
-		Manage.message(size + I18n.t(' items selected'));
+		Manage.message(size + ' items selected');
 	} else {
-		Manage.message(I18n.t('Select item(s) you want to edit'));
+		Manage.message('Select item(s) you want to edit');
 		addClass("manage_control", "grayout");
 		Form.disable_all("manage_control");
 		app.state.manage_disabled = true;
@@ -312,8 +312,8 @@ Manage.Item = {
 	unsubscribe: function(){
 		var ids = TRSelector.get_selected();
 		var l = ids.length;
-		var tmpl_confirm = I18n.t('manage_unsubscribe_confirm_tmpl');
-		var tmpl_progress = I18n.t('manage_unsubscribe_progress_tmpl')
+		var tmpl_confirm = 'Are you sure to remove [[ count ]] feed(s) from your subscription?';
+		var tmpl_progress = 'Removing feeds: [[ remain ]] items to go'
 		var c = confirm(tmpl_confirm.fill({count: l}));
 		if(!c) return;
 		TRSelector.clear();
@@ -325,7 +325,7 @@ Manage.Item = {
 					tmpl_progress.fill({remain: l})
 				);
 				if(l == 0){
-					message(I18n.t('Feeds deleted'));
+					message('Feeds deleted');
 					MI.load();
 				}
 			});
@@ -360,9 +360,9 @@ updater("manage_offset", function(){
 	var tmpl = Template.get("man_offset").compile();
 	var folder_id = MF.folder_id;
 	if(folder_id == 0){
-		var folder_name = I18n.t('Uncategolized');
+		var folder_name = 'Uncategolized';
 	} else if (!folder_id){
-		var folder_name = I18n.t('All');
+		var folder_name = 'All';
 	} else {
 		var folder_name = folder.id2name[folder_id];
 	}
@@ -386,7 +386,7 @@ updater("mi_paging", function(){
 
 updater("move_to", function(){
 	this.options.length = 0;
-	this.options[0] = new Option(I18n.t('Uncategolized'), "");
+	this.options[0] = new Option('Uncategolized', "");
 	var op = this.options;
 	folder.names.map(function(v,i){
 		op[i+1] = new Option(v,v);
@@ -412,7 +412,7 @@ updater("manage_folder", function(){
 		})
 	};
 	_$("manage_folder").innerHTML = [
-		'<li class="button ' + (MF.folder_id == 0 ? 'selected' : '')  + '" onclick="MF.select(0)">', I18n.t('Uncategolized'), '</li>',
+		'<li class="button ' + (MF.folder_id == 0 ? 'selected' : '')  + '" onclick="MF.select(0)">', 'Uncategolized', '</li>',
 		folder.names.map(fmt).join(" ")
 	].join("");
 	update("update_folder");
@@ -443,7 +443,7 @@ updater("update_folder",function(){
 
 	ajaxize("delete_form",{
 		before: function(param){
-			var tmpl = I18n.t('manage_folder_delete_confirm');
+			var tmpl = 'Are you sure to remove "[[folder]]"?  (Items inside won\'t be removed)';
 			var c = confirm(
 				tmpl.fill({ folder: folder.id2name[param.folder_id]})
 			);
@@ -451,7 +451,7 @@ updater("update_folder",function(){
 		},
 		after: function(res,req){
 			var fn = folder.id2name[req.folder_id];
-			message(fn + I18n.t(' deleted'));
+			message(fn + ' deleted');
 			MF.folder_id = null;
 			folder = null;
 			// フォルダ一覧を再読み込みして表示のみ更新
@@ -509,7 +509,7 @@ Manage.Folder = {
 	},
 	filter: function(){ return true },
 	create_folder: function(callback){
-		var name = prompt(I18n.t('Folder Name'),"");
+		var name = prompt('Folder Name',"");
 		if(!name) return;
 		var api = new LDR.API("/api/folder/create");
 		api.post({name:name},function(res){
@@ -536,14 +536,14 @@ Manage.Folder = {
 	delete_folder : function(callback){
 		var folder_id = MF.folder_id;
 		if(!folder_id) return false;
-		var tmpl = I18n.t('manage_folder_delete_confirm');
+		var tmpl = 'Are you sure to remove "[[folder]]"?  (Items inside won\'t be removed)';
 		var c = confirm(
 			tmpl.fill({ folder: folder.id2name[folder_id]})
 		);
 		if(!c) return false;
 		var api = new LDR.API("/api/folder/delete");
 		api.post({folder_id : folder_id},function(){
-			message(folder.id2name[folder_id] + I18n.t(' deleted'));
+			message(folder.id2name[folder_id] + ' deleted');
 			MF.folder_id = null;
 			folder = null;
 			callback();
@@ -566,7 +566,7 @@ Manage.hide_help = function(){
 function delete_folder(folder_id){
 	var api = new LDR.API("/api/folder/delete");
 	api.post({folder_id : folder_id},function(){
-		message(folder.id2name[folder_id] + I18n.t(' deleted'));
+		message(folder.id2name[folder_id] + ' deleted');
 		folder = null; callback();
 	});
 	var models = SM.instances;

@@ -26,8 +26,8 @@ function setup_event(){
         feed_subscribe(feedlink,function(res){
             el.setAttribute("rel","unsubscribe");
             el.className = "unsub_button";
-            if(el.innerHTML == I18n.t('Add')){
-                el.innerHTML = I18n.t('Unsubscribe');
+            if(el.innerHTML == 'Add'){
+                el.innerHTML = 'Unsubscribe';
             }
             feedlink2id[feedlink] = res.subscribe_id;
         });
@@ -40,8 +40,8 @@ function setup_event(){
         feed_unsubscribe(sid,function(res){
             el.setAttribute("rel","subscribe");
             el.className = "sub_button";
-            if(el.innerHTML == I18n.t('Unsubscribe')){
-                el.innerHTML = I18n.t('Add');
+            if(el.innerHTML == 'Unsubscribe'){
+                el.innerHTML = 'Add';
             }
         });
     });

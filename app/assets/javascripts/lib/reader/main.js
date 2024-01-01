@@ -134,7 +134,7 @@ function Dumper(obj){
 var subs,inbox;
 
 function message(str){
-	_$("message").innerHTML = I18n.t(str) || str;
+	_$("message").innerHTML = str;
 }
 
 app.state.last_items = {};
@@ -171,16 +171,16 @@ function format_keybind(){
 	var button = [
 		'<div class="keyhelp_desc">',
 		'<div class="keyhelp_ime">',
-			I18n.t('notice_ime_off'),
+			"If you can't use shortcut keys, try disabling Japanese input.",
 		'</div>',
 		'<div class="keyhelp_more">',
-			'<span class="button"r onclick="Control.open_keyhelp.call(this,event)">' + I18n.t('Show in window') + '</span>',
+			'<span class="button"r onclick="Control.open_keyhelp.call(this,event)">' + "show in window" + '</span>',
 			'<span class="button" onclick="Control.toggle_more_keyhelp.call(this,event)">'+
-			 (app.state.keyhelp_more ? I18n.t('Compact') : I18n.t('More') + '...') + '</span>',
+			 (app.state.keyhelp_more ? "compact" : "more" + '...') + '</span>',
 		'</div>',
 		'</div>',
 		'<div class="keyhelp_hide">',
-			'<span class="button" onclick="Control.hide_keyhelp.call(this,event)">' + I18n.t('Close') + '</span>',
+			'<span class="button" onclick="Control.hide_keyhelp.call(this,event)">' + "close" + '</span>',
 		'</div>'
 	];
 	return table + button.join("");
@@ -583,7 +583,7 @@ Subscribe.Controller = Class.create("controller").extend({
 					update('total_unread_count');
 					count+=limit;
 					load_request();
-					message(I18n.t('Loading .. ') + (count+1) + " - " + (count+limit));
+					message("Loading .. " + (count+1) + " - " + (count+limit));
 				}
 			};
 			var flush = function(list){
@@ -943,7 +943,7 @@ function init(){
 				output.innerHTML = [
 					'<div class="discover_loading">',
 					'<img src="/img/icon/loading.gif">　',
-					I18n.t("print_discover_loading"),
+					"Finding a feed. Please wait.",
 					'</div>'
 				].join("");
 				return true;
@@ -971,7 +971,7 @@ function print_discover(list){
 	if(list.length == 0){
 		output.innerHTML = [
 			'<div class="discover_loading"><img src="/img/icon/orz.gif">　',
-			I18n.t('print_discover_notfound'),
+      "Finding a feed. Please wait.",
 			'</div>'
 		].join("");
 	} else {

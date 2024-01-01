@@ -33,11 +33,11 @@ function unsubscribe(sid,callback){
     var api = new LDR.API("/api/feed/unsubscribe");
     callback = callback || Function.empty;
     var info = subs_item(sid);
-    var tmpl = I18n.t('unsubscribe_confirm');  // 'Are you sure to remove [[title]] from your subscription?'
-    var tmpl2 = I18n.t('ubsubscribe_confirm2'); // 'Are you sure to unsubscribe this feed?'
+    var tmpl = "Are you sure to remove [[title]] from your subscription?";  // 'Are you sure to remove [[title]] from your subscription?'
+    var tmpl2 = "Are you sure to unsubscribe this feed?"; // 'Are you sure to unsubscribe this feed?'
     confirm( info ? tmpl.fill(info) : tmpl2) && api.post(
         {subscribe_id:sid},function(res){
-            message(I18n.t('feed deleted'));
+            message('feed deleted');
             callback(res);
         }
     );
@@ -253,7 +253,7 @@ function print_feed(feed){
         app.state.last_items["_"+v.id] = v;
         var widgets = entry_widgets.process(feed, v);
         return item_formatter(v,{
-            relative_date : (v.created_on) ? (Now-v.created_on).toRelativeDate() : I18n.t('Unknown date'),
+            relative_date : (v.created_on) ? (Now-v.created_on).toRelativeDate() : 'Unknown date',
             item_count    : item_count,
             widgets       : widgets,
             pin_active    : app.pin.has(v.link) ? "pin_active" : "",
@@ -436,7 +436,7 @@ var Control = {
             menu.add([
                 '<span class="button flat_menu pin_list"',
                 ' rel="Control:pin_list();FlatMenu.hide()">',
-                I18n.t('List view'), ' (', app.pin.pins.length, I18n.t(' items'), ')</span>'
+                'List view', ' (', app.pin.pins.length, ' items', ')</span>'
             ].join(""));
             foreach(app.pin.pins,function(v,i){
                 if(i > view_num){
@@ -453,7 +453,7 @@ var Control = {
             menu.add([
                 '<span class="button flat_menu dust_box"',
                 ' rel="Control:clear_pin();FlatMenu.hide()">',
-                I18n.t('Clear'), '</span>'
+                'Clear', '</span>'
             ].join(""));
             menu.update();
         };
@@ -595,10 +595,10 @@ var Control = {
             menu.add([
                 '<span class="button create_folder"',
                 ' rel="Control:create_folder();FlatMenu.hide()">',
-                I18n.t('Create New Folder'), '</span>'
+                'Create New Folder', '</span>'
             ].join(""));
             menu.add(tmpl({
-                folder_name : I18n.t('Uncategolized'),
+                folder_name : 'Uncategolized',
                 move_to : ""
             }));
             foreach(folder.names,function(v){
@@ -609,14 +609,14 @@ var Control = {
             menu.add([
                 '<span class="button dust_box"',
                 ' rel="Control:unsubscribe();FlatMenu.hide()">',
-                I18n.t('Unsubscribe'), '</span>'
+                'Unsubscribe', '</span>'
             ].join(""));
             menu.update();
         };
         if(folder){
             write_menu();
         } else {
-            menu.add(I18n.t('Loading'));
+            menu.add('Loading');
             get_folders(write_menu);
         }
         return menu;
@@ -628,7 +628,7 @@ var Control = {
         var modes  = LDR.VARS.ViewModes;
         foreach(modes,function(v,i){
             var item = tmpl({
-                label : I18n.t(v),
+                label : GLOBAL.viewModes[v],
                 mode  : v,
                 checked : app.config.view_mode == v ? "checked" : ""
             });
@@ -653,7 +653,7 @@ var Control = {
         ];
         foreach(modes,function(v,i){
             var item = tmpl({
-                label : I18n.t(v),
+                label : GLOBAL.sortModes[v],
                 mode  : v,
                 checked : app.config.sort_mode == v ? "checked" : ""
             });
@@ -874,7 +874,7 @@ var Control = {
                 app.state.return_to_head = false;
                 Control.read_head_subs();
             } else {
-                message(I18n.t('End of feeds.  Press s to return to the top.'));
+                message('End of feeds.  Press s to return to the top.');
                 app.state.return_to_head = true;
             }
         }
@@ -982,7 +982,7 @@ var Control = {
     mark_all_read: function(){
         var list = Ordered.list;
         if(!list) return;
-        var no_feeds = I18n.t('There is no item to mark as read');
+        var no_feeds = 'There is no item to mark as read';
         if(list.length == 0){
             alert(no_feeds);
             return;
@@ -996,7 +996,7 @@ var Control = {
             alert(no_feeds);
             return;
         }
-        var tmpl = I18n.t('mark_all_read_tmpl');
+        var tmpl = ' are you sure to mark [[count]] feeds as read?';
         var c = confirm(tmpl.fill({
             count: post_list.length
         }));
@@ -1051,7 +1051,7 @@ function feed_unsubscribe(sid, callback){
 function show_all_mouseover(){
     app.state.help_show = true;
     app.state.help_snap = this;
-    var tmpl = I18n.t('show_all_help_message_tmpl');
+    var tmpl = 'Show only updated feeds: [[ state ]]';
     app.state.help_message = tmpl.fill({state: app.config.show_all ? 'disabled' : 'enabled' });
     update("help_window");
 }
