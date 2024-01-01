@@ -19,10 +19,17 @@
         this.innerHTML = buf.join("");
     };
 
+    const errors = {
+      login: { title: "You need to sign in to Fastladder", body: "<p>Please reload the browser and sign in again</p>"},
+      xmlhttp: { title: "Your browser is not supported by Fastladder", body: "<p>Your browser is out of date.  (Please upgrade your browser.)</p>"},
+      busy: { title: "Failed to retrieve data.", body: "<p>Our servers might be busy.  Please try again later.</p>" },
+    };
+
     function print_error(t){
-        var options = {scope: "error_message/" + t};
-        _$("error_title").innerHTML = I18n.t('title', options);
-        _$("error_body").innerHTML =  I18n.t('body', options);
+        const title = errors[t].title;
+        const body = errors[t].body;
+        _$("error_title").innerHTML = title;
+        _$("error_body").innerHTML =  body;
     }
     var ld_check = function(){
         var c = document.cookie;
@@ -55,11 +62,14 @@
         }
     });
 
+
     updater("mode_text_view",function(){
-        this.innerHTML = I18n.t(app.config.view_mode);
+        this.innerHTML = viewModes[app.config.view_mode];
     });
+
+
     updater("mode_text_sort",function(){
-        this.innerHTML = I18n.t(app.config.sort_mode);
+        this.innerHTML = sortModes[app.config.sort_mode];
     });
     /* navi */
     updater("right_bottom_navi", print_navi);
@@ -71,7 +81,7 @@
     updater("folder_label",function(){
         var item = subs_item(app.state.now_reading);
         this.innerHTML = [
-            (item.folder ? item.folder.ry(8,"...") : I18n.t('Uncategolized')),
+            (item.folder ? item.folder.ry(8,"...") : 'Uncategolized'),
             '<img src="/img/icon/tri_d.gif">'
         ].join("");
     });
@@ -91,8 +101,8 @@
         } else {
             removeClass(this, "progress")
         }
-        var tmpl = I18n.t('unread_count_tmpl');
-        var tmpl_title = I18n.t('unread_count_title_tmpl');
+        var tmpl = '[[feed_count]] feeds&nbsp;&nbsp;|&nbsp;&nbsp;[[count]] items';
+        var tmpl_title = 'Fastladder ([[count]])';
         this.innerHTML = tmpl.fill(param);
         if(!app.state.guest_mode){
             document.title = tmpl_title.fill(param);

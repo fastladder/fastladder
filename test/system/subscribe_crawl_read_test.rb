@@ -40,7 +40,6 @@ class SubscribeCrawlReadTest < ApplicationSystemTestCase
     assert_text 'Feed URL', wait: 10
     fill_in 'url', with: 'http://example.com/'
     click_on 'next'
-    sleep 5
 
     assert_text '0 users', wait: 10
 
@@ -53,7 +52,6 @@ class SubscribeCrawlReadTest < ApplicationSystemTestCase
     assert_text 'Feed URL', wait: 10
     fill_in 'url', with: 'http://example.com/ebi'
     click_on 'next'
-    sleep 5
 
     assert_text '0 users', wait: 10
 

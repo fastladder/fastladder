@@ -21,10 +21,6 @@
 		[ 'compact', 'toggle_leftpane', 'focus_findbox'],
 	];
 
-	if (I18n.locale !== 'en') {
-		LDR.KeyHelpOrder.push([ '', 'toggle_clip', 'instant_clip']);
-	}
-
 	LDR.DefaultConfig = {
 		current_font   : 14,
 		use_autoreload : 0,
@@ -114,41 +110,41 @@
 	LDR.KeyHelp = (function() {
 		var options = {scope: "key_help"};
 		return {
-			'scroll_next_item' : I18n.t('scroll_next_item', options),
-			'scroll_prev_item' : I18n.t('scroll_prev_item', options),
-			'scroll_next_page' : I18n.t('scroll_next_page', options),
-			'scroll_prev_page' : I18n.t('scroll_prev_page', options),
-			'feed_next'        : I18n.t('feed_next', options),
-			'feed_prev'        : I18n.t('feed_prev', options),
-			'view_original'    : I18n.t('view_original', options),
-			'pin'              : I18n.t('pin', options),
-			'open_pin'         : I18n.t('open_pin', options),
-			'toggle_clip'      : I18n.t('toggle_clip', options),
-			'instant_clip'     : I18n.t('instant_clip', options),
-			'compact'          : I18n.t('compact', options),
-			'unsubscribe'      : I18n.t('unsubscribe', options),
-			'reload_subs'      : I18n.t('reload_subs', options),
-			'toggle_leftpane'  : I18n.t('toggle_leftpane', options),
-			'focus_findbox'    : I18n.t('focus_findbox', options),
-			'read_next_subs'   : I18n.t('read_next_subs', options),
-			'read_prev_subs'   : I18n.t('read_prev_subs', options),
-			'read_head_subs'   : I18n.t('read_head_subs', options),
-			'read_end_subs'    : I18n.t('read_end_subs', options),
-			'toggle_keyhelp'   : I18n.t('toggle_keyhelp', options)
+			'scroll_next_item' : "Next item",
+			'scroll_prev_item' : "Previous item",
+			'scroll_next_page' : "Scroll down",
+			'scroll_prev_page' : "Scroll up",
+			'feed_next'        : "Older items",
+			'feed_prev'        : "Newer items",
+			'view_original'    : "Open item",
+			'pin'              : "Pin",
+			'open_pin'         : "Open pinned items",
+			'toggle_clip'      : "Bookmark",
+			'instant_clip'     : "Quick bookmark",
+			'compact'          : "Collapse/Expand item",
+			'unsubscribe'      : "Unsubscribe",
+			'reload_subs'      : "Reload left pane",
+			'toggle_leftpane'  : "Colapse/Expand left pane",
+			'focus_findbox'    : "Focus to search box",
+			'read_next_subs'   : "Next feed",
+			'read_prev_subs'   : "Previous feed",
+			'read_head_subs'   : "Move to the top of unread feed",
+			'read_end_subs'    : "Move to the bottom of unread feed",
+			'toggle_keyhelp'   : "Open this menu",
 		};
 	})();
 
 	// menu
 	var options = {scope: "menu_items"};
 	LDR.VARS.MenuItems = [
-		{title: I18n.t("Quick Guide", options), action:"init_guide()"},
-		{title: I18n.t("Settings", options), action:"init_config()"},
-		{title: I18n.t("Edit Subscription list", options), action:"init_manage()"},
+		{title: "Quick Guide", action:"init_guide()"},
+		{title: "Settings", action:"init_config()"},
+		{title: "Edit Subscription list", action:"init_manage()"},
 		'-----',
-		{title: I18n.t("Expanded view / List view", options), action:"Control.compact()"},
-		{title: I18n.t("Toggle order", options), action:"Control.reverse()"},
+		{title: "Expanded view / List view", action:"Control.compact()"},
+		{title: "Toggle order", action:"Control.reverse()"},
 		'-----',
-		{title: I18n.t("Mark all feeds as read", options), action:"Control.mark_all_read()"}
+		{title: "Mark all feeds as read", action:"Control.mark_all_read()"}
 	];
 }).call(LDR);
 

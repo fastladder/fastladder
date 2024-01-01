@@ -300,7 +300,7 @@ Subscribe.Formatter = {
             var min = Math.min(tmp[0],tmp[1]);
             var filtered = model.get_by_subscribers_count(min,max);
             var param = {
-                name : min + " - " + max + " " + I18n.t('users'),
+                name : min + " - " + max + " " + 'users',
                 unread_count : filtered.get_unread_count()
             };
             var folder = new TreeView(

@@ -1,15 +1,3 @@
-//= require i18n
-//= require i18n/translations
-I18n.locale = (function() {
-	var root = document.lastChild;
-	var lang = root.getAttribute('xml:lang') || root.getAttribute('lang') || I18n.defaultLocale;
-	return lang.split('-')[0];
-})();
-I18n.defaultSeparator = '/';
-I18n.missingTranslation = function(scope) {
-	return scope;
-};
-
 function has_attr(id){
 	return function(target){
 		return this.getAttribute(id)
@@ -90,10 +78,6 @@ function _$(el){
 
 _$.cache = {};
 _$.cacheable = {};
-
-function getlocale(){
-	return I18n.locale;
-}
 
 
 
@@ -1463,3 +1447,21 @@ var Element = {
 	getStyle : getStyle
 };
 
+GLOBAL.sortModes = {
+      modified_on: "New",
+      "modified_on:reverse": "Old",
+      unread_count: "Unread Items (desc.)",
+      "unread_count:reverse": "Unread items (asc.)",
+      "title:reverse": "Title",
+      rate: "Rating",
+      subscribers_count: "Subscribers (desc.)",
+      "subscribers_count:reverse": "Subscribers (asc.)"
+    }
+
+GLOBAL.viewModes = {
+          flat: "Flat",
+          folder: "Folder",
+          rate: "Rating",
+          subscribers: "Subscribers",
+          domain: "Domain",
+    }

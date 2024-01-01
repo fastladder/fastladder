@@ -4,7 +4,7 @@ var Ordered = {};
 
 function create_folder(name){
     if(!name){
-        name = prompt(I18n.t('Folder Name'),"");
+        name = prompt('Folder Name',"");
         if(!name) return;
     }
     var api = new LDR.API("/api/folder/create");

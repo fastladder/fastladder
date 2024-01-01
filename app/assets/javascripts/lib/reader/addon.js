@@ -26,10 +26,7 @@ function print_ads(ads){
 
 
 new function(){
-	if(I18n.locale === 'en'){ return }
-	// extension for livedoor clip
-	KeyConfig.toggle_clip  = "b";
-	KeyConfig.instant_clip = "i";
+
 }
 
 app.state.clipped_item = new Cache();
@@ -248,16 +245,6 @@ function custom_clip_change(e){
 	}
 }
 LDR.register_hook("after_init_config", function(){
-	if(I18n.locale === 'en'){ return }
-	update("custom_clip");
-	if(app.config.use_custom_clip == "off"){
-		Element.show("config_for_ldclip");
-		Element.hide("config_for_customclip");
-	} else {
-		Element.hide("config_for_ldclip");
-		Element.show("config_for_customclip");
-		_$("custom_clip").value = "on";
-	}
 });
 
 
@@ -358,7 +345,7 @@ register_command("v|view",function(mode){
 	var mode = modes.like(mode);
 	if(mode){
 		Control.change_view(mode);
-		var mode_text = I18n.t(mode);
+		var mode_text = mode;
 		message(mode_text + "表示に変更しました");
 	} else {
 		message(":v [" + modes.join("|") + "]");
@@ -690,432 +677,6 @@ DOMArray.extend({
 
 
 var clip_overlay;
-(function(){
-	if(I18n.locale === 'en'){ return }
-	app.state.clip_overlay = false;
-	var Keybind_clip = new HotKey(null, "clip_overlay");
-	Keybind_clip.activate(false);
-	var template = [
-		'<span class="date">[[#{ (app.state.now-created_on).toRelativeDate() }]]</span>',
-		'<a href="[[link]]" target="_blank" class="[[ classname ]]">[[title]]</a>',
-		'<span class="clip-count">',
-		'<a href="[[#{ clip_page_link(link) }]]" class="hotlevel_[[#{get_hotlevel(public_clip_count)}]]" target="_blank">',
-			'[[public_clip_count]] user</a></span>'
-	].join("");
-	var template_comments = [];
-	var formatter = new Template(template).compile();
-	var LDClip = Class.base(ListView);
-	LDClip.extend({
-		initialize: function(){
-			this.items = [];
-			this.item_index = {};
-			this.element_id = "ldcbrowser_items";
-			ListView._instance[this.element_id] = this;
-			this.clip_api = '/clip/clips';
-			this.last_response = null;
-			this._has_next = true;
-			this.window;
-			this.limit = 20;
-			this.offset = 0;
-			this.requested = 0;
-			this.selected_item;
-			this.selected_index = 0;
-			this.loader = new LDR.API(this.clip_api);
-		},
-		show_error : function(){
-			this.window.innerHTML = [
-				Template.get("clip_register").fill(),
-				'<div class="clip_paging">',
-				'<span id="clip_progress"><span class="button" onclick="clip_overlay.hide()">閉じる</span></span>',
-				'</div><br clear="all">'
-			].join("");
-		},
-		load_items: function(callback){
-			var offset = this.items.length;
-			if(this.requested >= offset + this.limit) return;
-			this.requested = offset + this.limit;
-			var self = this;
-			this.loading = true;
-			this.loader.post({
-				escape : 1,
-				offset : offset,
-				limit: this.limit
-			}, function(res){
-				if(!res.isSuccess){
-					self.show_error();
-					return;
-				}
-				self.loading = false;
-				self.last_response = res;
-				self.postkey = res.postkey;
-				var count = self.items.length;
-				res.clips.forEach(function(item){
-					item.id = self.element_id + "_" + count++;
-					self.item_index[item.id] = item;
-					self.items.push(item);
-				});
-				if(res.clips.length < self.limit){
-					self._has_next = false;
-					self.total_count = self.items.length;
-				}
-				callback && callback();
-			});
-		},
-		format: function(info, items){
-			return [
-				'<div class="clip_paging">',
-				'<span id="clip_progress">',
-				'<span class="button" onclick="clip_overlay.hide()">閉じる</span></span>',
-				'</div>',
-				'<h3><a href="http://clip.livedoor.com/clips/',
-				info.livedoor_id , '" target="_blank">' , info.title , '</a></h3>',
-				this.format_list(items),
-				'<div class="clip_paging">',
-				'<span id="clip_prev" class="button" onclick="clip_overlay.prev_page()">前の20件 | </span>',
-				'<span id="clip_next" class="button" onclick="clip_overlay.next_page()">次の20件</span>',
-				'</div>',
-			].join("");
-		},
-		rewrite: function(){
-			var self = this;
-			app.state.now = Math.floor(new Date / 1000);
-			var rewrite = function(){
-				var items = self.get_page();
-				self.window.innerHTML = self.format(self.last_response, items);
-				self.update_focus();
-				// window.status = "rewrite";
-				self.update_paging();
-				if(browser.isOpera) self.redraw();
-			};
-			if(this.items.length > this.offset){
-				rewrite();
-			} else {
-				this.load_items(rewrite)
-			}
-		},
-		update_paging: function(){
-			update("clip_next");
-			update("clip_prev");
-		},
-		open_item: function(){
-			if(!this.selected_item) return;
-			window.open(this.get_item().link.unescapeHTML());
-		},
-		open_items: function(){
-			var count = 0;
-			this.get_selected_items().forEach(function(item){
-				count++;
-				if(count > app.config.max_pin){
-					return
-				}
-				window.open(item.link.unescapeHTML());
-				item._selected = false;
-			});
-			this.rewrite();
-		},
-		make_window: function(){
-			var div = $N('DIV');
-			div.id = "clip_overlay";
-			with(div.style){
-				position   = "absolute";
-				width      = "90%";
-				height     = "90%";
-				background = "#fff";
-				lineHeight = "160%";
-				zIndex     = "10000";
-				border     = "4px solid #4889FD";
-				padding    = "0px";
-				overflow   = "auto";
-			}
-			div.innerHTML = "<div class='wait'>読み込み中</div>";
-			return div
-		},
-		show: function(){
-			show_overlay();
-			var clip_window = this.make_window();
-			document.body.appendChild(clip_window);
-			centering(clip_window);
-			this.window = clip_window;
-			this.rewrite();
-			app.state.clip_overlay = true;
-			HotKey.use_only("clip_overlay");
-		},
-		hide: function(){
-			// clear cache
-			this.reset();
-			HotKey.use_only("reader");
-			DOM.remove("clip_overlay");
-			hide_overlay();
-			app.state.clip_overlay = false;
-		},
-		toggle: function(){
-			app.state.clip_overlay ? this.hide() : this.show();
-		},
-		reset: function(){
-			this.items = [];
-			this.offset = 0;
-			this.requested = 0;
-			this.selected_index = 0;
-		},
-		as_singleton: function(){
-			var self = this;
-			keys(this).forEach(function(method){
-				if(isFunction(self[method])){
-					self[method] = self[method].bind(self)
-				}
-			});
-			return this;
-		},
-		add_tag_form: function(){
-			var tag = prompt("追加するタグを入力してください", this.recent_tag || "");
-			if(!tag) return;
-			this.recent_tag = tag;
-			this.add_tag(tag);
-		}.later(0), // delay for mozless
-		remove_tag_form: function(){
-			var tag = prompt("削除するタグを入力してください", this.recent_tag || "");
-			if(!tag) return;
-			this.recent_tag = tag;
-			this.remove_tag(tag);
-		}.later(0),
-		add_tag: function(tag){
-			var items = this.get_selected_items();
-			if(items.length == 0){
-				items = [this.get_item()]
-			}
-			var tags_to_append = TagParser.split_tags(tag);
-			items.forEach(function(item){
-				var orig_tags = Set(item.tags);
-				var len = orig_tags.length;
-				var union = orig_tags.union(tags_to_append);
-				if(len != union.length){
-					clip_progress.add_task(1);
-					item.tags = union;
-					sync_clip(item, function(){
-						clip_progress.complete(1)
-					});
-				}
-			});
-		},
-		remove_tag: function(tag){
-			var items = this.get_selected_items();
-			if(items.length == 0){
-				items = [this.get_item()]
-			}
-			var lc = function(v){ return v.toLowerCase() };
-			var tags_to_remove = TagParser.split_tags(tag).map(lc);
-			items.forEach(function(item){
-				var orig_tags = Set(item.tags.map(lc));
-				var intersection = orig_tags.intersection(tags_to_remove);
-				if(intersection.length){
-					clip_progress.add_task(1);
-					// 大文字小文字を維持するために手動で削除
-					tags_to_remove.forEach(function(remove_tag){
-						item.tags = item.tags.reject(function(orig){
-							return lc(orig) == remove_tag
-						})
-					});
-					sync_clip(item, function(){
-						clip_progress.complete(1)
-					});
-				}
-			});
-		},
-		toggle_private: function(){
-			var items = this.get_selected_items();
-			if(items.length == 0){
-				items = [this.get_item()]
-			}
-			var turn;
-			items.forEach(function(item, i){
-				if(i==0){
-					turn = !item["public"];
-				}
-				if(!!item["public"] != turn){
-					clip_progress.add_task(1);
-					item["public"] = turn;
-					sync_clip(item, function(){
-						clip_progress.complete(1);
-					});
-				}
-			});
-			this.rewrite();
-		},
-		delete_clip: function(){
-			var postkey = this.postkey;
-			var items = this.get_selected_items();
-			if(items.length == 0){
-				items = [this.get_item()]
-			}
-			var c = confirm(items.length + "件のクリップを削除してよろしいですか？");
-			if(!c) return;
-			items.forEach(function(item){
-				if(!item._deleted){
-					clip_progress.add_task(1);
-					delete_clip(item, function(){
-						clip_progress.complete(1);
-					})
-				}
-			});
-			this.unselect_all();
-			this.rewrite();
-			function delete_clip(item,callback){
-				var api = new LDR.API("/clip/delete");
-				api.post({
-					link : item.link.unescapeHTML(),
-					postkey : postkey
-				}, function(){
-					message("削除しました。");
-					if(callback) callback();
-				});
-				item._deleted = true;
-			}
-
-		},
-		make_item_from: function(item){
-			var id = item.id;
-			var classname = [];
-			if(item._selected){
-				classname.push("selected");
-			}
-			if(item._deleted){
-				classname.push("deleted");
-			}
-			return [
-				'<li id="', id, '"',
-					' onmouseout="ListView.mouseout.call(this,event)"',
-					' onmouseover="ListView.mouseover.call(this,event)"',
-					' onmousedown="ListView.mousedown.call(this,event)"',
-					' class="', classname.join(" "), '"',
-				'>', this.item_formatter(item),
-				'</li>'
-			].join("");
-		}
-	});
-	clip_overlay = new LDClip().as_singleton();
-	clip_overlay.item_formatter = function(item){
-		var classname = [];
-		if(item["public"] == 0){
-			classname.push("private");
-		}
-		return formatter(
-			item,
-			{classname:classname.join(" ")}
-		);
-	};
-	var Progress = Class.create();
-	Progress.extend({
-		initialize: function(id){
-			this.element_id = id;
-			this.interval = 60;
-			this.after_finish = [];
-			this.reset();
-		},
-		reset : function(){
-			this.old_value = 0;
-			this.task_count = 0;
-			this.complete_count = 0;
-		},
-		add_task: function(num){
-			this.task_count += num;
-			this.update();
-		},
-		complete: function(num){
-			this.complete_count += num;
-			this.update();
-		},
-		print: function(value){
-			var el = _$(this.element_id);
-			if(el){
-				el.innerHTML = value;
-			}
-		},
-		oncomplete: function(){
-			this.reset();
-			var el = _$(this.element_id);
-			el.innerHTML = "<span class='progress_complete'>" + this.complete_text + "</span>";
-			setTimeout(function(){
-				el.innerHTML = '<span class="button" onclick="clip_overlay.hide()">閉じる</span>';
-			}, 1000);
-		},
-		complete_text: "保存しました",
-		update: function(){
-			var self = this;
-			clearInterval(this.timer);
-			var new_value = Math.floor(100*this.complete_count/this.task_count);
-			var step = Math.floor((new_value - this.old_value) / 5);
-			this.timer = setInterval(function(){
-				self.old_value += step;
-				if(self.old_value >= new_value){
-					clearInterval(self.timer);
-					self.print(new_value + "%");
-					if(self.task_count == self.complete_count){
-						self.oncomplete();
-					}
-				} else {
-					self.print(self.old_value + "%");
-				}
-			}, this.interval);
-		}
-	});
-	var clip_progress = new Progress("clip_progress");
-	updater("clip_next", function(){
-		if(!clip_overlay.total_count){
-			this.style.display = "inline";
-			return
-		}
-		if(clip_overlay.total_count < (clip_overlay.offset + clip_overlay.limit)){
-			this.style.display = "none";
-		}
-	});
-	updater("clip_prev", function(){
-		if(clip_overlay.offset >= clip_overlay.limit){
-			this.style.display = "inline";
-		} else {
-			this.style.display = "none";
-		}
-	});
-	function sync_clip(item, callback){
-		var api = new LDR.API("/clip/add");
-		var onload = function(json){
-			message("保存しました");
-			if(callback) callback();
-		};
-		var param = Object.extend({}, item);
-		param["public"] = param["public"] ? "on" : "off";
-		param.link  = item.link.unescapeHTML();
-		param.title = item.title.unescapeHTML();
-		param.tags  = item.tags.join(" ");
-		// param.from  = "reader";
-		api.post(param, onload);
-	}
-	var kb = {
-		"C": clip_overlay.hide,
-		">": clip_overlay.next_page,
-		"<": clip_overlay.prev_page,
-		"j|down": clip_overlay.next_item,
-		"k|up": clip_overlay.prev_item,
-		"v": clip_overlay.open_item,
-		"o": clip_overlay.open_items,
-		"t": clip_overlay.add_tag_form,
-		"T": clip_overlay.remove_tag_form,
-		"S": clip_overlay.toggle_private,
-		"p|space": clip_overlay.toggle_select,
-		"shift+space": clip_overlay.range_select,
-		"shift+down|J": clip_overlay.select_and_next_item,
-		"shift+up|K"  : clip_overlay.select_and_prev_item,
-		"delete": clip_overlay.delete_clip
-	}
-	each(kb, function(f, key){
-		Keybind_clip.add(key, f);
-	});
-	var toggle_clip_overlay = function(){clip_overlay.toggle()}
-	LDR.register_hook('AFTER_INIT', function(){
-		Keybind.add("C", toggle_clip_overlay);
-	});
-})();
-
-
 
 
 // set data type for javascript
@@ -1385,84 +946,81 @@ new function(){
 	Event.observe(_$(target), 'selectstart', click);
 };
 
-// for English mode
-if(I18n.locale === 'en'){
-	function fit_screen(){
-		var leftpane_width = app.state.leftpane_width;
-		if(app.state.fullscreen) return fit_fullscreen();
-		DOM.hide("footer");
-		var body_h = document.body.offsetHeight;
-		var top_padding    = _$("container").offsetTop;
-		// var bottom_padding = _$("footer").offsetHeight - 20;
-		var bottom_padding = 0 - 20;
-		var ch = body_h - top_padding - bottom_padding - 4;
-		app.state.container_height = ch;
-		style_update(/container/);
-	}
-	style_updater("left_container", function(){
-		setStyle(this,{
-			display : app.state.show_left ? "block": "none",
-			width   : app.state.leftpane_width   + "px",
-			height  : app.state.container_height + 33 + "px"
-		});
-	}._try());
+function fit_screen(){
+  var leftpane_width = app.state.leftpane_width;
+  if(app.state.fullscreen) return fit_fullscreen();
+  DOM.hide("footer");
+  var body_h = document.body.offsetHeight;
+  var top_padding    = _$("container").offsetTop;
+  // var bottom_padding = _$("footer").offsetHeight - 20;
+  var bottom_padding = 0 - 20;
+  var ch = body_h - top_padding - bottom_padding - 4;
+  app.state.container_height = ch;
+  style_update(/container/);
+}
+style_updater("left_container", function(){
+  setStyle(this,{
+    display : app.state.show_left ? "block": "none",
+    width   : app.state.leftpane_width   + "px",
+    height  : app.state.container_height + 33 + "px"
+  });
+}._try());
 
-	style_updater("subs_container", function(){
-		var h = app.state.container_height - _$("subs_tools").offsetHeight;
-		setStyle(this,{
-			display : app.state.show_left ? "block": "none",
-			width   : app.state.leftpane_width + "px",
-			height  : h + 33 +"px"
-		})
-	}._try());
+style_updater("subs_container", function(){
+  var h = app.state.container_height - _$("subs_tools").offsetHeight;
+  setStyle(this,{
+    display : app.state.show_left ? "block": "none",
+    width   : app.state.leftpane_width + "px",
+    height  : h + 33 +"px"
+  })
+}._try());
 
-	style_updater("right_container", function(){
-		var border_w = 2;
-		var border_h = 0;
-		if(navigator.userAgent.indexOf("MSIE 7") != -1){
-			border_w = 6;
-			border_h = 2;
-		}
-		setStyle(this,{
-			 height : app.state.container_height - border_h + "px",
-			 width  : document.body.offsetWidth - app.state.leftpane_width - border_w + "px"
-		});
-	}._try());
+style_updater("right_container", function(){
+  var border_w = 2;
+  var border_h = 0;
+  if(navigator.userAgent.indexOf("MSIE 7") != -1){
+    border_w = 6;
+    border_h = 2;
+  }
+  setStyle(this,{
+     height : app.state.container_height - border_h + "px",
+     width  : document.body.offsetWidth - app.state.leftpane_width - border_w + "px"
+  });
+}._try());
 
-	Number.prototype.toRelativeDate = function(){
-		var k = this > 0 ? this : -this;
-		var u = "second";
-		var vec = this >= 0 ? "ago" : "after";
-		var st = 0;
-		(k>=60) ? (k/=60,u="minute",st=1) : 0;
-		(st && k>=60) ? (k/=60,u="hour",st=1) : st=0;
-		(st && k>=24) ? (k/=24,u="day" ,st=1) : st=0;
-		(st && k>=30) ? (k/=30,u="month" ,st=1) : st=0;
-		k = Math.floor(k);
-		v = u;
-		return (isNaN(k)) ? "nan" : k +" "+ v + ((k>1)?"s":"") + " " + vec;
-	};
-	Control.open_keyhelp = function(){
-		var old_state = app.state.keyhelp_more;
-		app.state.keyhelp_more = true;
-		var w = window.open("","keyhelp","width=580,height=400");
-		w.document.write([
-			"<style>",
-			"*{font-size:12px;font-weight:normal;line-height:150%}",
-			"tr,td{vertical-align:top}",
-			"kbd{border:1px solid #888;padding:2px}",
-			"div{display:none}",
-			"</style>",
-			format_keybind()
-		].join(""));
-		w.document.close();
-		app.state.keyhelp_more = old_state;
-	};
-	show_tips.text = "What's up?";
-	function ld_check(){
-		var c = document.cookie;
-		return c.indexOf("reader_sid") != -1;
-	}
+Number.prototype.toRelativeDate = function(){
+  var k = this > 0 ? this : -this;
+  var u = "second";
+  var vec = this >= 0 ? "ago" : "after";
+  var st = 0;
+  (k>=60) ? (k/=60,u="minute",st=1) : 0;
+  (st && k>=60) ? (k/=60,u="hour",st=1) : st=0;
+  (st && k>=24) ? (k/=24,u="day" ,st=1) : st=0;
+  (st && k>=30) ? (k/=30,u="month" ,st=1) : st=0;
+  k = Math.floor(k);
+  v = u;
+  return (isNaN(k)) ? "nan" : k +" "+ v + ((k>1)?"s":"") + " " + vec;
+};
+Control.open_keyhelp = function(){
+  var old_state = app.state.keyhelp_more;
+  app.state.keyhelp_more = true;
+  var w = window.open("","keyhelp","width=580,height=400");
+  w.document.write([
+    "<style>",
+    "*{font-size:12px;font-weight:normal;line-height:150%}",
+    "tr,td{vertical-align:top}",
+    "kbd{border:1px solid #888;padding:2px}",
+    "div{display:none}",
+    "</style>",
+    format_keybind()
+  ].join(""));
+  w.document.close();
+  app.state.keyhelp_more = old_state;
+};
+show_tips.text = "What's up?";
+function ld_check(){
+  var c = document.cookie;
+  return c.indexOf("reader_sid") != -1;
 }
 
 
