@@ -1,6 +1,7 @@
 require "fastladder"
 require "tempfile"
 require "logger"
+require "timeout"
 begin
   require "image_utils"
 rescue LoadError
