@@ -99,8 +99,6 @@ module Fastladder
     def run_loop
       begin
         run_body
-      rescue TimeoutError
-        @logger.error "Time out: #{$!}"
       rescue SignalException
         @logger.warn "\n=> #{$!.message} trapped. Terminating..."
         return true
