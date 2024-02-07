@@ -1,0 +1,36 @@
+%title Fastladder Mobile
+<link href='https://unpkg.com/sakura.css/css/sakura.css' media='screen' rel='stylesheet' type='text/css'>
+<meta content='width=320, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' name='viewport'>
+
+%h1
+  %img(src="/img/logo_small.gif" alt="Fastladder")
+
+- if @member.pins.count > 0
+  %div
+    %a{href: "/pins"} Pins
+
+%ul
+  - rate = nil
+  - @subscriptions.each do |subscription|
+    - if subscription.rate != rate
+      - rate = subscription.rate
+      %li(style="list-style-type: none;")
+        %img{src: "/img/rate/#{rate}.gif", alt: "#{rate}", style: "margin-bottom: 0px"}
+    %li
+      %a.feed{href: "/mobile/#{subscription.id}"}
+        = subscription.feed.title 
+        (#{subscription.unread_count > 200 ? 200 : subscription.unread_count})
+
+:css
+  body {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+:javascript
+  // if press s, read first feed
+  window.addEventListener('keyup', (e)=> {
+    if(e.key === 's') {
+      document.querySelector('.feed').click();
+    }
+  });
