@@ -4,6 +4,8 @@
 ARG RUBY_VERSION=3.3.0
 FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim-bookworm as base
 
+RUN gem install foreman
+
 # Rails app lives here
 WORKDIR /rails
 

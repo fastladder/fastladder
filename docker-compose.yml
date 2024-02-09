@@ -9,8 +9,9 @@ services:
       - 5000:5000
     environment:
       DATABASE_URL: mysql2://root@db/fastladder
-      PORT: 5000
-    command: ./bin/rails db:migrate && foreman start
+      PORT: "5000"
+      SECRET_KEY_BASE: PLEASE_CHANGE_ME
+    command: bash -c "./bin/rails db:create db:migrate && foreman start"
     restart: always
   db:
     image: mysql:8
