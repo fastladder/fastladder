@@ -48,6 +48,7 @@
 		<div id="my_menu" style="line-height:100%;padding:4px 6px 0px 0;text-align:right">
 			<span id="welcome">welcome <%= link_to current_member.username, user_path(current_member.username) %></span>
 			|&nbsp;<%= link_to "Settings", "#config", onclick: "init_config();return false;" %>
+			|&nbsp;<%= link_to "Mobile", "/mobile" %>
 			|&nbsp;<%= link_to "Account", account_index_path, target: "_self" %>
                         |&nbsp;<%= link_to "Sign Out", logout_path, target: "_self" %>
 		</div>
