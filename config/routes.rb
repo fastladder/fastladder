@@ -119,6 +119,8 @@ Rails.application.routes.draw do
     end
   end
 
+  get '/contents/edit', to: 'contents#edit'
+
   get '/mobile', to: 'mobile#index'
   get '/mobile/:feed_id', to: 'mobile#read_feed'
   get '/mobile/:feed_id/read', to: 'mobile#mark_as_read'

@@ -1,5 +1,6 @@
 /* LDR /subscribe/ */
 
+ApiKey = document.querySelector('#ApiKey').dataset.apiKey;
 LDR.API.StickyQuery = { ApiKey: ApiKey };
 var LDReader = {};
 
