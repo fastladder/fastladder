@@ -9,6 +9,7 @@
     - if content_for? :extract_header
       = yield :extract_header
   %body{class: params[:controller]}
+    %span#ApiKey(style="display:none" data-api-key="#{session[:session_id]}")
     #container
       .navi
         %h1.logo= link_to "Fastladder", root_path

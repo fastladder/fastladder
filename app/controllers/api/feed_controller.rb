@@ -80,7 +80,7 @@ class Api::FeedController < ApplicationController
     sub_id = (params[:subscribe_id] || 0).to_i
     sub = nil
     if sub_id > 0
-      sub = @member.subscriptions.find_by(id: sub_id)
+      sub = @member.subscriptions.find_by(id: sub_id) || @member.subscriptions.find_by(feed_id: sub_id)
     else
       if feedlink.blank? or (feed = Feed.find_by(feedlink: feedlink)).nil?
         return render_json_status(false)
