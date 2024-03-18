@@ -87,7 +87,7 @@ class ApiController < ApplicationController
         rate: sub.rate,
         public: sub.public ? 1 : 0,
 
-        link: feed.link.html_escape,
+        link: feed.link&.html_escape,
         feedlink: feed.feedlink.html_escape,
         title: feed.title.utf8_roundtrip.html_escape,
         icon: feed.favicon.try(:image).try!(:blank?) ? "/img/icon/default.png" : favicon_path(feed.id),
