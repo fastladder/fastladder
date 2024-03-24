@@ -94,10 +94,12 @@ module Fastladder
   end
 
   def simple_fetch(link, options = {})
-    URI.open(link.to_s,  "User-Agent" => "Fastladder (https://github.com/fastladder/fastladder)").read
+    user_agent = options.fetch("User-Agent", "Fastladder (https://github.com/fastladder/fastladder)")
+    response = HTTP.follow.get(link.to_s, headers: {"User-Agent" => user_agent})
+    response.to_s
   rescue Exception => e
     Rails.logger.error(e)
-    Rails.logger.error(e.backtrace)
+    Rails.logger.error(e.backtrace.join("\n"))
     nil
   end
 

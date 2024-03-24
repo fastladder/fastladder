@@ -22,4 +22,14 @@ describe Fastladder do
     fastladder.crawler_user_agent = "YetAnother FeedFetcher/0.0.3 (http://example.com/)"
     expect(Fastladder.crawler_user_agent).to eq("YetAnother FeedFetcher/0.0.3 (http://example.com/)")
   end
+
+  it 'simple_fetch can handle http => https redirect' do
+    stub_request(:get, "http://example.com")
+      .to_return(status: 301, headers: { 'Location' => 'https://example.com' })
+
+    stub_request(:get, "https://example.com")
+      .to_return(status: 200, body: "Success")
+
+    expect(fastladder.simple_fetch("http://example.com")).to eq("Success")
+  end
 end
