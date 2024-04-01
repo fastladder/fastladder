@@ -29,7 +29,7 @@ class SubscribeController < ApplicationController
       return (redirect_to action: "index")
     end
     @feeds = feeds
-    render action: "confirm"
+    render action: "confirm", formats: [:html]
   end
 
   def subscribe
