@@ -35,6 +35,6 @@ gem "sprockets-rails", "~> 3.4"
 
 gem "settings_cabinet", "~> 0.1.0"
 
-gem "nkf", "~> 0.1.3"
+gem "nkf", "~> 0.2.0"
 
 gem "http", "~> 5.2"
