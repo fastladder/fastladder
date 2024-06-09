@@ -31,7 +31,7 @@ gem "rails-controller-testing", "~> 1.0"
 
 gem "puma", "~> 6.4"
 
-gem "sprockets-rails", "~> 3.4"
+gem "sprockets-rails", "~> 3.5"
 
 gem "settings_cabinet", "~> 0.1.0"
 
