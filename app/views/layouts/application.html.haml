@@ -5,7 +5,10 @@
       Fastladder #{@title or [params[:controller].capitalize, (params[:action] if params[:action] != "index")].compact.join(": ")}
     %meta{content: "text/javascript", "http-equiv": "Content-Script-Type"}
     %meta{content: "text/css", "http-equiv": "Content-Style-Type"}
-    = stylesheet_link_tag "application"
+    = stylesheet_link_tag "common"
+    = stylesheet_link_tag "style"
+    = stylesheet_link_tag "main"
+
     - if content_for? :extract_header
       = yield :extract_header
   %body{class: params[:controller]}
@@ -33,3 +36,32 @@
     :javascript
       var ApiKey = '#{escape_javascript(session[:session_id])}';
     = javascript_include_tag "application"
+    = javascript_include_tag "vendor/flow.min" 
+    = javascript_include_tag "vendor/zepto.min" 
+
+    = javascript_include_tag "lib/namespace" 
+
+    = javascript_include_tag "lib/utils/DateTime" 
+    = javascript_include_tag "lib/utils/array_extra" 
+    = javascript_include_tag "lib/utils/common" 
+    = javascript_include_tag "lib/utils/dom" 
+    = javascript_include_tag "lib/utils/ie_xmlhttp" 
+    = javascript_include_tag "lib/utils/preload" 
+    = javascript_include_tag "lib/utils/proto" 
+    = javascript_include_tag "lib/utils/roma" 
+
+    = javascript_include_tag "lib/events/event_dispatcher" 
+    = javascript_include_tag "lib/events/hotkey" 
+    = javascript_include_tag "lib/events/mouse_wheel" 
+    = javascript_include_tag "lib/events/queryCSS" 
+
+    = javascript_include_tag "lib/template" 
+    = javascript_include_tag "lib/api" 
+    = javascript_include_tag "lib/reader/style_initializer" 
+    = javascript_include_tag "lib/ldr" 
+
+    = javascript_include_tag "lib/ui/feed" 
+    = javascript_include_tag "lib/ui/flat_menu" 
+    = javascript_include_tag "lib/ui/item" 
+    = javascript_include_tag "lib/ui/rate" 
+

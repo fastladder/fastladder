@@ -74,5 +74,38 @@
 </div>
 
 <script type="text/javascript">var ApiKey = "<%= session[:session_id] %>";</script>
-<%= javascript_include_tag "share" %>
+
+<%= javascript_include_tag "vendor/flow.min" %>
+<%= javascript_include_tag "vendor/zepto.min" %>
+
+<%= javascript_include_tag "lib/namespace" %>
+
+<%= javascript_include_tag "lib/utils/DateTime" %>
+<%= javascript_include_tag "lib/utils/array_extra" %>
+<%= javascript_include_tag "lib/utils/common" %>
+<%= javascript_include_tag "lib/utils/dom" %>
+<%= javascript_include_tag "lib/utils/ie_xmlhttp" %>
+<%= javascript_include_tag "lib/utils/preload" %>
+<%= javascript_include_tag "lib/utils/proto" %>
+<%= javascript_include_tag "lib/utils/roma" %>
+
+<%= javascript_include_tag "lib/events/event_dispatcher" %>
+<%= javascript_include_tag "lib/events/hotkey" %>
+<%= javascript_include_tag "lib/events/mouse_wheel" %>
+<%= javascript_include_tag "lib/events/queryCSS" %>
+
+<%= javascript_include_tag "lib/template" %>
+<%= javascript_include_tag "lib/api" %>
+<%= javascript_include_tag "lib/reader/style_initializer" %>
+<%= javascript_include_tag "lib/ldr" %>
+
+<%= javascript_include_tag "lib/ui/feed" %>
+<%= javascript_include_tag "lib/ui/flat_menu" %>
+<%= javascript_include_tag "lib/ui/item" %>
+<%= javascript_include_tag "lib/ui/rate" %>
+
+
+<%= javascript_include_tag "lib/models/pref" %>
+<%= javascript_include_tag "lib/share/share" %>
+
 
