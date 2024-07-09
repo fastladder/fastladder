@@ -10,7 +10,7 @@ gem 'pg'
 gem 'sqlite3', '< 2.0'
 
 gem 'addressable', require: 'addressable/uri'
-gem 'feed_searcher', '>= 0.0.6'
+gem 'feed_searcher', git: 'https://github.com/fastladder/feed_searcher'
 gem 'feedjira'
 gem 'haml'
 gem 'jbuilder', '~> 2.0'
