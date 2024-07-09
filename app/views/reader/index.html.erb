@@ -5,7 +5,9 @@
 	<meta http-equiv="content-type" content="text/html; charset=utf-8">
 	<meta http-equiv="content-script-type" content="text/javascript">
 	<meta http-equiv="X-UA-Compatible" content="IE=8">
-	<title>Fastladder</title>
+  <title>Fastladder</title>
+  <%= stylesheet_link_tag "common" %>
+  <%= stylesheet_link_tag "style" %>
 	<%= stylesheet_link_tag "reader" %>
 	<link rel="shortcut icon" href="/favicon.ico">
 </head>
@@ -489,7 +491,55 @@ function ads_mouseout(){
 	}
 }
 </script>
-<%= javascript_include_tag "reader" %>
+<%= javascript_include_tag "vendor/flow.min" %>
+<%= javascript_include_tag "vendor/zepto.min" %>
+
+<%= javascript_include_tag "lib/namespace" %>
+
+<%= javascript_include_tag "lib/utils/DateTime" %>
+<%= javascript_include_tag "lib/utils/array_extra" %>
+<%= javascript_include_tag "lib/utils/common" %>
+<%= javascript_include_tag "lib/utils/dom" %>
+<%= javascript_include_tag "lib/utils/ie_xmlhttp" %>
+<%= javascript_include_tag "lib/utils/preload" %>
+<%= javascript_include_tag "lib/utils/proto" %>
+<%= javascript_include_tag "lib/utils/roma" %>
+
+<%= javascript_include_tag "lib/events/event_dispatcher" %>
+<%= javascript_include_tag "lib/events/hotkey" %>
+<%= javascript_include_tag "lib/events/mouse_wheel" %>
+<%= javascript_include_tag "lib/events/queryCSS" %>
+
+<%= javascript_include_tag "lib/template" %>
+<%= javascript_include_tag "lib/api" %>
+<%= javascript_include_tag "lib/reader/style_initializer" %>
+<%= javascript_include_tag "lib/ldr" %>
+
+<%= javascript_include_tag "lib/ui/feed" %>
+<%= javascript_include_tag "lib/ui/flat_menu" %>
+<%= javascript_include_tag "lib/ui/item" %>
+<%= javascript_include_tag "lib/ui/rate" %>
+
+<%= javascript_include_tag "lib/models/config" %>
+<%= javascript_include_tag "lib/models/finder" %>
+<%= javascript_include_tag "lib/models/pin" %>
+<%= javascript_include_tag "lib/models/pref" %>
+<%= javascript_include_tag "lib/models/queue" %>
+<%= javascript_include_tag "lib/models/state" %>
+
+<%= javascript_include_tag "lib/reader/event_hook" %>
+<%= javascript_include_tag "lib/reader/event_trigger" %>
+<%= javascript_include_tag "lib/reader/hotkey_manager" %>
+<%= javascript_include_tag "lib/reader/updater" %>
+<%= javascript_include_tag "lib/reader/folder" %>
+<%= javascript_include_tag "lib/reader/subscriber" %>
+<%= javascript_include_tag "lib/reader/commands" %>
+<%= javascript_include_tag "lib/reader/ajax" %>
+<%= javascript_include_tag "lib/reader/view" %>
+<%= javascript_include_tag "lib/reader/main" %>
+<%= javascript_include_tag "lib/reader/manage" %>
+<%= javascript_include_tag "lib/reader/widgets_en" %>
+<%= javascript_include_tag "lib/reader/addon" %>
 
 </body>
 </html>
