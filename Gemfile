@@ -31,7 +31,7 @@ gem "rails-controller-testing", "~> 1.0"
 
 gem "puma", "~> 6.4"
 
-gem "settings_cabinet", "~> 0.1.0"
+gem "settings_cabinet", "~> 1.0.0"
 
 gem "nkf", "~> 0.2.0"
 
