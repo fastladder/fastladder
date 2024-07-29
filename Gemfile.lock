@@ -314,7 +314,7 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
-    settings_cabinet (0.1.0)
+    settings_cabinet (1.0.0)
     sqlite3 (1.7.3-aarch64-linux)
     sqlite3 (1.7.3-arm-linux)
     sqlite3 (1.7.3-arm64-darwin)
@@ -381,7 +381,7 @@ DEPENDENCIES
   rspec-activemodel-mocks
   rspec-rails
   selenium-webdriver
-  settings_cabinet (~> 0.1.0)
+  settings_cabinet (~> 1.0.0)
   sqlite3 (< 2.0)
   webmock
 
