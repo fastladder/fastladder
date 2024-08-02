@@ -315,12 +315,16 @@ GEM
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
     settings_cabinet (1.0.0)
-    sqlite3 (1.7.3-aarch64-linux)
-    sqlite3 (1.7.3-arm-linux)
-    sqlite3 (1.7.3-arm64-darwin)
-    sqlite3 (1.7.3-x86-linux)
-    sqlite3 (1.7.3-x86_64-darwin)
-    sqlite3 (1.7.3-x86_64-linux)
+    sqlite3 (2.0.3-aarch64-linux-gnu)
+    sqlite3 (2.0.3-aarch64-linux-musl)
+    sqlite3 (2.0.3-arm-linux-gnu)
+    sqlite3 (2.0.3-arm-linux-musl)
+    sqlite3 (2.0.3-arm64-darwin)
+    sqlite3 (2.0.3-x86-linux-gnu)
+    sqlite3 (2.0.3-x86-linux-musl)
+    sqlite3 (2.0.3-x86_64-darwin)
+    sqlite3 (2.0.3-x86_64-linux-gnu)
+    sqlite3 (2.0.3-x86_64-linux-musl)
     stringio (3.1.1)
     strscan (3.1.0)
     temple (0.10.3)
@@ -382,7 +386,7 @@ DEPENDENCIES
   rspec-rails
   selenium-webdriver
   settings_cabinet (~> 1.0.0)
-  sqlite3 (< 2.0)
+  sqlite3 (< 3.0)
   webmock
 
 BUNDLED WITH
