@@ -37,4 +37,4 @@ gem "nkf", "~> 0.2.0"
 
 gem "http", "~> 5.2"
 
-gem "propshaft", "~> 0.9.0"
+gem "propshaft", "~> 0.9.1"
