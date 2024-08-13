@@ -7,7 +7,7 @@ require 'yaml'
 
 gem 'mysql2'
 gem 'pg'
-gem 'sqlite3', '< 2.0'
+gem 'sqlite3', '< 3.0'
 
 gem 'addressable', require: 'addressable/uri'
 gem 'feed_searcher', git: 'https://github.com/fastladder/feed_searcher'
