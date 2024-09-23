@@ -198,6 +198,7 @@ GEM
     nkf (0.2.0)
     nokogiri (1.16.7-x86_64-linux)
       racc (~> 1.4)
+    ostruct (0.6.0)
     pg (1.5.8)
     propshaft (1.0.0)
       actionpack (>= 7.0.0)
@@ -331,6 +332,7 @@ DEPENDENCIES
   nkf (~> 0.2.0)
   nokogiri
   opml!
+  ostruct (~> 0.6.0)
   pg
   propshaft (~> 1.0.0)
   puma (~> 6.4)
