@@ -10,11 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-      - run: cp config/database.yml.sqlite3 config/database.yml
-      - run: bundle exec rake db:create db:migrate setup
-      - run: bundle exec rspec
-      - uses: browser-actions/setup-chrome@v1
-      - run: xvfb-run ./bin/rails test:system
+      - run: docker build -t test -f Dockerfile.test .
+      - run: docker run test bundle exec rspec
+      - run: docker run test ./bin/rails test:system
