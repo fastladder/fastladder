@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-gem 'rails', '7.2.1'
+gem 'rails', '7.2.1.1'
 
 require 'erb'
 require 'uri'
