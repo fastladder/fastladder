@@ -42,5 +42,6 @@ ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 5000
 ENV PORT 5000
+ENV RAILS_LOG_TO_STDOUT true
 
 CMD ["./bin/rails", "server"]
