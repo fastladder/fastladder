@@ -299,7 +299,7 @@ GEM
     settings_cabinet (1.0.0)
     sqlite3 (2.3.0-arm64-darwin)
     sqlite3 (2.3.0-x86_64-linux-gnu)
-    stringio (3.1.1)
+    stringio (3.1.2)
     temple (0.10.3)
     thor (1.3.2)
     tilt (2.4.0)
@@ -351,7 +351,7 @@ DEPENDENCIES
   selenium-webdriver
   settings_cabinet (~> 1.0.0)
   sqlite3 (< 3.0)
-  stringio (= 3.1.1)
+  stringio (= 3.1.2)
   webmock
 
 BUNDLED WITH
