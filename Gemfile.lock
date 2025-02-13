@@ -217,7 +217,7 @@ GEM
       date
       stringio
     public_suffix (6.0.1)
-    puma (6.5.0)
+    puma (6.6.0)
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.1.10)
@@ -346,7 +346,7 @@ DEPENDENCIES
   ostruct (~> 0.6.0)
   pg
   propshaft (~> 1.1.0)
-  puma (~> 6.5)
+  puma (~> 6.6)
   rails (= 8.0.1)
   rails-controller-testing (~> 1.0)
   rspec-activemodel-mocks
