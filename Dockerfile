@@ -17,7 +17,7 @@ ENV RAILS_ENV="production" \
 
 # Install packages needed to build gems
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git libvips pkg-config libpq-dev libsqlite3-dev libmariadb-dev imagemagick 
+    apt-get install --no-install-recommends -y build-essential git libvips pkg-config libpq-dev libsqlite3-dev libmariadb-dev imagemagick  libyaml-dev
 
 # Install application gems
 COPY Gemfile Gemfile.lock ./
