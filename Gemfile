@@ -21,6 +21,7 @@ gem 'opml', git: 'https://github.com/ssig33/opml'
 group :test do
   gem 'capybara'
   gem 'factory_bot_rails'
+  gem 'minitest-retry'
   gem 'rspec-activemodel-mocks'
   gem 'rspec-rails'
   gem 'webmock'

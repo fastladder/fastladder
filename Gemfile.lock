@@ -188,6 +188,8 @@ GEM
       logger
     mini_mime (1.1.5)
     minitest (5.25.5)
+    minitest-retry (0.2.5)
+      minitest (>= 5.0)
     mysql2 (0.5.6)
     net-http-digest_auth (1.4.1)
     net-http-persistent (4.0.5)
@@ -345,6 +347,7 @@ DEPENDENCIES
   http (~> 5.2)
   jbuilder (~> 2.13)
   mini_magick
+  minitest-retry
   mysql2
   nkf (~> 0.2.0)
   nokogiri
