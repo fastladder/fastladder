@@ -36,7 +36,7 @@ gem "settings_cabinet", "~> 1.0.0"
 
 gem "nkf", "~> 0.2.0"
 
-gem "http", "~> 5.2"
+gem "http", "~> 5.3"
 
 gem "propshaft", "~> 1.1.0"
 
