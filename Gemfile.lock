@@ -208,7 +208,7 @@ GEM
       racc (~> 1.4)
     nokogiri (1.18.8-x86_64-linux-gnu)
       racc (~> 1.4)
-    ostruct (0.6.2)
+    ostruct (0.6.3)
     pg (1.5.9)
     pp (0.6.2)
       prettyprint
@@ -351,7 +351,7 @@ DEPENDENCIES
   nkf (~> 0.2.0)
   nokogiri
   opml!
-  ostruct (~> 0.6.2)
+  ostruct (~> 0.6.3)
   pg
   propshaft (~> 1.2.0)
   puma (~> 6.6)

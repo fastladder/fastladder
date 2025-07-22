@@ -40,6 +40,6 @@ gem "http", "~> 5.3"
 
 gem "propshaft", "~> 1.2.0"
 
-gem "ostruct", "~> 0.6.2"
+gem "ostruct", "~> 0.6.3"
 
 gem "stringio", "3.1.7"
