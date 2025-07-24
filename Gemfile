@@ -38,7 +38,7 @@ gem "nkf", "~> 0.2.0"
 
 gem "http", "~> 5.3"
 
-gem "propshaft", "~> 1.2.0"
+gem "propshaft", "~> 1.2.1"
 
 gem "ostruct", "~> 0.6.3"
 
