@@ -36,10 +36,10 @@ gem "settings_cabinet", "~> 1.0.0"
 
 gem "nkf", "~> 0.2.0"
 
-gem "http", "~> 5.2"
+gem "http", "~> 5.3"
 
-gem "propshaft", "~> 1.1.0"
+gem "propshaft", "~> 1.2.0"
 
-gem "ostruct", "~> 0.6.0"
+gem "ostruct", "~> 0.6.3"
 
 gem "stringio", "3.1.7"
