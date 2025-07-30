@@ -22,10 +22,9 @@ group :test do
   gem 'capybara'
   gem 'factory_bot_rails'
   gem 'minitest-retry'
-  gem 'rspec-activemodel-mocks'
-  gem 'rspec-rails'
   gem 'webmock'
   gem 'selenium-webdriver'
+  gem "minitest-rails", "~> 8.0"
 end
 
 gem "rails-controller-testing", "~> 1.0"
@@ -43,3 +42,5 @@ gem "propshaft", "~> 1.2.1"
 gem "ostruct", "~> 0.6.3"
 
 gem "stringio", "3.1.7"
+
+

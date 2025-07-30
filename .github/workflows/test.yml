@@ -16,6 +16,6 @@ jobs:
           bundler-cache: true
       - run: cp config/database.yml.sqlite3 config/database.yml
       - run: bundle exec rake db:create db:migrate setup
-      - run: bundle exec rspec
+      - run: ./bin/rails test
       - uses: browser-actions/setup-chrome@v2
       - run: xvfb-run ./bin/rails test:system

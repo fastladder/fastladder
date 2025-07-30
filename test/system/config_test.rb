@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-require 'application_system_test_case'
+require "application_system_test_case"
 
 class ConfigTest < ApplicationSystemTestCase
   setup do
-    @dankogai = Member.create!(username: 'dankogai', password: 'kogaidan', password_confirmation: 'kogaidan')
-    visit '/login'
-    fill_in 'username', with: 'dankogai'
-    fill_in 'password', with: 'kogaidan'
-    click_on 'Sign In'
-    assert_equal '/reader/', current_path
+    @dankogai = Member.create!(username: "dankogai", password: "kogaidan", password_confirmation: "kogaidan")
+    visit "/login"
+    fill_in "username", with: "dankogai"
+    fill_in "password", with: "kogaidan"
+    click_on "Sign In"
+    assert_equal "/reader/", current_path
     assert_text "Loading completed.", wait: 10
   end
 
