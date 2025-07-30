@@ -1,4 +1,3 @@
-require 'webmock/rspec'
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -40,8 +39,4 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
-  WebMock.disable_net_connect!(allow_localhost: true)
 end
-
-require 'webmock/rspec'
-WebMock.disable_net_connect!(allow_localhost: true)

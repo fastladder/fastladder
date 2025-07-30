@@ -14,7 +14,7 @@ require "fastladder/crawler"
 Minitest::Retry.use!(retry_count: 5)
 
 WebMock.enable!
-WebMock.disable_net_connect!
+WebMock.disable_net_connect!(allow_localhost: true)
 
 Dir[Rails.root.join("test/support/**/*.rb")].each { |f| require f }
 
