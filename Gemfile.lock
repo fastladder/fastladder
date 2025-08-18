@@ -211,8 +211,8 @@ GEM
     nokogiri (1.18.9-x86_64-linux-gnu)
       racc (~> 1.4)
     ostruct (0.6.3)
-    pg (1.6.0-arm64-darwin)
-    pg (1.6.0-x86_64-linux)
+    pg (1.6.1-arm64-darwin)
+    pg (1.6.1-x86_64-linux)
     pp (0.6.2)
       prettyprint
     prettyprint (0.2.0)
