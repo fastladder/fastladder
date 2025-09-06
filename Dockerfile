@@ -31,6 +31,7 @@ COPY . .
 RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
 # Run and own only the runtime files as a non-root user for security
+RUN mkdir -p log tmp
 RUN useradd rails --create-home --shell /bin/bash && \
     chown -R rails:rails db log tmp
 USER rails:rails
