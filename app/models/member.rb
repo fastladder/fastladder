@@ -21,7 +21,7 @@ require "digest/sha1"
 class Member < ActiveRecord::Base
   # Virtual attribute for the unencrypted password
   attr_accessor :password
-  serialize :config_dump
+  serialize :config_dump, coder: JSON
 
   has_many :folders
   has_many :subscriptions
