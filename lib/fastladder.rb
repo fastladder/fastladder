@@ -95,7 +95,7 @@ module Fastladder
 
   def simple_fetch(link, options = {})
     user_agent = options.fetch("User-Agent", "Fastladder (https://github.com/fastladder/fastladder)")
-    response = HTTP.follow.timeout(Fastladder.http_read_timeout).get(link.to_s, headers: {"User-Agent" => user_agent})
+    response = HTTP.follow.timeout(read: Fastladder.http_read_timeout).get(link.to_s, headers: {"User-Agent" => user_agent})
     response.to_s
   rescue Exception => e
     Rails.logger.error(e)
