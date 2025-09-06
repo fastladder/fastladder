@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-gem 'rails', '8.0.2.1'
+gem 'rails', '8.1.0.beta1'
 
 require 'erb'
 require 'uri'
@@ -29,9 +29,9 @@ end
 
 gem "rails-controller-testing", "~> 1.0"
 
-gem "puma", "~> 6.6"
+gem "puma", "~> 7.0"
 
-gem "settings_cabinet", "~> 1.0.0"
+gem "settings_cabinet", "~> 1.1.0"
 
 gem "nkf", "~> 0.2.0"
 

@@ -33,7 +33,7 @@ class ApiControllerTest < ActionController::TestCase
     parsed = JSON.parse(response.body)
     assert_equal 3, parsed["items"].size
     item_ids = parsed["items"].map { |item| item["id"] }
-    assert_equal [3, 2, 1], item_ids.sort.reverse
+    assert_equal [@item.id].concat(@items.map(&:id)).sort.slice(0, 3), item_ids.sort
   end
 
   test "GET all renders purified link" do
