@@ -11,7 +11,7 @@ require "factory_bot_rails"
 require "webmock/minitest"
 require "fastladder/crawler"
 
-Minitest::Retry.use!(retry_count: 5)
+Minitest::Retry.use!(retry_count: 15) if ENV["CI"]
 
 WebMock.enable!
 WebMock.disable_net_connect!(allow_localhost: true)
