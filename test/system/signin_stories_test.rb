@@ -11,7 +11,7 @@ class SigninStoriesTest < ApplicationSystemTestCase
     fill_in "password", with: "mala"
     click_on "Sign In"
 
-    assert_equal "/reader/", current_path
+    assert_current_path "/reader/"
     within "#welcome" do
       assert_text member.username
     end
