@@ -12,6 +12,8 @@ class SignupStoriesTest < ApplicationSystemTestCase
     fill_in "member_password_confirmation", with: "mala"
     click_on "Sign Up"
 
+    assert_current_path "/reader/"
+
     assert_equal initial_count + 1, Member.count
   end
 
@@ -24,6 +26,8 @@ class SignupStoriesTest < ApplicationSystemTestCase
     fill_in "member_password", with: "mala"
     fill_in "member_password_confirmation", with: "mala"
     click_on "Sign Up"
+
+    assert_current_path "/reader/"
 
     assert_equal initial_count + 1, Member.count
   end
