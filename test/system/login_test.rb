@@ -14,7 +14,7 @@ class LoginTest < ApplicationSystemTestCase
 
     click_on "Sign Up"
 
-    assert_equal "/reader/", current_path
+    assert_current_path "/reader/"
 
     assert_equal 1, Member.count
 
@@ -30,13 +30,13 @@ class LoginTest < ApplicationSystemTestCase
 
     visit "/"
 
-    assert_equal "/login", current_path
+    assert_current_path "/login"
 
     fill_in "username", with: "dankogai"
     fill_in "password", with: "kogaidan"
 
     click_on "Sign In"
 
-    assert_equal "/reader/", current_path
+    assert_current_path "/reader/"
   end
 end
