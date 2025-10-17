@@ -10,7 +10,7 @@ class SubscribeSystemTest < ApplicationSystemTestCase
     fill_in "password", with: "kogaidan"
     click_on "Sign In"
 
-    assert_equal "/reader/", current_path
+    assert_current_path "/reader/"
 
     stub_request(:get, "https://example.com/feed.rss?keyword=123")
       .to_return(status: 200, body: File.read(Rails.root.join("test/fixtures/examlpe.com.feed.xml")))

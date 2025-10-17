@@ -6,7 +6,7 @@ class LoginTest < ApplicationSystemTestCase
   test "can create new member" do
     assert_equal 0, Member.count
     visit "/"
-    assert_equal "/signup", current_path
+    assert_current_path "/signup"
 
     fill_in "member[username]", with: "dankogai"
     fill_in "member[password]", with: "kogaidan"

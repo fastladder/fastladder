@@ -10,9 +10,9 @@ class SignoutStoriesTest < ApplicationSystemTestCase
     fill_in "username", with: member.username
     fill_in "password", with: "mala"
     click_on "Sign In"
-    assert_equal "/reader/", current_path
+    assert_current_path "/reader/"
 
     click_on "Sign Out"
-    assert_equal "/login", current_path
+    assert_current_path "/login"
   end
 end
