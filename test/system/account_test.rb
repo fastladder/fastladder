@@ -17,7 +17,13 @@ class AccountTest < ApplicationSystemTestCase
     click_link "Account"
     click_link "API key"
     click_button "Set or Change Auth Key"
-    assert_not_nil @member.reload.auth_key
+    auth_key = nil
+    50.times do
+      auth_key = @member.reload.auth_key
+      break if auth_key.present?
+      sleep 0.1
+    end
+    assert_not_nil auth_key
   end
 
   test "changes existing auth key" do
@@ -31,8 +37,16 @@ class AccountTest < ApplicationSystemTestCase
     click_link "API key"
     click_button "Set or Change Auth Key"
 
-    new_auth_key = @member.reload.auth_key
-    assert_not_nil new_auth_key
-    assert_not_equal old_auth_key, new_auth_key
+    new_auth_key = nil
+    equal = true
+    50.times do
+      new_auth_key = @member.reload.auth_key
+      if new_auth_key && new_auth_key != old_auth_key
+        equal = false
+        break
+      end
+      sleep 0.1
+    end
+    refute equal
   end
 end
