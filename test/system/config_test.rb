@@ -9,7 +9,7 @@ class ConfigTest < ApplicationSystemTestCase
     fill_in "username", with: "dankogai"
     fill_in "password", with: "kogaidan"
     click_on "Sign In"
-    assert_equal "/reader/", current_path
+    assert_current_path "/reader/"
     assert_text "Loading completed.", wait: 10
   end
 
