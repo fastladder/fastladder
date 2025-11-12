@@ -41,6 +41,6 @@ gem "propshaft", "~> 1.3.1"
 
 gem "ostruct", "~> 0.6.3"
 
-gem "stringio", "3.1.7"
+gem "stringio", "3.1.8"
 
 
