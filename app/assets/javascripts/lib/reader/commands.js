@@ -118,35 +118,33 @@ function close_item(item_id){
 
 // スクロール位置から現在フォーカスが当たっているアイテムを取得
 function get_active_item(detail){
-    // return 1;
-    var sc = _$("right_container").scrollTop;
-    var divs = _$("right_body").getElementsByTagName("h2");
-    // for Opera9 beta
-    var top_offset = _$("right_body").offsetTop;
+    var container = _$("right_container");
+    var body = _$("right_body");
+    var divs = body.getElementsByTagName("h2");
 
     var len = divs.length;
     if(!len) return;
+
+    // getBoundingClientRect() でサブピクセル精度の位置を取得
+    var containerRect = container.getBoundingClientRect();
+    var bodyRect = body.getBoundingClientRect();
+
     var offsets = [];
     for(var i=0;i<len;i++){
-        offsets.push(divs[i].offsetTop - top_offset);
+        var rect = divs[i].getBoundingClientRect();
+        offsets.push(rect.top - bodyRect.top);
     }
-    /*
-    var diffs, min, offset;
-    if(len == 1){
-        offset = 0
-    } else {
-        diffs  = offsets.map(function(v){return Math.abs(sc - v)});
-        min    = Math.min.apply(null, diffs);
-        offset = diffs.indexOf(min);
-    }
-    */
 
-    var screen = [sc, sc + _$("right_container").offsetHeight];
+    // 画面の表示範囲（container 内の相対位置）
+    var scrollTop = container.scrollTop;
+    var screenHeight = containerRect.height;
+    var screen = [scrollTop, scrollTop + screenHeight];
+
     var pairs = offsets.map(function(v,i,self){
         if(self[i+1]){
             return [v, self[i+1]];
         } else {
-            return [v, _$("right_body").offsetHeight]
+            return [v, body.scrollHeight]
         }
     });
     var full_contain = [];
@@ -160,6 +158,7 @@ function get_active_item(detail){
         }
         return bottom - top;
     });
+    var offset;
     if(len == 1){
         offset = 0;
     } else {
