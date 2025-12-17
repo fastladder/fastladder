@@ -303,7 +303,7 @@ GEM
     sqlite3 (2.8.1-aarch64-linux-gnu)
     sqlite3 (2.8.1-arm64-darwin)
     sqlite3 (2.8.1-x86_64-linux-gnu)
-    stringio (3.1.8)
+    stringio (3.2.0)
     temple (0.10.4)
     thor (1.4.0)
     tilt (2.6.1)
@@ -358,7 +358,7 @@ DEPENDENCIES
   selenium-webdriver
   settings_cabinet (~> 1.1.0)
   sqlite3 (< 3.0)
-  stringio (= 3.1.8)
+  stringio (= 3.2.0)
   webmock
 
 CHECKSUMS
@@ -468,7 +468,7 @@ CHECKSUMS
   sqlite3 (2.8.1-aarch64-linux-gnu) sha256=9bce166d3e3595a42fc92c28d986ea11d499b55be8bd1cd491be04af30029543
   sqlite3 (2.8.1-arm64-darwin) sha256=3cb617640577ec9c1b7c09744d1e368ad3d3851c2494540f5f007387da943477
   sqlite3 (2.8.1-x86_64-linux-gnu) sha256=878f4a0c5c2c4d9d4345afe2a142a87805f388a24aa8a3c2dfe2f964d7686b7a
-  stringio (3.1.8) sha256=99c43c3a9302843cca223fd985bfc503dd50a4b1723d3e4a9eb1d9c37d99e4ec
+  stringio (3.2.0) sha256=c37cb2e58b4ffbd33fe5cd948c05934af997b36e0b6ca6fdf43afa234cf222e1
   temple (0.10.4) sha256=b7a1e94b6f09038ab0b6e4fe0126996055da2c38bec53a8a336f075748fff72c
   thor (1.4.0) sha256=8763e822ccb0f1d7bee88cde131b19a65606657b847cc7b7b4b82e772bcd8a3d
   tilt (2.6.1) sha256=35a99bba2adf7c1e362f5b48f9b581cce4edfba98117e34696dde6d308d84770
