@@ -195,7 +195,7 @@ GEM
     minitest-rails (8.1.0)
       minitest (~> 5.20)
       railties (>= 8.1.0, < 8.2.0)
-    minitest-retry (0.2.5)
+    minitest-retry (0.3.0)
       minitest (>= 5.0)
     mysql2 (0.5.7)
       bigdecimal
@@ -420,7 +420,7 @@ CHECKSUMS
   mini_mime (1.1.5) sha256=8681b7e2e4215f2a159f9400b5816d85e9d8c6c6b491e96a12797e798f8bccef
   minitest (5.27.0) sha256=2d3b17f8a36fe7801c1adcffdbc38233b938eb0b4966e97a6739055a45fa77d5
   minitest-rails (8.1.0) sha256=baf92080456ab3ffb352e038114728a25469b89001b76da0d0db2433d8192eca
-  minitest-retry (0.2.5) sha256=2f968fd33706fe91c6f38b6e3e2a2f581d5e8aeceb80113eab0c6a6ed96185fc
+  minitest-retry (0.3.0) sha256=346b34134656e6af7726cf12cd80cf2d95c31d6eefb9901b0efacc6111f8f753
   mysql2 (0.5.7) sha256=ba09ede515a0ae8a7192040a1b778c0fb0f025fa5877e9be895cd325fa5e9d7b
   net-http-digest_auth (1.4.1) sha256=4b8ad50ed8d180a58db5d6c49449b987dd0466fe01e24037945bc007562a08db
   net-http-persistent (4.0.8) sha256=ef3de8319d691537b329053fae3a33195f8b070bbbfae8bf1a58c796081960e6
