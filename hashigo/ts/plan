@@ -1,0 +1,20 @@
+### Plan A: The Modern Lite (Bun + Hono + Svelte)
+ユーザー様の要望に最もフィットする構成です。全てをTypeScriptで統一し、Bunの高速性を活かします。
+
+- 構成:
+  - Runtime: Bun (Node.js互換かつ高速、パッケージマネージャ内蔵)
+  - Backend: Hono (Bunと相性抜群の軽量Webフレームワーク)
+  - Frontend: Svelte 5 (仮想DOMを持たないコンパイラ、軽量で高速)
+  - Database: bun:sqlite (Bun標準搭載のSQLite。外部依存ゼロで爆速)
+  - Parser: fast-xml-parser 等の軽量ライブラリ
+- 特徴:
+  - Single Language: フロントからDB操作までTypeScriptで完結。
+  - Modern DX: ホットリロードなど開発体験が非常に良い。
+  - Minimal: Docker不要。 bun install して bun run dev だけで動く。
+- ディレクトリ構成イメージ:
+/src
+  /db        # SQLite schema & queries
+  /routes    # Hono API endpoints
+  /crawler   # RSS Fetcher logic
+/frontend    # Svelte application
+index.ts     # Entry point

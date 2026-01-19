@@ -1,0 +1,5 @@
+https://zenn.dev/feed
+https://b.hatena.ne.jp/hotentry/it.rss
+https://news.ycombinator.com/rss
+# コメント行も可能です
+https://github.com/blog.atom
