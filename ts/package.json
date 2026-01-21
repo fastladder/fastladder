@@ -1,0 +1,24 @@
+{
+  "name": "hashigo-web",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"bun run server/index.ts\" \"vite\"",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "hono": "^4.0.0",
+    "cheerio": "^1.0.0-rc.12",
+    "fast-xml-parser": "^4.4.1"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^3.0.0",
+    "@tsconfig/svelte": "^5.0.0",
+    "bun-types": "^1.0.0",
+    "concurrently": "^8.0.0",
+    "svelte": "^4.0.0",
+    "typescript": "^5.0.0",
+    "vite": "^5.0.0"
+  }
+}

@@ -1,5 +1,0 @@
-<ul class="account_navi">
-	<% %w/password apikey backup share/.each do |name| -%>
-	<li><%= link_to t(name, scope: 'account'), url_for(controller: :account, action: name), class: ("selected" if name == params[:action]) %></li>
-	<% end -%>
-</ul>

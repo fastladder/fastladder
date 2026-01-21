@@ -9,6 +9,7 @@ lib/*.dylib
 db/*.sqlite3
 public/assets
 coverage
+node_modules
 .rbenv-gemsets
 .DS_Store
 db/*.sqlite3-*
