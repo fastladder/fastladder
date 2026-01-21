@@ -29,7 +29,7 @@ end
 
 gem "rails-controller-testing", "~> 1.0"
 
-gem "puma", "~> 7.1"
+gem "puma", "~> 7.2"
 
 gem "settings_cabinet", "~> 1.1.0"
 
