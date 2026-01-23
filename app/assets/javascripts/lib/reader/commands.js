@@ -172,44 +172,6 @@ function get_active_item(detail){
         }
     }
 
-    // DEBUG: アクティブアイテム判定のデバッグ
-    console.log('=== get_active_item DEBUG ===');
-    console.log('scrollTop:', scrollTop);
-    console.log('screenHeight:', screenHeight);
-    console.log('screen (top, bottom):', screen);
-    console.log('bodyRect.top:', bodyRect.top);
-    console.log('bodyRect.height:', bodyRect.height);
-    console.log('containerRect.top:', containerRect.top);
-    console.log('containerRect.height:', containerRect.height);
-    console.log('body.offsetTop:', body.offsetTop);
-    console.log('body.scrollHeight:', body.scrollHeight);
-    console.log('container.scrollHeight:', container.scrollHeight);
-    console.log('scrollTop + bodyRect.top:', scrollTop + bodyRect.top);
-    console.log('Expected screen[0] from offsets perspective:', -bodyRect.top);
-    // 各h2の実際のviewport位置も出力
-    for(var di=0; di<Math.min(divs.length, 5); di++){
-        var dr = divs[di].getBoundingClientRect();
-        console.log('divs['+di+'] getBoundingClientRect().top:', dr.top, 'id:', divs[di].id);
-    }
-    // 問題の記事周辺
-    if(offset > 0 && divs[offset-1]){
-        var prevRect = divs[offset-1].getBoundingClientRect();
-        console.log('divs[offset-1] viewport top:', prevRect.top, 'id:', divs[offset-1].id);
-    }
-    if(divs[offset]){
-        var selRect = divs[offset].getBoundingClientRect();
-        console.log('divs[offset] viewport top:', selRect.top, 'id:', divs[offset].id);
-    }
-    console.log('offsets:', offsets);
-    console.log('pairs:', pairs);
-    console.log('intersections:', intersections);
-    console.log('full_contain:', full_contain);
-    console.log('selected offset:', offset);
-    if(divs[offset]){
-        console.log('selected item id:', divs[offset].id);
-    }
-    console.log('=============================');
-
     if(detail){
         var element = divs[offset];
         var link    = element.getElementsByTagName("a")[0];
