@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns:media="http://search.yahoo.com/mrss/" xmlns="http://www.w3.org/2005/Atom">
+ <link rel="self" href="http://www.youtube.com/feeds/videos.xml?user=google"/>
+ <id>yt:channel:UCK8sQmJBp8GCxrOtXWBpyEA</id>
+ <yt:channelId>UCK8sQmJBp8GCxrOtXWBpyEA</yt:channelId>
+ <title>Google</title>
+ <link rel="alternate" href="http://www.youtube.com/user/Google"/>
+ <author>
+  <name>Google Author</name>
+  <uri>http://www.youtube.com/channel/UCK8sQmJBp8GCxrOtXWBpyEA</uri>
+ </author>
+ <published>2005-09-18T22:37:10+00:00</published>
+ <updated>2015-05-04T00:01:27+00:00</updated>
+ <entry>
+  <id>yt:video:5shykyfmb28</id>
+  <yt:videoId>5shykyfmb28</yt:videoId>
+  <yt:channelId>UCK8sQmJBp8GCxrOtXWBpyEA</yt:channelId>
+  <title>The Google app: Questions Title</title>
+  <link rel="alternate" href="http://www.youtube.com/watch?v=5shykyfmb28"/>
+  <author>
+   <name>Google</name>
+   <uri>http://www.youtube.com/channel/UCK8sQmJBp8GCxrOtXWBpyEA</uri>
+  </author>
+  <published>2015-05-04T00:01:27+00:00</published>
+  <updated>2015-05-13T17:38:30+00:00</updated>
+  <media:group>
+   <media:title>The Google app: Questions</media:title>
+   <media:content url="https://www.youtube.com/v/5shykyfmb28?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i2.ytimg.com/vi/5shykyfmb28/hqdefault.jpg" width="480" height="360"/>
+   <media:description>A question is the most powerful force in the world.</media:description>
+   <media:community>
+    <media:starRating count="3546" average="4.79" min="1" max="5"/>
+    <media:statistics views="251497"/>
+   </media:community>
+  </media:group>
+ </entry>
+</feed>

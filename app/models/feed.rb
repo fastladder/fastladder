@@ -56,7 +56,7 @@ class Feed < ActiveRecord::Base
       feedlink: uri.to_s,
       link: feed_dom.url || uri.to_s,
       title: feed_dom.title || feed_dom.url || "",
-      description: feed_dom.description || "",
+      description: extract_description(feed_dom),
     )
   end
 
@@ -174,5 +174,10 @@ class Feed < ActiveRecord::Base
   def default_values
     self.title ||= ""
     self.description ||= ""
+  end
+
+  def self.extract_description(parsed)
+    return "" unless parsed.respond_to?(:description)
+    parsed.description || ""
   end
 end
