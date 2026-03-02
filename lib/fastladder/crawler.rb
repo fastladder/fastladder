@@ -248,7 +248,12 @@ module Fastladder
     def update_feed_infomation(feed, parsed)
       feed.title = parsed.title
       feed.link = parsed.url
-      feed.description = parsed.description || ""
+      feed.description = extract_description(parsed)
+    end
+
+    def extract_description(parsed)
+      return "" unless parsed.respond_to?(:description)
+      parsed.description || ""
     end
 
     def almost_same(str1, str2)

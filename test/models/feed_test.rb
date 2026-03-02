@@ -51,6 +51,16 @@ class FeedTest < ActiveSupport::TestCase
     end
   end
 
+  test "initialize_from_uri handles YouTube Atom feed without NoMethodError" do
+    stub_content = File.read(Rails.root.join("test/stubs/youtube.atom"))
+    Fastladder.stub :simple_fetch, stub_content do
+      feed = Feed.initialize_from_uri("https://www.youtube.com/feeds/videos.xml?user=google")
+      assert_equal "Google", feed.title
+      assert_equal "", feed.description
+      assert_equal "http://www.youtube.com/user/Google", feed.link
+    end
+  end
+
   test "removes fragment from feedlink" do
     feed = FactoryBot.create(:feed, feedlink: "http://example.com/rss#_=_")
     assert_equal "http://example.com/rss", feed.feedlink
