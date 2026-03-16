@@ -30,7 +30,7 @@ jobs:
           tags: |
             type=sha
             type=ref,event=branch
-      - uses: docker/build-push-action@v6
+      - uses: docker/build-push-action@v7
         with:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
