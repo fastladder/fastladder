@@ -773,7 +773,9 @@ var Control = {
     },
     prev_item_offset: function(){
         var container = _$("right_container");
-        var sc = container.scrollTop;
+        // On fractional DPI (e.g. 125% scaling) scrollTop is subpixel-shifted,
+        // so floor it to mirror the Math.ceil in next_item_offset
+        var sc = Math.floor(container.scrollTop);
         var top_offset = _$("right_body").offsetTop;
         var divs = _$("right_body").getElementsByTagName("h2");
         var active = get_active_item();
