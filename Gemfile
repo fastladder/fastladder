@@ -33,7 +33,7 @@ gem "puma", "~> 8.0"
 
 gem "settings_cabinet", "~> 1.1.0"
 
-gem "nkf", "~> 0.2.0"
+gem "nkf", "~> 0.3.0"
 
 gem "http", "~> 5.3"
 
