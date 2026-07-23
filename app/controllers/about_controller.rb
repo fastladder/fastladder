@@ -5,8 +5,8 @@ class AboutController < ApplicationController
     unless @feed.nil?
       @is_feedlink = true
       respond_to do |format|
-        format.html { render action: :index }
         format.json { render json: @feed.to_json }
+        format.any { render action: :index, formats: [:html] }
       end
     else
       respond_to do |format|
