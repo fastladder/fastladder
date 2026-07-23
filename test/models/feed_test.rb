@@ -156,4 +156,29 @@ class FeedTest < ActiveSupport::TestCase
     feed = FactoryBot.create(:feed_without_title)
     refute_nil feed.title
   end
+
+  test "ignore_body_update? is false by default" do
+    feed = FactoryBot.create(:feed)
+    refute feed.ignore_body_update?
+  end
+
+  test "ignore_body_update? respects the per-feed flag" do
+    feed = FactoryBot.create(:feed, ignore_body_update: true)
+    assert feed.ignore_body_update?
+  end
+
+  test "ignore_body_update? is true when the feed link is on a listed domain" do
+    feed = FactoryBot.create(:feed, link: "http://ameblo.jp/someone/")
+    assert feed.ignore_body_update?
+  end
+
+  test "ignore_body_update? is true when the feedlink is on a subdomain of a listed domain" do
+    feed = FactoryBot.create(:feed, feedlink: "http://rssblog.ameba.jp/someone/rss20.xml")
+    assert feed.ignore_body_update?
+  end
+
+  test "ignore_body_update? is false for hosts that merely end with a listed domain" do
+    feed = FactoryBot.create(:feed, feedlink: "http://notameba.jp/rss", link: "http://notameblo.jp/")
+    refute feed.ignore_body_update?
+  end
 end

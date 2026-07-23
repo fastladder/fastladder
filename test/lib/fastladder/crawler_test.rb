@@ -49,6 +49,70 @@ class Fastladder::CrawlerTest < ActiveSupport::TestCase
     assert_equal [item], result
   end
 
+  test "reject_ignored_body_updates keeps body-only updates when feed does not ignore them" do
+    old_item = FactoryBot.create(:item, feed: @feed, body: "old body")
+    item = FactoryBot.build(:item, feed: @feed, guid: old_item.guid, link: old_item.link,
+                                   title: old_item.title, body: "changed body")
+
+    result = @crawler.send(:reject_ignored_body_updates, @feed, [item])
+
+    assert_equal [item], result
+  end
+
+  test "reject_ignored_body_updates rejects body-only updates when feed ignores them" do
+    @feed.update!(ignore_body_update: true)
+    old_item = FactoryBot.create(:item, feed: @feed, body: "old body")
+    item = FactoryBot.build(:item, feed: @feed, guid: old_item.guid, link: old_item.link,
+                                   title: old_item.title, body: "changed body")
+
+    result = @crawler.send(:reject_ignored_body_updates, @feed, [item])
+
+    assert_empty result
+  end
+
+  test "reject_ignored_body_updates keeps updates that also change the title" do
+    @feed.update!(ignore_body_update: true)
+    old_item = FactoryBot.create(:item, feed: @feed, body: "old body")
+    item = FactoryBot.build(:item, feed: @feed, guid: old_item.guid, link: old_item.link,
+                                   title: "changed title", body: "changed body")
+
+    result = @crawler.send(:reject_ignored_body_updates, @feed, [item])
+
+    assert_equal [item], result
+  end
+
+  test "reject_ignored_body_updates keeps updates that also change the link" do
+    @feed.update!(ignore_body_update: true)
+    old_item = FactoryBot.create(:item, feed: @feed, body: "old body")
+    item = FactoryBot.build(:item, feed: @feed, guid: old_item.guid, link: "http://example.com/moved",
+                                   title: old_item.title, body: "changed body")
+
+    result = @crawler.send(:reject_ignored_body_updates, @feed, [item])
+
+    assert_equal [item], result
+  end
+
+  test "reject_ignored_body_updates keeps new items" do
+    @feed.update!(ignore_body_update: true)
+    item = FactoryBot.build(:item, feed: @feed, guid: "brand-new-guid")
+
+    result = @crawler.send(:reject_ignored_body_updates, @feed, [item])
+
+    assert_equal [item], result
+  end
+
+  test "reject_ignored_body_updates rejects body-only updates for feeds on listed domains" do
+    feed = FactoryBot.create(:feed, feedlink: "http://rssblog.ameba.jp/someone/rss20.xml",
+                                    link: "http://ameblo.jp/someone/")
+    old_item = FactoryBot.create(:item, feed: feed, body: "old body")
+    item = FactoryBot.build(:item, feed: feed, guid: old_item.guid, link: old_item.link,
+                                   title: old_item.title, body: "changed body")
+
+    result = @crawler.send(:reject_ignored_body_updates, feed, [item])
+
+    assert_empty result
+  end
+
   test "update rewrites relative links in item body" do
     atom_body = File.read(File.expand_path("../../fixtures/github.private.atom", __dir__))
     source = Struct.new(:body).new(atom_body)

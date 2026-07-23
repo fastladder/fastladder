@@ -13,6 +13,7 @@
 #  modified_on       :datetime
 #  created_on        :datetime         not null
 #  updated_on        :datetime         not null
+#  ignore_body_update :boolean         default(FALSE), not null
 #
 
 # require "fastladder/crawler"
@@ -159,6 +160,20 @@ class Feed < ActiveRecord::Base
 
   def avg_rate
     subscriptions.where("rate > ?", 0).average(:rate).to_i
+  end
+
+  # Domains listed in IGNORE_BODY_UPDATE_DOMAINS always take precedence over
+  # the per-feed ignore_body_update flag.
+  def ignore_body_update?
+    body_update_ignored_domain? || super
+  end
+
+  def body_update_ignored_domain?
+    [feedlink, link].compact.any? do |url|
+      host = Addressable::URI.parse(url).host rescue nil
+      next false unless host
+      IGNORE_BODY_UPDATE_DOMAINS.any? { |domain| host == domain || host.end_with?(".#{domain}") }
+    end
   end
 
   def except_fragment_identifier
