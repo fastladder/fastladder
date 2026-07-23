@@ -144,6 +144,7 @@ module Fastladder
 
       items = cut_off(feed, items)
       items = reject_duplicated(feed, items)
+      items = reject_stale_item_updates(feed, items)
       delete_old_items_if_new_items_are_many(feed, items)
       update_or_insert_items_to_feed(feed, items, result)
       update_unread_status(feed, result)
@@ -203,6 +204,16 @@ module Fastladder
 
     def reject_duplicated(feed, items)
       items.uniq { |item| item.guid }.reject { |item| feed.items.exists?(["guid = ? and digest = ?", item.guid, item.digest]) }
+    end
+
+    def reject_stale_item_updates(feed, items)
+      items.reject do |item|
+        next false unless item.modified_on
+        next false unless old_item = feed.items.find_by(guid: item.guid)
+        next false unless old_item.stored_on
+
+        item.modified_on.to_time <= old_item.stored_on.to_time
+      end
     end
 
     def new_items_count(feed, items)

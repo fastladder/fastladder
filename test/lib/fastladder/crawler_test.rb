@@ -23,6 +23,32 @@ class Fastladder::CrawlerTest < ActiveSupport::TestCase
     assert_empty result
   end
 
+  test "reject_stale_item_updates rejects existing item when feed timestamp is older than stored_on" do
+    stored_on = Time.zone.parse("2026-07-07 12:00:00")
+    old_item = FactoryBot.create(:item, feed: @feed, guid: "same-guid", link: "http://example.com/item",
+                                        body: "old body", stored_on: stored_on, modified_on: stored_on - 1.day)
+    item = FactoryBot.build(:item, feed: @feed, guid: old_item.guid, link: old_item.link,
+                                   body: "changed body", stored_on: stored_on + 1.hour,
+                                   modified_on: stored_on - 1.second)
+
+    result = @crawler.send(:reject_stale_item_updates, @feed, [item])
+
+    assert_empty result
+  end
+
+  test "reject_stale_item_updates keeps existing item when feed timestamp is newer than stored_on" do
+    stored_on = Time.zone.parse("2026-07-07 12:00:00")
+    old_item = FactoryBot.create(:item, feed: @feed, guid: "same-guid", link: "http://example.com/item",
+                                        body: "old body", stored_on: stored_on, modified_on: stored_on - 1.day)
+    item = FactoryBot.build(:item, feed: @feed, guid: old_item.guid, link: old_item.link,
+                                   body: "changed body", stored_on: stored_on + 1.hour,
+                                   modified_on: stored_on + 1.second)
+
+    result = @crawler.send(:reject_stale_item_updates, @feed, [item])
+
+    assert_equal [item], result
+  end
+
   test "update rewrites relative links in item body" do
     atom_body = File.read(File.expand_path("../../fixtures/github.private.atom", __dir__))
     source = Struct.new(:body).new(atom_body)
