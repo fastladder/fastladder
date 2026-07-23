@@ -59,6 +59,7 @@ Rails.application.routes.draw do
 
   namespace :about do
     get '*url', action: :index, format: false
+    post '*url', action: :update, format: false, as: nil
   end
 
   namespace :user do

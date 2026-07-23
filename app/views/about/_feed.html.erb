@@ -22,6 +22,20 @@
 		</li>
 		<li class="subscribers_count"><%= users(feed.subscribers_count) %></li>
 		<li class="avg_rate">rate average <%= rate_image(avg_rate) %> <span id="avg-rate"><%= avg_rate %></span></li>
+		<% if logged_in? -%>
+		<li class="ignore_body_update">
+			<% if feed.body_update_ignored_domain? -%>
+			<input type="checkbox" checked disabled>
+			ignore body-only item updates <span class="note">(always on for this domain)</span>
+			<% else -%>
+			<%= form_tag(about_path(url: feed.feedlink), style: "display:inline") do %>
+				<%= check_box_tag :ignore_body_update, 1, feed.ignore_body_update %>
+				<%= label_tag :ignore_body_update, "ignore body-only item updates" %>
+				<input type="submit" value="Save">
+			<% end %>
+			<% end -%>
+		</li>
+		<% end -%>
 	</ul>
 	</div>
 </div>
