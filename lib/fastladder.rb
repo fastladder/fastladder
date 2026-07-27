@@ -9,7 +9,15 @@ module Fastladder
   HTTP_ACCEPT = 'text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5'
 
   module ClassMethods
-    attr_reader :http_proxy, :http_proxy_except_hosts, :http_open_timeout, :http_read_timeout, :crawler_user_agent
+    attr_reader :http_proxy, :http_proxy_except_hosts, :crawler_user_agent
+
+    def http_open_timeout
+      @http_open_timeout || 60
+    end
+
+    def http_read_timeout
+      @http_read_timeout || 60
+    end
 
     def configure(&block)
       @http_proxy ||= nil
