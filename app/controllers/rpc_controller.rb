@@ -12,7 +12,7 @@ class RpcController < ApplicationController
 
   def check_digest
     digests = JSON.parse(params[:digests]).uniq.sort
-    render json: (digests - Item.where(digests).map{|x| x.digest}.uniq.sort)
+    render json: (digests - Item.where(digest: digests).map{|x| x.digest}.uniq.sort)
   end
 
   # TODO Fix Baaaaaad SQL
