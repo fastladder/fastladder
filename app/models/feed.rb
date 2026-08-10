@@ -109,8 +109,7 @@ class Feed < ActiveRecord::Base
   def fetch_favicon!
     self.favicon ||= Favicon.new(feed: self)
     favicon_list.each do |uri|
-      next unless Fastladder::UrlValidator.safe?(uri)
-      next unless response = URI.open(uri.to_s) rescue nil # ensure timeout
+      next unless response = open_favicon(uri)
       next if response.status.last.to_i >= 400
       # MiniMagick will determine the image type from extension of file name
       ext = response.meta["content-type"] == 'image/vnd.microsoft.icon' ? ".ico" : File.basename(uri.to_s)
@@ -136,6 +135,25 @@ class Feed < ActiveRecord::Base
         tmp.close!
       end
     end
+  end
+
+  # open-uri follows redirects by itself and would happily land on an internal
+  # address, so redirects are turned off and followed here, validating every hop.
+  def open_favicon(uri)
+    url = uri.to_s
+    Fastladder::REDIRECT_LIMIT.times do
+      return nil unless Fastladder::UrlValidator.safe?(url)
+      begin
+        return URI.open(url, redirect: false) # ensure timeout
+      rescue OpenURI::HTTPRedirect => e
+        target = e.uri.to_s
+        return nil unless Fastladder::UrlValidator.safe_redirect?(url, target)
+        url = target
+      rescue StandardError
+        return nil
+      end
+    end
+    nil
   end
 
   def favicon_list

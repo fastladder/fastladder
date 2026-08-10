@@ -1,8 +1,12 @@
 require "test_helper"
 
 class Fastladder::UrlValidatorTest < ActiveSupport::TestCase
+  PUBLIC_ADDRESS = "203.0.113.1".freeze
+
   test "allows a public http url" do
-    assert Fastladder::UrlValidator.safe?("http://example.com/feed.xml")
+    with_public_dns do
+      assert Fastladder::UrlValidator.safe?("http://example.com/feed.xml")
+    end
   end
 
   test "rejects schemes other than http and https" do
@@ -43,9 +47,11 @@ class Fastladder::UrlValidatorTest < ActiveSupport::TestCase
   end
 
   test "safe_redirect? rejects a downgrade from https to http" do
-    refute Fastladder::UrlValidator.safe_redirect?("https://example.com/", "http://example.com/")
-    assert Fastladder::UrlValidator.safe_redirect?("http://example.com/", "https://example.com/")
-    assert Fastladder::UrlValidator.safe_redirect?("https://example.com/", "https://example.org/")
+    with_public_dns do
+      refute Fastladder::UrlValidator.safe_redirect?("https://example.com/", "http://example.com/")
+      assert Fastladder::UrlValidator.safe_redirect?("http://example.com/", "https://example.com/")
+      assert Fastladder::UrlValidator.safe_redirect?("https://example.com/", "https://example.org/")
+    end
   end
 
   test "safe_redirect? rejects an unsafe destination" do
@@ -71,7 +77,7 @@ class Fastladder::UrlValidatorTest < ActiveSupport::TestCase
       assert Fastladder::UrlValidator.safe?("http://10.0.0.1/")
       assert Fastladder::UrlValidator.safe?("http://192.168.0.1/feed.xml")
       assert Fastladder::UrlValidator.safe?("http://169.254.169.254/")
-      assert Fastladder::UrlValidator.safe?("http://example.com/feed.xml")
+      assert Fastladder::UrlValidator.safe?("http://#{PUBLIC_ADDRESS}/feed.xml")
     end
   end
 
@@ -96,6 +102,12 @@ class Fastladder::UrlValidatorTest < ActiveSupport::TestCase
   end
 
   private
+
+  # Host names are never looked up for real: the suite must not depend on the
+  # resolver it happens to run with.
+  def with_public_dns(&block)
+    Fastladder::UrlValidator.stub :resolve, [IPAddr.new(PUBLIC_ADDRESS)], &block
+  end
 
   def with_intranet_feeds(value)
     previous = ENV[Fastladder::UrlValidator::INTRANET_ENV_KEY]
