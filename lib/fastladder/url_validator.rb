@@ -6,10 +6,18 @@ module Fastladder
   # Feed URLs come from users, so every URL fastladder fetches has to be checked
   # before the request is made: only plain http(s) URLs resolving to a globally
   # routable address are allowed.
+  #
+  # An installation that only serves trusted users may need to subscribe to feeds
+  # hosted on its own network. Setting ALLOW_INTRANET_FEEDS to a truthy value
+  # lifts the address restriction; the scheme restriction always applies.
   module UrlValidator
     class UnsafeUrlError < StandardError; end
 
     ALLOWED_SCHEMES = %w(http https).freeze
+
+    INTRANET_ENV_KEY = "ALLOW_INTRANET_FEEDS".freeze
+
+    TRUTHY_VALUES = %w(1 true yes on).freeze
 
     BLOCKED_RANGES = %w(
       0.0.0.0/8
@@ -65,7 +73,12 @@ module Fastladder
       []
     end
 
+    def intranet_feeds_allowed?
+      TRUTHY_VALUES.include?(ENV[INTRANET_ENV_KEY].to_s.strip.downcase)
+    end
+
     def blocked?(address)
+      return false if intranet_feeds_allowed?
       address = address.native if address.ipv4_mapped?
       BLOCKED_RANGES.any? { |range| range.include?(address) }
     end

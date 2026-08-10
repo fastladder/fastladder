@@ -51,4 +51,57 @@ class Fastladder::UrlValidatorTest < ActiveSupport::TestCase
   test "safe_redirect? rejects an unsafe destination" do
     refute Fastladder::UrlValidator.safe_redirect?("http://example.com/", "http://127.0.0.1/")
   end
+
+  test "ALLOW_INTRANET_FEEDS is off unless it is set to a truthy value" do
+    refute Fastladder::UrlValidator.intranet_feeds_allowed?
+
+    %w(1 true TRUE yes on).each do |value|
+      with_intranet_feeds(value) { assert Fastladder::UrlValidator.intranet_feeds_allowed?, value }
+    end
+
+    %w(0 false no off).each do |value|
+      with_intranet_feeds(value) { refute Fastladder::UrlValidator.intranet_feeds_allowed?, value }
+    end
+  end
+
+  test "allows private and loopback addresses when ALLOW_INTRANET_FEEDS is set" do
+    with_intranet_feeds("1") do
+      assert Fastladder::UrlValidator.safe?("http://127.0.0.1/")
+      assert Fastladder::UrlValidator.safe?("http://[::1]/")
+      assert Fastladder::UrlValidator.safe?("http://10.0.0.1/")
+      assert Fastladder::UrlValidator.safe?("http://192.168.0.1/feed.xml")
+      assert Fastladder::UrlValidator.safe?("http://169.254.169.254/")
+      assert Fastladder::UrlValidator.safe?("http://example.com/feed.xml")
+    end
+  end
+
+  test "keeps rejecting other schemes when ALLOW_INTRANET_FEEDS is set" do
+    with_intranet_feeds("1") do
+      refute Fastladder::UrlValidator.safe?("file:///etc/passwd")
+      refute Fastladder::UrlValidator.safe?("ftp://example.com/feed.xml")
+    end
+  end
+
+  test "validate! accepts an intranet url when ALLOW_INTRANET_FEEDS is set" do
+    with_intranet_feeds("yes") do
+      assert_equal "http://192.168.0.1/feed.xml", Fastladder::UrlValidator.validate!("http://192.168.0.1/feed.xml")
+    end
+  end
+
+  test "safe_redirect? follows a redirect to an intranet host when ALLOW_INTRANET_FEEDS is set" do
+    with_intranet_feeds("true") do
+      assert Fastladder::UrlValidator.safe_redirect?("http://example.com/", "http://192.168.0.1/feed.xml")
+      refute Fastladder::UrlValidator.safe_redirect?("https://example.com/", "http://192.168.0.1/feed.xml")
+    end
+  end
+
+  private
+
+  def with_intranet_feeds(value)
+    previous = ENV[Fastladder::UrlValidator::INTRANET_ENV_KEY]
+    ENV[Fastladder::UrlValidator::INTRANET_ENV_KEY] = value
+    yield
+  ensure
+    ENV[Fastladder::UrlValidator::INTRANET_ENV_KEY] = previous
+  end
 end
