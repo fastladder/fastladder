@@ -11,7 +11,7 @@
     %h3 
       %a.read{href: item.link, target: "_blank"}=item.title
 
-    %div!= remove_style_attr_of_all_tags(item.body)
+    %div= item.body.to_s.scrub_html
     %div
       %p.smallgrey 
         %a.pin{href: "/mobile/#{item.id}/pin"} Pin
