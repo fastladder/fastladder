@@ -3,10 +3,12 @@ require 'openssl'
 require 'open-uri'
 require 'net/http'
 require 'singleton'
+require_relative 'fastladder/url_validator'
 
 module Fastladder
   Version = '0.0.3'
   HTTP_ACCEPT = 'text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5'
+  REDIRECT_LIMIT = 5
 
   module ClassMethods
     attr_reader :http_proxy, :http_proxy_except_hosts, :crawler_user_agent
@@ -68,6 +70,7 @@ module Fastladder
 
   def fetch(link, options = {})
     uri = link.kind_of?(URI) ? link : URI.parse(link)
+    UrlValidator.validate!(uri)
 
     http_class = Net::HTTP
     # if proxy = uri.find_proxy || Fastladder.http_proxy
@@ -103,8 +106,22 @@ module Fastladder
 
   def simple_fetch(link, options = {})
     user_agent = options.fetch("User-Agent", "Fastladder (https://github.com/fastladder/fastladder)")
-    response = HTTP.follow.timeout(connect: Fastladder.http_open_timeout, read: Fastladder.http_read_timeout).get(link.to_s, headers: {"User-Agent" => user_agent})
-    response.to_s
+    client = HTTP.timeout(connect: Fastladder.http_open_timeout, read: Fastladder.http_read_timeout)
+    url = link.to_s
+    REDIRECT_LIMIT.times do
+      UrlValidator.validate!(url)
+      response = client.get(url, headers: {"User-Agent" => user_agent})
+      return response.to_s unless response.status.redirect?
+      location = response.headers["Location"]
+      response.flush
+      raise UrlValidator::UnsafeUrlError, "redirect without location: #{url}" if location.blank?
+      target = URI.join(url, location).to_s
+      unless UrlValidator.safe_redirect?(url, target)
+        raise UrlValidator::UnsafeUrlError, "unsafe redirect: #{url} => #{target}"
+      end
+      url = target
+    end
+    raise "too many redirects: #{link}"
   rescue Exception => e
     Rails.logger.error(e)
     Rails.logger.error(e.backtrace.join("\n"))

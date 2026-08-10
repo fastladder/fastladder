@@ -11,6 +11,7 @@ class Api::FeedController < ApplicationController
   def discover
     feeds = []
     url = Addressable::URI.parse(params[:url])
+    return render json: [].to_json unless Fastladder::UrlValidator.safe?(url.normalize)
     FeedSearcher.search(url.normalize.to_s).each do |feedlink|
       feedlink = (url + feedlink).to_s
       if feed = Feed.find_by(feedlink: feedlink)

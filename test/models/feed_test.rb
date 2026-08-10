@@ -86,6 +86,32 @@ class FeedTest < ActiveSupport::TestCase
     end
   end
 
+  test "does not follow a favicon redirect to a private address" do
+    feed = FactoryBot.create(:feed)
+    stub_request(:get, "http://example.com/favicon.ico")
+      .to_return(status: 302, headers: { "Location" => "http://169.254.169.254/favicon.ico" })
+
+    feed.stub :favicon_list, [Addressable::URI.parse("http://example.com/favicon.ico")] do
+      feed.fetch_favicon!
+    end
+    assert_not_requested :get, "http://169.254.169.254/favicon.ico"
+    assert_nil feed.favicon.image
+  end
+
+  test "follows a favicon redirect to a public address" do
+    feed = FactoryBot.create(:feed)
+    favicon = File.read(Rails.root.join("test/fixtures/favicon.ico"))
+    stub_request(:get, "http://example.com/favicon.ico")
+      .to_return(status: 302, headers: { "Location" => "http://icon.example.com/favicon.ico" })
+    stub_request(:get, "http://icon.example.com/favicon.ico")
+      .to_return(headers: { "Content-Type" => "image/vnd.microsoft.icon" }, body: favicon)
+
+    feed.stub :favicon_list, [Addressable::URI.parse("http://example.com/favicon.ico")] do
+      feed.fetch_favicon!
+    end
+    assert feed.favicon.image.start_with?("\x89PNG\r\n".force_encoding("ascii-8bit"))
+  end
+
   test "logs errors when favicon.ico is not valid data" do
     feed = FactoryBot.create(:feed)
     stub_request(:any, /.*/).to_return(body: "invalid image data")
