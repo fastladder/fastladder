@@ -109,6 +109,7 @@ class Feed < ActiveRecord::Base
   def fetch_favicon!
     self.favicon ||= Favicon.new(feed: self)
     favicon_list.each do |uri|
+      next unless Fastladder::UrlValidator.safe?(uri)
       next unless response = URI.open(uri.to_s) rescue nil # ensure timeout
       next if response.status.last.to_i >= 400
       # MiniMagick will determine the image type from extension of file name

@@ -129,6 +129,40 @@ class Fastladder::CrawlerTest < ActiveSupport::TestCase
     assert_equal 1, doc.css('a[href="http://example.com/bundler/bundler/tree/1-9-stable"]').size
   end
 
+  test "crawl does not store a redirect to a private address" do
+    @feed.update!(feedlink: "http://example.com/feed.xml")
+    response = Net::HTTPMovedPermanently.new("1.1", "301", "Moved Permanently")
+    response["location"] = "http://169.254.169.254/latest/meta-data/"
+
+    result = Fastladder.stub :fetch, response do
+      @crawler.crawl(@feed)
+    end
+
+    assert result[:error]
+    assert_equal "http://example.com/feed.xml", @feed.reload.feedlink
+  end
+
+  test "crawl stores a redirect to a public address" do
+    @feed.update!(feedlink: "http://example.com/feed.xml")
+    response = Net::HTTPMovedPermanently.new("1.1", "301", "Moved Permanently")
+    response["location"] = "/moved.xml"
+
+    Fastladder.stub :fetch, response do
+      @crawler.crawl(@feed)
+    end
+
+    assert_equal "http://example.com/moved.xml", @feed.reload.feedlink
+  end
+
+  test "crawl reports an error when the feedlink is unsafe" do
+    @feed.update!(feedlink: "http://127.0.0.1/feed.xml")
+
+    result = @crawler.crawl(@feed)
+
+    assert result[:error]
+    assert_nil result[:response_code]
+  end
+
   test "cut_off limits items when too large feed" do
     items = FactoryBot.build_list(:item, Fastladder::Crawler::ITEMS_LIMIT + 1)
     @feed.items << items

@@ -30,4 +30,31 @@ class FastladderTest < ActiveSupport::TestCase
 
     assert_equal "Success", Fastladder.simple_fetch("http://example.com")
   end
+
+  test "simple_fetch does not request a private address" do
+    assert_nil Fastladder.simple_fetch("http://127.0.0.1/feed.xml")
+    assert_not_requested :get, "http://127.0.0.1/feed.xml"
+  end
+
+  test "simple_fetch does not follow a redirect to a private address" do
+    stub_request(:get, "http://example.com")
+      .to_return(status: 302, headers: { "Location" => "http://169.254.169.254/latest/meta-data/" })
+
+    assert_nil Fastladder.simple_fetch("http://example.com")
+    assert_not_requested :get, "http://169.254.169.254/latest/meta-data/"
+  end
+
+  test "simple_fetch does not follow a redirect downgrading https to http" do
+    stub_request(:get, "https://example.com")
+      .to_return(status: 302, headers: { "Location" => "http://example.com" })
+
+    assert_nil Fastladder.simple_fetch("https://example.com")
+    assert_not_requested :get, "http://example.com"
+  end
+
+  test "fetch raises for a private address" do
+    assert_raises Fastladder::UrlValidator::UnsafeUrlError do
+      Fastladder.fetch("http://169.254.169.254/latest/meta-data/")
+    end
+  end
 end

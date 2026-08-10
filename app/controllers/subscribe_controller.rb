@@ -12,6 +12,10 @@ class SubscribeController < ApplicationController
     feeds = []
     # params[:url] is http:/example.com because of squeeze("/")
     @url = url_from_path(:url)
+    unless Fastladder::UrlValidator.safe?(@url)
+      flash[:notice] = "please check URL"
+      return (redirect_to action: "index")
+    end
     FeedSearcher.search(@url).each do |feedlink|
       if feed = Feed.find_by(feedlink: feedlink)
         if sub = current_member.subscribed(feed)

@@ -54,6 +54,10 @@ module Fastladder
         begin
           @logger.info "fetch: #{feed.feedlink}"
           response = Fastladder.fetch(feed.feedlink, modified_on: feed.modified_on)
+        rescue Fastladder::UrlValidator::UnsafeUrlError => e
+          result[:message] = "Error: #{e.message}"
+          result[:error] = true
+          break
         end
         @logger.info "HTTP status: [#{response.code}] #{feed.feedlink}"
         case response
@@ -80,7 +84,13 @@ module Fastladder
         #   break
         when Net::HTTPRedirection
           @logger.info "Redirect: #{feed.feedlink} => #{response["location"]}"
-          feed.feedlink = URI.join(feed.feedlink, response["location"])
+          target = redirect_target(feed.feedlink, response["location"])
+          unless target
+            result[:message] = "Error: unsafe redirect to #{response["location"]}"
+            result[:error] = true
+            break
+          end
+          feed.feedlink = target
           feed.modified_on = nil
           feed.save
         else
@@ -90,11 +100,20 @@ module Fastladder
           break
         end
       end
-      result[:response_code] = response.code.to_i
+      result[:response_code] = response.code.to_i if response
       result
     end
 
     private
+
+    def redirect_target(feedlink, location)
+      return nil if location.blank?
+      target = URI.join(feedlink, location).to_s
+      return nil unless Fastladder::UrlValidator.safe_redirect?(feedlink, target)
+      target
+    rescue URI::InvalidURIError
+      nil
+    end
 
     def run_loop
       begin
