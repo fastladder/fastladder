@@ -11,12 +11,12 @@ class MobileController < ApplicationController # rubocop:todo Style/Documentatio
   end
 
   def read_feed
-    @subscription = Subscription.find(params[:feed_id])
+    @subscription = current_member.subscriptions.find(params[:feed_id])
     @items = @subscription.feed.items.stored_since(@subscription.viewed_on).order('stored_on asc').limit(200)
   end
 
   def mark_as_read
-    @subscription = Subscription.find(params[:feed_id])
+    @subscription = current_member.subscriptions.find(params[:feed_id])
     @subscription.update!(has_unread: false, viewed_on: Time.at(params[:timestamp].to_i + 1))
 
     redirect_to '/mobile'
@@ -24,11 +24,12 @@ class MobileController < ApplicationController # rubocop:todo Style/Documentatio
 
   def pin
     item = Item.find(params[:item_id])
+    subscription = current_member.subscriptions.find_by!(feed_id: item.feed_id)
     begin
       current_member.pins.create!(link: item.link, title: item.title)
     rescue ActiveRecord::RecordNotUnique
     end
 
-    redirect_to "/mobile/#{item.feed_id}#item-#{item.id}"
+    redirect_to "/mobile/#{subscription.id}#item-#{item.id}"
   end
 end
