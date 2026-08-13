@@ -4,7 +4,6 @@ class ApiController < ApplicationController
   params_required [:timestamp, :subscribe_id], only: :touch
   params_required :since, only: [:item_count, :unread_count]
   before_action :find_sub, only: [:all, :unread]
-  skip_before_action :verify_authenticity_token
 
   def all
     if params[:limit].blank?
