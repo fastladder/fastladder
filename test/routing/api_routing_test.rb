@@ -1,7 +1,7 @@
 require "test_helper"
 
 class ApiRoutingTest < ActionDispatch::IntegrationTest
-  %w(all unread touch_all touch item_count unread_count crawl).each do |name|
+  %w(all unread item_count unread_count).each do |name|
     test "routes #{name} via GET" do
       assert_routing(
         { method: "get", path: "/api/#{name}" },
@@ -17,7 +17,7 @@ class ApiRoutingTest < ActionDispatch::IntegrationTest
     end
   end
 
-  %w(subs lite_subs error_subs folders).each do |name|
+  %w(touch_all touch crawl subs lite_subs error_subs folders).each do |name|
     test "routes #{name}" do
       assert_routing(
         { method: "post", path: "/api/#{name}" },

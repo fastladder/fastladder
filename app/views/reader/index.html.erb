@@ -473,7 +473,7 @@
 <!-- /TEMPLATE -->
 
 <script type="text/javascript">
-var ApiKey = "<%= session[:session_id]  %>";
+var ApiKey = "<%= form_authenticity_token  %>";
 
 function ads_mouseover(){
 	if(typeof Element == 'object'){

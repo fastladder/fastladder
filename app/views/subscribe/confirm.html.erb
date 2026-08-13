@@ -9,7 +9,7 @@
 	<h3>You can subscribe to</h3>
 	<input type="hidden" name="url" value="<%= @url %>" id="target_url">
 	<input type="hidden" name="register" value="1">
-	<input type="hidden" name="ApiKey" value="<%= session[:session_id] %>">
+	<input type="hidden" name="ApiKey" value="<%= form_authenticity_token %>">
 	<ul id="feed_candidates">
 		<% @feeds.uniq {|feed| feed.feedlink }.each_with_index do |feed, i| -%>
 		<li class="list<% if i == 0 %> list-first<% end %>">
@@ -104,6 +104,6 @@
 </div><!-- /content-inner -->
 </div><!-- /content -->
 
-<script type="text/javascript">var ApiKey = "<%= session[:session_id] %>";</script>
+<script type="text/javascript">var ApiKey = "<%= form_authenticity_token %>";</script>
 <%= javascript_include_tag "subscribe" %>
 <script type="text/javascript">if(typeof init == "function") init();</script>

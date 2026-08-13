@@ -1,7 +1,6 @@
 require "yaml"
 class Api::ConfigController < ApplicationController
   before_action :login_required_api
-  skip_before_action :verify_authenticity_token
 
   APP_CONFIG = Settings.to_h.slice(:save_pin_limit)
 

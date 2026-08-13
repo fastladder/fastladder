@@ -36,8 +36,12 @@ Rails.application.routes.draw do
       post  :save, action: :setter
     end
 
-    %w(all unread touch_all touch item_count unread_count crawl).each do |name|
+    %w(all unread item_count unread_count).each do |name|
       match name, via: [:get, :post]
+    end
+
+    %w(touch_all touch crawl).each do |name|
+      post name
     end
 
     %w[subs lite_subs error_subs folders].each do |name|

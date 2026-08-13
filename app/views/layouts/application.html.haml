@@ -12,7 +12,7 @@
     - if content_for? :extract_header
       = yield :extract_header
   %body{class: params[:controller]}
-    %span#ApiKey(style="display:none" data-api-key="#{session[:session_id]}")
+    %span#ApiKey(style="display:none" data-api-key="#{form_authenticity_token}")
     #container
       .navi
         %h1.logo= link_to "Fastladder", root_path
@@ -34,7 +34,7 @@
             = flash[:alert]
       = yield
     :javascript
-      var ApiKey = '#{escape_javascript(session[:session_id])}';
+      var ApiKey = '#{escape_javascript(form_authenticity_token)}';
     = javascript_include_tag "application"
     = javascript_include_tag "vendor/flow.min" 
     = javascript_include_tag "vendor/zepto.min" 
