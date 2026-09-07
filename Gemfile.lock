@@ -126,7 +126,7 @@ GEM
       sax-machine (>= 1.0, < 2)
     globalid (1.4.0)
       activesupport (>= 6.1)
-    haml (7.5.0)
+    haml (7.5.1)
       prism (>= 1.1.0)
       temple (>= 0.8.2)
       thor
@@ -390,7 +390,7 @@ CHECKSUMS
   feed_searcher (0.0.6)
   feedjira (4.0.2) sha256=3e7a90d24fd66eddc809539e637a86a02de1a7e038cd40157e916ed2f3b5ff71
   globalid (1.4.0) sha256=037f12fbf1d9d7a014d501c2d5c77356fd4ddd96d7a7991d6700bba96706f427
-  haml (7.5.0) sha256=f84519100c81ee1c3ab55faf9bafe0d9dfbdb19cf75b204897025a719c92cd6e
+  haml (7.5.1) sha256=91c5843dd85d32042cc6218d2df8c81282403459958aa53caa58fda238adc287
   hashdiff (1.2.1) sha256=9c079dbc513dfc8833ab59c0c2d8f230fa28499cc5efb4b8dd276cf931457cd1
   http (6.0.4) sha256=3768f902489ea8309424f1881c668af8d3ca73675648a755dfe2cb0030d42d26
   http-cookie (1.1.6) sha256=ba4b82be64de61dc281243dac70e3c382c45142f20268ed9276a3670c93feaa9
