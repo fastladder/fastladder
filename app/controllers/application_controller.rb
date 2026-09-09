@@ -57,6 +57,17 @@ class ApplicationController < ActionController::Base
 
   private
 
+  # The JavaScript front end sends the CSRF token as the "ApiKey" parameter.
+  def request_authenticity_tokens
+    super + [params[:ApiKey]]
+  end
+
+  # Requests authenticated with an API key instead of the session cookie are
+  # not reachable by cross site request forgery.
+  def verified_request?
+    super || find_current_member_by_auth_key.present?
+  end
+
   def current_member
     @member ||= find_current_member_by_session || find_current_member_by_auth_key
   end

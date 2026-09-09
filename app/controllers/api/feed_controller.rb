@@ -6,7 +6,6 @@ class Api::FeedController < ApplicationController
   params_required [ :subscribe_id, :rate   ], only: :set_rate
   params_required [ :subscribe_id, :ignore ], only: :set_notify
   params_required [ :subscribe_id, :public ], only: :set_public
-  skip_before_action :verify_authenticity_token
 
   def discover
     feeds = []
@@ -92,7 +91,7 @@ class Api::FeedController < ApplicationController
       return render_json_status(false)
     end
     result = {
-      ApiKey: session[:session_id],
+      ApiKey: form_authenticity_token,
       subscribe_id: sub.id,
       folder_id: sub.folder_id || 0,
       rate: sub.rate,

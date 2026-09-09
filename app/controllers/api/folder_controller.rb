@@ -2,7 +2,6 @@ class Api::FolderController < ApplicationController
   before_action :login_required_api
   # we need not check folder_id, because it checked by each method
   params_required :name, only: [ :create, :update ]
-  skip_before_action :verify_authenticity_token
 
   ERR_ALREADY_EXISTS = 10
 

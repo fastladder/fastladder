@@ -3,21 +3,8 @@ window.onresize = function(){LDR.invoke_hook('WINDOW_RESIZE')};
 
 var app = LDR.Application.getInstance();
 
-// API Key
-(function(){
-	LDR.API.StickyQuery = { ApiKey: ApiKey };
-	function getApiKey(){
-	    var ck = new Cookie().parse();
-	    for(var key in ck){
-	        if(/_sid/.test(key)){
-	            return ck[key]
-	        }
-	    }
-	};
-	if(/^\[/.test(ApiKey)){
-	    LDR.API.StickyQuery = { ApiKey: getApiKey() };
-	}
-}).call(LDR);
+// CSRF token, sent along with every API request
+LDR.API.StickyQuery = { ApiKey: ApiKey };
 
 
 /*

@@ -1,6 +1,6 @@
 <%= form_for :feed, url: url_for(controller: "api/feed", action: "update"), html: {id: "subs_edit_form"} do |f| %>
 <%= f.hidden_field :subscribe_id, name: "subscribe_id" %>
-<%= f.hidden_field :api_key, name: "ApiKey", value: session[:session_id] %>
+<%= f.hidden_field :api_key, name: "ApiKey", value: form_authenticity_token %>
 <table>
 <tr>
 	<th>Folder</th>

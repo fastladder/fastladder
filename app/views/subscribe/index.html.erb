@@ -19,5 +19,5 @@
 </div>
 </div>
 </div>
-<script type="text/javascript">var ApiKey = "<%= session[:session_id] %>";</script>
+<script type="text/javascript">var ApiKey = "<%= form_authenticity_token %>";</script>
 <%= javascript_include_tag "subscribe" %>

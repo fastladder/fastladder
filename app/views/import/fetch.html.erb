@@ -37,7 +37,7 @@ function s_toggle(mode,tab){
 
 <% if @opml.present? -%>
 <%= form_for :import, url: import_finish_path do |f| %>
-<%= f.hidden_field :api_key, name: "ApiKey", value: session[:session_id] %>
+<%= f.hidden_field :api_key, name: "ApiKey", value: form_authenticity_token %>
 <div id="registerbox" style="width:auto;margin:0 10px">
 	<div id="import_tab" class="tabs" style="text-align:left;padding-left:15px;">
 		<div class="tab tab-active" onclick="s_toggle('all',this)">All<span class="num">(<%= all_count = (all_items = @folders.values.flatten).length %>)</span></div>
