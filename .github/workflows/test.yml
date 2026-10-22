@@ -10,7 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - run: sudo apt-get update && sudo apt-get install -y imagemagick
+      - uses: mfinelli/setup-imagemagick@v8
+        with:
+          cache: false
+      - run: magick -version
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
