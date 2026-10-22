@@ -294,9 +294,9 @@ GEM
       rubyzip (>= 1.2.2, < 4.0)
       websocket (~> 1.0)
     settings_cabinet (1.1.0)
-    sqlite3 (2.9.6-aarch64-linux-gnu)
-    sqlite3 (2.9.6-arm64-darwin)
-    sqlite3 (2.9.6-x86_64-linux-gnu)
+    sqlite3 (2.10.0-aarch64-linux-gnu)
+    sqlite3 (2.10.0-arm64-darwin)
+    sqlite3 (2.10.0-x86_64-linux-gnu)
     stringio (3.2.0)
     temple (0.10.7)
     thor (1.5.0)
@@ -458,9 +458,9 @@ CHECKSUMS
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
   selenium-webdriver (4.48.0) sha256=0c8376ebc8a0a4879343fe6fe6eccdcea76748611cd25de370b33eded2077a94
   settings_cabinet (1.1.0) sha256=4cf153d366430dd6e2a582889336ff33a831b14e6e4c05bfadfdf25629d5ac36
-  sqlite3 (2.9.6-aarch64-linux-gnu) sha256=d8b1f7d23efd7abac285775a9566562fc7debfef79d594e3a20354406fb7907c
-  sqlite3 (2.9.6-arm64-darwin) sha256=849b5d7f795e60fe25076d62c72dd722beb45b3850b516ad978d60ee848ec15b
-  sqlite3 (2.9.6-x86_64-linux-gnu) sha256=613188ce02f614126ddbc38c5e217ccffd6306d0dcd9adca9764547aa890a634
+  sqlite3 (2.10.0-aarch64-linux-gnu) sha256=dafeea94182af2eb53a10797be359fa6ec4270532bd45255d1c2beb69f2eb743
+  sqlite3 (2.10.0-arm64-darwin) sha256=f619f33adfd01a1827e8764a3da92b289c1a99d93707d021a242dccba6909c4e
+  sqlite3 (2.10.0-x86_64-linux-gnu) sha256=295f48b240ba663efa2e3b6f38cbc0f19f5c8a2823a71fda3bf15531be5dd0e8
   stringio (3.2.0) sha256=c37cb2e58b4ffbd33fe5cd948c05934af997b36e0b6ca6fdf43afa234cf222e1
   temple (0.10.7) sha256=369fe560adb6534674ce232899c2232df614bcb29c5359b05efedff7a57ed9c0
   thor (1.5.0) sha256=e3a9e55fe857e44859ce104a84675ab6e8cd59c650a49106a05f55f136425e73
