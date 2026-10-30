@@ -27,7 +27,7 @@ class Pin < ActiveRecord::Base
 
   # older pins are collectioned
   def destroy_over_limit_pins
-    over_count = member.pins.size - Settings.save_pin_limit
+    over_count = member.pins.count - Settings.save_pin_limit
     member.pins.past(over_count).destroy_all if over_count > 0
   end
 end

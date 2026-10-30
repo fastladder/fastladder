@@ -26,4 +26,14 @@ class PinTest < ActiveSupport::TestCase
       assert_nothing_raised { pin.reload }
     end
   end
+
+  test "destroy_over_limit_pins counts pins in the database when the association is loaded" do
+    Settings.stub :save_pin_limit, 1 do
+      member = FactoryBot.create(:member, password: "mala", password_confirmation: "mala")
+      member.pins.load
+      member.pins.create!(link: "link_1", title: "title")
+      member.pins.create!(link: "link_2", title: "title")
+      assert_equal [ "link_2" ], Pin.where(member_id: member.id).pluck(:link)
+    end
+  end
 end

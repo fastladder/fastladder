@@ -13,9 +13,9 @@ class Api::PinController < ApplicationController
   end
 
   def add
-    link = params[:link]
-    title = params[:title]
-    current_member.pins.create(link: link, title: title)
+    current_member.pins.find_or_create_by(link: params[:link]) do |pin|
+      pin.title = params[:title]
+    end
     render_json_status(true)
   end
 

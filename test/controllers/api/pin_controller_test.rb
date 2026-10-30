@@ -23,6 +23,16 @@ class Api::PinControllerTest < ActionController::TestCase
     assert_valid_json response.body
   end
 
+  test "POST add succeeds and keeps the existing pin when the link is already pinned" do
+    link = "http://la.ma.la/blog/diary_200810292006.htm"
+    pin = FactoryBot.create(:pin, member: @member, link: link, title: "old")
+    assert_no_difference -> { @member.pins.count } do
+      post :add, params: { link: link, title: "new" }, session: { member_id: @member.id }
+    end
+    assert_equal({ "isSuccess" => true, "ErrorCode" => 0 }, JSON.parse(response.body))
+    assert_equal "old", pin.reload.title
+  end
+
   test "POST add renders error without link" do
     post :add, session: { member_id: @member.id }
     error = { "isSuccess" => false, "ErrorCode" => 1 }
