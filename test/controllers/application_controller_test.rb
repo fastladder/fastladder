@@ -2,10 +2,15 @@ require "test_helper"
 
 class TestApplicationController < ApplicationController
   before_action :login_required, only: [:test_login_required]
+  before_action :login_required_api, only: [:test_login_required_api]
   before_action :current_member, only: [:test_current_member]
 
   def test_login_required
     head 200
+  end
+
+  def test_login_required_api
+    render plain: "ok"
   end
 
   def test_current_member
@@ -20,6 +25,7 @@ class ApplicationControllerTest < ActionController::TestCase
     @member = FactoryBot.create(:member, password: "mala", password_confirmation: "mala")
     Rails.application.routes.draw do
       get "test_login_required", to: "test_application#test_login_required"
+      get "test_login_required_api", to: "test_application#test_login_required_api"
       get "test_current_member", to: "test_application#test_current_member"
       get "login", to: "sessions#new", as: :login
     end
@@ -43,6 +49,38 @@ class ApplicationControllerTest < ActionController::TestCase
   test "login_required without member redirects to login_path" do
     get :test_login_required
     assert_redirected_to login_path
+  end
+
+  test "login_required with Bearer auth_key renders 200" do
+    @member.set_auth_key
+    @request.headers["Authorization"] = "Bearer #{@member.auth_key}"
+    get :test_login_required
+    assert_response :success
+  end
+
+  test "login_required_api with Bearer auth_key runs the action" do
+    @member.set_auth_key
+    @request.headers["Authorization"] = "Bearer #{@member.auth_key}"
+    get :test_login_required_api
+    assert_response :success
+    assert_equal "ok", response.body
+  end
+
+  test "login_required_api with invalid Bearer auth_key renders 401" do
+    @request.headers["Authorization"] = "Bearer invalid"
+    get :test_login_required_api
+    assert_response :unauthorized
+  end
+
+  test "login_required_api with invalid auth_key param renders 401" do
+    get :test_login_required_api, params: { auth_key: "invalid" }
+    assert_response :unauthorized
+  end
+
+  test "login_required_api without credentials renders empty 200" do
+    get :test_login_required_api
+    assert_response :success
+    assert_empty response.body
   end
 
   test "current_member with existing member assigns @member" do

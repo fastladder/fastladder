@@ -54,6 +54,10 @@ $ foreman start web     # run web process
 $ foreman start crawler # run crawler process
 ```
 
+## API
+
+Fastladder provides an HTTP API for external clients. See [docs/api.md](docs/api.md).
+
 ## Configuration
 
 ### `ALLOW_INTRANET_FEEDS`

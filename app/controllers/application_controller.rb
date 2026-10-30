@@ -21,7 +21,8 @@ class ApplicationController < ActionController::Base
   end
 
   def login_required_api
-    nothing unless logged_in?
+    return if logged_in?
+    auth_key_from_request ? head(:unauthorized) : nothing
   end
 
   def nothing
@@ -66,7 +67,11 @@ class ApplicationController < ActionController::Base
   end
 
   def find_current_member_by_auth_key
-    params[:auth_key].presence && Member.find_by(auth_key: params[:auth_key])
+    (auth_key = auth_key_from_request) && Member.find_by(auth_key: auth_key)
+  end
+
+  def auth_key_from_request
+    request.authorization.to_s[/\ABearer\s+(\S+)\z/, 1] || params[:auth_key].presence
   end
 
   def self.params_required(params, options = {})
