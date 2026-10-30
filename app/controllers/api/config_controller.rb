@@ -3,7 +3,7 @@ class Api::ConfigController < ApplicationController
   before_action :login_required_api
   skip_before_action :verify_authenticity_token
 
-  APP_CONFIG = Settings.to_h.slice(:save_pin_limit)
+  APP_CONFIG = Settings.to_h.slice(:save_pin_limit).stringify_keys
 
   def getter
     render json: (@member.config_dump || {}).merge(APP_CONFIG).to_json
@@ -15,7 +15,7 @@ class Api::ConfigController < ApplicationController
     end
     config = @member.config_dump || {}
     params.each do |key, value|
-      unless %w(action controller member_public).include? key
+      unless %w(action controller member_public).include?(key) or APP_CONFIG.key?(key)
         config[key] = value
       end
     end
