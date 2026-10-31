@@ -63,6 +63,7 @@ into the page as-is. Clients that display plain text must unescape them.
 | `/api/folders` | `names` and the keys of `name2id` |
 | `/api/feed/discover` | `feedlink`, `link`, `title` (only for feeds not yet known to the server) |
 | `channel` in `/api/all`, `/api/unread` | `description` |
+| `/api/pin/all` | `link`, `title` |
 
 Item `body` is sanitized HTML and should be rendered as HTML. Item `title`,
 `author` and `category` are sanitized and may contain HTML entities.
@@ -422,8 +423,10 @@ Returns a status object.
 
 ## Pins
 
-Pins are a per-account list of links to read later. Up to 100 pins are kept;
-adding more removes the oldest ones.
+Pins are a per-account list of links to read later. The number of pins kept
+is limited by the server (`save_pin_limit` in `/api/config/load`, 100 by
+default); adding more
+removes the oldest ones.
 
 ### `POST /api/pin/all`
 
@@ -440,7 +443,8 @@ adding more removes the oldest ones.
 | `link` | Required. |
 | `title` | Required. |
 
-Returns a status object.
+Returns a status object. Adding a link that is already pinned succeeds and
+leaves the existing pin, including its title, unchanged.
 
 ### `POST /api/pin/remove`
 
