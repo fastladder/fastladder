@@ -23,7 +23,7 @@ Pin.extend({
         this.pins.unshift(data);
         if(this.pins.length > app.config.save_pin_limit){
             var p = this.pins.pop();
-            this.has[p.url] = false;
+            this.hash[p.url] = false;
         }
         this.update_view();
     },

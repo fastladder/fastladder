@@ -50,9 +50,9 @@ class ApiController < ApplicationController
   end
 
   def touch
-    timestamps = params[:timestamp].split(/\s*, \s*/).map { |t| t.to_i }
+    timestamps = params[:timestamp].split(/\s*,\s*/).map { |t| t.to_i }
     params[:subscribe_id].split(/\s*,\s*/).each_with_index do |id, i|
-      if sub = Subscription.find(id) and sub.member_id == @member.id and timestamps[i]
+      if sub = @member.subscriptions.find_by(id: id) and timestamps[i]
         sub.update(has_unread: false, viewed_on: Time.at(timestamps[i] + 1))
       end
     end
@@ -150,7 +150,7 @@ class ApiController < ApplicationController
   def crawl
     success = false
     params[:subscribe_id].to_s.split(/\s*,\s*/).each_with_index do |id, i|
-      if sub = Subscription.find(id) and sub.member_id == @member.id
+      if sub = @member.subscriptions.find_by(id: id)
         success = sub.feed.crawl
       end
     end
@@ -164,7 +164,7 @@ class ApiController < ApplicationController
   def find_sub
     @id = (params[:subscribe_id] || params[:id] || 0).to_i
     unless @sub = @member.subscriptions.includes(:feed).find_by(id: @id)
-      render NOTHING
+      render_json_status(false)
       return false
     end
     return true
@@ -181,7 +181,7 @@ class ApiController < ApplicationController
     end
     counts = []
     params[:since].split(/,/).each do |s|
-      param_since = s =~ /^\d+$/ ? Time.new(s.to_i) : Time.parse(s)
+      param_since = s =~ /^\d+$/ ? Time.at(s.to_i) : Time.parse(s)
       counts << stored_on_list.inject(0) do |sum, pair|
         since = options[:unread] ? [param_since, pair[:subscription].viewed_on.to_time].max : param_since
         sum + pair[:stored_on].find_all { |stored_on| stored_on > since }.size

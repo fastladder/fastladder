@@ -182,6 +182,8 @@ Returns the unread items of one subscription.
   enclosure.
 - `ignore_notify` is present only when it is set.
 
+A failure status object is returned when the account has no such subscription.
+
 ### `GET|POST /api/all`
 
 Returns the items of one subscription regardless of read state, in the same
@@ -192,6 +194,8 @@ format as `/api/unread` without `last_stored_on`.
 | `subscribe_id` | Required. |
 | `limit` | Number of items. Default and maximum 200. |
 | `offset` | Number of items to skip. Default `0`. |
+
+A failure status object is returned when the account has no such subscription.
 
 ### `GET|POST /api/touch`
 
@@ -206,7 +210,8 @@ time become read.
 Use the `last_stored_on` value returned by `/api/unread`, converted to Unix
 time.
 
-Returns a status object.
+Returns a status object. IDs that are not subscriptions of the account are
+skipped and do not make the request fail.
 
 ### `GET|POST /api/touch_all`
 
@@ -216,7 +221,8 @@ Marks subscriptions as read up to the current time.
 |---|---|
 | `subscribe_id` | Required. Comma-separated subscription IDs. |
 
-Returns a status object.
+Returns a status object. IDs that are not subscriptions of the account are
+skipped and do not make the request fail.
 
 ### `GET|POST /api/unread_count`
 
@@ -225,7 +231,7 @@ times.
 
 | Parameter | Description |
 |---|---|
-| `since` | Required. A date-time string such as `2026-10-30T00:00:00+09:00`. Several values can be given separated by commas. |
+| `since` | Required. Unix time, or a date-time string such as `2026-10-30T00:00:00+09:00`. Several values can be given separated by commas. |
 
 Returns a number, or an array of numbers when several `since` values are given.
 For each subscription at most the 200 newest items are counted.
@@ -243,7 +249,8 @@ Asks the server to crawl the feeds of the given subscriptions immediately.
 | `subscribe_id` | Required. Comma-separated subscription IDs. |
 
 Returns `{"a": true}` when the crawl of the last given feed succeeded, and
-`{"a": false}` otherwise.
+`{"a": false}` otherwise. IDs that are not subscriptions of the account are
+skipped.
 
 ## Managing feeds
 

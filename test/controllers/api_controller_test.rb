@@ -46,6 +46,32 @@ class ApiControllerTest < ActionController::TestCase
     assert_includes JSON.parse(response.body)["items"].first["link"], "&amp;"
   end
 
+  test "GET all renders error for unknown subscription" do
+    get :all, params: { subscribe_id: 0 }, session: { member_id: @member.id }
+
+    assert_equal false, JSON.parse(response.body)["isSuccess"]
+  end
+
+  test "GET all renders error without subscribe_id" do
+    get :all, session: { member_id: @member.id }
+
+    assert_equal false, JSON.parse(response.body)["isSuccess"]
+  end
+
+  test "GET all renders error for subscription of another member" do
+    other = FactoryBot.create(:member, username: "other", password: "mala", password_confirmation: "mala")
+
+    get :all, params: { subscribe_id: @subscription.id }, session: { member_id: other.id }
+
+    assert_equal false, JSON.parse(response.body)["isSuccess"]
+  end
+
+  test "GET unread renders error for unknown subscription" do
+    get :unread, params: { subscribe_id: 0 }, session: { member_id: @member.id }
+
+    assert_equal false, JSON.parse(response.body)["isSuccess"]
+  end
+
   test "POST touch_all renders json" do
     post :touch_all, params: { subscribe_id: @subscription.id }, session: { member_id: @member.id }
 
@@ -69,6 +95,47 @@ class ApiControllerTest < ActionController::TestCase
     post :touch, session: { member_id: @member.id }
 
     assert JSON.parse(response.body)
+  end
+
+  test "POST touch marks every given subscription as read" do
+    other = FactoryBot.create(:subscription, member: @member)
+
+    post :touch, params: { timestamp: "1700000000,1700000100", subscribe_id: "#{@subscription.id},#{other.id}" }, session: { member_id: @member.id }
+
+    assert_equal true, JSON.parse(response.body)["isSuccess"]
+    assert_equal Time.at(1700000001), @subscription.reload.viewed_on
+    assert_equal Time.at(1700000101), other.reload.viewed_on
+  end
+
+  test "POST touch accepts spaces around commas" do
+    other = FactoryBot.create(:subscription, member: @member)
+
+    post :touch, params: { timestamp: "1700000000 , 1700000100", subscribe_id: "#{@subscription.id} , #{other.id}" }, session: { member_id: @member.id }
+
+    assert_equal Time.at(1700000001), @subscription.reload.viewed_on
+    assert_equal Time.at(1700000101), other.reload.viewed_on
+  end
+
+  test "POST touch skips unknown subscription" do
+    post :touch, params: { timestamp: "1700000000,1700000100", subscribe_id: "0,#{@subscription.id}" }, session: { member_id: @member.id }
+
+    assert_equal true, JSON.parse(response.body)["isSuccess"]
+    assert_equal Time.at(1700000101), @subscription.reload.viewed_on
+  end
+
+  test "POST touch skips subscription of another member" do
+    others = FactoryBot.create(:subscription, member: FactoryBot.create(:member, username: "other", password: "mala", password_confirmation: "mala"))
+
+    post :touch, params: { timestamp: "1700000000", subscribe_id: others.id }, session: { member_id: @member.id }
+
+    assert_equal true, JSON.parse(response.body)["isSuccess"]
+    assert_nil others.reload.viewed_on
+  end
+
+  test "POST crawl renders false for unknown subscription" do
+    post :crawl, params: { subscribe_id: 0 }, session: { member_id: @member.id }
+
+    assert_equal false, JSON.parse(response.body)["a"]
   end
 
   test "POST crawl renders json" do
@@ -115,6 +182,18 @@ class ApiControllerTest < ActionController::TestCase
     assert_equal 1, response.body.to_i
   end
 
+  test "GET item_count accepts Unix time" do
+    get :item_count, params: { since: @item.stored_on.to_i - 1 }, session: { member_id: @member.id }
+
+    assert_equal 1, response.body.to_i
+  end
+
+  test "GET item_count renders array for several Unix times" do
+    get :item_count, params: { since: "#{@item.stored_on.to_i - 1},#{@item.stored_on.to_i + 1}" }, session: { member_id: @member.id }
+
+    assert_equal [1, 0], JSON.parse(response.body)
+  end
+
   test "GET item_count renders error" do
     get :item_count, session: { member_id: @member.id }
 
@@ -126,6 +205,14 @@ class ApiControllerTest < ActionController::TestCase
     get :unread_count, params: { since: @item.stored_on }, session: { member_id: @member.id }
 
     assert_equal 0, response.body.to_i
+  end
+
+  test "GET unread_count accepts Unix time" do
+    FactoryBot.create(:unread_subscription, member: @member)
+
+    get :unread_count, params: { since: 3.hours.ago.to_i }, session: { member_id: @member.id }
+
+    assert_equal 1, response.body.to_i
   end
 
   test "GET unread_count renders error" do
