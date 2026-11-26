@@ -10,9 +10,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: mfinelli/setup-imagemagick@v8
-        with:
-          cache: false
+      - name: Install ImageMagick
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd "$RUNNER_TEMP"
+          gh release download --repo ImageMagick/ImageMagick --pattern 'ImageMagick-*x86_64.AppImage' --output magick.AppImage
+          chmod +x magick.AppImage
+          # Extract instead of mounting so libfuse2 is not needed.
+          ./magick.AppImage --appimage-extract > /dev/null
+          mkdir -p bin
+          ln -s "$RUNNER_TEMP/squashfs-root/AppRun" bin/magick
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
       - run: magick -version
       - uses: ruby/setup-ruby@v1
         with:
