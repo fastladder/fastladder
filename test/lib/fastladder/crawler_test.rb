@@ -15,8 +15,8 @@ class Fastladder::CrawlerTest < ActiveSupport::TestCase
   end
 
   test "reject_duplicated rejects duplicated items" do
-    items = FactoryBot.build_list(:item_has_fixed_guid, 1)
-    FactoryBot.create(:item_has_fixed_guid, feed: @feed)
+    existing = FactoryBot.create(:item_has_fixed_guid, feed: @feed)
+    items = FactoryBot.build_list(:item_has_fixed_guid, 1, feed: @feed, link: existing.link)
     items.each { |item| item.create_digest }
 
     result = @crawler.send(:reject_duplicated, @feed, items)

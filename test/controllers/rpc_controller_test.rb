@@ -21,6 +21,15 @@ class RpcControllerTest < ActionController::TestCase
     assert_equal [unknown], JSON.parse(response.body)
   end
 
+  test "POST check_digest returns digest of same content posted to another feed" do
+    other = Item.new(feed: FactoryBot.create(:feed), link: @item.link, title: @item.title, body: @item.body)
+    other.create_digest
+
+    post :check_digest, params: { api_key: @member.auth_key, digests: [other.digest].to_json }
+
+    assert_equal [other.digest], JSON.parse(response.body)
+  end
+
   test "POST check_digest treats digests as values, not SQL" do
     payload = "' OR 1=1 --"
 
