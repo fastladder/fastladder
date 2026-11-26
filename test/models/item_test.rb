@@ -103,4 +103,40 @@ class ItemTest < ActiveSupport::TestCase
     item = FactoryBot.create(:item_without_guid)
     assert_equal item.link, item.guid
   end
+
+  test "digest differs between feeds for the same content" do
+    item_1 = FactoryBot.create(:item, feed: FactoryBot.create(:feed), link: "http://example.com/1")
+    item_2 = FactoryBot.create(:item, feed: FactoryBot.create(:feed), link: "http://example.com/1")
+    refute_equal item_1.digest, item_2.digest
+  end
+
+  test "digest differs between links for the same content" do
+    feed = FactoryBot.create(:feed)
+    item_1 = FactoryBot.create(:item, feed: feed)
+    item_2 = FactoryBot.create(:item, feed: feed)
+    refute_equal item_1.digest, item_2.digest
+  end
+
+  test "digest changes when title or body changes" do
+    item = FactoryBot.create(:item, feed: FactoryBot.create(:feed))
+    digest = item.digest
+    item.update!(title: "changed")
+    refute_equal digest, item.digest
+    digest = item.digest
+    item.update!(body: "changed")
+    refute_equal digest, item.digest
+  end
+
+  test "digest ignores whitespace in title and body" do
+    feed = FactoryBot.create(:feed)
+    item_1 = FactoryBot.create(:item, feed: feed, link: "http://example.com/1", title: "a b", body: "c\nd")
+    item_2 = Item.new(feed: feed, link: "http://example.com/1", title: "ab", body: "cd")
+    item_2.create_digest
+    assert_equal item_1.digest, item_2.digest
+  end
+
+  test "digest can be calculated without a feed" do
+    item = FactoryBot.create(:item)
+    refute_nil item.digest
+  end
 end
